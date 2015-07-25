@@ -1,0 +1,65 @@
+tables: 
+ helpdeskultimate/ticket:
+  - id: 1
+    uid: "EBY-20287"
+    store_id: 1
+    title: "Some title"
+    filename: "filename.jpg"
+    content: "Message of the customer"
+    status: 1
+    priority: "todo"
+    created_time: "2011-07-06 10:01:38"
+    customer_email: "john.doe@example.com"
+    customer_name: "John Doe"
+    customer_id: 1
+    department_id: 1
+    created_by: "admin"
+    is_virtual: 1
+    locked_by: 0
+    locked_at: "0000-00-00 00:00:00"
+    note: "Some notes attached to the ticket"
+    order_id: 1
+    order_incremental_id: ""
+    content_type: "text/html"
+  - id: 2
+    uid: "VUF-43395"
+    store_id: 1
+    title: "Urgent"
+    filename: "ssdfsf.png"
+    content: "Some message"
+    status: 1
+    priority: "urgent"
+    created_time: "2011-07-06 11:47:55"
+    customer_email: "john.doe@example.com"
+    customer_name: "John Doe"
+    customer_id: 1
+    department_id: 1
+    created_by: "customer"
+    is_virtual: 0
+    locked_by: 0
+    locked_at: "0000-00-00 00:00:00"
+    note: ""
+    order_id: 0
+    order_incremental_id: ""
+    content_type: "text/plain"
+  - id: 3
+    uid: "OIG-94353"
+    store_id: 2
+    title: "Question from german store"
+    filename: ""
+    content: "Messege from german store"
+    status: 1
+    priority: "todo"
+    created_time: "2011-07-06 11:58:39"
+    customer_email: "john.doe@example.com"
+    customer_name: "John Doe"
+    customer_id: 1
+    department_id: 1
+    created_by: "customer"
+    is_virtual: 0
+    locked_by: 0
+    locked_at: "0000-00-00 00:00:00"
+    note: ""
+    order_id: 0
+    order_incremental_id: ""
+    content_type: "text/plain"

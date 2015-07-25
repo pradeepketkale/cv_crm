@@ -1,0 +1,49 @@
+"<soapenv:Envelope xmlns:soapenv=""http://schemas.xmlsoap.org/soap/envelope/"">
+   <env:Header xmlns:env=""http://schemas.xmlsoap.org/soap/envelope/"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance""/>
+   <soapenv:Body>
+      <v15:ProcessTagReply xmlns:env=""http://schemas.xmlsoap.org/soap/envelope/"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xmlns:v15=""http://fedex.com/ws/ship/v15"">
+         <v15:HighestSeverity>SUCCESS</v15:HighestSeverity>
+         <v15:Notifications>
+            <v15:Severity>SUCCESS</v15:Severity>
+            <v15:Source>ship</v15:Source>
+            <v15:Code>0000</v15:Code>
+            <v15:Message>Success</v15:Message>
+            <v15:LocalizedMessage>Success</v15:LocalizedMessage>
+         </v15:Notifications>
+         <v15:TransactionDetail>
+            <v15:CustomerTransactionId>ProcessTag_v15</v15:CustomerTransactionId>
+         </v15:TransactionDetail>
+         <v15:Version>
+            <v15:ServiceId>ship</v15:ServiceId>
+            <v15:Major>15</v15:Major>
+            <v15:Intermediate>0</v15:Intermediate>
+            <v15:Minor>0</v15:Minor>
+         </v15:Version>
+         <v15:CompletedShipmentDetail>
+            <v15:UsDomestic>true</v15:UsDomestic>
+            <v15:MasterTrackingId>
+               <v15:TrackingIdType>EXPRESS</v15:TrackingIdType>
+               <v15:TrackingNumber>301001775866</v15:TrackingNumber>
+            </v15:MasterTrackingId>
+            <v15:TagDetail>
+               <v15:ConfirmationNumber>6</v15:ConfirmationNumber>
+               <v15:AccessTime>PT2H0M</v15:AccessTime>
+               <v15:CutoffTime>18:00:00</v15:CutoffTime>
+               <v15:Location>NQAA</v15:Location>
+               <v15:DeliveryCommitment>2014-06-04T10:30:00</v15:DeliveryCommitment>
+               <v15:DispatchDate>2014-06-02</v15:DispatchDate>
+            </v15:TagDetail>
+            <v15:CompletedPackageDetails>
+               <v15:SequenceNumber>1</v15:SequenceNumber>
+               <v15:TrackingIds>
+                  <v15:TrackingIdType>EXPRESS</v15:TrackingIdType>
+                  <v15:FormId>0203</v15:FormId>
+                  <v15:TrackingNumber>301001775866</v15:TrackingNumber>
+               </v15:TrackingIds>
+               <v15:GroupNumber>0</v15:GroupNumber>
+            </v15:CompletedPackageDetails>
+         </v15:CompletedShipmentDetail>
+      </v15:ProcessTagReply>
+   </soapenv:Body>
+</soapenv:Envelope>
+"

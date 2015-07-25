@@ -1,0 +1,705 @@
+<div id="contactseller">
+  <div id="welcome_img" class="popuphead"><span class="popuoheading">Contact This Seller</span></div>
+  <div id="bg_welcome" class="shortpop">
+    <ul class="followshop">
+      <li>
+        <h2 class="greyheading">Already Member</h2>
+        <a href="#login" class="spriteimg bluesmallbtn fancybox">Login</a></li>
+      <li class="nobor">
+        <h2 class="greyheading">New Customer </h2>
+        <a class="spriteimg bluesmallbtn fancybox" href="#signUpForm">Sign Up</a></li>
+    </ul>
+    <p class="clr"></p>
+    <p align="center" class="clr margintoptwenty"><span class="required">Note:</span> To Contact this Seller You need to login or register.</p>
+  </div>
+</div>
+<div id="wishthis">
+  <div id="welcome_img" class="popuphead"><span class="popuoheading">Add to Wishlist</span></div>
+  <div id="bg_welcome" class="shortpop">
+    <ul class="followshop">
+      <li>
+        <h2 class="greyheading">Already Member</h2>
+        <a href="#login" class="spriteimg bluesmallbtn fancybox">Login</a></li>
+      <li class="nobor">
+        <h2 class="greyheading">New Customer </h2>
+        <a class="spriteimg bluesmallbtn fancybox" href="#signUpForm">Sign Up</a></li>
+    </ul>
+    <p class="clr"></p>
+    <p align="center" class="clr margintoptwenty"><span class="required">Note:</span>To Wish this product You need to login or register.</p>
+  </div>
+</div>
+
+<script src="http://static.ak.fbcdn.net/connect.php/js/FB.Share" type="text/javascript"></script>
+<script src="http://platform.twitter.com/widgets.js" type="text/javascript" ></script>
+<?php //$_helper = $this->helper('catalog/output'); ?>
+<?php $_product = $this->getProduct(); ?>
+<?php $my_tier_rocks = $this->getTierPrices($_product);?>
+<style type="text/css">
+</style>
+
+
+<?php
+$_productInventoryData = Mage::getModel('cataloginventory/stock_item')->loadByProduct($_product)->getData();
+$_currencyCodeProduct = Mage::app()->getStore()->getCurrentCurrencyCode();
+$productIdCache=$_product->getId();
+$CacheIdProduct = "productcache-$productIdCache-currency-$_currencyCodeProduct";
+$lifetime = 86400;//28800
+$_helpv = $this->helper('udropship');
+$vendorIfo = $_helpv->getVendor($_product);
+$cats = $_product->getCategoryIds();
+$catid2 = array();
+foreach ($cats as $category_id){
+	
+    $_cat = Mage::getModel('catalog/category')->load($category_id) ;
+    $catid2[] = $_cat->getName();
+}
+$catTitle = $catid2[1];
+$skuProduct = $_product->getSku();
+$productshortdescext = 'Online Shopping for ';
+$shopdesc = $vendorIfo->getData('shop_description');//getShopDescription()
+$productnameext = ' - Online Shopping for '.$catTitle.' by '.$vendorIfo->getData('vendor_name');
+$newProducTitle = $_product->getName().$productnameext;
+/******** Code added by Mandar for vendor product Stats on 4-05-2012 ********/
+       //  Mage::getModel('udropship/vendor_stats')->setStats($vendorIfo->getData('vendor_id'),'product');
+         /****************************************************************************/
+/*Below lines Commented by dileswar for not using any where
+---------------------------------------------------*/
+/*if(Mage::registry('current_category')) { 
+			$catId = Mage::registry('current_category')->getId();
+			$catIds=$_product->getCategoryIds();
+			$catId=$catIds[0];
+			}*/
+?>
+<div id="messages_product_view"><?php echo $this->getMessagesBlock()->getGroupedHtml(); ?></div>
+<?php
+if ($cacheContentProduct = Mage::app()->loadCache($CacheIdProduct)){ 
+    echo $cacheContentProduct;
+}
+else{ 
+        $_pageHtml = '';
+        $_helper = $this->helper('catalog/output');
+        $storeId = (int) $this->getStoreId();
+$_pageHtml .=
+'<script type="text/javascript">
+    var optionsPrice = new Product.OptionsPrice('.$this->getJsonConfig().')
+</script>';
+
+                  
+
+
+$_pageHtml .= '<div class="detailCotainer">';
+if($_product->getOptions()):
+    $multiData='enctype="multipart/form-data"';
+else:
+    $multiData='';
+endif;
+$_pageHtml .='<form action="'.$this->getAddToCartUrl($_product).'" method="post" id="product_addtocart_form"'.$multiData.'>';
+
+$_pageHtml .='<div class="details">
+      <p class="heading_css">'.$_helper->productAttribute($_product, $newProducTitle, 'name').'</p>
+      <div class="breadcrumbs_bottom"></div>
+      <p class="sort_description">';
+      if ($_product->getShortDescription()):
+           $_pageHtml .= $_helper->productAttribute($_product, nl2br($productshortdescext.$_product->getShortDescription().' SKU :'.$skuProduct), 'short_description');
+      endif;
+$_pageHtml .='</p>
+      <ul class="shipcost">';
+      $_shipcost = array();
+      if ($_product->getTypeId() == "configurable") {
+      $associated_products = $_product->getTypeInstance()->getUsedProducts();
+      
+	      $i=0;
+	      
+	      /*Start
+	       * Craftsvilla Comment
+	       * added international shipping cost by Suresh on 27-06-2012
+	       */
+	      $j=0;
+	      /*End
+	       * Craftsvilla Comment
+	       * added international shipping cost by Suresh on 27-06-2012
+	       */
+	  $stockConfig=array();    
+          foreach ($associated_products as $assoc)
+            {
+                $assocProduct =Mage::getModel('catalog/product')->load($assoc->getId());
+                $__shipcost = $assocProduct->getData('shippingcost');
+                
+                $stockConfig .=$assocProduct->isSaleable();
+                /*Start
+	       		* Craftsvilla Comment
+	       		* added international shipping cost by Suresh on 27-06-2012
+	       		*/
+                $__intershipcost = $assocProduct->getData('intershippingcost');
+                /*End
+	       		* Craftsvilla Comment
+	       		* added international shipping cost by Suresh on 27-06-2012
+	       		*/
+                
+                if (empty($__shipcost))
+                $_shipcost[$i]= 0;
+                else
+                $_shipcost[$i]= $__shipcost;
+                $i++;
+				
+				/*Start
+	       		* Craftsvilla Comment
+	       		* added international shipping cost by Suresh on 27-06-2012
+	       		*/
+                if (empty($__intershipcost))
+                $__intershipcost[$j]= 0;
+                else
+                $__intershipcost[$j]= $__intershipcost;
+                $j++;
+                /*End
+	       		* Craftsvilla Comment
+	       		* added international shipping cost by Suresh on 27-06-2012
+	       		*/
+            }
+            
+            $_shippingcost = max($_shipcost);
+            /*Start
+	       * Craftsvilla Comment
+	       * added international shipping cost by Suresh on 27-06-2012
+	       */
+            $_intershippingcost = max($__intershipcost);
+            /*End
+	       * Craftsvilla Comment
+	       * added international shipping cost by Suresh on 27-06-2012
+	       */
+        } else 
+        {
+            $_shippingcost = $_product->getData('shippingcost');
+            /*Start
+	       	* Craftsvilla Comment
+	       	* added international shipping cost by Suresh on 27-06-2012
+	       	*/
+            $_intershippingcost = $_product->getData('intershippingcost');  
+            /*End
+	       	* Craftsvilla Comment
+	       	* added international shipping cost by Suresh on 27-06-2012
+	       	*/   
+        }  
+        
+        $baseCurrencyCode = Mage::app()->getStore()->getBaseCurrencyCode();
+		$currentCurrencyCode = Mage::app()->getStore()->getCurrentCurrencyCode();
+		if($_shippingcost>0)
+		{
+			$_shippingcost = Mage::helper('directory')->currencyConvert($_shippingcost, $baseCurrencyCode, $currentCurrencyCode);
+		}
+		
+        if($_intershippingcost>0)
+		{
+			$_intershippingcost = Mage::helper('directory')->currencyConvert($_intershippingcost, $baseCurrencyCode, $currentCurrencyCode);
+		}
+		
+		if(empty($_shippingcost) || $_shippingcost=='0')
+                {
+                    $_pageHtml .='<li>Shipping Cost in India : <span>FREE</span></li>';
+                }    
+                else
+                {
+                    $_currSym=Mage::app()->getLocale()->currency($currentCurrencyCode)->getSymbol();
+                    $_numformatShippingCost=number_format($_shippingcost,2);
+                    $_pageHtml .='<li>Shipping Cost in India ('.$_currSym.'): <span>'.$_numformatShippingCost.'</span></li>';
+                }
+        /*Start
+	    * Craftsvilla Comment
+	    * added international shipping cost by Suresh on 27-06-2012
+	    */
+        if(!empty($_intershippingcost) && $_intershippingcost!='0'){		
+        //echo "<li>International Shipping : <span>FREE</span></li>";
+        //else
+            $_currSym=Mage::app()->getLocale()->currency($currentCurrencyCode)->getSymbol();
+            $_numforInterShippingCost=number_format($_intershippingcost,2);
+            $_pageHtml .='<li>Shipping Cost Outside of India ('.$_currSym.'): <span>'.$_numforInterShippingCost.'</span></li>';
+        }
+		/*End
+	    * Craftsvilla Comment
+	    * added international shipping cost by Suresh on 27-06-2012
+	    */
+        
+        ?>
+        <?php
+         
+         $_helpm = $this->helper('umicrosite');
+		 
+         
+         
+           
+         /******** Code added by Mandar for vendor product level Stats on 4-05-2012 ********/
+        // Mage::getModel('udropship/vendor_productstats')->setProductStats($vendorIfo->getData('vendor_id'),$_product->getId());
+         /****************************************************************************/
+        $storeurl = $_helpm->getVendorUrl($vendorIfo->getData('vendor_id'));
+        if(substr($storeurl, -1) == '/')
+        {
+        	$storeurl = substr($storeurl, 0, -1);
+        }
+        $_pageHtml .= '<li>See similar products from this Seller: ';
+        if($storeurl):
+            $storeurl=$storeurl;
+        else:
+            $storeurl='#';
+        endif;
+        $_pageHtml .=
+            '<span><a href="'.$storeurl.'" target="_blank">.'.$vendorIfo->getData('vendor_name').'</a></span>
+        </li>';
+        if($_product->getInternationalShipping()==1)
+            $_pageHtml .='<li>This Product is available for International Shipping.</li>';
+	else
+            $_pageHtml .='<li>This Product is not available for shipping outside India.</li>';
+		
+    /*Start Of COD : Commented On 17-04-2013 for static*/	        
+			/*$_prouctForbiddenPaymentMethods = '';
+            $_prouctForbiddenPaymentMethods = Mage::helper('payfilter')->getForbiddenPaymentMethodsFromProduct($_product);*/
+		//	print_r($vendorPaymentMethods = $vendorIfo->getVendoradminPaymentMethods());
+			$vendorAdminPaymentMethods = $vendorIfo->getVendoradminPaymentMethods();
+			$vendorCOD = true;
+			foreach ($vendorAdminPaymentMethods as $method)
+				{
+				   if($method == 'cashondelivery')
+					{
+						$vendorCOD = false;
+						break;
+					}
+				
+				}
+			/*if ($vendorCOD)
+				{
+				   $_pageHtml .= '<br><a href="#" class="craftsvilla_cash_on_delivery">Cash On Delivery Available</a>';
+				}*/
+			
+	?>
+	<?php 
+		/* get the data    Added By Dileswar On dated 07/01/2013 for get the quantity &  price of tier prices..*/
+		$my_tier_rocks = $this->getTierPrices($_product);
+		if (!empty($my_tier_rocks))
+			{
+			$my_tier_rocks = $this->getTierPrices($_product);
+			foreach($my_tier_rocks as $_tierprice)
+				{
+				$my_tier_rocks1 = $_tierprice['formated_price_incl_tax'];
+				$my_tier_rocks2 = $_tierprice['price_qty'];
+				}
+			$_pageHtml .='<li>Wholesale Price : <span class="price">'.$my_tier_rocks1.'</span> &nbsp;Min Order Qty : <span class="price">'.$my_tier_rocks2.'</span></span></li>';
+			} /*end showing tier prices */ 
+	?>
+	<?php
+	  
+      $_pageHtml .='</ul>
+      <div id="dtlPrice">';
+      
+        /*********SIZE***************/
+        
+			/*$attribute = $_product->getResource();
+			var_dump($attribute);*/
+$_pageHtml .=
+      '<div id="dtlSize">';
+          	$group = $_product->isComposite();
+		if ($group != true) { 
+            /*<span>Size</span><br /> 
+					<span class="size"> //echo($_product['size']);?></span>*/
+           } else {
+          if ($_product->isSaleable() && $this->hasOptions()):
+                $_pageHtml .= $this->getChildChildHtml('container2', '', true, true);
+          endif;
+          }
+$_pageHtml .='</div>
+        <div id="dtlQty">';
+          $_product = $this->getProduct();
+          if($_product->isSaleable()):
+            if(!$_product->isGrouped()):
+$_pageHtml .='<label for="qty">'.$this->__('Quantity:').'</label>';
+
+$_pageHtml .='<input type="text" name="qty" id="qty" maxlength="12" value="'.($this->getProductDefaultQty() * 1).'" />';
+            endif;
+         endif;
+     $_pageHtml .=
+         '<div id="numbers">
+            <div id="num_up"><script type="text/javascript">
+                    var cur_value_plus = jQuery("#qty").attr("value");
+                    jQuery("#num_up").click(function(){
+                            jQuery(".num_down").css("display","block");
+                            cur_value_plus++;
+                            jQuery("#qty").attr("value",cur_value_plus);
+                    });
+                    jQuery(".num_down").click(function(){
+                            cur_value_plus--;
+                            jQuery("#qty").attr("value",cur_value_plus);
+                                    if(cur_value_plus==1){
+                                            jQuery(".num_down").css("display","none");
+                                    }
+                    });
+            </script> 
+        </div>
+            <div id="num_down" class="num_down" style="display:none;"></div>
+          </div>';
+          
+$_pageHtml .='</div>
+        <div id="Price">'.$this->getChildHtml('product_type_data').' 
+        </div>
+        <br />
+        <div style="clear:both;"></div>
+        <div class="fleft">';
+        $stockConfigProd=strpos($stockConfig,'1');
+			if($_productInventoryData['is_in_stock']==1 && $_product->getTypeId() != "configurable"){
+                            $_pageHtml .= '<button class="spriteimg" type="submit" id="dtlAddCart"></button>';
+                        }
+			elseif($stockConfigProd!=false && $_product->getTypeId() == "configurable"){
+                                $_pageHtml .= '<button class="spriteimg" type="submit" id="dtlAddCart"></button>';
+                        }        
+                        else{
+				$_pageHtml .= '<p class="spriteimg pro_soldout" title="Sold Out"></p>';
+                        }        
+        $_pageHtml .= '</div>';
+        
+$_pageHtml .='<div id="dtlSocialLink">
+             Confused?';
+            //if(Mage::getSingleton('customer/session')->isLoggedIn()):
+              //  $_pageHtml .='<a rel="nofollow" class="fancybox contactseller" href="#contact_seller">Contact Seller</a>';
+            //else:
+                $_pageHtml .='<a rel="nofollow" class="contactseller" onclick="contactseller()" >Contact Seller</a>';
+           // endif;
+		$metaTitle = $_product->getData('meta_title');
+    $_pageHtml .='</div>
+        
+     <!--<div class="wholesale">
+        	<a rel="nofollow" class="fancybox" href="#wholesale">Buy This Item Wholesale</a>
+        </div>-->
+        
+        <div class="clear"></div>
+        <div class="tabs_social">
+           <ul id="socielicon" class="visible fleft">';
+$_wishlistSubmitUrl = $this->helper('wishlist')->getAddUrl($_product);
+$_pageHtml .='<li class="wishit" onclick="wishthisprod()" ><input type="button" id="imgwish" class="wishit_buttons" /></li>';
+$_pageHtml .='<li><a class="addthis_button_facebook_like" fb:like:layout="button_count" addthis:url="'.$_product->getProductUrl().'"></a></li>';
+$_pageHtml .='<li><a class="addthis_button_tweet"></a><script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid=ra-4f34adfd2fa3a766"></script></li>';
+$prodImage=$this->helper('catalog/image')->init($_product, 'image')->resize(500, 500);
+$_pageHtml .='<li><a href="http://pinterest.com/pin/create/button/?url='.$_product->getProductUrl().'&media='.$prodImage.'&description='.$metaTitle.'" class="pin-it-button" count-layout="none" target="_blank"><img border="0" src="//assets.pinterest.com/images/PinExt.png"/></a></li>';
+$_pageHtml .='</ul>
+    </div>
+	
+             <p class="clr"></p>';
+			 if ($vendorCOD)
+				{
+				   $_pageHtml .= '<div id="craftsvilla_cash_on_delivery"><div class="active">Cash On Delivery Available</div></div><br>';
+				}
+			
+$_pageHtml .=  '<div id="dtlGift">';
+ $couponread = Mage::getSingleton('core/resource')->getConnection('core_read');
+			$coupon="select sc.`code`, sc.`expiration_date`, sr.`name`, sr.`description`, sr.`vendorid` from  `salesrule_coupon` as sc, `salesrule` AS sr where sr.`rule_id` = sc.`rule_id` AND sr.`vendorid`='".$vendorIfo['vendor_id']."' AND sr.`is_active`=1 AND sc.`expiration_date`>NOW() order by sc.`rule_id` desc limit 1";
+			$result=$couponread->query($coupon)->fetchAll();
+			$vendorcoupon['code']=array();
+			$vendorcoupon['description']=array();
+			$vendorcoupon['vendor_name']=array();
+			
+			
+			foreach($result as $row)
+			{
+				$vendorcoupon['vendor_name'][] = substr($row['vendor_name'],0,30);
+				$vendorcoupon['code'][] =$row['code'];
+				$vendorcoupon['description'][] =$row['description'];
+				$expirydate = $row['expiration_date'];
+			}
+			 if(sizeof($vendorcoupon['vendor_name'])>0)
+		    {  
+			   $_pageHtml .= '<div id="dtlCompanyLogo"><table border="1"><tr><td rowspan="2"><div id="craftsvilla_coupons_product"><div class="active">Offers</div></div></td>';
+			$_pageHtml .= '<td style="padding-right: 6px;padding-left: 6px;vertical-align: center"><font size="2px">COUPON</font>: <strong>'.$vendorcoupon['code'][0].'</strong></td></tr><tr><td style="padding-right: 6px;padding-left: 6px;"><font size="1px"><strong>'.$vendorcoupon['description'][0].'</strong></td></tr></table>';
+			
+				 $_pageHtml .= '</div>';
+			}
+          /*<a href=""><img src="<?php //echo $this->getSkinUrl('images/dtl_gift.jpg') ?>" /></a>*/
+$_pageHtml .='</div>
+        <div id="dtlCompanyLogo">';
+            $url= $_helpm->getVendorUrl($data->vendor_id);
+            $storeurl = $_helpm->getVendorUrl($vendorIfo->getData('vendor_id'));
+            $vendorLogo = $vendorIfo->getShopLogo()!='' ? $vendorIfo->getShopLogo() : 'vendor/noimage/noimage.jpg';
+                                    
+									$Feedback = Mage::getModel('feedback/vendor_feedback')->getCollection()
+                                    ->addFieldToFilter('vendor_id',$vendorIfo->getData('vendor_id'))
+                                    ->addFieldToFilter('feedback_type',1)
+                                    ->addExpressionFieldToSelect('total','count({{feedback_id}})','feedback_id');
+									
+$_pageHtml .='          
+          <span class="seller_image"><a href="'.(substr($storeurl, 0, -1)).'" target="_blank"><img src="'.($_helpm->getResizedUrl($vendorLogo,70)).'" /></a></span>
+          <div class="fleft seller-right">';
+$_pageHtml .='<p class="vendorName"><a href="'.(substr($storeurl, 0, -1)).'" target="_blank">'.($vendorIfo['vendor_name']).'</a></p>
+            <span class="dtlLink-select">';
+
+                $countries = Mage::getModel('directory/country_api')->items();
+                $country = '';
+                $region = '';
+                $country = $vendorIfo["country_id"];
+                if($country!=''){
+                    $state_list = Mage::getModel('directory/region_api')->items($country);
+                    $region = $vendorIfo['region_id'];
+                    if($region!=''){
+                        foreach($state_list as $key => $value) {
+                            if ($value['region_id'] == $region) {
+                                $state_name = $value['name'];
+                                break;
+                            }
+                        }
+                    }
+                } 
+$_pageHtml .='<span>'.($vendorIfo['city']).','.$state_name.'</span></span>';
+
+// Removed Feedback On dated 13-12-12
+            /*$_totalFeedbackData = $Feedback->getData();
+            $_totalFeedback = $_totalFeedbackData[0]['total'];
+            $positiveFeedbackCollection = Mage::getModel('feedback/vendor_feedback')->getCollection()
+                                                    ->addFieldToFilter('vendor_id',$vendorIfo->getData('vendor_id'))
+                                                    ->addFieldToFilter('rating',2)
+                                                    ->addFieldToFilter('feedback_type',1)
+
+                                                    ->addExpressionFieldToSelect('total','count({{feedback_id}})','feedback_id');
+            $positiveFeedbackData = $positiveFeedbackCollection->getData();
+            $positiveFeedbackPercent = round(($positiveFeedbackData[0]['total'] * 100)/$_totalFeedback);
+    
+            if($positiveFeedbackData[0]['total'] > 0)
+            { 
+                $feedbck= "href=".$storeurl."feedback target='_blank'"; 
+            }*/
+//Below two lines added by dileswar to get the rating of feedback values on dated 23-10-2013***********stasrt
+
+            $vendorTotaldata = Mage::getModel('udropship/vendor')->load($vendorIfo['vendor_id']);
+			$feedbackRatingVendor = $vendorTotaldata->getData('feedback_vendorrating');
+
+//Below two lines added by dileswar to get the rating of feedback values on dated 23-10-2013***********END
+			
+
+			$positiveFeedbackPercent = $feedbackRatingVendor;
+            
+ $_pageHtml .='<a'.$feedbck.'>
+            <div class="classification">
+              <div class="tooltip">
+                <p class="arowtooltip spriteimg"></p>';
+$_pageHtml .='Feedback:'.$_totalFeedback.",".$positiveFeedbackPercent.'% pos. </div>
+              <div class="cover"></div>
+              <div class="progress" style="width:'.$positiveFeedbackPercent.'%;"></div>
+            </div>
+            </a>';
+
+			
+          $_pageHtml .='</div> <div class="clr follo-countainer">';
+
+            
+        // $_pageHtml .='<div id="followshopprod"></div>';
+	 
+		 
+         //$_pageHtml .=$this->getLayout()->createBlock('follow/follow')->setTemplate('follow/follow.phtml')->toHtml();
+            
+   // Commented below line for block Recent sales path      
+	//$_pageHtml .='<p class="links"><a rel="nofollow" href="'.$storeurl.'thoughtyard/policies/" target="_blank">Seller Policies</a> | <a rel="nofollow" class="selectedrecentsales" href="'.$storeurl.'thoughtyard/recentsales/" target="_blank">Recent Sales</a></p>
+
+    $_pageHtml .='<p class="links"><a rel="nofollow" href="'.$storeurl.'thoughtyard/policies/" target="_blank">Seller Policies</a></p>
+		  </div>
+        </div>';
+   
+	
+	
+			//echo $result['code'];
+          //if (!$this->hasOptions()):
+          //echo $this->getChildHtml('extra_buttons') 
+           //else:
+          //echo $this->getChildHtml('addto')
+          //endif;
+		 
+         $_pageHtml .=$this->getChildHtml('other');
+          if ($_product->isSaleable() && $this->hasOptions()):
+            $_pageHtml .=$this->getChildChildHtml('container1', '', true, true);
+          endif;
+$_pageHtml .='<div class="clearer"></div>';
+        /* if ($_product->isSaleable() && $this->hasOptions()):?>
+				<?php  echo $this->getChildChildHtml('container2', '', true, true) ?>
+			<?php endif; */
+$_pageHtml .='</div>
+      </div>
+  ';
+$_pageHtml .='<div class="product-view setwidth">
+      <div>
+        <div>
+          <input type="hidden" name="product" value="'.$_product->getId().'" />
+          <input type="hidden" name="related_product" id="related-products-field" value="" />
+        </div>';
+$_pageHtml .='<div class="product-img-box">'.$this->getChildHtml('media')
+          /*<div class="product-img-box-zoom"></div>*/.'
+        </div>
+      </div>
+      <div id="dtlText">';
+
+        foreach ($this->getChildGroup('detailed_info', 'getChildHtml') as $alias => $html):
+            if ($title = $this->getChildData($alias, 'title')):
+               $_pageHtml .= $this->escapeHtml($title);
+            endif;
+$_pageHtml .= $html;
+        endforeach;
+$_pageHtml .='</div>
+    </div>
+    <div class="clear"></div>
+  </form>
+</div>';
+
+$_pageHtml .='<div class="product-view">
+  <div> 
+
+ </div>
+</div>';
+//$_pageHtml .=$this->getChildHtml('contactseller');
+
+
+//$_pageHtml .=$this->getLayout()->createBlock('wholesale/index')->setTemplate('wholesale/index.phtml')->toHtml();
+
+
+//$_pageHtml .= '<iframe src="http://www.vizury.com/analyze/analyze.php?account_id=VIZVRM209&param=e300&pid='.$productIdCache.'&catid='.$catId.'&subcat1id=&subcat2id=&section=1&level=1" scrolling="no" width="1" height="1" marginheight="0" marginwidth="0" frameborder="0"></iframe>';
+    
+
+
+?>
+<!--code for vizury--->
+<?php 
+
+//if(Mage::registry('current_category')) { 
+//$catId = Mage::registry('current_category')->getId();
+//$category=Mage::getModel('catalog/category')->getChildrenCategories();
+//$catIds=$_product->getCategoryIds();
+//$catId=$catIds[0];
+/*$category=Mage::getModel('catalog/category')->getCategories($catIds[0]);
+
+foreach($category as $cat)
+{
+    if($cat->getId())
+  	{
+      $subcatId1=$cat->getId();
+	}
+	/*if(in_array($cat->getId(), $catIds))
+    {
+        $subcatId1=$cat->getId();
+    }*/
+   /* else
+    { 
+        $subcatId1="";
+    }*/
+    
+//}
+//}
+?>
+<?php $_pageHtml .= '<div>
+     <p class="heading_css">You May Also Like These Products!</p>
+<hr />
+<ul class="products-grid first odd you_like">';?>
+ <?php 
+ $read = Mage::getSingleton('core/resource')->getConnection('core_read');
+ $productVendorQury = "select * from `catalog_product_vendor` WHERE `udropship_vendor` = '".$vendorIfo['vendor_id']."' ORDER BY `product_id`  DESC LIMIT 0,4";
+ $productReadressult = $read->query($productVendorQury)->fetchAll();
+ foreach($productReadressult as $_productReadressult)
+ 	{ 
+	
+	$productVendorShows = Mage::getModel('catalog/product')->load($_productReadressult['product_id']);
+  	$vendorImage = $this->htmlEscape($this->getImageLabel($productVendorShows, 'small_image'));
+	$vendorUrl = $productVendorShows->getProductUrl();
+	$venPrdctName = $this->htmlEscape($productVendorShows->getName());
+	$catalogImage = $this->helper('catalog/image')->init($productVendorShows, 'small_image')->resize(166, 166);
+  ?> 
+  <?php $_pageHtml .= '<li class="item first">
+    <div class="prCnr"><a class="product-image spriteimg" title="'.$vendorImage.'" href="'.$vendorUrl.'"><img width="166" height="166" src="'.$catalogImage.'" alt=""></a> ';?>
+
+    <?php $_pageHtml .='<p class="shopbrief"><a title="" href="'.$vendorUrl.'">'.$venPrdctName.'</a></p>'; ?>
+      <?php 
+	  		$qtyStock = $productVendorShows->getInventoryInStock();
+			$storeurl = ''; 
+			$storeurl = Mage::helper('umicrosite')->getVendorUrl($_productReadressult['udropship_vendor']);
+			$vName = $_helpv->getVendor($_productReadressult['udropship_vendor'])->getVendorName();
+			$storeurl = substr($storeurl, 0, -1);
+			if($storeurl != '') {
+			$priceVendor = 'Rs. '.number_format($productVendorShows->getPrice(),0);	
+			$pricespecialVendor = 'Rs. '.number_format($productVendorShows->getSpecialPrice(),0);
+	  ?>
+      <?php $_pageHtml .= '<p class="vendorname">by <a target="_blank" href="'.$storeurl.'">'.$vName.'</a></p>';?>
+      
+      <!-- magento original price -->
+<?php } if(!$productVendorShows->getSpecialPrice()):?>
+	<?php $_pageHtml .='<div class="products price-box"> <span id="product-price-80805" class="regular-price"> <span class="price 123">'.$priceVendor.'</span> </span> </div>';?>
+<?php else:?> 
+	<?php $_pageHtml .= '<div class="products price-box">
+        <p class="old-price"> <span class="price-label"></span> <span id="old-price-77268" class="price">'.$priceVendor.'</span> </p>
+        <p class="special-price"> <span class="price-label"></span> <span id="product-price-77268" class="price">'.$pricespecialVendor.'</span> </p>
+    </div>';?>
+<?php endif;?> 
+<?php //if($qtyStock<1):?>
+       <!--<p class="sold_icon spriteimg"></p>-->
+<?php //endif;   ?>
+      <!-- magento original price -->
+      <?php $_pageHtml .='<div class="clear"></div>
+    </div>
+  </li>';?>
+<?php } ?>
+<?php $_pageHtml .= '</ul>
+    </div>';
+	?>
+<?php 
+$cacheContentProduct = $_pageHtml;
+    $tags = array(
+                    //Mage_Catalog_Model_Product::CACHE_TAG,
+                    //Mage_Catalog_Model_Product::CACHE_TAG . '_' . $productIdCache
+                );
+    $CacheIdProduct = "productcache-$productIdCache-currency-$_currencyCodeProduct";
+    Mage::app()->saveCache($cacheContentProduct, $CacheIdProduct, $tags, $lifetime);
+    echo $cacheContentProduct;
+} 
+ echo $this->getChildHtml('contactseller');
+?>
+
+<script type="text/javascript">
+    
+    jQuery(document).ready(new function() {
+       var vendorId='<?php echo $vendorIfo->getData('vendor_id')?>';
+       var u ='<?php echo Mage::getBaseUrl().'follow/index/followshopproduct/' ?>';
+        new Ajax.Request(u, {method:'post', parameters: {vendorid:vendorId}, onSuccess: function(transport) {
+                   jQuery('#followshopprod').html(transport.responseText);
+               }
+        });
+        
+    });
+    
+     function contactseller(){
+        <?php if(Mage::getSingleton('customer/session')->isLoggedIn()):?>
+                jQuery.fancybox({width:'430px', height:'22px',href:"#contact_seller"});
+            <?php else:?>
+				//jQuery.fancybox({width:'430px', height:'22px',href:"#contactseller"});
+                jQuery.fancybox({width:'430px', height:'22px',href:"#contact_seller"});
+            <?php endif;?>
+       } 
+    
+    function wishthisprod(){
+        <?php if(Mage::getSingleton('customer/session')->isLoggedIn()):?>
+               var u ='<?php echo Mage::getBaseUrl().'wishlist/publicshare/wishthisprod' ?>';
+        new Ajax.Request(u, {method:'post', parameters: {}, onSuccess: function(transport) {
+                   jQuery('#imgwish').addClass('wishit_hide');
+                    var u = "<?php echo $_wishlistSubmitUrl ?>" ;
+                            new Ajax.Request(u, {method:'post', parameters: {}, onSuccess: function(transport) {
+                                            if(transport.responseText == 'wished')
+                                                var locate = "<?php echo $_SERVER['HTTP_REFERER']; ?>";
+                                            window.location(locate);	
+                                    }
+                            });
+               }
+        });
+            <?php else:?>
+                jQuery.fancybox({width:'430px', height:'22px',href:"#wishthis"});
+            <?php endif;?>
+    }
+    
+    
+    //<![CDATA[
+            var productAddToCartForm = new VarienForm('product_addtocart_form');
+            productAddToCartForm.submit = function(button){
+                if (this.validator.validate()) {
+                    this.form.submit();
+                    if (button && button != '.undefined.') {
+                        button.disabled = true;
+                    }
+                }
+            }.bind(productAddToCartForm);
+    //]]>
+    </script> 

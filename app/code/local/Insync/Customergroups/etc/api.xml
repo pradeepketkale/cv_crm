@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <api>
+        <resources>
+            <customergroups_customergroups translate="title" module="customergroups">
+            	<title>Customergroups Resource</title>
+            	<model>customergroups/customergroups_api</model>
+            	  <methods>
+                	<create translate="title" module="customergroups">
+                    	<title>Create Customer Group</title>
+                    	<method>create</method>
+                   </create>
+            	 </methods>
+            </customergroups_customergroups>
+        </resources>
+		 <resources_alias>
+            <customergroups>customergroups_customergroups</customergroups>
+        </resources_alias>
+		<v2>
+        	<resources_function_prefix>
+                <customergroups>customergroupsCustomergroups</customergroups>
+            </resources_function_prefix>
+        </v2>
+    </api>
+</config>

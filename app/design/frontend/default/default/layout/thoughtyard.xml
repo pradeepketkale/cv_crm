@@ -1,0 +1,78 @@
+<?xml version="1.0"?>
+
+<layout version="0.1.0">
+
+ <thoughtyard_products_index>
+        <reference name="content">
+       <block type="core/template" template="marketplace/thoughtyard/products/home.phtml" name="vendorHome">
+                <block type="umicrosite/frontend_vendorProducts" name="product_list" template="catalog/product/list.phtml">
+                    <block type="catalog/product_list_toolbar" name="product_list_toolbar" template="catalog/product/list/toolbar.phtml">
+                        <block type="page/html_pager" name="product_list_toolbar_pager"/>
+                    </block>
+                    <action method="setToolbarBlockName"><name>product_list_toolbar</name></action>
+                </block>
+		<block type="catalog/product" name="highsold" as="highsold" template="marketplace/microsite/product/highsold.phtml" />
+            </block>
+      </reference>
+        <reference name="left">
+         <block type="customer/account_navigation" name="customer_account_navigation" before="-" template="marketplace/thoughtyard/profile/navigation.phtml">
+            </block>
+        </reference>
+</thoughtyard_products_index>
+    
+
+
+     <thoughtyard_profile_index>
+      <reference name="content">
+        <block type="core/template" template="marketplace/thoughtyard/profile/home.phtml" name="vendorProfile" />
+      </reference>
+        <reference name="left">
+         <!--<block type="catalog/navigation" name="catalog.leftnav" before="-" template="catalog/navigation/left.phtml"/>-->
+            <block type="customer/account_navigation" name="customer_account_navigation" before="-" template="marketplace/thoughtyard/profile/navigation.phtml">
+                <!--<action method="addLink" translate="label" module="customer"><name>profile</name><path>thoughtyard/profile/</path><label> > Profile</label></action>
+                <action method="addLink" translate="label" module="customer"><name>product</name><path>thoughtyard/products/</path><label> > Product</label></action>
+                <action method="addLink" translate="label" module="customer"><name>feedback</name><path>feedback/index/</path><label> > Feedback</label></action>
+                <action method="addLink" translate="label" module="customer"><name>policies</name><path>thoughtyard/policies/</path><label> > Shipping and Returns</label></action>-->
+            </block>
+        </reference>
+    </thoughtyard_profile_index>
+    
+     <thoughtyard_policies_index>
+      <reference name="content">
+         <block type="core/template" template="marketplace/thoughtyard/policies/home.phtml" name="vendorPolicies" />
+      </reference>
+        <reference name="left">
+         <block type="customer/account_navigation" name="customer_account_navigation" before="-" template="marketplace/thoughtyard/profile/navigation.phtml">
+            </block>
+        </reference>
+    </thoughtyard_policies_index>
+    <thoughtyard_recentsales_index>
+      <reference name="content">
+            <block type="catalog/product_list" template="marketplace/thoughtyard/recentsales/recentsales_seller.phtml" name="recentsales" />
+      </reference>
+        <reference name="left">
+         <block type="customer/account_navigation" name="customer_account_navigation" before="-" template="marketplace/thoughtyard/profile/navigation.phtml">
+            </block>
+        </reference>
+    </thoughtyard_recentsales_index>
+    <thoughtyard_recentsales_getmostrecent>
+      <reference name="content">
+            <block type="catalog/product_list" template="marketplace/thoughtyard/recentsales/mostrecent.phtml" name="mostrecent" />
+      </reference>
+        <reference name="left">
+         <block type="customer/account_navigation" name="customer_account_navigation" before="-" template="marketplace/thoughtyard/profile/navigation.phtml">
+            </block>
+        </reference>
+    </thoughtyard_recentsales_getmostrecent>
+    <thoughtyard_recentsales_getmostsold>
+      <reference name="content">
+            <block type="catalog/product_list" template="marketplace/thoughtyard/recentsales/mostsold.phtml" name="mostrecent" />
+      </reference>
+        <reference name="left">
+         <block type="customer/account_navigation" name="customer_account_navigation" before="-" template="marketplace/thoughtyard/profile/navigation.phtml">
+            </block>
+        </reference>
+    </thoughtyard_recentsales_getmostsold>
+   
+  </layout>
+

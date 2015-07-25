@@ -1,0 +1,132 @@
+<script type="text/javascript">
+    
+    function formatText(index, panel) {
+              return index + "";
+        }
+
+    jQuery(function () {
+
+        jQuery('.anythingSlider').anythingSlider({
+            easing: "easeInOutExpo",        // Anything other than "linear" or "swing" requires the easing plugin
+            autoPlay: true,                 // This turns off the entire FUNCTIONALY, not just if it starts running or not.
+            delay:10000000,                    // How long between slide transitions in AutoPlay mode
+            startStopped: false,            // If autoPlay is on, this can force it to start stopped
+            animationTime: 500,             // How long the slide transition takes
+            hashTags: true,                 // Should links change the hashtag in the URL?
+            buildNavigation: true,          // If true, builds and list of anchor links to link to each slide
+                    pauseOnHover: true,             // If true, and autoPlay is enabled, the show will pause on hover
+                    startText: "Go",             // Start text
+                    stopText: "Stop",               // Stop text
+                    navigationFormatter: formatText       // Details at the top of the file on this use (advanced use)
+        });
+
+        jQuery("#slide-jump").click(function(){
+            jQuery('.anythingSlider').anythingSlider(6);
+        });
+
+    });
+</script>
+
+
+<div id="home-featured"><div>
+            <p class="gratext"><?php echo $this->__('Featured Products') ?></p>
+        </div>
+
+<?php
+	$craftsvilla_base_url = MAGE::getBaseUrl();
+
+    // some helpers
+    $_helper = $this->helper('catalog/output');
+    $storeId = Mage::app()->getStore()->getId();
+    $catalog = $this->getLayout()->createBlock('catalog/product_list')->setStoreId($storeId);
+
+    // get all products that are marked as featured
+    $category=Mage::registry('current_category');
+    $collection = Mage::getResourceModel('catalog/product_collection');
+    $collection->addCategoryFilter($category);
+    $collection->addAttributeToSelect('featured_product');
+    $collection->addFieldToFilter(array(
+            array('attribute' => 'featured_product', 'eq' => true),
+    ));
+    $collection->addAttributeToSelect(array('small_image','url_path'), 'inner');
+    $collection->getSelect()->order('updated_at DESC')->limit(24);
+    
+    // if no products are currently featured, display some text
+    //echo $collection->count();
+    if (!$collection->count()) :
+?>
+<p class="note-msg"><?php echo $this->__('There are no featured products at the moment.') ?></p>
+<?php else : ?>
+
+   <?php 
+      if($collection->count()<=4):
+          echo "<div class='anythingSlider anythingSlidernew featureditem category-products'>";
+      else:
+          echo"<div class='anythingSlider anythingSlider featureditem category-products'>";
+      endif;
+
+    ?>  
+    <div class=wrapper>
+        <ul>
+            <li>
+                <ul class="products-grid first odd">             
+                <?php
+                        $i=1;
+                        foreach ($collection as $_product) :
+                        $_product = Mage::getModel('catalog/product')->setStoreId($storeId)->load($_product->getId());
+                ?>
+                <?php   
+                    $_helpm = $this->helper('umicrosite');
+                    $url= $_helpm->getVendorUrl($_product->getUdropshipVendor());
+                    $_vendorName=Mage::getModel('udropship/vendor')->load($_product->getUdropshipVendor())->getVendorName();
+                    //$_vendorName=$_vendor->getVendorName();
+                ?>
+                <li class="item first" style="">
+                    <div class="prCnr">
+                        <a class="product-image spriteimg" href="<?php echo $craftsvilla_base_url.$_product->getUrlPath(); ?>"><img height="166" width="166" src="<?php echo $this->helper('catalog/image')->init($_product, 'small_image')->resize(166); ?>" alt="<?php echo $this->helper('catalog/image')->init($_product, 'small_image'); ?>"  style="display: inline;"></a> 
+                        
+                          <!-- AddThis Button BEGIN -->
+          <ul id="socielicon">
+            <li>
+            <a href="http://pinterest.com/pin/create/button/?url=www.craftsvilla.com&media=<?php echo $this->helper('catalog/image')->init($_product, 'image')->resize(500, 500); ?>" class="pin-it-button" count-layout="none" target="_blank"><img border="0" src="<?php echo $this->getSkinUrl('img/PinExt.png')?>"/></a>  
+            </li>
+         </ul>
+<!-- AddThis Button END --> 
+                        
+                        
+                        <p class="shopbrief"><a href="<?php echo $craftsvilla_base_url.$_product->getUrlPath(); ?>"><?php echo $_helper->productAttribute($_product, $_product->getName(), 'name') ?></a></p>								               
+                        <p class="vendorname"><a target="_blank" href="<?php echo substr($url, 0, -1); ?>"><?php echo $_vendorName;?></a></p>
+                        <div class="products price-box"><span id="product-price-18102" class="regular-price"><span class="price"><?php echo $this->getPriceHtml($_product, true); ?></span></span></div>
+                    </div>
+                </li>
+                
+<?php if($i%4==0 && $i!=$collection->count()): 
+    echo '</ul></li><li><ul class="products-grid first odd">';
+endif;
+
+if($i==$collection->count()):
+    echo '</ul></li>';
+endif;$i++;
+?>
+                
+              <!--<li class="item first" style="">
+                    <div class="prCnr">
+                    <a class="product-image spriteimg" href="#"><img height="160" width="160" src="http://cdnkribha1.s3.amazonaws.com/catalog/product/cache/1/small_image/160x160/9df78eab33525d08d6e5fb8d27136e95/images/catalog/product/placeholder/small_image.jpg" alt="Bananakraft Ethnic Carry Bag Set - Rope International"  style="display: inline;"></a> 
+                    <h1 class="shopbrief"><a href="#">Bananakraft Ethnic Carry Bag Set - Rope International</a></h1>								               
+                    <p class="vendorname">by <a target="_blank" href="#">Rope International</a></p>
+                    <div class="products price-box"><span id="product-price-18102" class="regular-price"><span class="price">Rs. 449</span></span>                        
+                    </div></div>
+                </li>-->
+                    <?php endforeach; ?>
+                </ul>          
+            </li>
+        </ul>  
+        
+        
+        
+    </div>
+    <!--<a href="#" class="seemorebtn">See more</a>-->
+    
+</div>
+<?php endif; ?>
+</div>

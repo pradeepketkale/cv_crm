@@ -1,0 +1,71 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+    <default>
+    </default>
+    <craftsvillacustomer_index_index>
+        <reference name="head">
+            <action method="addCss"><stylesheet>css/styles_v16.css</stylesheet></action>
+            <action method="addCss"><stylesheet>css/common_v16.css</stylesheet></action>
+        </reference>
+        <reference name="root">
+            <action method="setTemplate"><template>page/1column.phtml</template></action>
+        </reference>
+        <reference name="content">
+            <block type="craftsvillacustomer/craftsvillacustomer" name="craftsvillacustomer" template="craftsvillacustomer/craftsvillacustomer.phtml" />
+        </reference>
+    </craftsvillacustomer_index_index>
+    
+    <craftsvillacustomer_index_custdata>
+        <reference name="head">
+            <action method="addCss"><stylesheet>css/styles_v16.css</stylesheet></action>
+            <action method="addCss"><stylesheet>css/common_v16.css</stylesheet></action>
+        </reference>
+        <reference name="root">
+            <action method="setTemplate"><template>page/1column.phtml</template></action>
+        </reference>
+        <reference name="content">
+            <block type="craftsvillacustomer/craftsvillacustomer" name="thankyou" template="craftsvillacustomer/thankyou.phtml" />
+        </reference>
+    </craftsvillacustomer_index_custdata>
+    
+     <craftsvillacustomer_index_already>
+        <reference name="head">
+            <action method="addCss"><stylesheet>css/styles_v16.css</stylesheet></action>
+            <action method="addCss"><stylesheet>css/common_v16.css</stylesheet></action>
+        </reference>
+        <reference name="root">
+            <action method="setTemplate"><template>page/1column.phtml</template></action>
+        </reference>
+        <reference name="content">
+            <block type="craftsvillacustomer/craftsvillacustomer" name="thankyou" template="craftsvillacustomer/already.phtml" />
+        </reference>
+    </craftsvillacustomer_index_already>
+    
+    <customer_account>
+        <reference name="customer_account_navigation">
+            <action method="addLink" translate="label" module="craftsvillacustomer">
+                <name>craftsvillacustomer</name>
+                <path>craftsvillacustomer/index/customerinbox</path>
+                <label>Inbox</label>
+            </action>
+        </reference>
+    </customer_account>
+
+
+    <craftsvillacustomer_index_customerinbox>
+        <update handle="customer_account"/>
+        <reference name="content">
+            <block type="craftsvillacustomer/craftsvillacustomer" name="customer-inbox"
+                   template="craftsvillacustomer/customerinbox.phtml"/>
+        </reference>
+    </craftsvillacustomer_index_customerinbox>
+    
+    <craftsvillacustomer_index_customerinboxread>
+        <update handle="customer_account"/>
+        <reference name="content">
+            <block type="craftsvillacustomer/craftsvillacustomer" name="customer-inbox-read"
+                   template="craftsvillacustomer/customerinboxread.phtml"/>
+        </reference>
+    </craftsvillacustomer_index_customerinboxread>
+    
+</layout> 

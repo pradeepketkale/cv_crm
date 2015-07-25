@@ -1,0 +1,1 @@
+Cufon.replace('.product-collateral h2, .short-description h2, .more-views h2, .discount h2, .shipping h2, .main-container .block .block-title, .banner-title', { fontFamily: 'Caviar Dreams' });

@@ -1,0 +1,101 @@
+<style type="text/css">
+#fancybox-inner{height:101px;}
+</style>
+
+<div id="wholesale">
+<?php 
+/*echo "<pre>";
+print_r($_SERVER);
+exit;*/
+$var = $_SERVER['REQUEST_URI'];
+$obj = explode("/" ,$var);
+$read = Mage::getSingleton('core/resource')->getConnection('core_read');
+
+
+//added a one more variable to below query 't2.email' for retrieve vendor email bay dileswar on dated 20-11-2012
+
+$sql = $read->query("SELECT t1.`entity_id`,t1.`price`,t1.`name`,t1.`sku`,t1.`small_image`,t1.`url_path`,t1.`udropship_vendor`,t2.`vendor_name`,t2.`email`,t2.`telephone` FROM `catalog_product_flat_1` as t1,`udropship_vendor` as t2 Where t1.`udropship_vendor` = t2.`vendor_id` and `url_path` like '". $obj[1]."'")->fetch();
+/*echo "<pre>";
+print_r($sql);
+echo "Product Id:".$sql['name'];
+exit();*/
+?>
+<div id="welcome_img" class="popuphead"><span class="popuoheading">Send Request For Wholesale</span></div>
+  <div id="bg_welcome">
+
+    <form name="wholesalesub" id="wholesalesub" method="post">
+   <!-- <form name="addform" id="addform">-->
+  
+    	<ul class="form-list twocolum_form">
+        		<input type="hidden" name = "productid" id = "productid" value="<?php echo $sql['entity_id'];?>"/>
+                <input type="hidden" name = "productname" id = "productname" value="<?php echo $sql['name'];?>"/>
+                <input type="hidden" name = "productimage" id = "productimage" value="<?php echo $sql['small_image'];?>"/>
+                <input type="hidden" name = "producturl" id = "producturl" value="<?php echo $sql['url_path'];?>"/>
+                <input type="hidden" name = "vendorid" id = "vendorid" value="<?php echo $sql['udropship_vendor'];?>"/>
+                <input type="hidden" name = "vendorname" id = "vendorname" value="<?php echo $sql['vendor_name'];?>"/>
+                <input type="hidden" name = "vendoremail" id = "vendoremail" value="<?php echo $sql['email'];?>"/>
+                <input type="hidden" name = "vendortelephone" id = "vendortelephone" value="<?php echo $sql['telephone'];?>"/>
+                <input type="hidden" name = "sku" id = "sku" value="<?php echo $sql['sku'];?>"/>
+                <input type="hidden" name = "created_date" id = "created_date" value="<?php echo date("y-m-d H:i:s"); ?>"/>
+                <input type="hidden" name="gotourl" id="gotourl" value="<?php echo $_SERVER['REQUEST_URI'];l ?>" />
+        	<li><label>Name<span>*</span></label><input type="text" name="name" id="name" class="required-entry"/></li>
+            <li><label>Email Address<span>*</span></label><input type="text" name="email" id="email" class="validate-email required-entry input-text" /></li>
+            <li id="right"><label>Phone No<span>*</span></label><input type="text" name="phone" id="phone" class="validate-number required-entry"/></li>
+            <li><label>Requested Quantity<span>*</span></label><input type="text" name="quantity" id="quantity" class="validate-number required-entry" /></li>
+            <li><label>Your Price<span>*</span></label><input type="text" name="offer_price" id="offer_price" class="validate-number required-entry"/></li>
+            <li><label>Need Customization?<span></span></label><input type="text" name="custom" id="custom" /></li>
+            
+            <li class="clr">
+            <label>Expected Delivery Date</label>
+             
+             <select name="day" value="day" id="day"><option selected="selected">Day</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option><option>11</option><option>12</option><option>13</option><option>14</option><option>15</option><option>16</option><option>17</option><option>18</option><option>19</option><option>20</option><option>21</option><option>22</option><option>23</option><option>24</option><option>25</option><option>26</option><option>27</option><option>28</option><option>29</option><option>30</option><option>31</option></select>
+             <select name="month" value="month" id="month"><option selected="selected">Month</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option><option>11</option><option>12</option></select>
+             <select name="year" value="year" id="year"><option selected="selected">Year</option><option>2012</option><option>2013</option><option>2014</option><option>2015</option></select></li>
+            
+            <li class="clr"><label>Comments</label>
+			<textarea name="comments"> </textarea></li>
+                       
+            <li id="right"><input name="submit" type="submit" id="submitval" value="submit" class="bluebtnsmall" /></li>
+        </ul>
+    </form>   
+  
+  </div></div>
+<!--WholeSale Data collection Thanks-->
+<div id="thankyousuccess" style="display:none;">
+     <div style="padding:20px;"><p>Thank You for your interest. Someone from our team will get back to you soon.</p>
+</div>
+
+</div>
+<script type="text/javascript">
+
+jQuery(document).ready(function() {
+	var options = { 
+        success:showResponse
+    };
+	
+		jQuery('#wholesalesub').submit(function() { 
+			var quantity=jQuery('#quantity').val();
+			var price = jQuery('#offer_price').val();
+			
+			if(quantity<10){
+				alert("Minimum Quantity should be 10");
+				return false;
+			}
+			if(price<10000){
+				alert("Minimum Order Value should be more than Rs. 10,000");
+				return false;
+			}
+			
+			//jQuery('#submitval').fadeOut("slow");
+			jQuery("#wholesalesub").ajaxSubmit({url: '<?php echo Mage::getBaseUrl().'wholesale/index/post'; ?>', type: 'post',success:showResponse})
+			return false; 
+		});
+		var addform = new VarienForm('wholesalesub');	
+});
+function showResponse(responseText){ 
+	if(responseText == 'wholesale submit!'){
+		jQuery.fancybox({width:'250px', height:'22px',href:"#thankyousuccess"});
+	}
+}
+
+</script>

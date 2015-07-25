@@ -1,0 +1,137 @@
+<?php
+$_itemCollection=Mage::getModel('wishlist/item')->getCollection();
+
+$_itemCollection->getSelect()->joinLeft(
+              array('stock' => 'cataloginventory_stock_item'),
+              "main_table.product_id = stock.product_id",
+              array('stock.is_in_stock')
+      );
+     $_itemCollection->getSelect()->joinLeft(array('productload' => 'catalog_product_flat_1'),
+              "main_table.product_id = productload.entity_id",
+              array('productload.url_path','productload.small_image','productload.name','productload.price','productload.special_price')
+        )->order('added_at DESC')->limit(50);
+//echo $_itemCollection->getSelect()->__toString();exit;
+$item=$_itemCollection->getData();
+$cookieName='lastidtime';
+$cookieValue=$item[0]['added_at'];
+?>
+<h4 class="heading_css_new smallpadding floatl">Live Feed</h4>
+<p class="floatl spriteimg feedcss" onclick="eraseCookie('<?php echo $cookieName;?>')"><span id="notify">0</span></p>
+<div class="breadcrumbs_bottom clr"></div>
+<div id="container" class="transitions-enabled clearfix">
+      <!-- These are our grid blocks -->
+    
+<?php
+foreach($_itemCollection as $_productCollection):
+    $qtyStock = $_productCollection->getIsInStock();?>
+  <div class="item">
+      <div class="prCnr">
+        <a href="<?php echo $_productCollection->getProductUrl();?>">
+            <div class="pro_image"><img src="<?php echo $this->helper('catalog/image')->init($_productCollection, 'small_image')->resize(170); ?>" width="170" /></div>
+            <div class="productinfo">
+                <p class="productname"><?php echo $_productCollection->getName(); ?></p>
+                <?php if($_productCollection->getSpecialPrice()):?>
+                    <p class="old-price floatr">             
+                        <span id="old-price-27370" class="price"><?php echo 'Rs. '.number_format($_productCollection->getPrice(),0); ?></span>
+                    </p>
+                    <p class="special-price">
+                        <span id="product-price-27370" class="price"><?php echo 'Rs. '. number_format($_productCollection->getSpecialPrice(),0); ?></span>
+                    </p>
+                <?php else: ?>
+                    <p>
+                        <span id="product-price-27370" class="price"><?php echo 'Rs. '. number_format($_productCollection->getPrice(),0);?></span>
+                    </p>
+                <?php endif; 
+                        if($qtyStock<1):?>
+                    <p class="sold_icon spriteimg"></p>
+                <?php elseif($_productCollection->getSpecialPrice()):?>
+                    <p class="sell_icon spriteimg"></p>
+                <?php endif; ?>
+            </div>
+        </a>
+      </div>
+    </div>
+    <?php endforeach; ?>
+</div>
+
+
+<!-- Once the page is loaded, initalize the plug-in. --> 
+<script type="text/javascript">
+  jQuery(document).ready(new function() {
+  
+       var name= '<?php echo $cookieName?>';
+       var value = '<?php echo $cookieValue ?>';
+       createCookie(name,value);
+       
+      
+  });
+  
+  function createCookie(name,value) {
+    var expires = "";
+    document.cookie = name+"="+value+expires+"";
+    //setInterval('shownotification("'+value+'")',10000);
+    setInterval('shownotification()',10000);
+    }
+  
+  function getCookie(c_name)
+    {
+        
+    var i,x,y,ARRcookies=document.cookie.split(";");
+    for (i=0;i<ARRcookies.length;i++)
+    {
+      x=ARRcookies[i].substr(0,ARRcookies[i].indexOf("="));
+      y=ARRcookies[i].substr(ARRcookies[i].indexOf("=")+1);
+      x=x.replace(/^\s+|\s+$/g,"");
+      if (x==c_name)
+        {
+        return unescape(y);
+        }
+      }
+    }
+    
+  function shownotification()
+     {
+         var u = "<?php echo Mage::getBaseUrl().'wishlist/publicshare/notification/';?>";
+         var name= '<?php echo $cookieName?>';
+         var val=getCookie(name);
+         var lastId=val;
+                new Ajax.Request(u, {method:'post', parameters: {lastid:lastId}, onSuccess: function(transport) {
+                                        if(transport.responseText!=0){
+                                            jQuery('#notify').html('+'+transport.responseText);
+                                        }    
+                                        else{
+                                            jQuery('#notify').html(transport.responseText);
+                                        }
+                        }
+                });
+     }
+    
+      function eraseCookie(name) {
+         
+            var val=getCookie(name);
+            var u = "<?php echo Mage::getBaseUrl().'wishlist/publicshare/addnewprod/';?>";
+            var lastId=val;
+                new Ajax.Request(u, {method:'post', parameters: {lastid:lastId}, onSuccess: function(transport) {
+                               if(transport.responseText==0){
+                                    var locate = "<?php echo $_SERVER['HTTP_REFERER']; ?>";
+                                    window.location(locate);
+                               }
+                               else{
+                                    var values = transport.responseText.evalJSON();
+                                    //var name= '<?php //echo $cookieName?>';
+                                    var newdiv = values.divvalue;
+                                    var newval=values.newvalue;
+                                    var expires = "";
+                                    document.cookie = name+"="+newval+expires+"";
+                                    jQuery('#container').fadeOut("slow").load(transport.responseText).fadeIn("slow");
+                                    jQuery('#container').prepend(newdiv);
+                                    jQuery('#notify').html('0');
+                                    
+                              }
+                              
+                        }
+                });
+
+        }
+       
+</script> 

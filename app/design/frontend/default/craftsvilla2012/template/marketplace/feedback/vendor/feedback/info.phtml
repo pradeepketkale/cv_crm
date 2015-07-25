@@ -1,0 +1,394 @@
+<?php
+/**
+ 
+ * @category   Marketplace
+ * @package    Feedback_info
+ * Date		01-05-2012
+ */
+?>
+<?php
+$newdate = '';
+$_datediff = '';
+$delta = '';
+$_todayDate = '';
+$_todayTime = '';
+$newdateTime = '';
+$_daysToFillFeedback = '';
+if(!$this->getRequest()->getParam('id'))
+	echo $_SESSION['feedback_shippment_id']."##%%%%%%%%%##";
+$_shipment = $this->getShipment();
+
+$shipmentstatus = $_shipment->getUdropshipStatus();
+$shipmentid = $_shipment->getIncrementId();
+$shipment_items = $_shipment->getOrder()->getAllVisibleItemsByVendor($_shipment->getUdropshipVendor(),false);
+$read = Mage::getSingleton('core/resource')->getConnection('core_read');
+$orderData = Mage::getModel('sales/order')->load($_shipment->getOrderId());
+$entityId = $orderData['entity_id'];
+$methodQuery = "SELECT * FROM `sales_flat_order_payment` WHERE `parent_id` = '".$entityId."'";
+$paymethodRes = $read->query($methodQuery)->fetch();
+$paymethod = $paymethodRes['method']; 
+$read->closeConnection();
+
+$_hlp = Mage::helper('udropship');
+$custid = $_shipment->getCustomerId();
+$_shippmentCreateDate = $_shipment->getCreatedAt();
+$newdate = strtotime($_shippmentCreateDate);
+$newdate = strtotime("+60 day", $newdate);
+$newdate =  date('jS F Y', $newdate);
+$_todayDate = date('jS F Y');
+$_todayTime = strtotime($_todayDate);
+$newdateTime = strtotime($newdate);
+$delta = $newdateTime - $_todayTime;
+
+$_masterId = $_shipment->getId();
+$Feedback = '';
+$_helpm = $this->helper('umicrosite');
+$Feedback = Mage::getModel('feedback/vendor_feedback')->getCollection()
+			->addFieldToFilter('shipment_id',$_shipment->getId())
+			->addFieldToFilter('vendor_id',$_shipment->getUdropshipVendor())
+			->addFieldToFilter('cust_id',Mage::getSingleton('customer/session')->getCustomer()->getId())
+			->addFieldToSelect('feedback_id')
+			->addFieldToSelect('feedback_at')
+			->addFieldToSelect('image_path')
+			->addFieldToSelect('feedback')
+			->addFieldToSelect('received')
+			->addFieldToSelect('rating')
+			->addFieldToSelect('feedback_type')
+			->addOrder('feedback_at');
+
+$_feedbackFlag = false;
+$_feedbackFormHideFlag = false;
+$FeedbackReceivedFlag = false;
+$FeedbackPositiveFlag = false;
+$FeedbackNeutralFlag = false;
+foreach($Feedback as $_FeedbackReceived){
+	if($_FeedbackReceived->getReceived() == 1 and $_FeedbackReceived->getFeedbackType() == 1)
+		$FeedbackReceivedFlag = true;
+
+	if($_FeedbackReceived->getRating() == 2 and $_FeedbackReceived->getFeedbackType() == 1)
+		$FeedbackPositiveFlag = true;
+
+	if($_FeedbackReceived->getRating() == 1 and $_FeedbackReceived->getFeedbackType() == 1)
+		$FeedbackNeutralFlag = true;
+}
+if($FeedbackReceivedFlag && $FeedbackPositiveFlag)
+	$_feedbackFormHideFlag = true;
+elseif($_shipment->getUdropshipStatus() == 1){
+	$_shipmentCommentData = Mage::getModel('sales/order_shipment_comment')->getCollection()
+							->addAttributeToFilter('parent_id',$_masterId)->addOrder('entity_id')
+							->setPageSize(1)->getData();
+	$_shipmentUpdatedAt = $_shipmentCommentData[0]['created_at'];
+	$newdateUpdateAt = strtotime($_shipmentUpdatedAt);
+	$newdateUpdateAt = strtotime("+7 day", $newdateUpdateAt);
+	$newdateUpdateAt =  date('jS F Y', $newdateUpdateAt);
+	$_todayDateUpdateAt = date('jS F Y');
+	$_todayTimeUpdateAt = strtotime($_todayDateUpdateAt);
+	$newdateTimeUpdateAt = strtotime($newdateUpdateAt);
+	$deltaUpdateAt = $newdateTimeUpdateAt - $_todayTimeUpdateAt;
+	if($deltaUpdateAt > 0){
+		$_daysToFillFeedback = floor(($deltaUpdateAt)/ (60*60*24));
+		$_feedbackFlag = true;
+	}
+}
+elseif($delta < 0)
+	$_feedbackFormHideFlag = true;
+else {
+	$vendorShippHandling = array();
+	$newdate = '';
+	$_datediff = '';
+	$delta = '';
+	$_todayDate = '';
+	$_todayTime = '';
+	$newdateTime = '';
+	$vendor = $_hlp->getVendor($_shipment->getUdropshipVendor());
+	$vendorShippHandling = explode(" ",$vendor->getShipHandlingTime());
+	if($vendorShippHandling[1] == 'hours')
+		$vendorShippHandling[0] = $vendorShippHandling[0]/24;
+
+	$_datediff = $vendorShippHandling[0] + 7;
+	$_datediff = "+".$_datediff." day";
+	$newdate = strtotime($_shippmentCreateDate);
+	$newdate = strtotime($_datediff, $newdate);
+	$newdate =  date('jS F Y', $newdate);
+	$_todayDate = date('jS F Y');
+	$_todayTime = strtotime($_todayDate);
+	$newdateTime = strtotime($newdate);
+	$delta = $newdateTime - $_todayTime;
+	if($delta > 0) {
+		$_daysToFillFeedback = floor(($delta)/ (60*60*24));
+		$_feedbackFlag = true;
+	}	
+}
+?>
+<?php echo $this->getMessagesBlock()->getGroupedHtml(); ?>
+<div id="prList" class="col2-set shipment-items feedback-cust">
+	<div class="success-msg" id="success-msg-<?php echo $_masterId ?>" style="display:none;"></div>
+	<h3 class="greyheading">Order Items</h3>
+<?php if(!$_feedbackFormHideFlag){ ?>
+<div class="fleft oditems" style="width:90%">
+<?php } else{?>
+<div class="oditems" style="width:96%;">
+<?php } ?>
+
+<table width="100%" cellspacing="0" class="table-border" id="order-items-3842">
+<thead>
+  <tr>
+    <th>Product Name</th>
+    <th>SKU</th>
+    <th class="a-center"><span class="nobr">Qty</span></th>
+  </tr>
+</thead>
+<tbody>
+<?php foreach ($shipment_items as $_item){ 
+		$sku= $_item->getData('sku'); 
+		//$product = Mage::getModel('catalog/product')->loadByAttribute('sku',$sku);  
+		$product = Mage::getModel('catalog/product')->load($_item->getProductId());  
+		$childId=$product->getId();
+		$parentIds = Mage::getResourceSingleton('catalog/product_type_configurable')->getParentIdsByChild($childId);
+?>
+<tr>
+	<td>
+		<?php echo $_item->getName(); ?>
+		<dl class="item-options item-optionsnew">
+			<?php  if(isset($parentIds[0])) : ?>
+			<?php $last_key = key(array_slice($parentIds, -1, 1, TRUE)); ?>
+			<?php $parentId=$parentIds[$last_key]; ?>
+					<?php $parentProduct = Mage::getModel('catalog/product')->load($parentId) ?>             
+					<?php $configurableAttributeCollection=$parentProduct->getTypeInstance()->getConfigurableAttributes() ?> 
+					<?php foreach($configurableAttributeCollection as $attribute):?> 
+						<?php $attcode = $attribute->getProductAttribute()->getAttributeCode() ?> 
+						<dt style="font-weight:bold"><?php echo $attribute->getProductAttribute()->getFrontend()->getLabel() ?></dt>
+						<dd style="margin:0; padding-left:14px;"><?php echo Mage::getModel('catalog/product')->load($_item->getProductID())->getAttributeText($attcode) ?></dd>
+					<?php endforeach; ?> 
+			<?php endif; ?>
+		</dl>
+	</td>
+	<td><?php echo $sku; ?></td>
+	<td><?php echo number_format($_item->getQtyOrdered(), 0); ?></td>																		
+</tr>
+<?php }?>
+</tbody>
+</table>
+</div><br><br><br>
+<style>#custnote {float: left;margin:9px 3px 0px;overflow: hidden;position: relative;}</style>
+
+<table style="margin-top:auto;margin-left:-7px">
+<tr>
+<td>
+<?php if($shipmentstatus==7 || $shipmentstatus==1 || $shipmentstatus==20)
+{?>
+  <div class="formpatch" style="height:670px">
+<form id="vendornote1" method="post" action="<?php echo $this->getUrl('craftsvillacustomer/index/disputeraised', array('id'=>$_masterId)); ?>" enctype="multipart/form-data">
+<table>
+ <th>Dispute Raised</th>
+ <tr><td>
+<textarea title="Give Vendornote1" style="width:250px; height:70px;" class="textarea" name="vendornote1" id="vendornote1-<?php echo $_masterId; ?>"></textarea></td></tr>
+<tr><td><div id="vendornote1">
+<input type="file" name="file" id="file"></div>
+<font color="#CE3D49">Note: Please attach only image/jpeg pictures.</font>
+</td></tr>
+<tr><td><button class="form-button" type="submit" style="margin-left:16px;margin-top:8px;height:30px;width:144px;background:none repeat scroll 0% 0% #CE3D49;color: rgb(255, 255, 255);cursor: pointer;" id="vendornote1-<?php echo $_masterId ?>"><span><?php echo $_hlp->__('Raise Dispute To Seller') ?></span></button><br><font color="#CE3D49">Note: You can raise a dispute to seller if you have received damaged and/or defective product or received product different from as shown on website. Please take a photo of the product which you received and attach it above for faster dispute settlement.</font></td></tr>
+</table></form><?php } ?>
+
+<?php if($shipmentstatus==20 && $paymethod == 'cashondelivery') 
+{?>
+<div id="closed"><br><br>
+<form id="closeddispute" method="post" action="<?php echo $this->getUrl('craftsvillacustomer/index/customerclosedispute', array('id'=>$_masterId)); ?>" enctype="multipart/form-data">
+<center><input type="submit" name="submit" value="Close The Dispute" style="margin-left:-38px;margin-top:-41px;height:30px;width:111px;background:none repeat scroll 0% 0% rgb(57, 112, 142);color: rgb(255, 255, 255);cursor: pointer;"></center>
+</form>
+</div>
+<div id = "bankaccdetails"><br><br>
+<form id = "bankaccdispute" name = "bankaccdispute" method="post" action="<?php echo $this->getUrl('craftsvillacustomer/index/customerbankaccount', array('id'=>$_masterId)); ?>" enctype="multipart/form-data" >
+<table style="margin-top: -45px;margin-left:0px; width:auto">
+<tr><th><font style="margin-top: -25px" align="center" size = "2"><u>Enter Bank Account Details for Refund</u></font></th></tr>
+
+<tr><th><font style="margin-top: -25px" align="center">Please enter the TrackingNumber and CourierName by which you are returning the product to the Seller</font></th></tr>
+
+<tr><td>Return CourierName: <input type="text" name="returncouriername" style="width:auto; margin-left:16px" required/></td></tr>
+<tr><td>Return TrackNumber: <input type="text" name="returntracknumber" style="width:auto;margin-left:15px" required/></td></tr>
+<tr><td>Name On Bank Account: <input type="text" name="nameonbankaccount" id="nameonbankaccount" style="width:auto" required/></td></tr>
+<tr><td>BankIFSC CODE:   <input type="text" name="bankifsccode" style="width:auto;margin-left:33px " required/></td></tr>
+<tr><td>BankAccountNumber: <input type="text" name="accountnumber" id="accountnumber" style="width:auto;margin-left:14px " required/></span></td></tr>
+
+<tr><td><input type="submit" name="submit" value="Submit Account Details" style="margin-left:66px;margin-top:0px;height:30px;width:141px;background:none repeat scroll 0% 0% rgb(57, 112, 142);color: rgb(255, 255, 255);cursor: pointer;" /></td></tr></table></form>
+</div>
+
+<?php } ?>
+<?php if($shipmentstatus==20 && $paymethod != 'cashondelivery')
+{?>
+<div id="closed"><br><br>
+<form id="closeddispute" method="post" action="<?php echo $this->getUrl('craftsvillacustomer/index/customerclosedispute', array('id'=>$_masterId)); ?>" enctype="multipart/form-data">
+<center><input type="submit" name="submit" value="Close The Dispute" style="margin-left:-38px;margin-top:-41px;height:30px;width:111px;background:none repeat scroll 0% 0% rgb(57, 112, 142);color: rgb(255, 255, 255);cursor: pointer;"></center>
+</form>
+</div>
+<div id = "returnprepaidtrackdetails"><br><br>
+<form id = "trackprepaiddispute" name = "trackprepaiddispute" method="post" action="<?php echo $this->getUrl('craftsvillacustomer/index/customerprepaidtrackdetails', array('id'=>$_masterId)); ?>" enctype="multipart/form-data" >
+<table style="margin-top: -30px;margin-left:0px; width:auto">
+<tr><th><font style="margin-top: -25px" align="center" size="2"><u>Enter Return Tracking Details</u></font></th></tr>
+<tr><th><font style="margin-top: -25px" align="center">Please enter the TrackingNumber and CourierName by which you are returning the product to the Seller</font></th></tr>
+
+<tr><td>Return CourierName: <input type="text" name="returncouriername" style="width:auto; margin-left:16px" required/></td></tr>
+<tr><td>Return TrackNumber: <input type="text" name="returntracknumber" style="width:auto;margin-left:15px" required/></td></tr>
+
+<tr><td><input type="submit" name="submit" value="Submit Return Tracking Details" style="margin-left:43px;margin-top:0px;height:30px;width:178px;background:none repeat scroll 0% 0% rgb(57, 112, 142);color: rgb(255, 255, 255);cursor: pointer;" /></td></tr></table></form>
+</div>
+
+<?php } ?></div></td>
+
+
+<td>
+<div class="formpatch" style="margin-left:-10px;margin-top:0px">
+
+<form id="vendornote-<?php echo $_masterId ?>" method="post" action="<?php echo $this->getUrl('craftsvillacustomer/index/vendornotePost', array('id'=>$_masterId)); ?>" enctype="multipart/form-data" name="vendornote-form-<?php echo $_masterId ?>">
+<table style="margin-top:-22px;margin-left:-7px">
+<th>Send Note To Seller</th>
+
+<tr>
+	<td>
+		<textarea title="Give Vendornote" style="width:250px; height:70px;" class="textarea" name="vendornote" id="vendornote-<?php echo $_masterId; ?>"></textarea>
+	</td>
+</tr>
+
+<tr>
+	<td>
+		<div id="vendornote"><input type="file" name="file" id="file"></div>
+	</td>
+</tr>
+	<br/>
+                        
+<tr><td>
+
+<button class="form-button" type="submit" style="margin-left:16px;margin-top:8px;height:30px;width:144px;background:none repeat scroll 0% 0% #CE3D49;color: rgb(255, 255, 255);cursor: pointer;" id="vendornote-<?php echo $_masterId ?>"><span><?php echo $_hlp->__('Send Note To Seller') ?></span></button>
+<span class="shipment-info-loader" style="display:none" id="feedback-submit-loader-<?php echo $_masterId ?>"><?php echo $_hlp->__('Please wait, submitting...')?></span><br><br><font color="#CE3D49">Note: Please attach only image/jpeg pictures. You can also send <br>request for tracking details, size/color information, customized gift options and thank you note to seller from here.</td></tr>
+</table></form></div>
+
+<!-- -- ----Below Function Added By dileswar on dated 12-10-2013  For action to send email to customer about vendor queries ---------End-->
+
+	</td></tr></table>
+	
+	
+	
+	
+	
+    <?php //if(!$_feedbackFormHideFlag){ ?>
+		            <!--<div class="fright">
+		              <div class="formpatch">
+						<?php //if($_feedbackFlag){ ?>
+							<!--<div class="opacitydiv">
+								<p class="msgshad">You can give feedback after <?php //echo $_daysToFillFeedback; ?> Days...</p>
+				         			<div class="messagediv"></div>
+							</div>-->
+						<?php //} ?>
+		             <!--<div>
+		               <form id="feedback-form-<?php //echo $_masterId ?>" method="post" action="<?php //echo $this->getUrl('feedback/vendor/feedbacksave'); ?>" enctype="multipart/form-data" name="feedback-form-<?php echo $_masterId ?>">
+						<input type="hidden" name="shippment_id" id="shippment<?php //echo $_masterId?>" value="<?php //echo $_masterId; ?>">
+						<input type="hidden" name="vendor_id" id="vendor<?php //echo $_masterId?>" value="<?php //echo $_shipment->getUdropshipVendor(); ?>"/>
+		                 <ul class="form-list">
+						<?php //if(!$FeedbackReceivedFlag){?>
+				              <li>
+				                <label> Have You Recived your order?</label>
+				                <ul class="feedback-headernew">
+				                  <li>
+				                    <input type="radio" value="1" name="received" id="received<?php //echo $_masterId?>">
+								<label for="received<?php //echo $_masterId?>">Yes</label>
+				                  </li>
+				                  <li>
+				                    <input type="radio" value="0" name="received" id="notreceived<?php //echo $_masterId?>">
+								<label for="notreceived<?php //echo $_masterId?>">No</label>
+				                  </li>
+				                </ul>
+				              </li>
+						<?php //}else{ ?>
+							<input type="hidden" name="received" value="1"/>
+						<?php //} if(!$FeedbackPositiveFlag){ ?>
+		                   <li>
+		                     <label>How do you rate this product?</label>
+		                     <ul class="feedback-headernew">
+		                       <li>
+		                         <input type="radio" value="2" id="positive<?php //echo $_masterId?>" name="rating">
+							<label for="positive<?php //echo $_masterId?>">Positive</label>
+		                       </li>
+		                       <li>
+		                         <input type="radio" value="1" id="neutral<?php //echo $_masterId?>" name="rating">
+							<label for="neutral<?php //echo $_masterId?>">Neutral</label>
+		                       </li>
+							<?php //if(!$FeedbackNeutralFlag){ ?>
+				                  <li>
+				                    <input type="radio" value="0" id="negative<?php //echo $_masterId?>" name="rating">
+								<label for="negative<?php //echo $_masterId?>">Negative</label>
+				                  </li>
+							<?php //} ?>
+		                     </ul>
+		                   </li>
+						<?php //}else {?>
+							<input type="hidden" name="rating" value="2"/>
+						<?php //} ?>
+		                   <li>
+		                     <label for="feedback-<?php //echo $_masterId?>">Feedback</label>
+		                     <textarea id="feedback-<?php //echo $_masterId?>" name="feedback"></textarea>
+		                   </li>
+						<li>
+		                     <label for="upload-image">Upload Image</label>
+		                     <input type="file" id="upload-image" name="upload-image-file">
+		                   </li>
+						<?php //if(!$_feedbackFlag){ ?>
+		                   <li>
+		                     <label>&nbsp;</label>
+		                     <button class="form-button" value="submit" type="button" id="submit-<?php //echo $_masterId ?>"><span><?php //echo $_hlp->__('Submit') ?></span></button>
+						<span class="shipment-info-loader" style="display:none" id="submit-loader-<?php //echo $_masterId ?>"><?php //echo $_hlp->__('Please wait, submitting...')?></span>
+		                   </li>
+						<?php //} ?>
+		                 </ul>
+		               </form>
+		             </div>
+		           </div>
+		            </div>
+		         </div>-->
+			<?php //} ?>
+			<div class="clear"></div>
+			<?php //if($Feedback->count()){?>
+					<!--<h4 class="greyheading fleft">Feedback History</h4>
+					<div class="fright">
+						<ul class="feedbackhistory iconmeaning">
+							<li class="positive"><p class="icon fleft"></p><label>Positive</label></li>
+							<li class="neutral"><p class="icon fleft"></p><label>Neutral</label></li>
+							<li class="negative"><p class="icon fleft"></p><label>Negative</label></li>
+						</ul> 
+					</div>
+                         <hr/>
+					<p class="clr"></p>
+
+					<ul class="feedbackhistory">-->
+
+					<?php /*foreach($Feedback as $_feedback){
+						$_feedbackRating = '';
+						$_feedbackImage = '';
+						$_feedbackRating = $_feedback->getRating();
+						$_feedbackImage = $_feedback->getImagePath();*/
+					?>
+						<!--<li class="<?php //if($_feedbackRating == 0) { ?>negative <?php //}elseif($_feedbackRating == 1) {?>neutral <?php //} ?>">
+						<p class="icon fleft"></p>				
+						<div class="fleft commentshere"><p><?php //echo $_feedback->getFeedback()?></p></div>
+						<p class="date fleft"><?php //echo date("d/m/Y h:iA",strtotime($_feedback->getFeedbackAt()));?></p>
+						<p class="fleft pic">
+							<?php 
+								/*if($_feedbackImage){
+									$_feedbackImagePath = "feedback".$_feedbackImage;*/
+							?>
+								<a href="<?php //echo $this->getUrl('feedback/vendor/imageshow/'); ?>id/<?php //echo $_feedback->getFeedbackId(); ?>" target="_blank"><img src="<?php //echo $_helpm->getResizedUrl($_feedbackImagePath,35); ?>" /></a>
+							<?php //} ?>
+						</p>
+						<p class="statusorder fleft"><?php  //if($_feedback->getReceived()!=null){ echo $_feedback->getReceived()==0 ? "Order Not Recevied" : "Order Recevied"; }?></p>
+						<p class="fleft"><?php //if($_feedback->getFeedbackType()){ echo $_feedback->getFeedbackType()==1 ? "By Customer" : "By Vendor"; }?></p>
+						</li>
+					<?php //} ?>
+					
+					</ul>-->
+				<?php //} ?>
+				
+
+	
+	
+				
+				
+

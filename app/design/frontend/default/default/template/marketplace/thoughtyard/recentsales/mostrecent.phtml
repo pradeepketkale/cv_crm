@@ -1,0 +1,170 @@
+<div>
+<?php $_vendor = Mage::helper('umicrosite')->getCurrentVendor();
+//echo $this->getChildHtml('product_list_toolbar');
+        $orders = Mage::getModel('sales/order_shipment')->getCollection()
+                    ->addAttributeToFilter('udropship_status',11)
+                    ->addAttributeToFilter('udropship_vendor', $_vendor->getId());  
+//echo $orders->getSelect()->__toString();
+           $orders->getSelect()
+           ->joinLeft('sales_flat_shipment_item', 'main_table.entity_id = sales_flat_shipment_item.parent_id',array('product_id' => 'product_id'))
+           ->group('product_id')->order('updated_at DESC');
+           
+        //$i=1;
+        /*foreach($orders as $order):
+            $productId= $order['product_id']; 
+            $_products = Mage::getModel('catalog/product')
+                ->getCollection()
+                ->addAttributeToFilter('udropship_vendor', $_vendor->getId())
+                ->addFieldToFilter('entity_id',$productId)
+                ->addAttributeToFilter('visibility',array('2','3','4'))
+                ->addAttributeToFilter('status', 1)
+                ->addAttributeToFilter('type_id','simple')
+                ->load();
+
+            foreach ($_products as $_product):
+                $product=Mage::getModel('catalog/product')->load($_product->getId());
+                $total=$total+1;
+          endforeach;
+       endforeach;  */
+       $_helpm = $this->helper('umicrosite');
+    $url= $_helpm->getVendorUrl($_vendor->getVendorId()); 
+?>
+     <div class="vendorNameHead">
+    <h1 class="headingvendor homeprite">
+            <?php echo $this->htmlEscape(Mage::helper('umicrosite')->getLandingPageTitle($_vendor)) ?>'s
+            Most Recent Sale Products
+    </h1>
+    
+     <?php /*?><div class="social-vendor">
+		<!-- facebook -->
+						<!-- twitter -->
+		<a href="http://twitter.com/">
+			<img src="http://doejofinal.craftsvilla.com/skin/frontend/default/craftsvilla2012/images/dtl_tw.jpg">
+		</a>
+		<!-- mail -->
+		<a href="mailto:kedar@craftsvilla.com">
+			<img src="http://doejofinal.craftsvilla.com/skin/frontend/default/craftsvilla2012/images/dtl_mail.jpg">
+		</a>
+	</div><?php */?>
+    <div class="clear"></div>
+    
+    
+    
+   
+            <p>
+                <?php echo $_vendor->getShopDescription(); ?>
+            </p>
+            
+            
+              </div>
+            
+            
+            <div id="our-products">
+<div class="category-products mostsale">
+
+
+        
+         <div class="topLine"></div>         
+      
+<div class="toolbar">
+  <div class="pager">
+    <div class="amount"><?php echo count($orders->getData()).' Items'; ?> </div>
+    
+    <div class="sort-by"><strong>SORT BY:</strong> 
+      <!--<ul id="sortby">
+				<li><a href="#">MOST RECENT</a></li>
+				<li><a href="#">LOWEST PRICE</a></li> 
+				<li><a href="#">HIGHEST PRICE</a></li>
+			</ul>
+            <label>Sort By</label>-->
+      <ul id="sortby">
+          <li><a href="<?php echo $url.'thoughtyard/recentsales/getmostrecent' ?>">MOST RECENT</a></li>
+          <li> <a href="<?php echo $url.'thoughtyard/recentsales/getmostsold' ?>">MOST SOLD</a></li>
+      </ul>
+      
+   </div>
+   
+     </div>
+</div>
+
+        
+            
+        
+    
+        
+        
+        <div class="clear"></div>
+         
+         <ul class="products-grid first">   
+        
+     
+        <?php
+  //      echo $this->getLayout()->createBlock('catalog/product_list_toolbar')->setCollection($product)->setTemplate('catalog/product/list/toolbar.phtml')->toHtml();
+        
+        foreach($orders->getData() as $k=>$order): 
+            $productId= $order['product_id'];
+            //$_vendor = Mage::helper('umicrosite')->getCurrentVendor();
+
+            $_products = Mage::getModel('catalog/product')
+               ->getCollection()
+                ->addAttributeToFilter('udropship_vendor', $_vendor->getId())
+                ->addFieldToFilter('entity_id',$productId)
+                ->addAttributeToFilter('visibility',array('2','3','4'))
+				->addAttributeToSelect('name')
+                                ->addAttributeToSelect('small_image')
+                //->addAttributeToFilter('status', 1)
+               // ->addAttributeToFilter('type_id','simple')
+                ->load();
+
+            foreach ($_products as $product):
+               /* if ($i % 4 == 0) {
+                        $class = 'class="last"';
+                    } else {
+                        $class = '';
+                    }*/
+                //echo"<pre>";
+            //print_r($product->getData());exit;
+                
+                $imgPath = $this->helper('catalog/image')->init($product, 'small_image')->resize(144, 144);
+                $productUrl = $product->getProductUrl();
+                $prodName=$product->getName();
+                
+                if( strlen($prodName) > 21)
+                        $prodName=substr($prodName, 0 , 21) . '...';
+                else
+                        $prodName= $prodName;
+//       echo $this->getLayout()->createBlock('catalog/product_list_toolbar')->setCollection($product)->setTemplate('marketplace/thoughtyard/recentsales/toolbar.phtml')->toHtml();
+                ?>
+        
+                   <li class="item">
+                    <div class="prCnr">
+                    
+                        <a href="<?php echo $productUrl ?>" class="product-image spriteimg">
+                            <img src="<?php echo $imgPath ?>" width="144" height="144" alt="" border="0" />
+                        </a>
+                       
+                           <p class="shopbrief"><a href="<?php echo $productUrl ?>"><?php echo $prodName; ?></a></p>
+                           <p class="vendorname">by <?php echo $_vendor->getShopName(); ?></span></p>
+                            <div class="products price-box">
+                                            				<span id="product-price-16294" class="regular-price">
+                    <span class="price">sold</span></span></div>
+                       
+                    </div>
+                    </li>
+                <?php
+                /*if ($i % 4 == 0) {
+                    echo '</ul> <ul class="products-grid first">';
+                }
+                /*if ($i % 12 == 0) {
+                    break;
+                }*/
+               // $i++;
+           endforeach;
+       endforeach;
+       //Mage::log($product->getData());
+    ?>
+    
+       </ul>
+        
+    </div>
+</div>

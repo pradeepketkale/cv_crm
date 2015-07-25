@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+    <bulkuploadcsv_adminhtml_bulkuploadcsv_index>
+        <reference name="content">
+            <block type="bulkuploadcsv/adminhtml_bulkuploadcsv" name="bulkuploadcsv" />
+        </reference>
+    </bulkuploadcsv_adminhtml_bulkuploadcsv_index>
+</layout>

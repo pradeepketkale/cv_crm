@@ -1,0 +1,70 @@
+
+
+<div>
+
+
+<table cellspacing="0" cellpadding="0" border="0" width="98%" style="margin-top:10px; margin-bottom:10px; background:#FFF;">
+<tr>
+    <td align="center" valign="top">
+        <!-- [ header starts here] -->
+        <table cellspacing="0" cellpadding="0" border="0" width="800">
+           <tr>
+            <td valign="top" align="center"><a href="{{store url=''}}"><img src="{{skin url='images/logo_email.gif' _area='frontend'}}" alt="Craftsvilla"  style="margin-bottom:10px;" border="0"/></a></td>
+          </tr>
+        </table>
+        <!-- [ middle starts here] -->
+        <table cellspacing="0" cellpadding="0" border="0" width="800">
+         <tr><td><img src="{{skin url='images/top_image.jpg' _area='frontend'}}" alt="" /></td></tr>
+            <tr>
+                <td valign="top" style="font-size:14px; color:#444; padding:0 40px; line-height:18px; line-height:20px;">
+                
+                  
+                                   
+                    <p style="font-size:18px;">Dear <span style="color:#CE3D49;">{{var vendorName}}</span></p>
+
+                
+                    
+                    <p><span style="color: #013B58;font-family: times New Roman;font-size: 18px;">This is a reminder to enter shipping details for your item(s) sold on Craftsvilla. Below are details of item(s) for which you need to provide shipping details. Please let us know expected shipping date of this shipment by clicking the button below. Once you click the date below, we will communicate the expected delivery date to the customer.</p>
+                    
+                    <p>I confirm that I will ship this shipment on following date:</p>
+                   <p>{{var chkbox}} </p>
+                   <p>&nbsp;</p>
+                  <div class="table-border table-bordersmall widtheight">
+	
+   <table cellspacing="0" cellpadding="0" border="0" style="border: 1px solid #DDDDDD;
+    border-collapse: separate;
+    border-spacing: 1px;
+    font-family: Arial,Helvetica,sans-serif;
+    font-size: 11px;
+    text-align: left; margin-bottom:20px; color:#000;">
+			<tr> 
+       			<th align="left" style="background: none repeat scroll 0 0 #F2E7E1;color: #000;font-weight: bold;">Shipment ID</th>
+				<th align="left" style="background: none repeat scroll 0 0 #F2E7E1;color: #000;font-weight: bold;">Item Title</th>
+ 				<th align="left" style="background: none repeat scroll 0 0 #F2E7E1;color: #000;font-weight: bold;width:190px;">Days Delayed</th>
+				<th align="left" style="background: none repeat scroll 0 0 #F2E7E1;color: #000;font-weight: bold;width:154px;">Buyer Name</th>	
+			</tr>
+			{{var vendorItemHTML}}
+
+
+   </table>
+   
+	 <p>Please note that if details are not provided within specified timeline, amount will be refunded to the buyer.</p>
+
+	 <p>If you need any help on how to enter shipping details for your sold items, please see <a href="http://www.youtube.com/watch?v=6U660bv3ACg"> this video</a>. For further help, please contact Craftsvilla <a href="mailto:places@craftsvilla.com">Seller Support</a>.</p> 
+	
+	<p>
+	Thank You<br/>
+Craftsvilla Team
+	</p>
+
+
+</div>
+<p align="right" style="clear:both;"><img border="0" style="margin-bottom:10px;" alt="" src="{{skin url='images/smalllogo.jpg' _area='frontend'}}"></p>
+
+               </td>
+           </tr>
+       </table>
+   </td>
+</tr>
+</table>
+</div>

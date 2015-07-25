@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns:typens="urn:{{var wsdl.name}}" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+    xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns="http://schemas.xmlsoap.org/wsdl/"
+    name="{{var wsdl.name}}" targetNamespace="urn:{{var wsdl.name}}">
+<types>
+        <schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="urn:Magento">
+            <import namespace="http://schemas.xmlsoap.org/soap/encoding/" schemaLocation="http://schemas.xmlsoap.org/soap/encoding/" />
+            <complexType name="bundleproductBundleproductCreateOptionsEntity">
+                <all>
+					<element name="bundle_options" type="typens:ArrayOfString" />
+                </all>
+            </complexType>
+			<complexType name="bundleproductBundleproductCreateSelectionsEntity">
+                <all>
+					<element name="bundle_selections" type="typens:ArrayOfString" />
+                </all>
+            </complexType>
+			 <complexType name="ArrayOfBundleProductData">
+                <complexContent>
+                    <restriction base="soapenc:Array">
+                        <attribute ref="soapenc:arrayType" wsdl:arrayType="typens:bundleproductBundleproductListEntity[]" />
+                    </restriction>
+                </complexContent>
+            </complexType>
+			<complexType name="bundleproductBundleproductListEntity">
+                <all>
+					<element name="sku_type" type="xsd:string" minOccurs="0"/>
+					<element name="weight_type" type="xsd:string" minOccurs="0"/>
+					<element name="price_type" type="xsd:string" minOccurs="0"/>
+					<element name="price_view" type="xsd:string" minOccurs="0"/>
+					<element name="shipment_type" type="xsd:string" minOccurs="0"/>
+					<element name="bundle_option" type="typens:ArrayOfBundleOptions" minOccurs="0"/>
+                </all>
+            </complexType>
+			 <complexType name="ArrayOfBundleOptions">
+                <complexContent>
+                    <restriction base="soapenc:Array">
+                        <attribute ref="soapenc:arrayType" wsdl:arrayType="typens:bundleproductBundleproductOptionEntity[]" />
+                    </restriction>
+                </complexContent>
+            </complexType>
+			<complexType name="bundleproductBundleproductOptionEntity">
+                <all>
+					<element name="option_id" type="xsd:string" minOccurs="0"/>
+					<element name="required" type="xsd:string" minOccurs="0"/>
+					<element name="position" type="xsd:string" minOccurs="0"/>
+					<element name="default_title" type="xsd:string" minOccurs="0"/>
+					<element name="bundle_option_selection" type="typens:ArrayOfBundleOptionSelections" minOccurs="0"/>
+                </all>
+            </complexType>
+			 <complexType name="ArrayOfBundleOptionSelections">
+                <complexContent>
+                    <restriction base="soapenc:Array">
+                        <attribute ref="soapenc:arrayType" wsdl:arrayType="typens:bundleproductBundleproductSelectionsEntity[]" />
+                    </restriction>
+                </complexContent>
+            </complexType>
+			<complexType name="bundleproductBundleproductSelectionsEntity">
+                <all>
+					<element name="entity_id" type="xsd:string" minOccurs="0"/>
+					<element name="sku" type="xsd:string" minOccurs="0"/>
+					<element name="attribute_set" type="xsd:string" minOccurs="0"/>
+					<element name="type_id" type="xsd:string" minOccurs="0"/>
+					<element name="selection_can_change_qty" type="xsd:string" minOccurs="0"/>
+					<element name="is_default" type="xsd:string" minOccurs="0"/>
+					<element name="selection_price_type" type="xsd:string" minOccurs="0"/>
+					<element name="selection_qty" type="xsd:string" minOccurs="0"/>
+					<element name="selection_price_value" type="xsd:string" minOccurs="0"/>
+                </all>
+            </complexType>
+        </schema>
+    </types>
+	<message name="bundleproductBundleproductCreateRequest">
+        <part name="sessionId" type="xsd:string" />
+		<part name="bundle_productId" type="xsd:string" />
+        <part name="bundleProductOptions" type="typens:bundleproductBundleproductCreateOptionsEntity" />
+		 <part name="bundleProductSelections" type="typens:bundleproductBundleproductCreateSelectionsEntity" />
+    </message>
+    <message name="bundleproductBundleproductCreateResponse">
+        <part name="configuarbleProductId" type="xsd:string" />
+    </message>
+	<message name="bundleproductBundleproductListRequest">
+        <part name="sessionId" type="xsd:string" />
+		<part name="configuarble_productId" type="xsd:string" />
+    </message>
+	<message name="bundleproductBundleproductListResponse">
+        <part name="bundleProductData" type="typens:ArrayOfBundleProductData" />
+    </message>
+    <portType name="{{var wsdl.handler}}PortType">
+        <operation name="bundleproductBundleproductCreate">
+            <documentation>Create Bundle Product</documentation>
+            <input message="typens:bundleproductBundleproductCreateRequest" />
+            <output message="typens:bundleproductBundleproductCreateResponse"/>
+        </operation>
+		 <operation name="bundleproductBundleproductList">
+            <documentation>Retrieve Bundle Product Options and Selections</documentation>
+            <input message="typens:bundleproductBundleproductListRequest" />
+            <output message="typens:bundleproductBundleproductListResponse"/>
+        </operation>
+    </portType>
+    <binding name="{{var wsdl.handler}}Binding" type="typens:{{var wsdl.handler}}PortType">
+        <soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http" />
+        <operation name="bundleproductBundleproductCreate">
+            <soap:operation soapAction="urn:{{var wsdl.handler}}Action" />
+            <input>
+                <soap:body namespace="urn:{{var wsdl.name}}" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+            </input>
+            <output>
+                <soap:body namespace="urn:{{var wsdl.name}}" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+            </output>
+        </operation>
+		 <operation name="bundleproductBundleproductList">
+            <soap:operation soapAction="urn:{{var wsdl.handler}}Action" />
+            <input>
+                <soap:body namespace="urn:{{var wsdl.name}}" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+            </input>
+            <output>
+                <soap:body namespace="urn:{{var wsdl.name}}" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+            </output>
+        </operation>
+    </binding>
+    <service name="{{var wsdl.name}}Service">
+        <port name="{{var wsdl.handler}}Port" binding="typens:{{var wsdl.handler}}Binding">
+            <soap:address location="{{var wsdl.url}}" />
+        </port>
+    </service>
+</definitions>

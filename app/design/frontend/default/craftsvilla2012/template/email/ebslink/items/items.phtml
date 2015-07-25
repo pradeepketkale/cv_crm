@@ -1,0 +1,121 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2010 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<?php 
+	//$_shipment = $this->getShipment(); 
+	$_order    = Mage::getModel('ebslink/ebslink')->getCollection();
+	
+	/*Start...
+	*Commented by Suresh on 05-05-2012
+	*To remove COD and Shipping Charges
+	*/
+	
+	//Added By Amit Pitre to show Shipping Charges And COD Fee.
+	/*$_shippmentCODFee = '';
+	$_shippmentCharge = '';
+	$_shippmentCharge = $_shipment->getShippingAmount();
+	$shippmentCollection = Mage::getModel('sales/order_shipment')->getCollection()
+									->addAttributeToFilter('increment_id', $_shipment->getIncrementId());
+	$_shippmentData = $shippmentCollection->getData();
+	if($_order->getPayment()->getMethod() == 'cashondelivery'){
+		$_shippmentCODFee = $_shippmentData[0]['cod_fee'];
+	}*/
+	//////
+	
+	/*End...
+	*Commented by Suresh on 05-05-2012
+	*To remove COD and Shipping Charges
+	*/
+?>
+<?php if ($_order): ?>
+<table cellspacing="0" cellpadding="0" border="0" width="722" style="border:1px solid #EAEAEA; margin-top:20px">
+    <thead>
+        <tr>
+			<th align="left" bgcolor="#EAEAEA" style="font-size:13px; padding:3px 9px"><?php echo $this->__('Image') ?></th>
+            <th align="left" bgcolor="#EAEAEA" style="font-size:13px; padding:3px 9px"><?php echo $this->__('Item') ?></th>
+            <th align="left" bgcolor="#EAEAEA" style="font-size:13px; padding:3px 9px"><?php echo $this->__('Sku') ?></th>
+            <th align="center" bgcolor="#EAEAEA" style="font-size:13px; padding:3px 9px"><?php echo $this->__('Qty') ?></th>
+			<th align="center" bgcolor="#EAEAEA" style="font-size:13px; padding:3px 9px"><?php echo $this->__('Unit Price') ?></th>
+			<th align="center" bgcolor="#EAEAEA" style="font-size:13px; padding:3px 9px"><?php echo $this->__('Prices') ?></th>
+        </tr>
+    </thead>
+	<?php $totalPrice = 0;?>
+    <?php $i=0; foreach ($_order->getAllItems() as $_item): ?>
+    <?php if($_item->getOrderItem()->getParentItem()) continue; else $i++; ?>
+	<?php 
+        $qty = $_item->getQty()*1;
+		$price = $_item->getPriceInclTax()*($qty);
+        $totalPrice += $price;
+	?>
+    <tbody<?php echo $i%2 ? ' bgcolor="#F6F6F6"' : '' ?>>
+        <?php echo $this->getItemHtml($_item) ?>
+    </tbody>
+    <?php endforeach; ?>
+	<?php if($totalPrice > 0): ?>
+		<tr>
+			<th align="right" bgcolor="#EAEAEA" style="font-size:13px; padding:3px 9px" colspan="5">Sub Total:</th>
+			<th align="center" bgcolor="#EAEAEA" style="font-size:13px; padding:3px 9px"><?php echo $_order->formatPriceTxt($totalPrice); ?></th>
+        </tr>
+	<?php endif; ?>
+	<?php
+		/*Start...
+		*Commented by Suresh on 05-05-2012
+		*To remove COD and Shipping Charges
+		*/
+		//Added By Amit Pitre to show Shipping Charges And COD Fee.
+		/*if($_shippmentCharge != ''){
+		?>
+			<tr>
+				<th align="right" bgcolor="#EAEAEA" style="font-size:13px; padding:3px 9px" colspan="5">Shipping Charges:</th>
+				<th align="center" bgcolor="#EAEAEA" style="font-size:13px; padding:3px 9px"><?php echo $_order->formatPriceTxt($_shippmentCharge); ?></th>
+		    </tr>
+		<?php
+		}
+	?>
+	
+	<?php
+		if($_shippmentCODFee != ''){
+		?>
+			<tr>
+				<th align="right" bgcolor="#EAEAEA" style="font-size:13px; padding:3px 9px" colspan="5">COD Fee:</th>
+				<th align="center" bgcolor="#EAEAEA" style="font-size:13px; padding:3px 9px"><?php echo $_order->formatPriceTxt($_shippmentCODFee); ?></th>
+		    </tr>
+		<?php
+		}*/
+		
+		/*End...
+		*Commented by Suresh on 05-05-2012
+		*To remove COD and Shipping Charges
+		*/
+	?>
+	<?php if($totalPrice > 0): ?>
+		<tr>
+			<th align="right" bgcolor="#EAEAEA" style="font-size:13px; padding:3px 9px" colspan="5">Grand Total:</th>
+			<th align="center" bgcolor="#EAEAEA" style="font-size:13px; padding:3px 9px"><?php echo $_order->formatPriceTxt($totalPrice+$_shippmentCharge+$_shippmentCODFee); ?></th>
+        </tr>
+	<?php endif; ?>
+</table>
+<?php endif; ?>

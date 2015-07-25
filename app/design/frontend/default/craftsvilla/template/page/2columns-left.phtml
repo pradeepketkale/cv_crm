@@ -1,0 +1,109 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $this->getLang() ?>" lang="<?php echo $this->getLang() ?>" xmlns:og="http://ogp.me/ns#" xmlns:fb="http://www.facebook.com/2008/fbml">
+    <head>
+
+   <?php echo $this->getChildHtml('head') ?>
+
+   <?php if($_SERVER['SERVER_ADDR'] == "10.134.214.27" || $_SERVER['SERVER_ADDR'] == "10.134.226.28") {?>
+        <script type="text/javascript">var _sf_startpt=(new Date()).getTime()</script>
+        <script type="text/javascript">
+            
+                var _kmq = _kmq || [];
+                function _kms(u){
+                    setTimeout(function(){
+                        var s = document.createElement('script'); var f = document.getElementsByTagName('script')[0]; s.type = 'text/javascript'; s.async = true;
+                        s.src = u; f.parentNode.insertBefore(s, f);
+                    }, 1);
+                }
+                _kms('//i.kissmetrics.com/i.js');_kms('//doug1izaerwt3.cloudfront.net/319a0179551de1a2e35f62f9f246b81c015f96ea.1.js');
+           
+        </script>
+        <?php
+        Mage::getSingleton('customer/session')->setBeforeAuthUrl($this->getRequest()->getRequestUri());  //save requested URL for later redirection
+        if (Mage::getSingleton('customer/session')->isLoggedIn()) {
+            $email_unique1 = Mage::getSingleton('customer/session')->getCustomer()->getEmail();
+            ?>
+            <script type="text/javascript">
+                  
+                    var _kmq = _kmq || []; 
+                    function _kms(u)
+                    { 
+                        setTimeout (function(){ var s = document.createElement('script'); 
+                            var f = document.getElementsByTagName('script')[0]; 
+                            s.type = 'text/javascript'; 
+                            s.async = true; 
+                            s.src = u; f.parentNode.insertBefore(s, f); }, 1); } _kms
+                    ('//i.kissmetrics.com/i.js');_kms
+                    ('//doug1izaerwt3.cloudfront.net/319a0179551de1a2e35f62f9f246b81c015f96ea.1.js'); 
+                    _kmq.push(['identify', '<?php echo $email_unique1; ?>']);
+              
+            </script>
+            <?php
+        }
+    	}
+        ?>
+        
+    </head>
+    <body<?php echo $this->getBodyClass() ? ' class="' . $this->getBodyClass() . '"' : '' ?>>
+        <?php echo $this->getChildHtml('ie') ?>
+        <?php echo $this->getChildHtml('after_body_start') ?>
+        <div class="algnCntr wrapper">
+            <?php echo $this->getChildHtml('global_notices') ?>
+            <div class="page">
+                <?php echo $this->getChildHtml('header') ?>
+                <div class="main-container">
+                    <div class="main">
+                        <div class="col-main">
+                            <div class="bdyShadow2">
+                                <div class="bodyWpr">
+                                    <div class="innerTwo">
+                                        <?php echo $this->getChildHtml('breadcrumbs') ?>
+                                        <?php //echo $this->getChildHtml('global_messages')  ?>
+                                        <div class="clmnRht"><?php echo $this->getChildHtml('content') ?></div>
+                                        <div class="col-left sidebar"><?php echo $this->getChildHtml('left') ?></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <?php echo $this->getChildHtml('footer') ?>
+            <?php echo $this->getChildHtml('before_body_end') ?>
+        </div>
+        <?php echo $this->getAbsoluteFooter(); ?>
+        <?php if($_SERVER['SERVER_ADDR'] == "10.134.214.27"){?>
+        	<!-- script for visit tag of craftsvilla -->
+        	<script type="text/javascript">
+		        function _mt_ready(){
+		        	if (typeof(MyThings) != "undefined") {
+		        		MyThings.Track({
+		        			EventType: MyThings.Event.Visit,
+		        			Action: "300"
+		        		});
+		        	}
+		        }
+		        var mtHost = (("https:" == document.location.protocol) ? "https" : "http") + "://rainbow-in.mythings.com";
+		        var mtAdvertiserToken = "1714-100-in";
+		        document.write(unescape("%3Cscript src='" + mtHost + "/c.aspx?atok="+mtAdvertiserToken+"' type='text/javascript'%3E%3C/script%3E"));
+	        </script>
+		<!--chart beat -->
+
+<script type="text/javascript">
+    var _sf_async_config={uid:27315,domain:"craftsvilla.com"};
+        function loadChartbeat() {
+            window._sf_endpt=(new Date()).getTime();
+            var e = document.createElement('script');
+            e.setAttribute('language', 'javascript');
+            e.setAttribute('type', 'text/javascript');
+            e.setAttribute('src',
+            (("https:" == document.location.protocol) ? "https://a248.e.akamai.net/chartbeat.download.akamai.com/102508/" : "http://static.chartbeat.com/") + "js/chartbeat.js");
+            document.body.appendChild(e);
+    }
+var oldonload = window.onload;
+window.onload = (typeof window.onload != 'function') ? loadChartbeat : function() { oldonload(); loadChartbeat(); };
+</script>
+<?php }?>
+<!-- end chart beat -->
+    </body>
+</html>

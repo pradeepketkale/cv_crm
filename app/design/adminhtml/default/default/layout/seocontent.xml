@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+    <seocontent_adminhtml_seocontent_index>
+        <reference name="content">
+            <block type="seocontent/adminhtml_seocontent" name="seocontent" />
+        </reference>
+    </seocontent_adminhtml_seocontent_index>
+</layout>

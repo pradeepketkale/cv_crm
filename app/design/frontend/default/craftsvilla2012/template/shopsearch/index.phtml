@@ -1,0 +1,92 @@
+<div class="category-products">
+<div id="fancybox-overlay" class="loadercss"><img src="<?php echo $this->getSkinUrl('images/ajax-loader.gif')?>" alt="loader" border="0" class="imgload" /></div>
+  <div class="topLine"></div>
+  <input type="hidden" name="search_val" id="search_val" value="<?php echo $_GET['q'];?>" />
+  <input type="hidden" name="page" id="page" value="0" />
+  <input type="hidden" name="sort_field" id="sort_field" value="" />
+  <input type="hidden" name="sort_by" id="sort_by" value="" />
+  <div class="toolbar">
+    <div class="pager">
+      <!-- <div class="amount"> Items <span>1</span> to <span>20</span> of <span>287</span> total </div> -->
+      <div class="amount" id="tot_item_div"></div>
+      <div class="pages" id="pagination_div">
+        <!-- <ol>
+          <li> <a title="Previous" href="#" class="previous i-previous"> <img width="27" height="27" border="0" align="Previous" title="Previous" src="http://www.craftsvilla.com/skin/frontend/default/craftsvilla2012/img/icon/pagination_left.png"> </a> </li>
+          <li class="current">1</li>
+          <li><a href="#">2</a></li>
+          <li><a href="#">3</a></li>
+          <li><a href="#">4</a></li>
+          <li><a href="#">5</a></li>
+          <li><a href="#" title="" class="next_jump">...</a></li>
+          <li><a href="#" class="last">15</a></li>
+          <li> <a title="Next" href="#" class="next i-next"> <img width="27" height="27" border="0" align="Next" title="Next" src="http://www.craftsvilla.com/skin/frontend/default/craftsvilla2012/img/icon/pagination_right.png"> </a> </li>
+        </ol> -->
+      </div>
+      <div class="sort-by"> <strong>SORT BY:</strong>
+        <ul id="sortby">
+          <!-- <li value=""><a href="">Newest</a> </li> -->
+          <li><a href="javascript:get_search_values(document.getElementById('search_val').value, '0', 'items_count', 'desc', '<?php echo $this->getSkinUrl(); ?>', '');">Items</a> </li>
+          <li><a href="javascript:get_search_values(document.getElementById('search_val').value, '0', 'name', 'desc', '<?php echo $this->getSkinUrl(); ?>', '')">Name</a> </li>
+          <!-- <li value=""><a href="">Price</a> </li> -->
+        </ul>
+        <a id="asc_desc_id" title="Set Ascending Direction" href="javascript:get_search_values(document.getElementById('search_val').value, '0', document.getElementById('sort_field').value, document.getElementById('sort_by').value, '<?php echo $this->getSkinUrl(); ?>', 'change');" class="sort-direction"><img class="v-middle" alt="Set Ascending Direction" src="http://www.craftsvilla.com/skin/frontend/default/craftsvilla2012/images/i_desc_arrow.gif"></a> </div>
+    </div>
+  </div>
+  <div id="shop-search"></div>
+  <!-- <div id="shop-search">
+    <div class="shop">
+      <div class="shop-info v2">
+        <div class="shop-details"> <span class="shopname wrap "> <a href="#"> organicquiltcompan... </a> </span> </div>
+        <div class="shop-owner">
+          <div class="avatar trigger-action-toolbox"> <a data-uid="5377363" href="#"> <img width="75" height="75" alt="Becky and Lisa" class="grey_border" src="<?php echo $this->getSkinUrl('images/spowner.jpg')?>"> </a> </div>
+          <div class="real-name"> <a href="#">Becky and Lisa</a> <span class="shop-owner-heading">Shop Owner</span> </div>
+        </div>
+      </div>
+      <div class="shop-listings">
+        <div class="item"> <a href="#"> <img width="75" height="75" alt="" src="<?php echo $this->getSkinUrl('images/sp01.jpg')?>"></a> </div>
+        <div class="item"> <a href="#"> <img width="75" height="75" alt="" src="<?php echo $this->getSkinUrl('images/sp01.jpg')?>"></a> </div>
+        <div class="item"> <a href="#"> <img width="75" height="75" alt="" src="<?php echo $this->getSkinUrl('images/sp01.jpg')?>"></a> </div>
+        <div class="item"> <a href="#"> <img width="75" height="75" alt="" src="<?php echo $this->getSkinUrl('images/sp01.jpg')?>"></a> </div>
+        <div class="clear"></div>
+      </div>
+      <div class="shop-count square-count"><a href="#"> <span class="count-number">189</span> items </a> </div>
+      <div class="clear"></div>
+    </div>
+    <div class="shop">
+      <div class="shop-info v2">
+        <div class="shop-details"> <span class="shopname wrap "> <a href="#"> organicquiltcompan... </a> </span> </div>
+        <div class="shop-owner">
+          <div class="avatar trigger-action-toolbox"> <a data-uid="5377363" href="#"> <img width="75" height="75" alt="Becky and Lisa" class="grey_border" src="<?php echo $this->getSkinUrl('images/spowner.jpg')?>"> </a> </div>
+          <div class="real-name"> <a href="#">Becky and Lisa</a> <span class="shop-owner-heading">Shop Owner</span> </div>
+        </div>
+      </div>
+      <div class="shop-listings">
+        <div class="item"> <a href="#"> <img width="75" height="75" alt="" src="<?php echo $this->getSkinUrl('images/sp01.jpg')?>"></a> </div>
+        <div class="item"> <a href="#"> <img width="75" height="75" alt="" src="<?php echo $this->getSkinUrl('images/sp01.jpg')?>"></a> </div>
+        <div class="item"> <a href="#"> <img width="75" height="75" alt="" src="<?php echo $this->getSkinUrl('images/sp01.jpg')?>"></a> </div>
+        <div class="item"> <a href="#"> <img width="75" height="75" alt="" src="<?php echo $this->getSkinUrl('images/sp01.jpg')?>"></a> </div>
+        <div class="clear"></div>
+      </div>
+      <div class="shop-count square-count"><a href="#"> <span class="count-number">189</span> items </a> </div>
+      <div class="clear"></div>
+    </div>
+    <div class="shop">
+      <div class="shop-info v2">
+        <div class="shop-details"> <span class="shopname wrap "> <a href="#"> organicquiltcompan... </a> </span> </div>
+        <div class="shop-owner">
+          <div class="avatar trigger-action-toolbox"> <a data-uid="5377363" href="#"> <img width="75" height="75" alt="Becky and Lisa" class="grey_border" src="<?php echo $this->getSkinUrl('images/spowner.jpg')?>"> </a> </div>
+          <div class="real-name"> <a href="#">Becky and Lisa</a> <span class="shop-owner-heading">Shop Owner</span> </div>
+        </div>
+      </div>
+      <div class="shop-listings">
+        <div class="item"> <a href="#"> <img width="75" height="75" alt="" src="<?php echo $this->getSkinUrl('images/sp01.jpg')?>"></a> </div>
+        <div class="item"> <a href="#"> <img width="75" height="75" alt="" src="<?php echo $this->getSkinUrl('images/sp01.jpg')?>"></a> </div>
+        <div class="item"> <a href="#"> <img width="75" height="75" alt="" src="<?php echo $this->getSkinUrl('images/sp01.jpg')?>"></a> </div>
+        <div class="item"> <a href="#"> <img width="75" height="75" alt="" src="<?php echo $this->getSkinUrl('images/sp01.jpg')?>"></a> </div>
+        <div class="clear"></div>
+      </div>
+      <div class="shop-count square-count"><a href="#"> <span class="count-number">189</span> items </a> </div>
+      <div class="clear"></div>
+    </div>
+  </div> -->
+</div>

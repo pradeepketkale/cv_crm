@@ -1,0 +1,36 @@
+<?php 
+if(Mage::getSingleton('customer/session')->isLoggedIn()):
+//$customer=Mage::getSingleton('customer/session')->getCustomer();
+$customerId=Mage::helper('customer')->getCustomer()->getId();
+
+$emailCommunications=Mage::getModel('craftsvillacustomer/emailcommunication')->getCollection()
+                    ->addFieldToFilter('customer_id',$customerId)->setOrder('created_at','DESC');
+
+$emailCommunications->addExpressionFieldToSelect('msg_count', 'COUNT({{message_id}})', 'message_id');
+$emailCommunications->getSelect()->group('message_id');
+//echo $emailCommunications->getSelect()->__toString();
+?>
+<table class="convos-threads">
+  <?php foreach($emailCommunications as $emailCommunication):?>
+  <?php $_vendor=$this->helper('udropship')->getVendor($emailCommunication->getVendorId());
+        $_helpm = $this->helper('umicrosite');
+        $url = $_helpm->getVendorUrl($emailCommunication->getVendorId());
+        $vendorLogo = $_vendor->getShopLogo()!='' ? $_vendor->getShopLogo() : 'vendor/noimage/noimage.jpg';
+        $readUrl = Mage::getBaseUrl().'craftsvillacustomer/index/customerinboxread/msgid/'.$emailCommunication->getMessageId().'/sub/'.preg_replace('/[^A-Za-z0-9\-]/', '', $emailCommunication->getSubject()).'/custid/'.$emailCommunication->getCustomerId().'/vendid/'.$emailCommunication->getVendorId();
+  ?>
+  <tr class="convo-read">
+    <td class="select" width="40"><input type="checkbox" class="checkbox" name="selectcon"></td>
+    <td class="avatar" width="40"><div class="trigger-action-toolbox"><a href="<?php echo $url; ?>"><img src="<?php echo $_helpm->getResizedUrl($vendorLogo,32); ?>" class="img-avatar"></a></div></td>
+    <td class="person" width="140"><a href="<?php echo $url; ?>"><?php echo $_vendor->getVendorName();?></a><span><a href="<?php echo $url; ?>" class="shopname shopname-quiet"><span></span><?php echo $_vendor->getShopName();?></a></span></td>
+    <td class="summary">
+        <span class="convo-title"><span><a href="<?php echo $readUrl ;?>"><?php echo $emailCommunication->getSubject(); ?></a></span></span><span class="convo-excerpt"><span><a href="<?php echo $readUrl; ?>"><?php echo $emailCommunication->getContent();?></a></span></span>
+    </td><?php //javascript:void(0)" onclick="msgid('<?php echo $emailCommunication->getMessageId(); ')?>
+    <td class="count"><span class="convo-count"><?php echo $emailCommunication->getMsgCount(); ?></span></td>
+    <td class="timestamp" width="140"><span class="time-val"><?php echo date('M d,Y',strtotime($emailCommunication->getCreatedAt())); ?></span> <span class="replied-icon"></span></td>
+  </tr>
+<?php endforeach; ?>  
+</table>
+<?php else:
+    echo Mage::app()->getFrontController()->getResponse()->setRedirect(Mage::getUrl('customer/account'));
+endif;
+?>

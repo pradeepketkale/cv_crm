@@ -1,0 +1,61 @@
+<?php
+$visibility = array(
+Mage_Catalog_Model_Product_Visibility::VISIBILITY_BOTH,
+Mage_Catalog_Model_Product_Visibility::VISIBILITY_IN_CATALOG
+);
+
+$_productCollection = Mage::getResourceModel('reports/product_collection')
+->addAttributeToSelect('*')
+->addOrderedQty()
+->addAttributeToFilter('visibility', $visibility)
+->addAttributeToFilter('udropship_vendor', 2)
+->setOrder('created_at', 'desc');
+?>
+
+<?php foreach($_productCollection as $product): ?>
+
+<?php
+$categories = null;
+foreach (explode(",", $product->category_ids) as $catId){
+$totalPerPage=10;
+//Mage_Catalog_Model_Category
+$cat = Mage::getModel('catalog/category')
+->setStoreId(Mage::app()->getStore()->getId())
+->load($catId);
+$catName = $cat->getName();
+
+$catLink = $cat->getUrlPath();
+$categories .= '<a href="'.$catLink.'" title="'.$catName.'">'.$catName.'</a>&nbsp;&nbsp;';
+}
+
+?>
+
+<?php if($counter <= $totalPerPage): ?>
+
+<?php $productUrl =  $product->getProductUrl() ?>
+<div class="best-sellh">
+<div class="wraptocenter">
+<a href="<?php echo $productUrl ?>" title="View <?php echo $product->name ?>">
+<img src="<?php echo $this->helper('catalog/image')->init($product, 'image')->resize(120); ?>" alt="Product image"  class="shadow" rel="black" />
+<!--        <img src="images/prodimg01.jpg" alt="chrysler-building" height="150" width="100" class="shadow" rel="black"/>-->
+</a>
+</div>
+
+<div class="img_txt" >
+<span class="yellow-bg-text"><?php echo $product->name ?></span> <?=$catName?><br />
+<p class="price_txt">starts from <span class="price_hd"><?php echo Mage::helper('core')->currency($product->price) ?> </span> </p>
+</div>
+
+<br class="spacer" /></div>
+<h4><?php echo $product->name ?></h4>
+</a>
+<small><?php echo $this->__('Total sold quantities') ?>: <?php echo (int)$product->ordered_qty ?></small><br />
+
+<a href="<?php echo $productUrl ?>" title="View <?php echo $product->name ?>">
+<img src="<?php echo $this->helper('catalog/image')->init($product, 'image')->resize(120); ?>" alt="Product image"  />
+</a> <br />
+<?php echo $this->__('Categories: ') ?><?php echo $categories ?>
+<p><?php echo $product->short_description ?></p>
+<?php endif; $counter++; ?>
+<?php endforeach; ?>
+

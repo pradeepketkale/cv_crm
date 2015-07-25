@@ -1,0 +1,56 @@
+<?xml version="1.0"?> 
+<config>
+  <modules>
+      <Craftsvilla_PostalCode> 
+          <version>0.1.0</version>
+          <depends>
+              <!-- no dependencies --> 
+          </depends>
+      </Craftsvilla_PostalCode> 
+  </modules>
+  <global> 
+    <models>
+        <postalcode>
+            <class>Craftsvilla_PostalCode_Model</class>
+            <resourceModel>postalcode_mysql4</resourceModel>
+        </postalcode>
+        <postalcode_mysql4>
+            <class>Craftsvilla_PostalCode_Model_Mysql4</class>
+            <entities>
+                <postalcode>
+                    <table>checkout_pobox</table>
+                </postalcode>
+            </entities>
+        </postalcode_mysql4>
+    </models>
+    <resources>
+        <postalcode_write>
+            <connection> 
+                <use>core_write</use>
+            </connection>
+        </postalcode_write> 
+        <postalcode_read>
+            <connection>
+                <use>core_read</use> 
+            </connection>
+        </postalcode_read>
+    </resources>
+    <helpers>
+        <postalcode>
+          <class>Craftsvilla_PostalCode_Helper</class>
+        </postalcode>
+    </helpers>
+  </global>
+   
+  <frontend>
+  	<routers>
+    	<PostalCode>
+        	<use>standard</use>
+            <args>
+               	<module>Craftsvilla_PostalCode</module>
+                <frontName>postalcode</frontName>
+            </args>
+        </PostalCode>
+    </routers>
+  </frontend>
+</config>

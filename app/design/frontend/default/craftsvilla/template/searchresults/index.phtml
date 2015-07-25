@@ -1,0 +1,234 @@
+<!--Accordian Scripts-->
+
+<script type="text/javascript"  src="<?php echo $this->getSkinUrl('js/ddaccordion.js')?>">
+
+/***********************************************
+* Accordion Content script- (c) Dynamic Drive DHTML code library (www.dynamicdrive.com)
+* Visit http://www.dynamicDrive.com for hundreds of DHTML scripts
+* This notice must stay intact for legal use
+***********************************************/
+</script>
+<script type="text/javascript">
+    ddaccordion.init({
+	headerclass: "submenuheader", //Shared CSS class name of headers group
+	contentclass: "submenu", //Shared CSS class name of contents group
+	revealtype: "click", //Reveal content when user clicks or onmouseover the header? Valid value: "click", "clickgo", or "mouseover"
+    ouseoverdelay: 900, //if revealtype="mouseover", set delay in milliseconds before header expands onMouseover
+	collapseprev: true, //Collapse previous content (so only one open at any time)? true/false 
+	defaultexpanded: false, //index of content(s) open by default [index1, index2, etc] [] denotes no content
+	onemustopen: false, //Specify whether at least one header should be open always (so never all headers closed)
+	animatedefault: false, //Should contents open by default be animated into view?
+	persiststate: true, //persist state of opened contents within browser session?
+	toggleclass: ["", "menuitem2"], //Two CSS classes to be applied to the header when it's collapsed and expanded, respectively ["class1", "class2"]
+//comment by kpl need arrow remove this comment	togglehtml: ["suffix", "<img src='images/plus.gif' class='statusicon' />", "<img src='images/minus.gif' class='statusicon' />"], //Additional HTML added to the header when it's collapsed and expanded, respectively  ["position", "html1", "html2"] (see docs)
+	animatespeed: "fast", //speed of animation: integer in milliseconds (ie: 200), or keywords "fast", "normal", or "slow"
+	oninit:function(headers, expandedindices){ //custom code to run when headers have initalized
+		//do nothing
+	},
+	onopenclose:function(header, index, state, isuseractivated){ //custom code to run whenever a header is opened or closed
+		//do nothing
+	}
+	})
+</script><!--Accordian Scripts end-->
+
+
+<style type="text/css">
+
+ .mainBrd .breadcrumbs{ top:-20px;}
+ .pager .pages{ position:relative; left:auto;}
+
+</style>
+
+
+
+	<div class="clmnRht">
+		<div class="pageTitle" id="search_title_div"></div>
+		<div class="category-products">
+        <!-- AddThis Button BEGIN -->
+<div class="addthis_toolbox addthis_default_style floatr" style="left:262px;padding-bottom: 15px;position: absolute;top:0px; *top:3px; top /*\**/: 0px\9">
+ <a class="addthis_button_facebook_like" fb:like:layout="button_count"></a>
+ <a class="addthis_button_tweet"></a>
+ <a class="addthis_button_google_plusone" g:plusone:size="medium"></a>
+ <!--<a class="addthis_counter addthis_pill_style"></a>-->
+</div>
+
+
+<script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid=ra-4f34adfd2fa3a766"></script>
+<!-- AddThis Button END -->
+        
+        
+			<div class="toolbar">
+				<div class="pager">
+					<input type="hidden" name="color_hidden" id="color_hidden" value="" />
+					<!-- <input type=hidden name="size_hidden" id="size_hidden" value="" /> -->
+					<input type="hidden" name="location_hidden" id="location_hidden" value="" />
+					<input type="hidden" name="price_hidden" id="price_hidden" value="" />
+					<input type="hidden" name="category_hidden" id="category_hidden" value="" />
+					<input type="hidden" name="price_min" id="price_min" value="" />
+					<input type="hidden" name="price_max" id="price_max" value="" />
+					<input type="hidden" name="initialise_price_min" id="initialise_price_min" value="" />
+					<input type="hidden" name="initialise_price_max" id="initialise_price_max" value="" />
+					<input type="hidden" name="sort_orderby" id="sort_orderby" value="" />
+					<input type="hidden" name="sort_order" id="sort_order" value="" />
+					<div class="amount" id="total_items"></div>
+					
+					<div class="sort-by">
+						<label>Sort By</label> 
+						<select onchange="javascript: process_search(document.getElementById('search').value, document.getElementById('category_hidden').value, 0, document.getElementById('price_min').value, document.getElementById('price_max').value, this.value, 'desc')">
+                        <option value="new">
+								Newest</option>
+							<option value="name">
+								Name</option>
+							<option value="price">
+								Price</option>
+						</select> <a title="Set Ascending Direction" href="javascript:search_order_func('<?php echo $this->getSkinUrl(); ?>');"><span id="image_val"><img class="v-middle" id="asc_desc_img" alt="Set Ascending Direction" src="<?php echo $this->getSkinUrl('images/i_asc_arrow.gif'); ?>"></span>
+						</a>
+					</div>
+				</div>
+			</div>
+			<script type="text/javascript">decorateGeneric($$('ul.products-grid'), ['odd','even','first','last'])</script>
+			<div id="products_display"></div>
+			<div class="pager"><div class="pages"></div></div>
+		</div>
+	</div>
+	<div class="col-left sidebar">
+		<!-- <div class="block block-tags">
+			<div class="block-title">
+				<strong><span>Popular Tags</span>
+				</strong>
+			</div>
+			<div class="block-content">
+				<ul class="tags-list">
+					<li><a style="font-size: 75%;"
+						href="http://www.craftsvilla.com/tag/product/list/tagId/55/"></a>
+					</li>
+					<li><a style="font-size: 75%;"
+						href="http://www.craftsvilla.com/tag/product/list/tagId/50/">
+							White</a>
+					</li>
+					<li><a style="font-size: 75%;"
+						href="http://www.craftsvilla.com/tag/product/list/tagId/46/"> bags</a>
+					</li>
+					<li><a style="font-size: 75%;"
+						href="http://www.craftsvilla.com/tag/product/list/tagId/53/"> blue
+							crewel</a>
+					</li>
+					<li><a style="font-size: 75%;"
+						href="http://www.craftsvilla.com/tag/product/list/tagId/57/">
+							blue- maroon crewel</a>
+					</li>
+					<li><a style="font-size: 75%;"
+						href="http://www.craftsvilla.com/tag/product/list/tagId/49/">
+							cotton</a>
+					</li>
+					<li><a style="font-size: 75%;"
+						href="http://www.craftsvilla.com/tag/product/list/tagId/51/">
+							crewel</a>
+					</li>
+					<li><a style="font-size: 75%;"
+						href="http://www.craftsvilla.com/tag/product/list/tagId/48/">
+							embroidered</a>
+					</li>
+					<li><a style="font-size: 75%;"
+						href="http://www.craftsvilla.com/tag/product/list/tagId/59/">
+							green crewel</a>
+					</li>
+					<li><a style="font-size: 75%;"
+						href="http://www.craftsvilla.com/tag/product/list/tagId/45/"> hand
+							bags</a>
+					</li>
+					<li><a style="font-size: 75%;"
+						href="http://www.craftsvilla.com/tag/product/list/tagId/54/">
+							lemon crewel</a>
+					</li>
+					<li><a style="font-size: 75%;"
+						href="http://www.craftsvilla.com/tag/product/list/tagId/52/">
+							multi - cloured crewe</a>
+					</li>
+					<li><a style="font-size: 75%;"
+						href="http://www.craftsvilla.com/tag/product/list/tagId/58/">
+							round crewe </a>
+					</li>
+					<li><a style="font-size: 75%;"
+						href="http://www.craftsvilla.com/tag/product/list/tagId/56/"> sky
+							- blue crewel</a>
+					</li>
+					<li><a style="font-size: 75%;"
+						href="http://www.craftsvilla.com/tag/product/list/tagId/47/">
+							women</a>
+					</li>
+					<li><a style="font-size: 75%;"
+						href="http://www.craftsvilla.com/tag/product/list/tagId/44/">black</a>
+					</li>
+					<li><a style="font-size: 75%;"
+						href="http://www.craftsvilla.com/tag/product/list/tagId/41/">earrings</a>
+					</li>
+					<li><a style="font-size: 75%;"
+						href="http://www.craftsvilla.com/tag/product/list/tagId/77/">food
+							products</a>
+					</li>
+					<li><a style="font-size: 75%;"
+						href="http://www.craftsvilla.com/tag/product/list/tagId/43/">green</a>
+					</li>
+					<li><a style="font-size: 75%;"
+						href="http://www.craftsvilla.com/tag/product/list/tagId/42/">necklace</a>
+					</li>
+				</ul>
+				<div class="actions">
+					<a href="http://www.craftsvilla.com/tag/list/">View All Tags</a>
+				</div>
+			</div>
+		</div> -->
+		<div class="block block-layered-nav">
+			<div class="block-title-new">Shop By</div>
+			<div class="block-content" id="shop_by_div">
+        		<!-- <div class="currently">
+    				<p class="block-subtitle">Currently Shopping by:</p>
+    				<ol>
+            			<li>
+            				<a href="http://www.craftsvilla.com/catalogsearch/result/index/?dir=desc&amp;q=organic&amp;soaptype=30270" title="Remove This Item" class="btn-remove">Remove This Item</a>
+            					<span class="label">Category:</span> Food &amp; Health        
+            			</li>
+            			<li>
+            				<a href="http://www.craftsvilla.com/catalogsearch/result/index/?cat=69&amp;dir=desc&amp;q=organic" title="Remove This Item" class="btn-remove">Remove This Item</a>
+            				<span class="label">Soap Type:</span> Bath        
+            			</li>
+        			</ol>
+    				<div class="actions"><a href="http://www.craftsvilla.com/catalogsearch/result/index/?dir=desc&amp;q=organic">Clear All</a></div>
+				</div> -->
+			</div>
+			<div class="block-content accordi">
+				<dl id="narrow-by-list" class="menuitem">
+					<dt class="odd menuitem submenuheader">Category</dt>
+					<dd class="odd submenu accodianheight" id="cat_div"></dd>
+					<dt class="even menuitem submenuheader">Price</dt>
+					<dd class="even submenu accodianheight" id="price_div">
+						<!-- <ol>
+							<li><a
+								href="http://www.craftsvilla.com/catalogsearch/result/index/?dir=desc&amp;price=1%2C1000&amp;q=Shiva+-+Rich+coral+flower+Pearl+Necklace+Set"><span
+									class="price 123">Rs. 0</span> - <span class="price 123">Rs.
+										1,000</span>
+							</a> (28)</li>
+							<li><a
+								href="http://www.craftsvilla.com/catalogsearch/result/index/?dir=desc&amp;price=2%2C1000&amp;q=Shiva+-+Rich+coral+flower+Pearl+Necklace+Set"><span
+									class="price 123">Rs. 1,000</span> - <span class="price 123">Rs.
+										2,000</span>
+							</a> (3)</li>
+						</ol> -->
+					</dd>
+                    
+                    
+                    
+					<dt class="last odd menuitem submenuheader">Color</dt>
+					<dd class="last odd submenu accodianheight" id="color_div">
+                    
+                    </dd>
+					<dt class="last odd menuitem submenuheader">Location</dt>
+					<!-- <dd class="last odd" id="size_div"></dd> -->
+					<dd class="last odd submenu accodianheight" id="location_div"></dd>
+				</dl>
+				<script type="text/javascript">decorateDataList('narrow-by-list')</script>
+			</div>
+		</div>
+	</div>
+

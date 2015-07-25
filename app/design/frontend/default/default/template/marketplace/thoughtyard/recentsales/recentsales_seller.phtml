@@ -1,0 +1,169 @@
+<div>
+<?php 
+$_vendor = Mage::helper('umicrosite')->getCurrentVendor();
+/******** Code added by Mandar for vendor recent sales Stats on 4-05-2012 ********/
+Mage::getModel('udropship/vendor_stats')->setStats($_vendor->getVendorId(),'recentsales');
+/********************************************************************************/
+   // echo $this->getChildHtml('product_list_toolbar');
+        $orders = Mage::getModel('sales/order_shipment')->getCollection()
+                    ->addAttributeToFilter('udropship_status',1)
+                    ->addAttributeToFilter('udropship_vendor', $_vendor->getId());
+  
+//echo $orders->getSelect()->__toString();
+          $orders->getSelect()
+           ->joinLeft('sales_flat_shipment_item', 'main_table.entity_id = sales_flat_shipment_item.parent_id',array('product_id' => 'product_id'))
+           ->group('product_id')->order('updated_at ASC');
+           
+       // $i=1;
+    $_helpm = $this->helper('umicrosite');
+    $url= $_helpm->getVendorUrl($_vendor->getVendorId());    
+?>
+   <div class="vendorNameHead">
+    <h1 class="headingvendor homeprite">
+            <?php echo $this->htmlEscape(Mage::helper('umicrosite')->getLandingPageTitle($_vendor)) ?>'s
+            Recent Sale Products
+    </h1>
+    
+    <?php /*?><div class="social-vendor">
+		<!-- facebook -->
+						<!-- twitter -->
+		<a href="http://twitter.com/">
+			<img src="http://doejofinal.craftsvilla.com/skin/frontend/default/craftsvilla2012/images/dtl_tw.jpg">
+		</a>
+		<!-- mail -->
+		<a href="mailto:kedar@craftsvilla.com">
+			<img src="http://doejofinal.craftsvilla.com/skin/frontend/default/craftsvilla2012/images/dtl_mail.jpg">
+		</a>
+	</div><?php */?>
+    <div class="clear"></div>
+ 
+            <p>
+                <?php echo $_vendor->getShopDescription(); ?>
+            </p>
+            
+            
+               
+            </div>
+            
+            
+            <div id="our-products">
+<div class="category-products mostsale">
+            <div class="topLine"></div>         
+      
+<div class="toolbar">
+  <div class="pager">
+    <div class="amount"><?php echo count($orders->getData()).' Items' ; ?></div>
+    
+    <div class="sort-by"><strong>SORT BY:</strong> 
+      <!--<ul id="sortby">
+				<li><a href="#">MOST RECENT</a></li>
+				<li><a href="#">LOWEST PRICE</a></li> 
+				<li><a href="#">HIGHEST PRICE</a></li>
+			</ul>
+            <label>Sort By</label>-->
+      <ul id="sortby">
+                <li><a href="<?php echo $url.'thoughtyard/recentsales/getmostrecent' ?>">MOST RECENT</a></li>
+          <li> <a href="<?php echo $url.'thoughtyard/recentsales/getmostsold' ?>">MOST SOLD</a></li>
+      </ul>
+      
+      </div>
+   
+     </div>
+</div>
+
+        
+     
+     
+        <div class="clear"></div>
+         
+         <ul class="products-grid first">   
+       
+     
+     
+        <?php
+     //  echo $this->getLayout()->createBlock('catalog/product_list_toolbar')->setCollection($product)->setTemplate('catalog/product/list/toolbar.phtml')->toHtml();
+        foreach($orders->getData() as $k=>$order): 
+            $productId= $order['product_id'];
+
+            $_products = Mage::getModel('catalog/product')
+                ->getCollection()
+                //->addAttributeToFilter('udropship_vendor', $_vendor->getId())
+                ->addFieldToFilter('entity_id',$productId)
+                ->addAttributeToSelect('name')
+                ->addAttributeToSelect(array('small_image','price','special_price'))
+                ->addAttributeToFilter('status', 1)
+                ->addAttributeToFilter('visibility', array('eq' => 4))
+               // ->addAttributeToFilter('type_id','simple')
+              ->load();
+           
+            foreach ($_products as $product):
+            
+                $qtyStock = Mage::getModel('cataloginventory/stock_item')->loadByProduct($product)->getQty();
+           
+               /* if ($i % 4 == 0) {
+                        $class = 'class="last"';
+                    } else {
+                        $class = '';
+                    }*/
+					//echo "<pre>";
+					//print_r($product->getData());
+                $imgPath = $this->helper('catalog/image')->init($product, 'small_image')->resize(160,160);
+                $productUrl = $product->getProductUrl();
+                $prodName=$product->getName();
+                
+                if( strlen($prodName) > 21)
+                        $prodName=substr($prodName, 0 , 21) . '...';
+                else
+                        $prodName= $prodName;
+     //echo $this->getLayout()->createBlock('catalog/product_list_toolbar')->setCollection($product)->setTemplate('marketplace/thoughtyard/recentsales/toolbar.phtml')->toHtml();
+                ?>
+        
+                   <li class="item">
+                    <div class="prCnr"> 
+                     
+                        <a href="<?php echo $productUrl ?>" class="product-image spriteimg">
+                            <img src="<?php echo $imgPath ?>" width="160" height="160" alt="" border="0" />
+                        </a>
+                        <p class="shopbrief"><a href="<?php echo $productUrl ?>"><?php echo $prodName; ?></a></p>
+                                       
+                            <p class="vendorname">by <?php echo $_vendor->getShopName(); ?></p>
+                                <div class="products price-box">  
+                                    <?php if($product->getSpecialPrice()):?>
+                                    <p class="old-price">             
+                                        <span id="old-price-27370" class="price"><?php echo 'Rs. '.number_format($product->getPrice(),0);?></span>
+                                    </p>
+                                    <p class="special-price">
+                                        <span id="product-price-27370" class="price"><?php echo 'Rs. '. number_format($product->getSpecialPrice(),0);?></span>
+                                    </p>
+                                    <?php else: ?>
+                                   <p class="special-price">
+                                        <span id="product-price-27370" class="price"><?php echo 'Rs. '. number_format($product->getPrice(),0);?></span>
+                                    </p>
+                                    <?php endif; ?>
+                                </div>
+                    <?php if($qtyStock<1):?>        
+                        
+                        <p class="sold_icon spriteimg"></p>
+                        
+                    <?php elseif($product->getSpecialPrice()):?>  
+                        <p class="sell_icon spriteimg"></p>
+                    <?php endif; ?>
+                    </div></li>
+                <?php
+                /*if ($i % 4 == 0) {
+                    echo '</ul> <ul class="products-grid first">';
+                }
+                /*if ($i % 12 == 0) {
+                    break;
+                }*/
+                $i++;
+           endforeach;
+       endforeach;
+       //Mage::log($product->getData());
+    ?>
+    
+    
+     </ul>
+    
+    </div>
+</div>

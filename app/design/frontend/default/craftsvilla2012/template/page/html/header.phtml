@@ -1,0 +1,391 @@
+<?php 
+$hlp = Mage::helper('generalcheck');
+$ismobile = $hlp->ismobile();
+
+if(!$ismobile)
+
+{
+
+// added for Desktop view by chetan 
+	$desktopHeader = $this->desktopHeader();
+	echo $desktopHeader;
+?>
+
+
+		<script type="text/javascript">
+			jQuery('#Community').hover(function(){
+			jQuery('.dropdown_menu').css('display','block');
+			},function(){
+			jQuery('.dropdown_menu').css('display','none');
+			}
+			);
+		</script>
+
+		<script type="text/javascript">
+			jQuery(document).ready(function() {
+			jQuery(".fancybox").fancybox({
+				padding: 0
+			});
+			}); 
+		</script>
+
+              
+		<script type="text/javascript">
+	
+		function fillvalues()
+		{
+			if(document.getElementById('searchby').value == 'all')
+			{
+				if(document.getElementById('search').value == '')
+					{
+					document.getElementById('search').value = 'Search Entire Store';
+					}		
+			}
+			else if(document.getElementById('searchby').value == 'product')
+			{
+				if(document.getElementById('search').value == '')
+				{
+				document.getElementById('search').value = 'Search All Products';
+				}	
+			}
+			else if(document.getElementById('searchby').value == 'shop')
+			{
+				if(document.getElementById('search').value == '')
+				{
+				document.getElementById('search').value = 'Search All Shops';
+				}	
+			}
+			
+		}
+		
+		</script> 
+
+
+
+<script>
+
+
+jQuery(document).ready(new function() {
+
+     var pageheaderviewajax = '<?php echo Mage::getBaseUrl().'generalcheck/header/pageheaderview' ?>';
+	 var craftsurl = '<?php echo Mage::getBaseUrl()?>';
+	 var url = '<?php echo Mage::getBaseUrl().'sell'?>';
+	 new Ajax.Request(pageheaderviewajax,{onSuccess: function(transport){
+        	var responseajax = transport.responseText;
+         	var ajaxresponsearray = responseajax.split(";");
+			var ajaxresponsearray0result = ajaxresponsearray[0];
+		    var ajaxresponsearrayresult = ajaxresponsearray[4];
+			if(ajaxresponsearray0result==1)
+			{
+				jQuery('#sellerlogin20032014').html('<p class="fleft"><a rel="nofollow" href="'+url+'" class="inline">Click Here to Sell</a></p>');
+							
+			}
+			else
+			{
+				jQuery('#sellerlogin20032014').html('<div style="padding-top:5px;"> <span><a rel="nofollow" href="'+craftsurl+'marketplace/vendor/">Seller Dashboard</a></span> / <span><a href="'+craftsurl+'marketplace/vendor/logout">Logout</a></span></div>');
+				
+			}
+			if(ajaxresponsearray[1]==1)
+			{
+				jQuery('#agentlogin20102015').html('<p class="fleft"><a rel="nofollow" href="'+craftsurl+'agent" class="inline"> | Click Here To Become an Agent</a></p>');
+			}
+			else
+			{
+				jQuery('#agentlogin20102015').html('<div style="padding-top:5px;"> <span><a rel="nofollow" href="'+craftsurl+'uagent/index/index/">| Agent Dashboard</a></span> / <span><a href="'+craftsurl+'uagent/index/logout">Logout</a></span></div>');
+			}
+			if(ajaxresponsearray[2]==1)
+			{
+				jQuery('#customerregister12131321').html('<li><a rel="nofollow" class="fancybox" href="#login">Login</a></li><li><a rel="nofollow" class="fancybox em modal_link" href="#signUpForm">Register</a></li>');
+			}
+			else
+			{
+				jQuery('#customerregister12131321').html('<li style="width:140px;"><a rel="nofollow" href="'+craftsurl+'customer/account">My Account</a> <span style="margin:0 6px;">/</span> <a rel="nofollow" href="'+craftsurl+'customer/account/logout">Logout</a></li>');
+			}
+
+			jQuery('#cartcountdispval').html('<a rel="nofollow" href="'+craftsurl+'checkout/cart/"><span class="icon icon-cart"></span><span> {'+ajaxresponsearray[3]+'}&nbsp;'+ajaxresponsearrayresult+'<\/span></a>');
+			
+		}
+		});
+       
+	
+	});
+</script>
+
+
+<?php
+}
+
+else{
+
+	$mobileHeader = $this->mobileHeader();
+	echo $mobileHeader;
+                                                                              
+?>
+<!--///////////////////////////////////////////////---MOBILE VIEW ---///////////////////////////////////////////////////////-->
+
+<?php
+
+// added for modile view by chetan 
+
+?>
+		<script>
+			function f1()
+				{
+					
+					document.getElementById('cmpnyName').style.display = 'none';
+					document.getElementById('customerregister12131321').style.display = 'none';
+					document.getElementById('cartcountdispval').style.display = 'none';
+	
+				};
+			function f2()
+			
+				{
+					
+					document.getElementById('cmpnyName').style.display = '';
+					document.getElementById('customerregister12131321').style.display = '';
+					document.getElementById('cartcountdispval').style.display = '';
+				};
+		</script>
+ 
+		<script type="text/javascript">
+
+		function fillvalues()
+		{
+			
+			if(document.getElementById('searchby').value == 'all')
+			{
+				if(document.getElementById('search').value == '')
+					{
+					document.getElementById('search').value = 'Search Entire Store';
+					}		
+			}
+			else if(document.getElementById('searchby').value == 'product')
+			{
+				if(document.getElementById('search').value == '')
+				{
+				document.getElementById('search').value = 'Search All Products';
+				}	
+			}
+			else if(document.getElementById('searchby').value == 'shop')
+			{
+				if(document.getElementById('search').value == '')
+				{
+				document.getElementById('search').value = 'Search All Shops';
+				}	
+			}
+			
+		}
+
+	</script> 
+
+			<script type="text/javascript">
+				jQuery('#Community').hover(function(){
+				jQuery('.dropdown_menu').css('display','block');
+				},function(){
+				jQuery('.dropdown_menu').css('display','none');
+				}
+				);
+			</script>
+
+			<script type="text/javascript">
+				jQuery(document).ready(function() {
+				jQuery(".fancybox").fancybox({
+				padding: 0
+				});
+				}); 
+			</script>
+
+      
+			<script>
+				function btn1(){
+
+				var abcd = document.getElementById("show123").style.left;
+					if(abcd == "0px")
+					{
+
+						document.getElementById("show123").style.left = "-400px";
+						document.getElementById("show123").style.transition = "0.1s";
+
+					}
+					else
+					{
+
+					    	 document.getElementById("show123").style.left = "0px";
+						 document.getElementById("show123").style.transition = "0.1s";
+					}
+								 
+				}
+
+			</script>
+
+<script>
+
+          
+jQuery(document).ready(new function() {
+
+     var pageheaderviewajax = '<?php echo Mage::getBaseUrl().'generalcheck/header/pageheaderview' ?>';
+	 var craftsurl = '<?php echo Mage::getBaseUrl()?>';
+	 var url = '<?php echo Mage::getBaseUrl().'sell'?>';
+	 new Ajax.Request(pageheaderviewajax,{onSuccess: function(transport){
+        	var responseajax = transport.responseText;
+         	var ajaxresponsearray = responseajax.split(";");
+			var ajaxresponsearray0result = ajaxresponsearray[0];
+		    var ajaxresponsearrayresult = ajaxresponsearray[4];
+			
+			if(ajaxresponsearray[1]==1)
+			{
+				jQuery('#agentlogin20102015').html('<p class="fleft" id="sr"><img src="<?= Mage::getDesign()->getSkinUrl('mobileimg/search_header_mobile.png')?>"  name="sr" id="sr"  onclick="return f1()" style="margin-top: -18px;width:80px;cursor:pointer" >&nbsp&nbsp<a rel="nofollow" href="'+craftsurl+'agent" class="inline"> | Click Here To Become an Agent</a></p>');
+			}
+			else
+			{
+				jQuery('#agentlogin20102015').html('<div style="padding-top:5px;" id="sr"> <span><a rel="nofollow" href="'+craftsurl+'uagent/index/index/">| Agent Dashboard</a></span> / <span><a href="'+craftsurl+'uagent/index/logout">Logout</a></span></div>');
+			}
+			if(ajaxresponsearray[2]==1)
+			{
+				jQuery('#customerregister12131321').html('<li id="sr"><a rel="nofollow" class="fancybox" href="#login">Login</a>&nbsp&nbsp<a rel="nofollow" class="fancybox em modal_link" href="#signUpForm">Register</a></li>');
+			}
+			else
+			{
+				jQuery('#customerregister12131321').html('<li style="width:100%;" id="sr"><a rel="nofollow" href="'+craftsurl+'customer/account">My Account</a> <span style="margin:0 6px;"></li>');
+			}
+
+			jQuery('#cartcountdispval').html('<a rel="nofollow" href="'+craftsurl+'checkout/cart/"><img src="<?= Mage::getDesign()->getSkinUrl('mobileimg/cart_header_mobile.png')?>" name="sr" id="sr" width=50px style="margin-top: -14px; margin-right: 14px;";><span style="font-size: 20px;" > {'+ajaxresponsearray[3]+'}<\/span></a>');
+			
+		}
+		});
+       
+	
+	});
+</script>
+
+<style>
+	.detailCotainer1 {float: left;width: 100%;margin-bottom: 10px;
+	}
+	.bunch{	padding-left:8px;
+	}
+	.prdctdetail{float:left;width:100%;/*border:1px solid black;*/
+	}
+	.prdctimg{width:76%;/*border:1px solid black;*/
+	}
+	.heading_css1 {float: left;color: #92C5BE;font-size: 21px;padding-bottom: 10px;
+	}
+	.buttonBye {
+		background-color: #f24537;text-indent: 0px;border: 4px solid #d02718;display: inline-block;color: #ffffff;cursor: pointer;font-family:Times New Roman;font-size: 54px;font-weight: bold;font-style: normal;height: 100px;line-height: 47px;width: 100%;text-decoration: none;
+	}
+	#dtlSocialLink1 {height: 40px;line-height: 34px;/* margin: 36px 0 0 233px; width: 106px;*/ font-size:20px;
+	}
+	.product-view1 {/*float: right;*/
+	}
+	.setwidth {width: 75%;
+	}
+	.product-img-box1 {width: 100%;/*height: 470px;*//* background: #a1b2c3; */margin-top: 38px;margin-bottom: 20px;
+	}
+	#dtlText1 {text-align: justify;padding-left: 8px;float: left;width: 100%;font-size: 14px;
+	}
+	element.style {
+	}
+	testin3cache.htmlmedia="all"
+	#dtlQty1 {width: 100%;/* float: left; */position: relative;
+	}
+	#Price1 {
+		float: right;/*margin-right: 64%*/;font-size: 42px;/* margin-left: -33px; */margin-top: -24px;text-align: right;margin-right: 10%;
+	}
+	#qty{color: #a8a7a7;font-size: 13px;line-height: 16px;padding: 5px;border: 1px solid #cccaca;width: 10%;/* display: block; */
+	}
+	p {line-height: 40px;
+	}
+	#cash1 {
+		width: 100%;height: 180px;border-width: 2px;padding: 5px;border-color: rgb(245, 244, 242);border-style: solid;alignment-adjust: central;
+	}
+	#craftsvilla_cash_on_delivery1 {
+		-webkit-box-shadow: inset 0px 0px 0px -8px #f5978e;box-shadow: inset 0px 0px 0px -8px #f5978e;
+		background: -webkit-gradient( linear, left top, left bottom, color-stop(0.05, #f24537), color-stop(1, #c62d1f) );
+		background: -moz-linear-gradient( center top, #f24537 5%, #c62d1f 100% );
+		filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f24537', endColorstr='#c62d1f');
+		background-color: #f24537;-webkit-border-top-left-radius: 20px;	-moz-border-radius-topleft: 20px;
+		border-top-left-radius: 20px;-webkit-border-top-right-radius: 20px;-moz-border-radius-topright: 20px;
+		border-top-right-radius: 20px;-webkit-border-bottom-right-radius: 20px;-moz-border-radius-bottomright: 20px;
+		border-bottom-right-radius: 20px;-webkit-border-bottom-left-radius: 20px;-moz-border-radius-bottomleft: 20px;
+		border-bottom-left-radius: 20px;
+		text-indent: 0px;border: 3px solid #d02718;display: inline-block;color: #ffffff;font-family: Arial;font-size: 23px;
+		font-weight: bold;font-style: italic;height: 50px;line-height: 52px;width: 100%;text-decoration: none;text-align: center;
+		text-shadow: -1px 0px 0px #810e05;
+	}
+
+	#dtlCompanyLogo1 {width:100%;height:132px;border: 7px solid #f5f4f2;margin-bottom:13px;font-size:16px;
+	}
+	#dtlCompanyLogo1 img {/* margin: 10px 0 0 6px; */}
+	#dtlCompanyLogo1 p.vendorName {	height:30px;margin-bottom:0;
+	}
+	#dtlCompanyLogo1 p, #dtlCompanyLogo1 p a {
+		margin-bottom: 12px;overflow:hidden;height:26px;/* display: block;margin: -52px 0 0 101px; */
+	}
+	#dtlCompanyLogo a {/* display: block;margin: 4px 0 0 101px; */width:50px;font-weight:bold;
+	}
+	#dtlCompanyLogo1 span {display: block;float: left;margin-right: 10px;
+	}
+	#dtlCompanyLogo1 span.seller_image {
+		border:1px solid #DDDDDD;border-radius:2px 2px 2px 2px;box-shadow:1px 0 1px #BCBCBC;height: 85%;;margin:3px 13px 3px 3px;padding:6px;width:10%;overflow:hidden;
+	}
+	#dtlCompanyLogo1 .vendorName {height:21px;overflow:hidden;
+	}
+	.fleft1 {/*float: left;*/
+	}
+	.header_wrapper .top .actions1 {/* float: right; */padding-top: 9px;
+	}
+	.header_wrapper .bottom div.search_block1 {/* float: right; */width: 57%;padding-top: 15px;
+	}
+	#categories_dropdown1 {
+	bottom: -29px;left: 0;padding: 12px 0 9px;position: absolute;
+	}
+	#container123{width:66px;height:60px;background:#E3D7C8;border: 2px solid;border-radius: 15px;}
+	#container123:hover{border: 2px solid #000;background:#fff;transition:1s}
+	#container123:hover > div{border: 5px solid #fff;background:#000;transition:1s;}
+	#container123 > div{width:50%;height:0%;background:#492B26;border: 5px solid #fff;border-radius:15px;position:relative;top:6px;
+	margin:0 auto;padding:3px}
+	#show123{width:400px;height:1022px; position:absolute;left:-400px;background:#E3D7C8;border-radius: 15px 15px 15px 15px;margin-top: 0px;z-index:100;}
+	#show123:hover{left:0px;z-index:100;}
+	#search_mini_form {
+
+	}
+
+	#search_mini_form input[type="text"] {
+	    background: url(<?=Mage::getDesign()->getSkinUrl('mobileimg/search_header_mobile.png')?>) no-repeat -10px 0px #fcfcfc;
+	    border: 1px solid #d1d1d1; background-size: 80px 64px;background-color:#E3D7C8;font:  44px Arial,Helvetica,Sans-serif;
+	    color: #bebebe;width: 0px;height: 44px;padding: 6px 15px 6px 35px;-webkit-border-radius: 20px;-moz-border-radius: 20px;
+	    border-radius: 20px;text-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);-webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15) inset;
+	    -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15) inset;box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15) inset;-webkit-transition: all 0.5s ease 0s;-moz-transition: all 0.5s ease 0s;-o-transition: all 0.5s ease 0s;transition: all 0.5s ease 0s;}
+
+	#search_mini_form input[type="text"]:focus {width:700px;background-color:#fff;}
+
+</style>
+
+
+<!--/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
+<?php } ?>
+<!-- end login form --> 
+
+		<script type="text/javascript">
+			var dataForm = new VarienForm('form-validate', true);
+		</script>
+
+		<script>(function() {
+			var _fbq = window._fbq || (window._fbq = []);
+			if (!_fbq.loaded) {
+			var fbds = document.createElement('script');
+			fbds.async = true;
+			fbds.src = '//connect.facebook.net/en_US/fbds.js';
+			var s = document.getElementsByTagName('script')[0];
+			s.parentNode.insertBefore(fbds, s);
+			_fbq.loaded = true;
+			}
+			_fbq.push(['addPixelId', '1404095163227576']);
+			})();
+			window._fbq = window._fbq || [];
+			window._fbq.push(['track', 'PixelInitialized', {}]);
+		</script>
+<noscript>
+<img height="1" width="1" alt="" style="display:none" src="https://www.facebook.com/tr?id=1404095163227576&amp;ev=PixelInitialized" />
+</noscript>
+
+

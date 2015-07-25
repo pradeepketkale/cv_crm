@@ -1,0 +1,138 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     default_default
+ * @copyright   Copyright (c) 2010 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<?php
+$payId=$this->getRequest()->getParam('payment_id');
+$orderId=Mage::getModel('sales/order_payment')->load($payId)->getParentId();
+$grandTotal=Mage::getModel('sales/order')->load($orderId)->getGrandTotal();
+?>
+<div>
+<ul class="messages">
+    <li class="notice-msg">
+        <ul>
+            <li><?php echo Mage::helper('sales')->__('Changing Payment information will not recalculate shipping, tax or other order amount.') ?></li>
+        </ul>
+    </li>
+</ul>
+</div>
+<div class="entry-edit">
+    <div class="fieldset">
+        <?php //echo $this->getForm()->toHtml() ?>
+        <div name="paysel" id="paysel" >
+        <?php //echo $this->getForm()->toHtml() ?>
+        <?php 
+        /*$order = Mage::getModel('sales/order')->load($orderId);
+        $items=$order->getAllItems();
+        foreach($items as $itemId => $item)
+        {
+            Mage::log($item->getData());exit;
+        }*/
+        
+//$payments=Mage::helper('payfilter')->loadProductPaymentMethodsOnCartItemProducts($items);   
+// Mage::log($payments);
+//Mage::log($items->getData());
+        /*foreach ($items as $item)
+        {
+                $productPaymentMethods = Mage::helper('payfilter')->getForbiddenPaymentMethodsFromProduct($item->getProduct());
+Mage::log($productPaymentMethods);
+                if (! $productPaymentMethods) continue;
+
+                foreach ($productPaymentMethods as $method)
+                {
+                        if (! in_array($method, $methods)) $methods[] = $method;
+                }
+        }
+        $payments = $methods;*/
+       $storeId=Mage::app()->getStore()->getId();
+        $payments=Mage::helper('payfilter')->getPaymentMethodOptions($storeId);
+ $i=0;
+           foreach ($payments as $payment):
+               $paymentCode=$payment['value'];
+               $paymentTitle = $payment['label'];
+       //echo "<pre>";
+         //       print_r($paymentCode);
+                /*$methods[$paymentCode] = array(
+                    'label'   => $paymentTitle,
+                    'value' => $paymentCode,
+                );
+                echo "<pre>";
+            Mage::log('hhhh=========='.$methods[$paymentCode]);*/
+            //Mage::log ('pay=============='.$paymentCode);
+               
+            if ($paymentCode!='secureebs_standard' && $paymentCode!='paypal_standard' && $paymentCode!='paypal_billing_agreement'):
+                if($grandTotal=='0' && $paymentCode!='gharpay_standard' && $paymentCode!='purchaseorder' && $paymentCode!='m2epropayment'):
+            ?>
+                        <input type="radio" name="paymethod" id="paymethod<?php echo $i?>" value="<?php echo $paymentCode; ?>" onClick="showbox(jQuery('#paymethod<?php echo $i;?>').val());" /><?php echo $paymentTitle; ?><br />
+                    <?php elseif($grandTotal!='0' && $paymentCode!='free'):?>
+                        <input type="radio" name="paymethod" id="paymethod<?php echo $i?>" value="<?php echo $paymentCode; ?>" onClick="showbox(jQuery('#paymethod<?php echo $i;?>').val());" /><?php echo $paymentTitle; ?><br />
+            <?php  endif;?>
+            <?php if($paymentCode=='purchaseorder'):?>
+                <div class="required-entry" style="display:none;" id="textbox">
+                    <input type="text" name="" id="txtval" />                
+                </div>
+            <?php endif; ?>
+            <?php $i++;?>
+       <?php endif; endforeach; ?>
+         <input type="hidden" name="valuebtnn" id="valuebtn"/>
+         <input type="hidden" name="valuetxtbox" id="valuetxt"/>
+                <br /><input type="submit" value="Save" onClick="selectval(jQuery('#valuebtn').val())" />
+        </div>
+   </div>
+</div>
+
+<script type="text/javascript" src="http://jqueryjs.googlecode.com/files/jquery-1.2.6.min.js"></script>
+<script type="text/javascript">
+    function showbox(value){
+        if(value=='purchaseorder'){
+            jQuery('#textbox').show();
+            
+        }
+        else{
+            jQuery('#textbox').hide();
+        }
+        jQuery('#valuebtn').val(value);
+    }
+	function selectval(value){
+            var val=jQuery('#valuebtn').val();
+            if(val=='purchaseorder'){
+                var txtvalue= jQuery('#txtval').val();
+            }
+            else{
+                var txtvalue='';
+            }
+                var payid="<?php echo $this->getRequest()->getParam('payment_id'); ?>";
+                var u = "<?php echo $this->getUrl('*/sales_order/paymentmethodsave') ?>" ;
+                var orderid="<?php echo $orderId;?>";
+                var url = "<?php echo $this->getUrl('*/sales_order/view/order_id/'.$orderId) ?>";
+                new Ajax.Request(u, {method:'post', parameters: {paymethod: val,payid:payid,txtval:txtvalue}, onSuccess: function(transport) {
+                        if(transport.responseText == 'saved!'){
+                            window.location=url;
+                        }
+                                        
+            }	
+		});	
+	}
+</script>

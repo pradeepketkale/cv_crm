@@ -1,0 +1,233 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $this->getLang() ?>" lang="<?php echo $this->getLang() ?>" xmlns:og="http://ogp.me/ns#" xmlns:fb="http://www.facebook.com/2008/fbml">
+    
+    	<?php 
+    	/*
+    	*Start..
+    	*Commented by suresh on 21-05-2012
+    	*for remove kismatrix, tyroo, mythings
+    	*/
+    	
+    	/*if($_SERVER['SERVER_ADDR'] != "127.0.0.1" && $_SERVER['SERVER_ADDR'] != "192.168.1.90"){?>
+        <script type="text/javascript">var _sf_startpt=(new Date()).getTime()</script>
+        <script type="text/javascript">
+            var _kmq = _kmq || [];
+            function _kms(u){
+                setTimeout(function(){
+                    var s = document.createElement('script'); var f = document.getElementsByTagName('script')[0]; s.type = 'text/javascript'; s.async = true;
+                    s.src = u; f.parentNode.insertBefore(s, f);
+                }, 1);
+            }
+            _kms('//i.kissmetrics.com/i.js');_kms('//doug1izaerwt3.cloudfront.net/319a0179551de1a2e35f62f9f246b81c015f96ea.1.js');
+        </script>
+        <?php
+        Mage::getSingleton('customer/session')->setBeforeAuthUrl($this->getRequest()->getRequestUri());  //save requested URL for later redirection
+        if (Mage::getSingleton('customer/session')->isLoggedIn()) {
+            $email_unique1 = Mage::getSingleton('customer/session')->getCustomer()->getEmail();
+            ?>
+            <script type="text/javascript">
+                    var _kmq = _kmq || []; 
+                    function _kms(u)
+                    { 
+                        setTimeout (function(){ var s = document.createElement('script'); 
+                            var f = document.getElementsByTagName('script')[0]; 
+                            s.type = 'text/javascript'; 
+                            s.async = true; 
+                            s.src = u; f.parentNode.insertBefore(s, f); }, 1); } _kms
+                    ('//i.kissmetrics.com/i.js');_kms
+                    ('//doug1izaerwt3.cloudfront.net/319a0179551de1a2e35f62f9f246b81c015f96ea.1.js'); 
+                    _kmq.push(['identify', '<?php echo $email_unique1; ?>']);
+            </script>
+            <?php
+        }
+    	}*/
+    	/*
+    	*End..
+    	*Commented by suresh on 21-05-2012
+    	*for remove kismatrix, tyroo, mythings
+    	*/
+        ?>
+        <?php 
+$hlp = Mage::helper('generalcheck');
+$ismobile = $hlp->ismobile();
+$_currencyCodeProduct = Mage::app()->getStore()->getCurrentCurrencyCode();
+	$oneclmnhomecacheId = preg_replace('/[^a-zA-Z0-9\']/','',$_SERVER['REQUEST_URI']).'-'.preg_replace('/[^a-zA-Z0-9\']/','',$this->getBodyClass().'-homepage2-'.$_currencyCodeProduct).'-'.$ismobile; 
+	$lifetime = 86000;//28800 
+	$cacheContentHome = '';
+	if (($cacheContentHome = Mage::app()->loadCache($oneclmnhomecacheId))){ 
+			echo $cacheContentHome;
+		}
+	else{
+	?>
+    <?php 
+	$bodyClass = $this->getBodyClass() ? ' class="' . $this->getBodyClass() . '"' : '';
+	$cacheContentHome .= '<head>'.$this->getChildHtml('head').'</head>';?>
+    <?php $cacheContentHome .= '<body'.$bodyClass.'>'; ?>
+        <?php $cacheContentHome .= $this->getChildHtml('ie') ?>
+        <?php $cacheContentHome .=$this->getChildHtml('after_body_start') ?>
+        <?php $cacheContentHome .='
+<div class="algnCntr wrapper">
+            '.$this->getChildHtml('global_notices').
+            '<div class="page">
+                '.$this->getChildHtml('header').'';
+?>
+<?php 
+
+if(!$ismobile)
+
+{
+   
+$cacheContentHome .='
+
+
+	<div class="main-container col1-layout">
+	<div class="main">
+	<div class="col-main">
+	<div class="bdyShadow2">
+
+	<div class="bodyWpr">
+
+
+	<div class="innerTwo">'.$this->getChildHtml('global_messages').
+		'<div class="mainBrd">
+			<div class="brdTxt">
+			'.$this->getChildHtml('breadcrumbs').'
+			</div>
+				</div>
+
+				<div class="two_col"> <!--ADD--><div class="side_col">'
+				.$this->getChildHtml('homesidebar').'
+
+				</div>
+					<div class="main_col">
+
+					'.$this->getChildHtml('content').
+
+					'</div>
+	</div>
+
+
+	<hr />
+
+	<div class="sub_content">
+		<table width="100%" class="sponsor_logoes">
+		<tr>
+			<td>
+				<div id="hdngBg1">
+					<div class="fltLeft">In The News</div>
+				</div>
+			</td>
+			<td>
+				<a rel="nofollow" href="http://www.livemint.com/2011/10/06231246/Craftsvillacom-gets-earlysta.html" target="_blank" class="spriteimg livemint"></a>
+			</td>
+			<td>
+				<a rel="nofollow" href="http://economictimes.indiatimes.com/et-now/daily/starting-up-craftsvilla--an-online-handicraft-portal-in-india/videoshow/8133009.cms" target="_blank" class="spriteimg etnow"></a>
+			</td>
+			<td>
+				<a rel="nofollow" href="http://articles.economictimes.indiatimes.com/2011-08-19/news/29905308_1_start-ups-talent-crunch-snapdeal" target="_blank" class="spriteimg economictimes"></a>
+			</td>
+			<td>
+				<a rel="nofollow" href="http://www.mid-day.com/lifestyle/2011/aug/200811-Pichwai-paintings-eco-friendly-items-online-mumbai.htm" target="_blank" class="spriteimg midday floatr"></a><!-- Shop for eco-friendly items online -->
+			</td>
+		</tr>
+		</table>
+	</div>
+
+	<!--ADD-->
+	<hr />
+
+	<!--ADD-->
+	<div class="sub_content">
+
+		<div class="fleft headtext">What They are Saying:</div>
+
+			<div class="right">
+				<blockquote>
+					<p>&ldquo;Received my order today :) the handwritten note and the free candles were a pleasant surprise!! thank you :) looking forward to a lot of amazing stuff and a lot of shopping :) &rdquo; <cite>- Khushboo Sharma</cite></p>            
+				</blockquote>
+			</div>
+		</div> 	   
+
+
+					
+		</div></div></div>
+		</div>
+	</div>
+
+';
+$cacheContentHome .='  </div>
+</div>
+<div class="push"></div>
+'.$this->getChildHtml('before_body_end').' 
+</div>
+'.$this->getChildHtml('footer').
+$this->getAbsoluteFooter();
+
+}
+
+
+else {
+
+////////////////////////////////////////------------------Mobile View-------------------------////////////////////////////////////
+
+$homeMobileView = $hlp->homeMobileView();
+
+$cacheContentHome .= $homeMobileView;
+}
+?>
+<?php
+               
+          
+		 $tags = array(
+                    //Mage_Catalog_Model_Product::CACHE_TAG,
+                    //Mage_Catalog_Model_Product::CACHE_TAG . '_' . $productIdCache
+                );
+    	Mage::app()->saveCache($cacheContentHome, $oneclmnhomecacheId, $tags, $lifetime);
+		echo $cacheContentHome;
+		}
+		 ?>
+        <?php if($_SERVER['SERVER_ADDR'] != "127.0.0.1" && $_SERVER['SERVER_ADDR'] != "192.168.1.90"){?>
+        <!--
+    	*Start..
+    	*Commented by suresh on 21-05-2012
+    	*for remove kismatrix, tyroo, mythings
+    	-->
+        <!-- script for visit tag of craftsvilla -->
+        <!-- <script type="text/javascript">
+            function _mt_ready(){
+                if (typeof(MyThings) != "undefined") {
+                    MyThings.Track({
+                        EventType: MyThings.Event.Visit,
+                        Action: "300"
+                    });
+                }
+            }
+            var mtHost = (("https:" == document.location.protocol) ? "https" : "http") + "://rainbow-in.mythings.com";
+            var mtAdvertiserToken = "1714-100-in";
+            document.write(unescape("%3Cscript src='" + mtHost + "/c.aspx?atok="+mtAdvertiserToken+"' type='text/javascript'%3E%3C/script%3E"));
+        </script> -->
+        <!--
+    	*End..
+    	*Commented by suresh on 21-05-2012
+    	*for remove kismatrix, tyroo, mythings
+    	-->
+		<!--chart beat -->
+
+<!--<script type="text/javascript">
+    var _sf_async_config={uid:27315,domain:"craftsvilla.com"};
+        function loadChartbeat() {
+            window._sf_endpt=(new Date()).getTime();
+            var e = document.createElement('script');
+            e.setAttribute('language', 'javascript');
+            e.setAttribute('type', 'text/javascript');
+            e.setAttribute('src',
+            (("https:" == document.location.protocol) ? "https://a248.e.akamai.net/chartbeat.download.akamai.com/102508/" : "http://static.chartbeat.com/") + "js/chartbeat.js");
+            document.body.appendChild(e);
+    }
+var oldonload = window.onload;
+window.onload = (typeof window.onload != 'function') ? loadChartbeat : function() { oldonload(); loadChartbeat(); };
+</script>-->
+<!-- end chart beat -->                   
+<?php }?>
+    </body>
+</html>

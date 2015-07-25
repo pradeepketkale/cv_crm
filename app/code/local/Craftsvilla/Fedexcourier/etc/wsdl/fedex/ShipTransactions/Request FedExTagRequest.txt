@@ -1,0 +1,114 @@
+"<soapenv:Envelope xmlns:soapenv=""http://schemas.xmlsoap.org/soap/envelope/"" xmlns:v15=""http://fedex.com/ws/ship/v15"">
+   <soapenv:Header></soapenv:Header>
+   <soapenv:Body>
+      <v15:ProcessTagRequest>
+        <v15:WebAuthenticationDetail>
+                <v15:UserCredential>
+               <v15:Key>Input Your Information</v15:Key>
+               <v15:Password>Input Your Information</v15:Password>
+            </v15:UserCredential>
+         </v15:WebAuthenticationDetail>
+         <v15:ClientDetail>
+            <v15:AccountNumber>Input Your Information</v15:AccountNumber>
+            <v15:MeterNumber>Input Your Information</v15:MeterNumber>
+           </v15:ClientDetail>
+         <v15:TransactionDetail>
+            <v15:CustomerTransactionId>ProcessTag_v15</v15:CustomerTransactionId>
+         </v15:TransactionDetail>
+         <v15:Version>
+            <v15:ServiceId>ship</v15:ServiceId>
+            <v15:Major>15</v15:Major>
+            <v15:Intermediate>0</v15:Intermediate>
+            <v15:Minor>0</v15:Minor>
+         </v15:Version>
+         <v15:RequestedShipment>
+            <v15:ShipTimestamp>2014-05-26T09:30:47-05:00</v15:ShipTimestamp>
+            <v15:DropoffType>REGULAR_PICKUP</v15:DropoffType>
+            <v15:ServiceType>FEDEX_2_DAY_AM</v15:ServiceType>
+            <v15:PackagingType>YOUR_PACKAGING</v15:PackagingType>
+            <v15:TotalWeight>
+               <v15:Units>LB</v15:Units>
+               <v15:Value>149.0</v15:Value>
+            </v15:TotalWeight>
+            <v15:TotalInsuredValue>
+               <v15:Currency>USD</v15:Currency>
+               <v15:Amount>100.00</v15:Amount>
+            </v15:TotalInsuredValue>
+            <v15:Shipper>
+               <v15:Contact>
+                  <v15:PersonName>Input Your Information</v15:PersonName>
+                  <v15:CompanyName>Input Your Information</v15:CompanyName>
+                  <v15:PhoneNumber>Input Your Information</v15:PhoneNumber>
+               </v15:Contact>
+               <v15:Address>
+                  <v15:StreetLines>Input Your Information</v15:StreetLines>
+                  <v15:City>MEMPHIS</v15:City>
+                  <v15:StateOrProvinceCode>TN</v15:StateOrProvinceCode>
+                  <v15:PostalCode>38101</v15:PostalCode>
+                  <v15:CountryCode>US</v15:CountryCode>
+               </v15:Address>
+            </v15:Shipper>
+            <v15:Recipient>
+               <v15:Contact>
+                  <v15:PersonName>Input Your Information</v15:PersonName>
+                  <v15:CompanyName>Input Your Information</v15:CompanyName>
+                  <v15:PhoneNumber>Input Your Information</v15:PhoneNumber>
+               </v15:Contact>
+               <v15:Address>
+                  <v15:StreetLines>Input Your Information</v15:StreetLines>
+                  <v15:City>Memphis</v15:City>
+                  <v15:StateOrProvinceCode>TN</v15:StateOrProvinceCode>
+                  <v15:PostalCode>38018</v15:PostalCode>
+                  <v15:CountryCode>US</v15:CountryCode>
+               </v15:Address>
+            </v15:Recipient>
+            <v15:ShippingChargesPayment>
+               <v15:PaymentType>SENDER</v15:PaymentType>
+               <v15:Payor>
+                  <v15:ResponsibleParty>
+                     <v15:AccountNumber>Input Your Information</v15:AccountNumber>
+                     <v15:Contact>
+                        <v15:ContactId/>
+                        <v15:PersonName/>
+                        <v15:CompanyName/>
+                        <v15:PhoneNumber/>
+                        <v15:EMailAddress/>
+                     </v15:Contact>
+                  </v15:ResponsibleParty>
+               </v15:Payor>
+            </v15:ShippingChargesPayment>
+            <v15:SpecialServicesRequested>
+               <v15:SpecialServiceTypes>RETURN_SHIPMENT</v15:SpecialServiceTypes>
+               <v15:ReturnShipmentDetail>
+                  <v15:ReturnType>FEDEX_TAG</v15:ReturnType>
+               </v15:ReturnShipmentDetail>
+            </v15:SpecialServicesRequested>
+            <v15:PickupDetail>
+               <v15:ReadyDateTime>2014-05-26T12:30:47-05:00</v15:ReadyDateTime>
+               <v15:LatestPickupDateTime>2014-05-26T14:30:47-05:00</v15:LatestPickupDateTime>
+               <v15:CourierInstructions>HandleWithCare</v15:CourierInstructions>
+            </v15:PickupDetail>
+            <v15:LabelSpecification>
+               <v15:LabelFormatType>COMMON2D</v15:LabelFormatType>
+               <v15:ImageType>DPL</v15:ImageType>
+               <v15:LabelStockType>PAPER_4X6</v15:LabelStockType>
+               <v15:LabelPrintingOrientation>BOTTOM_EDGE_OF_TEXT_FIRST</v15:LabelPrintingOrientation>
+            </v15:LabelSpecification>
+            <v15:RateRequestTypes>LIST</v15:RateRequestTypes>
+            <v15:PackageCount>1</v15:PackageCount>
+            <v15:RequestedPackageLineItems>
+               <v15:SequenceNumber>1</v15:SequenceNumber>
+               <v15:InsuredValue>
+                  <v15:Currency>USD</v15:Currency>
+                  <v15:Amount>100.00</v15:Amount>
+               </v15:InsuredValue>
+               <v15:Weight>
+                  <v15:Units>LB</v15:Units>
+                  <v15:Value>50.00</v15:Value>
+               </v15:Weight>
+               <v15:ItemDescription>String</v15:ItemDescription>
+            </v15:RequestedPackageLineItems>
+         </v15:RequestedShipment>
+      </v15:ProcessTagRequest>
+   </soapenv:Body>
+</soapenv:Envelope>"

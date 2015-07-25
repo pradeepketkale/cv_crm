@@ -1,0 +1,57 @@
+<?php $_session = Mage::getSingleton('udropship/session') ?>
+
+<?php echo $this->getMessagesBlock()->getGroupedHtml() ?>
+
+<form action="#" method="post" id="login-form">
+
+
+ <div class="login-boxnew" id="centered-box">
+	<div class="dashboard_head">
+		<h1 class="headingnew"><?php echo $this->__('Vendor Log in') ?></h1>
+		<div class="breadcrumbs_bottom"></div>
+	</div>
+    <div class="col-1 registered-users raised-box">
+        <div class="content">
+           
+            <ul class="form-list form-listvl">
+                <li>
+                    <label for="email" style="display:block;"><?php echo $this->__('Username / Email Address') ?> <span class="required">*</span></label><br />
+                    <input name="login[username]" value="<?php echo $this->htmlEscape($_session->getUsername()) ?>" title="<?php echo $this->__('Email Address') ?>" id="email" type="text" class="editInfoInput" />
+                </li>
+                <li class="clr">
+                    <label for="pass" style="display:block;"><?php echo $this->__('Password') ?> <span class="required">*</span></label><br />
+                    <input name="login[password]" type="password" class="editInfoInput" id="pass" />
+                </li>
+            </ul>
+	    
+			<div class="clr">
+				<span class="required"><?php echo $this->__('* Required Fields') ?></span><br />            
+				<button style="margin: 10px 0; float:left;" class="continueMdm" type="submit" name="send">
+					<?php echo $this->__('Login') ?>
+				</button>
+				<div class="clear"></div>
+				<div class="paddtop"><?php echo $this->getChildHtml('login_links') ?></div>
+       	    </div>
+        </div>
+    </div>
+</div>
+
+
+</form>
+
+
+
+
+
+
+
+<?php if (!$this->getRequest()->getParam('ajax')): ?>
+<script type="text/javascript">
+    var dataForm = new VarienForm('login-form', true);
+</script>
+<?php endif ?>
+<?php if ($_session->getUsername()): ?>
+<script type="text/javascript">
+$('pass').focus();
+</script>
+<?php endif ?>

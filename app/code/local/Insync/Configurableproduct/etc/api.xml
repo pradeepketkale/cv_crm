@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <api>
+        <resources>
+            <configurableproduct_configurableproduct translate="title" module="configurableproduct">
+            	<title>Configurable Product Resource</title>
+            	<model>configurableproduct/configurableproduct_api</model>
+            	  <methods>
+                	<create translate="title" module="configurableproduct">
+                    	<title>Create Configurable Product</title>
+                    	<method>create</method>
+                   </create>
+				   <listAttribute translate="title" module="configurableproduct">
+                    	<title>Retrieve Configurable Attributes</title>
+                    	<method>getUsedConfigurableAttributes</method>
+                   </listAttribute>
+				    <listAttributePrice translate="title" module="configurableproduct">
+                    	<title>Retrieve Configurable Attributes Price</title>
+                    	<method>getAttributePriceData</method>
+                   </listAttributePrice>
+				   <listChildProduct translate="title" module="configurableproduct">
+                    	<title>Retrieve Child Product</title>
+                    	<method>getAssociatedProduct</method>
+                   </listChildProduct>
+            	 </methods>
+            </configurableproduct_configurableproduct>
+        </resources>
+		 <resources_alias>
+            <configurableproduct>configurableproduct_configurableproduct</configurableproduct>
+        </resources_alias>
+		<v2>
+        	<resources_function_prefix>
+                <configurableproduct>configurableproductConfigurableproduct</configurableproduct>
+            </resources_function_prefix>
+        </v2>
+    </api>
+</config>

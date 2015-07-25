@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+    <default>
+    </default>
+    <sellerqualitycraftsvilla_index_index>
+        <reference name="content">
+            <block type="sellerqualitycraftsvilla/sellerqualitycraftsvilla" name="sellerqualitycraftsvilla" template="sellerqualitycraftsvilla/sellerqualitycraftsvilla.phtml" />
+        </reference>
+    </sellerqualitycraftsvilla_index_index>
+</layout> 
+

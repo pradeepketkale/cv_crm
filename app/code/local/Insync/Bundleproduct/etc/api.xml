@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <api>
+        <resources>
+            <bundleproduct_bundleproduct translate="title" module="bundleproduct">
+            	<title>Bundleproduct Resource</title>
+            	<model>bundleproduct/bundleproduct_api</model>
+            	  <methods>
+                	<create translate="title" module="bundleproduct">
+                    	<title>Create Bundle Product</title>
+                    	<method>create</method>
+                   </create>
+				   <list translate="title" module="bundleproduct">
+                    	<title>Get list of Bundle Product</title>
+                    	<method>getBundleProduct</method>
+                   </list>
+            	 </methods>
+            </bundleproduct_bundleproduct>
+        </resources>
+		 <resources_alias>
+            <bundleproduct>bundleproduct_bundleproduct</bundleproduct>
+        </resources_alias>
+		<v2>
+        	<resources_function_prefix>
+                <bundleproduct>bundleproductBundleproduct</bundleproduct>
+            </resources_function_prefix>
+        </v2>
+    </api>
+</config>

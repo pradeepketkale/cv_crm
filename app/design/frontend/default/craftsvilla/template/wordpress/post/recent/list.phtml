@@ -1,0 +1,25 @@
+<?php $posts = $this->getPosts();
+//echo "<pre>";
+//print_r($posts);
+//exit;
+?>
+<?php if (count($posts) > 0): ?>
+	
+		<?php foreach($posts as $post): 
+			$images = array();
+			$image = $this->getSkinUrl('images/forum.jpg');
+			$images = $post->getImages()->load()->getData();
+			if(!empty($images))
+				$image = $images[0]['guid'];
+		?>
+			<div class="blogset"><img src="<?php echo $image; ?>" width="160" alt="" class="forum floatl"/>
+            
+            <div class="block_content"> <span class="item mHide">
+				<h3><a href="<?php echo $post->getPermalink() ?>" title="<?php echo $this->htmlEscape($post->getPostTitle()) ?>" target="_blank"><?php echo $this->htmlEscape($post->getPostTitle()) ?></a>
+			</h3></span><?php echo $post->getPostExcerpt() ?></div>
+            <p class="article-more"><a href="<?php echo $post->getPermalink() ?>" title="<?php echo $this->htmlEscape($post->getPostTitle()) ?>" target="_blank">Read the post</a></p></div>
+            
+            
+		<?php endforeach; ?>
+	
+<?php endif; ?>

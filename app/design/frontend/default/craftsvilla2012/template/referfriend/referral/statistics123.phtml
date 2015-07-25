@@ -1,0 +1,74 @@
+<script type=""text/javascript"">// <![CDATA[
+function sendReminder(invite_friends) {
+//var invite_friends = document.getElementById('Invite1_txtEmail').value;
+//alert(invite_friends);
+	if(invite_friends=='')
+	{
+		alert("email errror!");
+	}
+	else 
+	{
+		var reloadurl = '<?php echo $this->getUrl('referfriend/index/reminder') ?>';
+		new Ajax.Request(reloadurl, {
+			method: 'post',
+			parameters: {invite_friends:invite_friends,invite_box:'1',Submit:'Send Invites',homeInvite:'1'},
+			onComplete: function(transport) {
+				alert('Reminder mail has been sent!');
+			}
+		});
+	}
+}
+// ]]></script>
+<script language="JavaScript" type="text/javascript">
+function showhide(id){
+	document.getElementById('tab1').style.display ='none';
+	document.getElementById('tab2').style.display ='none';
+	document.getElementById(id).style.display ='';
+}
+</script>
+<?php $referrals = $this->getReferrals()->getdata(); ?>
+<div class="grid-top-menu">
+	<ul>
+		<li><a class="active" href="javascript:;"><span>Open Invitations</span></a></li>
+		<li><a href="<?php echo $this->getUrl('referfriend/index/accept') ?>"   onclick="javascript:showhide('tab2');"><span>Accepted Invitations</span></a></li>
+	</ul>
+	<?php if(!empty($referrals)): ?>
+	<table width="100%" border="0" bordercolor="#d5d5d5" cellspacing="0" cellpadding="0" id="tab1" class="table-grid" style=" border-collapse: collapse;">
+	<!-- accepted invitation list -->
+		<thead>
+    	<tr>
+    		<!--<th><?php echo $this->__('Referal No.') ?></th>-->
+    		<th><?php echo $this->__('Friends') ?></th>
+    		<th><?php echo $this->__('Last Invitation Sent') ?></th>
+			<th><span class="nobr"><?php echo $this->__('Send Reminder') ?></span></th>
+    		<!--<th><span class="nobr"><?php echo $this->__('Has Purchased') ?></span></th>
+    		<th><span class="nobr"><?php echo $this->__('Earnings') ?></span></th>-->
+    	</tr>
+    	</thead>
+    	<tbody>
+        <?php $_odd = ''; $i=''; ?>
+        <?php foreach ($referrals as $referral): 
+				$i++;
+				$this->registration_status = $referral['referral_register_status'];
+				$this->purchase_status = $referral['referral_purchase_status'];
+		?>
+        <tr>
+            <!--<td><?php echo $i ?></td>-->
+            <td><?php echo $referral['referral_email'] ?></td>
+	    	<td><span class="nobr"><?php echo $referral['created_ts'] ?></span></td>
+            <td><a href="#" onClick="sendReminder('<?php echo $referral['referral_email'] ?>')"><?php echo 'Send Reminder'; ?></a></td>
+			<!-- <td><?php echo $this->getPurchaseStatus() ?></td>
+			<td><?php echo $ii; ?></td>-->
+		</tr>
+		<?php endforeach; ?>
+		</tbody>
+	</table>
+<script type="text/javascript">decorateTable('my-orders-table');</script>
+<script type="text/javascript">decorateTable('my-orders-table');</script>
+		<?php echo $this->getPagerHtml(); ?>
+        <?php else: ?>
+        <p><?php echo $this->__('No invitation found.'); ?></p>
+        <?php endif ?>
+		</div>
+	</div>
+</div>

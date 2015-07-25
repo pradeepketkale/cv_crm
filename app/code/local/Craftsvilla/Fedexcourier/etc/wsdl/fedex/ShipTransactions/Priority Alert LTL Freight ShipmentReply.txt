@@ -1,0 +1,9 @@
+"<?xml version=""1.0"" encoding=""UTF-8""?>
+<soapenv:Envelope xmlns:soapenv=""http://schemas.xmlsoap.org/soap/envelope/""><env:Header xmlns:env=""http://schemas.xmlsoap.org/soap/envelope/"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance""/><soapenv:Body><v15:ProcessShipmentReply xmlns:env=""http://schemas.xmlsoap.org/soap/envelope/"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xmlns:v15=""http://fedex.com/ws/ship/v15""><v15:HighestSeverity>ERROR</v15:HighestSeverity><v15:Notifications><v15:Severity>ERROR</v15:Severity><v15:Source>ship</v15:Source><v15:Code>8336</v15:Code><v15:Message>Service type not valid with commitment.</v15:Message><v15:LocalizedMessage>Service type not valid with commitment.</v15:LocalizedMessage></v15:Notifications><v15:Notifications><v15:Severity>WARNING</v15:Severity><v15:Source>ship</v15:Source><v15:Code>2469</v15:Code><v15:Message>shipTimestamp is invalid</v15:Message><v15:LocalizedMessage>shipTimestamp is invalid</v15:LocalizedMessage></v15:Notifications><m0:TransactionDetail xmlns:SOAP-ENV=""http://schemas.xmlsoap.org/soap/envelope/"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" xmlns:SOAP-ENC=""http://schemas.xmlsoap.org/soap/encoding/"" xmlns:m0=""http://fedex.com/ws/ship/v15"">
+            <m0:CustomerTransactionId>IE_v15_Ship</m0:CustomerTransactionId>
+         </m0:TransactionDetail><m0:Version xmlns:SOAP-ENV=""http://schemas.xmlsoap.org/soap/envelope/"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" xmlns:SOAP-ENC=""http://schemas.xmlsoap.org/soap/encoding/"" xmlns:m0=""http://fedex.com/ws/ship/v15"">
+            <m0:ServiceId>ship</m0:ServiceId>
+            <m0:Major>15</m0:Major>
+            <m0:Intermediate>0</m0:Intermediate>
+            <m0:Minor>0</m0:Minor>
+         </m0:Version></v15:ProcessShipmentReply></soapenv:Body></soapenv:Envelope>"

@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+    <checkout_onepage_success>
+        <remove name="checkout.success" />
+        <reference name="head">
+            <action method="addCss"><stylesheet>meanbee/ordershare/css/ordershare.css</stylesheet></action>
+        </reference>
+        <reference name="content">
+            <block type="ordershare/ordershare" name="meanbee.ordershare" template="meanbee/ordershare/ordershare.phtml"/>
+        </reference>
+    </checkout_onepage_success>
+    <checkout_multishipping_success>
+        <remove name="checkout_success" />
+        <reference name="head">
+            <action method="addCss"><stylesheet>meanbee/ordershare/css/ordershare.css</stylesheet></action>
+        </reference>
+        <reference name="content">
+            <block type="ordershare/multishipping_ordershare" name="checkout_ordershare_success" template="meanbee/ordershare/multishipping/ordershare.phtml" />
+        </reference>
+    </checkout_multishipping_success>
+</layout>

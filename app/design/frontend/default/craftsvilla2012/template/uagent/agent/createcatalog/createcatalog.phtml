@@ -1,0 +1,235 @@
+<?php 
+$_session = Mage::getSingleton('uagent/session');
+$agentId = $_session->getAgentId();
+$hlp = Mage::helper('uagent');
+if ($_session->isLoggedIn()):
+?> 
+<style type="text/css">
+.col-left {
+    padding: 0 0 0 0;
+    width: 129px;
+}  
+* {
+	margin:0;
+	padding:0;
+	list-style:none;
+}
+.listanitem {
+	overflow:hidden;
+		padding:10px 0;
+}
+.listanitem.last {
+	border:0;
+}
+.listanitem li {
+	float:left;
+	font-family:Arial, Helvetica, sans-serif;
+	font-size:12px;
+	color:#444;
+	padding-right:8px;
+}
+.listaniteminputs li {
+	float:none;
+	padding-bottom:10px;
+        overflow:hidden;
+}
+.listaniteminputs li label {
+	float:left;
+	padding-right:10px;
+	width:130px;
+        font-weight: normal;
+}
+
+.listanitem li label {
+	display:block;
+}
+.listanitem li select {
+	width:180px;
+	font-family:Arial, Helvetica, sans-serif;
+}
+
+.listanitem li select,.listanitem li textarea,.listanitem li input{background:#fff;}
+
+.listaniteminputs li select,.listaniteminputs li textarea,.listaniteminputs li input{ width:231px;}
+
+
+.listaniteminputs li input, .listaniteminputs li textarea {
+	width:220px;
+	padding:3px;
+}
+.listanitem li .img {
+	border:1px solid #ccc;
+	width:80px;
+	height:80px;
+}
+.listfomrs {
+	padding:5px;
+	background:#f7f7f7;
+	border:1px solid #ccc;
+	margin:10px 0;
+}
+.listfomrs {
+	padding:5px;
+	background:#f7f7f7;
+	border:1px solid #ccc;
+	margin:10px 0;
+}
+.shippingdata{
+	text-align:left;
+	margin: 0 0 0 180px;
+	 width:220px;
+	padding:3px;
+	
+	}
+
+.productpic_thumbnew{
+    border: 1px solid #CCCCCC;
+    float: right;
+    margin: 0 0 0 15px;}
+.valignm { border-spacing: 3px;}
+.valignm tr td{ vertical-align: middle;}
+.valignm tr td input{ padding:3px;}
+</style>
+<div class="page-title">
+
+        <h1>Create Catalog</h1>
+    </div>
+    <div class="fieldset mkpdash">
+    <b>Here you can create an email/printable catalog to share with your customers. You need to provide comma separated sku ids of the products you want to add in your catalog. You are free to create as many catalog you wish to and all the catalogs will be available below in the grid. Please add products which you think your customers will like and would buy. We recommend creating a catalog using no more than 20-24 products. You can also add your Agent coupon code in the catalog for customers to use to convert them easily. You can also send email to yourself which you can forward to your customers from your inbox. <a href="http://www.screenr.com/embed/WBwH" width="250" height="280" frameborder="0" target="_blank">You can see demo video here</a></b></div>
+<?php echo $this->getMessagesBlock()->getGroupedHtml() ?>
+
+	
+                <form name="createcataloglist" action="<?php echo $this->getUrl('uagent/index/createcataloglist');?>" method="post" enctype="multipart/form-data">
+                <div class="listfomrs">
+            <ul class="listanitem last listaniteminputs">
+             <li class="lablelist"><label>Catalog Title</label> 
+	                <div class="floatl"><input type="text" name="catalogtitle" id="catalogtitle" class="inputtext required-entry"  /></div>
+                </li>
+                <li class="lablelist"><label>Sku</label> 
+	                <div class="floatl"><input type="text" name="sku" id="sku" class="inputtext required-entry"  /></div>
+                </li>
+                <li class="lablelist clr"><label>Your Coupon Code</label> 
+                    <div class="floatl"><input type="text" name="couponcode" id="couponcode" class="validate-digits required-entry validate-greater-than-zero"/></div>
+                </li>
+                
+                 <input type="hidden" name="agent_id" value="<?php echo $_session->getAgent()->getAgentId();?>"  />
+                </ul>
+        </div>
+ <input type="submit" value="Create Catalog" class="form-button"/> </form>
+                <br /><br /><br /><br /><br /><br />
+   <div class="box-head">
+  <h3>Details Of Your Catalog</h3>
+</div>
+<div class="a-left" style="margin:10px 0">
+
+<div style="max-height: 1000px;overflow: scroll;width: 883px;">    
+    <table cellspacing="1" cellpadding="0" class="data-table table-gride vtop">
+     <thead>
+        <tr>
+          <th><?php echo $this->__('Catalog Title')?></th> 
+          <th><?php echo $this->__('Coupon Code')?></th>
+          <th><?php echo $this->__('Created At')?></th>
+          <th><?php echo $this->__('View')?></th>
+          <th><?php echo $this->__('Send Email')?></th>
+        </tr>
+      </thead>
+      <tbody> 
+         <tbody>
+      	<?php
+		$agentId = Mage::getSingleton('uagent/session')->getAgentId();
+		
+		/*$collection = Mage::getModel('uagent/cataloguecraftsvilla')->getCollection()
+						->addFieldToFilter('agentid', $agentId)
+						->setOrder('catalog_id', 'DESC');
+						$collection->getSelect()->limit(10);*/
+		$readCollect = 	Mage::getSingleton('core/resource')->getConnection('core_read');			
+		$collectionQry = "SELECT * FROM  `cataloguecraftsvilla` WHERE  `agentid` =  '".$agentId."' ORDER BY  `cataloguecraftsvilla`.`catalog_id` DESC LIMIT 10";
+		$collection = $readCollect->query($collectionQry)->fetchAll();
+		
+		foreach ($collection as $collect) 
+		{		
+		
+		$filename = $collect['filename'];
+		$filepath = Mage::getBaseUrl('media'). 'agenthtml'.'/';
+		$filenamepath = $filepath.$filename;
+
+			?>	
+		<tr>
+          <td><?php echo $collect['catalogtitle'];?></td>
+          <td><?php echo $collect['coupon_code'];?></td>
+          <td><?php echo $collect['created_at'];?></td>
+         <td><a href="<?php echo $filenamepath ?>" target="_blank"><?php echo $collect['filename'];?></a></td>
+         <td> 
+           <form name="sendmail" action="<?php echo $this->getUrl('uagent/index/sendemail')."catalog_id/".$collect['catalog_id'];?>" method="post" enctype="multipart/form-data">
+         <input type="submit" value="Send Email" id="sendemail" name="sendemail" class="form-button" /> 
+          </form> 
+          </td> 
+        </tr> 
+          <?php } ?>  </tbody>   
+   </table>      
+ <div class="clr"></div>
+  </div></div>    
+
+<?php endif;?>
+<script type="text/javascript">
+//<![CDATA[
+enUS = {"m":{"wide":["January","February","March","April","May","June","July","August","September","October","November","December"],"abbr":["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]}}; // en_US locale reference
+Calendar._DN = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"]; // full day names
+Calendar._SDN = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"]; // short day names
+Calendar._FD = 0; // First day of the week. "0" means display Sunday first, "1" means display Monday first, etc.
+Calendar._MN = ["January","February","March","April","May","June","July","August","September","October","November","December"]; // full month names
+Calendar._SMN = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]; // short month names
+Calendar._am = "AM"; // am/pm
+Calendar._pm = "PM";
+
+// tooltips
+Calendar._TT = {};
+Calendar._TT["INFO"] = "About the calendar";
+
+Calendar._TT["ABOUT"] =
+"DHTML Date/Time Selector\n" +
+"(c) dynarch.com 2002-2005 / Author: Mihai Bazon\n" +
+"For latest version visit: http://www.dynarch.com/projects/calendar/\n" +
+"Distributed under GNU LGPL. See http://gnu.org/licenses/lgpl.html for details." +
+"\n\n" +
+"Date selection:\n" +
+"- Use the \xab, \xbb buttons to select year\n" +
+"- Use the " + String.fromCharCode(0x2039) + ", " + String.fromCharCode(0x203a) + " buttons to select month\n" +
+"- Hold mouse button on any of the above buttons for faster selection.";
+Calendar._TT["ABOUT_TIME"] = "\n\n" +
+"Time selection:\n" +
+"- Click on any of the time parts to increase it\n" +
+"- or Shift-click to decrease it\n" +
+"- or click and drag for faster selection.";
+
+Calendar._TT["PREV_YEAR"] = "Prev. year (hold for menu)";
+Calendar._TT["PREV_MONTH"] = "Prev. month (hold for menu)";
+Calendar._TT["GO_TODAY"] = "Go Today";
+Calendar._TT["NEXT_MONTH"] = "Next month (hold for menu)";
+Calendar._TT["NEXT_YEAR"] = "Next year (hold for menu)";
+Calendar._TT["SEL_DATE"] = "Select date";
+Calendar._TT["DRAG_TO_MOVE"] = "Drag to move";
+Calendar._TT["PART_TODAY"] = ' (' + "Today" + ')';
+
+// the following is to inform that "%s" is to be the first day of week
+Calendar._TT["DAY_FIRST"] = "Display %s first";
+
+// This may be locale-dependent. It specifies the week-end days, as an array
+// of comma-separated numbers. The numbers are from 0 to 6: 0 means Sunday, 1
+// means Monday, etc.
+Calendar._TT["WEEKEND"] = "0,6";
+
+Calendar._TT["CLOSE"] = "Close";
+Calendar._TT["TODAY"] = "Today";
+Calendar._TT["TIME_PART"] = "(Shift-)Click or drag to change value";
+
+// date formats
+Calendar._TT["DEF_DATE_FORMAT"] = "%b %e, %Y";
+Calendar._TT["TT_DATE_FORMAT"] = "%B %e, %Y";
+
+Calendar._TT["WK"] = "Week";
+Calendar._TT["TIME"] = "Time:";
+
+//]]>
+
+</script>

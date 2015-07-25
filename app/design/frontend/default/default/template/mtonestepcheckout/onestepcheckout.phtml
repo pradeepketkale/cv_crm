@@ -1,0 +1,613 @@
+<?php
+/******************************************************
+ * @package MT OneStepCheckOut module for Magento 1.4.x.x and Magento 1.5.x.x
+ * @version 1.5.2.1
+ * @author http://www.magentheme.com
+ * @copyright (C) 2011- MagenTheme.Com
+ * @license PHP files are GNU/GPL
+*******************************************************/
+?>
+<?php
+$hlp = Mage::helper('generalcheck');
+$ismobile = $hlp->ismobile();
+
+if(!$ismobile)
+{?> 
+
+<?php
+/******************************************************
+ * @package MT OneStepCheckOut module for Magento 1.4.x.x and Magento 1.5.x.x
+ * @version 1.5.2.1
+ * @author http://www.magentheme.com
+ * @copyright (C) 2011- MagenTheme.Com
+ * @license PHP files are GNU/GPL
+*******************************************************/
+?>
+<?php $checkUseForShipping = Mage::getSingleton('core/session')->getData('use_for_shipping'); ?>
+<script type="text/javascript">countryRegions = <?php echo $this->helper('directory')->getRegionJson() ?></script>
+<script type="text/javascript">
+	//var $j = jQuery.noConflict();
+</script>
+<div class="twostepprewrapper" id="wrapper">
+	<div class="wrapper_in">
+	<?php
+		/*CALLING CHECKOUT HEADER STARTS*/
+		echo $this->getLayout()->createBlock('cms/block')->setBlockId('checkout-header')->toHtml();
+		/*CALLING CHECKOUT HEADERN ENDS*/
+	?>
+	<div class="onestepcheckout-wrapper">
+		<div class="onestepcheckout-header">
+			<!--h3><?php //echo Mage::helper('mtonestepcheckout')->checkoutTitle() ?></h3-->
+			<p class="onestepcheckout-note"><?php echo Mage::helper('mtonestepcheckout')->checkoutDescription() ?></p>
+		</div>
+	<?php $i=0; foreach($this->getSteps() as $_stepId => $_stepInfo): ?>
+	<?php if (!$this->getChild($_stepId) || !$this->getChild($_stepId)->isShow()): continue; endif; ?>
+		<?php if($_stepId == 'login'): ?>
+		<!--div class="onestepcheckout-<?php echo $_stepId ?>">
+			<div class="checkout-step-<?php echo $_stepId ?>">
+				<?php //echo $this->getChildHtml($_stepId) ?>
+			</div>
+		</div-->
+			<?php
+				$loginStepHtml = '';
+			?>
+		<?php else: ?>
+		<?php if($_stepId == 'shipping'): ?>
+		<?php if($checkUseForShipping): ?>
+		<?php $i++; ?>
+		<?php endif; ?>
+		<?php else: ?>
+		<?php $i++ ?>
+		<?php endif; ?>
+		<?php if($_stepId == 'billing'): ?>
+		
+			<div id="tabs">
+			<ul>
+				<li><a href="#tab-1" id="emailshippingtab">Email &amp; Shipping Details</a></li>
+				<li><a href="#tab-2" id="makepaymenttab">Make Payment</a></li>
+			</ul>
+			<?php
+				$continueButton = '<ul style="clear:both;"><li class="nextstep"><div class="btn icon-btn_138 red fancybox em modal_link" onclick=""><span class="inner">Continue</span></div><div class="ajaxloadermtosc displaynone"></div></li></ul>';
+				$shipCheck = '';
+				$shipCheck .='<div class="control">';
+				$checkUseForShipping = Mage::getSingleton('core/session')->getData('use_for_shipping');
+				$shipCheck .='<input type="checkbox" name="billing[use_for_shipping]" id="billing:use_for_shipping_yes"';
+				if($checkUseForShipping){
+					$shipCheck .='checked="checked"';
+				}
+				$shipCheck .='value="2" title="'.$this->__('Ship to different address').'" class="checkbox shipping-check" />';
+				$shipCheck .='<label for="billing:use_for_shipping_yes">'.$this->__('Ship to different address').'</label>';
+				$shipCheck .='<script type="text/javascript">';
+			//	$shipCheck .='//<![CDATA[';
+				$shipCheck .='$("billing:use_for_shipping_yes").observe("click", function(event){billing.enalbleShippingAddress();}.bind(this));';
+			//	$shipCheck .='//]]';
+				$shipCheck .='</script>';
+				$shipCheck .='</div>';
+			?>
+				
+				<form id="onestepcheckout-form" action="" method="post">
+				<div id="tab-1"class="first left" >
+				<?php echo $this->getChildHtml('login');?>
+				<div class="tab1inner" id="tab-1-inner">
+				<?php echo $shipCheck;?>
+			<?php endif; ?>
+			<?php if (!Mage::getSingleton('checkout/type_onepage')->getQuote()->isVirtual()): ?>
+				<?php if($_stepId == 'shipping_method') echo $continueButton, '</div></div><div id="tab-2" class="last right" >'; ?>
+			<?php else: ?>
+				<?php if($_stepId == 'payment') echo '</div><div id="tab-2" class="last right" >'; ?>
+			<?php endif; ?>
+			<?php if($_stepId == 'shipping'): ?>
+					<div class="step onestepcheckout-<?php echo $_stepId ?>" <?php if($checkUseForShipping): ?>style="display:block;"<?php else: ?>style="display:none;"<?php endif; ?> id="shipping-address-form">
+			<?php else: ?>
+					<div class="step onestepcheckout-<?php echo $_stepId ?>">
+			<?php endif; ?>
+						<div class="step-title">
+							<span id="step-number" <?php if($_stepId == 'review'): ?>class="step-review"<?php elseif($checkUseForShipping): ?>class="step-<?php echo $i ?>"<?php elseif($_stepId != 'shipping'): ?>class="step-<?php echo $i ?>"<?php endif; ?>></span>
+							<h2><?php echo $_stepInfo['label'] ?></h2>
+						</div>
+						<div class="content checkout-step-<?php echo $_stepId ?>">
+							<?php echo $this->getChildHtml($_stepId) ?>
+						</div>
+					</div>
+			<?php endif; ?>
+		<?php endforeach ?>
+			<div class="buttons-set" id="review-buttons-container">
+			<p class="f-left"><?php echo $this->__('Forgot an Item?') ?> <a href="<?php echo $this->getUrl('checkout/cart') ?>"><?php echo $this->__('Edit Your Cart') ?></a></p>
+			<!--Added id to hide the place order button  By Dileswar on dated 30-12-2013   -->
+            <button type="button" title="<?php echo $this->__('Place Order') ?>" id="btn-checkout-1140" class="button btn-checkout" onclick="placeorderfunction();"><span><span><?php echo $this->__('Place Order') ?></span></span></button>
+			<div class="ajaxloadermtosc displaynone"></div>
+			<span class="please-wait" id="review-please-wait" style="display:none;">
+				<img src="<?php echo $this->getSkinUrl('images/opc-ajax-loader.gif') ?>" alt="<?php echo $this->__('Submitting order information...') ?>" title="<?php echo $this->__('Submitting order information...') ?>" class="v-middle" /> <?php echo $this->__('Submitting order information...') ?>
+			</span>
+			</div>
+				<?php 
+					// echo '<pre>';
+					//var_dump($this->getQuote()->getShippingAddress()->getShippingMethod());exit;
+					//print_r(get_class_methods($this->getQuote()->getShippingAddress()));exit; 
+					$shipping_method = $this->getQuote()->getShippingAddress()->getShippingMethod() ? $this->getQuote()->getShippingAddress()->getShippingMethod() : 'udropship_Per Item Shipping';
+				?>
+				<!--<input name="shipping_method" type="hidden" value="<?php //echo $shipping_method ?>"  />-->
+                <input name="shipping_method" type="hidden" value="udropship_Per Item Shipping"  />
+			</form>
+				</div>
+			</div>	
+		</div>
+		
+		<div class="checkout-right-panel">
+			<?php //echo $this->getChildHtml('cart_sidebar1');?>
+			<?php echo $this->getChildHtml('sidebar-right');?>
+		</div>
+	<!--/form-->
+		</div>
+	</div>
+<?php 
+	/*CALLING CHECKOUT FOOTER STARTS*/
+	echo $this->getLayout()->createBlock('cms/block')->setBlockId('checkout-footer')->toHtml();
+	/*CALLING CHECKOUT FOOTER ENDS*/
+?>
+</div><!--Pre Wrapper ends-->
+<script type="text/javascript">
+//<![CDATA[
+    var shippingMethod = new ShippingMethod(
+                                    "<?php echo $this->getUrl('mtonestepcheckout/index/saveShippingMethod') ?>",
+                                    <?php echo Mage::helper('mtonestepcheckout')->isReloadPayment() ?>
+                                );
+//]]>
+</script>
+<script type="text/javascript">
+	function placeorderfunction(){
+		//shippingMethod.saveShippingMethod();
+		var validator = new Validation('checkout-payment-method-load');
+		if(validator.validate()) {
+			jQuery('.btn-checkout').hide();
+			jQuery('.ajaxloadermtosc').show();
+
+			review.save();
+			//$j.post('<?php //echo $this->getUrl('mtonestepcheckout/index/saveOrder') ?>');
+			
+			//jQuery('.btn-checkout').show();
+			//jQuery('.ajaxloadermtosc').hide();
+		}else{
+			alert('Invalid form. Kindly fill all the required fields.');
+		}
+	}
+//<![CDATA[
+
+    var onestepcheckout = new Onestepcheckout(
+                {
+                    //failure: '<?php //echo $this->getUrl('checkout/onepage/failure') ?>',
+					failure: '<?php echo $this->getUrl('secureebs/standard/failure/') ?>',
+                    reloadReview: '<?php echo $this->getUrl('mtonestepcheckout/index/reloadReview') ?>',
+                    reloadPayment: '<?php echo $this->getUrl('mtonestepcheckout/index/reloadPayment') ?>',
+                    success: '<?php echo $this->getUrl('checkout/onepage/success') ?>'
+                }
+            );
+    if($('billing-address-select')){
+        billing.setAddress($('billing-address-select').value);
+    }else{
+        if($('billing:use_for_shipping_yes') == undefined || $('billing:use_for_shipping_yes').checked == false) {
+            billing.saveCountry();
+        } else {
+            shipping.saveCountry();
+        }
+    }
+//]]>
+</script>
+    <script type="text/javascript">
+    //<![CDATA[
+		<?php $couponCode = 0;if($this->getQuote()->getCouponCode()) $couponCode = 1; ?>
+		var review = new Review('onestepcheckout-form',
+			'<?php echo $this->getUrl('mtonestepcheckout/index/coupon') ?>',
+			'<?php echo $couponCode ?>',
+			'<?php echo $this->getUrl('mtonestepcheckout/index/updateQty') ?>',
+			'<?php echo $this->getUrl('mtonestepcheckout/index/saveOrder') ?>',
+			$('checkout-agreements') 
+		);
+    //]]>
+    </script>
+<script type="text/javascript">
+		function populateShippingAddress(){
+			var isChecked = $j('input.shipping-check').attr('checked')?true:false;
+			var html = '';
+			if(isChecked){
+				html += '<div class="right-ship-name">'+$j('input[name="shipping[firstname]"]').val()+' '+$j('input[name="shipping[lastname]"]').val()+'</div>';
+				html += '<div class="right-ship-address">';
+				html +=$j('input[name="shipping[street][]"]').val()+' <br/>';
+				html +=$j('input[name="shipping[city]"]').val()+' <br/>';
+				html +=$j('input[name="shipping[postcode]"]').val()+' <br/>';
+				var regiontext = $j('select[name="shipping[region_id]"] option:selected').text();
+				if(regiontext == 'Please select region, state or province'){
+					regiontext = $j('input[name="shipping[region]"]').val();
+				}
+				html +=regiontext+' <br/> ';
+				html +=$j('select[name="shipping[country_id]"] option:selected').text()+' <br/>';
+				//html +=$j('input[name="shipping[country_id]"] option:selected').text();+' <br/>';
+				html +=$j('input[name="shipping[telephone]"]').val()+' ';
+				html += '</div>';
+			} else{
+				html += '<div class="right-ship-name">'+$j('input[name="billing[firstname]"]').val()+' '+$j('input[name="billing[lastname]"]').val()+'</div>';
+				html += '<div class="right-ship-address">';
+				html +=$j('input[name="billing[street][]"]').val()+' <br/>';
+				html +=$j('input[name="billing[city]"]').val()+' <br/>';
+				html +=$j('input[name="billing[postcode]"]').val()+' <br/>';
+				var regiontext = $j('select[name="billing[region_id]"] option:selected').text();
+				if(regiontext == 'Please select region, state or province'){
+					regiontext = $j('input[name="billing[region]"]').val();
+				}
+				html +=regiontext+' <br/> ';
+				html +=$j('select[name="billing[country_id]"] option:selected').text()+' <br/>';
+				html +=$j('input[name="billing[telephone]"]').val()+' ';
+				html += '</div>';
+			}
+			
+			$j('.shipping-addr-sidebar .shipping-addr-container').html(html);
+		}
+	$j(document).ready(new function(){
+		//$j('#checkout-payment-method-load input').attr('checked', 'false');
+		var reloadReviewUrl = '<?php echo $this->getUrl('mtonestepcheckout/index/reloadReviewh') ?>';
+		shippingMethod.saveShippingMethod();
+		reloadReview(reloadReviewUrl);
+		$j('#coupon_code-right').bind('keyup', function(){
+			$j('.coupon-hidden-code').val($j('#coupon_code-right').val());
+		})
+		//document.title = 'Checkout';
+		var $tabs = $j( "#tabs" ).tabs();
+		$tabs.tabs({disabled: [0,1]});
+		
+		$j('.nextstep div.btn').bind('click', function(){
+			gotonextstep();
+		});
+		
+		$j('.tab1inner').bind('keypress submit', function(e) {
+			if(e.which == 13) {
+				gotonextstep();
+				return false;
+			}
+		});
+		
+		function gotonextstep(){
+			
+			//shippingMethod.saveShippingMethod();
+			checkpostalcode('<?php echo $this->getUrl('mtonestepcheckout/index/postalcodecheck')?>');
+			//$j('.meth-cod-dd input').attr('checked', 'false');
+			//$j('#p_method_avenues_standard').attr('checked', 'true');
+			$j('.nextstep div.btn').hide();
+			var validator = new Validation('tab-1-inner');
+			if(validator.validate()) {
+				populateShippingAddress();
+					$j('.shipping-addr-sidebar').show();
+					$tabs.tabs({disabled: []});
+					$tabs.tabs('select', 1);
+					$j('.nextstep div.btn').show();
+					$j('nextstep .ajaxloadermtosc').hide();
+			reloadReview(reloadReviewUrl);
+			}else{
+				$j('html, body').animate({ scrollTop: 0}, 'slow');
+				$j('.nextstep div.btn').show();
+				$j('nextstep .ajaxloadermtosc').hide();
+			}
+		}
+		
+
+		
+		$j('#tab-1 .companyfield').hide();
+		$j('#tab-2 .onestepcheckout-shipping_method').hide();
+		$j('#tab-2 .onestepcheckout-review').hide();
+		
+		<?php if(!$this->isCustomerLoggedIn()): ?>
+			$j('#tab-1 .tab1inner').hide();
+		<?php else:?>
+			$j('#tab-1 .loginstep').hide();
+		<?php endif;?>
+
+	});
+
+
+</script>
+
+
+
+
+
+
+
+
+
+
+<?php } else { ?>
+<?php $checkUseForShipping = Mage::getSingleton('core/session')->getData('use_for_shipping'); ?>
+<script type="text/javascript">countryRegions = <?php echo $this->helper('directory')->getRegionJson() ?></script>
+<script type="text/javascript">
+	//var $j = jQuery.noConflict();
+</script>
+<div class="twostepprewrapper" id="wrapper">
+	<div class="wrapper_in" style="width:900px;">
+	<?php
+		/*CALLING CHECKOUT HEADER STARTS*/
+		echo $this->getLayout()->createBlock('cms/block')->setBlockId('checkout-header')->toHtml();
+		/*CALLING CHECKOUT HEADERN ENDS*/
+	?>
+	<div class="onestepcheckout-wrapper" style="width:100%;">
+		<div class="onestepcheckout-header">
+			<!--h3><?php //echo Mage::helper('mtonestepcheckout')->checkoutTitle() ?></h3-->
+			<p class="onestepcheckout-note"><?php echo Mage::helper('mtonestepcheckout')->checkoutDescription() ?></p>
+		</div>
+	<?php $i=0; foreach($this->getSteps() as $_stepId => $_stepInfo): ?>
+	<?php if (!$this->getChild($_stepId) || !$this->getChild($_stepId)->isShow()): continue; endif; ?>
+		<?php if($_stepId == 'login'): ?>
+		<!--div class="onestepcheckout-<?php echo $_stepId ?>">
+			<div class="checkout-step-<?php echo $_stepId ?>">
+				<?php //echo $this->getChildHtml($_stepId) ?>
+			</div>
+		</div-->
+			<?php
+				$loginStepHtml = '';
+			?>
+		<?php else: ?>
+		<?php if($_stepId == 'shipping'): ?>
+		<?php if($checkUseForShipping): ?>
+		<?php $i++; ?>
+		<?php endif; ?>
+		<?php else: ?>
+		<?php $i++ ?>
+		<?php endif; ?>
+		<?php if($_stepId == 'billing'): ?>
+		
+			<div id="tabs" style="font-size:1.3em;" >
+			<ul>
+				<li><a href="#tab-1" id="emailshippingtab">Email &amp; Shipping Details</a></li>
+				<li><a href="#tab-2" id="makepaymenttab">Make Payment</a></li>
+			</ul>
+			<?php
+				
+				$continueButton = '<ul style="clear:both;"><li class="nextstep" ><div class="btn icon-btn_138 red fancybox em modal_link" style="width:100%;" onclick=""><span class="newaddcartbutton12092014" style="width:100% !important; font-size:2em;line-height:45px;height:45px;" >Continue</span></div><div class="ajaxloadermtosc displaynone"></div></li></ul>';
+
+				//$continueButton = '<ul style="clear:both;"><li class="nextstep" ><div class="btn icon-btn_138 red fancybox em modal_link" style="margin-left:30px;" onclick=""><input type="button" value="Continue" /></div><div class="ajaxloadermtosc displaynone"></div></li></ul>';				
+				$shipCheck = '';
+				$shipCheck .='<div class="control">';
+				$checkUseForShipping = Mage::getSingleton('core/session')->getData('use_for_shipping');
+				/*$shipCheck .='<input type="checkbox" name="billing[use_for_shipping]" id="billing:use_for_shipping_yes"';
+				if($checkUseForShipping){
+					$shipCheck .='checked="checked"';
+				}
+				$shipCheck .='value="2" title="'.$this->__('Ship to different address').'" class="checkbox shipping-check" />';
+				$shipCheck .='<label for="billing:use_for_shipping_yes">'.$this->__('Ship to different address').'</label>';*/
+				$shipCheck .='<script type="text/javascript">';
+			//	$shipCheck .='//<![CDATA[';
+				$shipCheck .='$("billing:use_for_shipping_yes").observe("click", function(event){billing.enalbleShippingAddress();}.bind(this));';
+			//	$shipCheck .='//]]';
+				$shipCheck .='</script>';
+				$shipCheck .='</div>';
+			?>
+				
+				<form id="onestepcheckout-form" action="" method="post" style= "width:98%;">
+				<div id="tab-1"class="first left" style="width:100%; ">
+				<?php echo $this->getChildHtml('login');?>
+				<div class="tab1inner" id="tab-1-inner">
+				<?php echo $shipCheck;?>
+			<?php endif; ?>
+			<?php if (!Mage::getSingleton('checkout/type_onepage')->getQuote()->isVirtual()): ?>
+				<?php if($_stepId == 'shipping_method') echo $continueButton,'</div></div><div id="tab-2" style="width:100%;margin-right:-5%;" class="last right" >'; ?>
+
+			<?php else: ?>
+				<?php if($_stepId == 'payment') echo '</div><div id="tab-2" style="width:100%;margin-right:-5%;" class="last right" >'; ?>
+			<?php endif; ?>
+			<?php if($_stepId == 'shipping'): ?>
+					<div class="step onestepcheckout-<?php echo $_stepId ?>" <?php if($checkUseForShipping): ?>style="display:block;padding:5%;padding-top:2%;margin-left:-5%; width:98% !important;"<?php else: ?>style="display:none;"<?php endif; ?> id="shipping-address-form">
+			<?php else: ?>
+					<div class="step onestepcheckout-<?php echo $_stepId ?>" style="width:98% !important;">
+			<?php endif; ?>
+						<div class="step-title" style="width:100%;"  >
+							<span id="step-number" <?php if($_stepId == 'review'): ?>class="step-review"<?php elseif($checkUseForShipping): ?>class="step-<?php echo $i ?>"<?php elseif($_stepId != 'shipping'): ?>class="step-<?php echo $i ?>"<?php endif; ?>></span>
+							<h2><?php echo 'Shipping Information';//echo $_stepInfo['label'] ?></h2>
+						</div>
+						<div class="content checkout-step-<?php echo $_stepId ?>"style="width:98%;"  >
+							<?php echo $this->getChildHtml($_stepId) ?>
+						</div>
+					</div>
+			<?php endif; ?>
+		<?php endforeach ?>
+			<div class="buttons-set" id="review-buttons-container" style="font-size:1.4em;">
+			<p class="f-left"><?php echo $this->__('Forgot an Item?') ?> <a href="<?php echo $this->getUrl('checkout/cart') ?>"><?php echo $this->__('Edit Your Cart') ?></a></p>
+<br>			<!--Added id to hide the place order button  By Dileswar on dated 30-12-2013   -->
+            <button type="button" title="<?php echo $this->__('Place Order') ?>" id="btn-checkout-1140" class="newaddcartbutton12092014" style="float:left;width:100%;margin-right:85%;" onclick="placeorderfunction();"><span><span style="font-size:1.2em;float:center;"><?php echo $this->__('Place Order') ?></span></span></button>
+			<div class="ajaxloadermtosc displaynone"></div>
+			<span class="please-wait" id="review-please-wait" style="display:none;">
+				<img src="<?php echo $this->getSkinUrl('images/opc-ajax-loader.gif') ?>" alt="<?php echo $this->__('Submitting order information...') ?>" title="<?php echo $this->__('Submitting order information...') ?>" class="v-middle" /> <?php echo $this->__('Submitting order information...') ?>
+			</span>		
+	</div>
+<div class="checkout-right-panel" style="float:left;width:100%;">
+			<?php //echo $this->getChildHtml('cart_sidebar1');?>
+			<?php echo $this->getChildHtml('sidebar-right');?>
+		</div>				
+<?php 
+					// echo '<pre>';
+					//var_dump($this->getQuote()->getShippingAddress()->getShippingMethod());exit;
+					//print_r(get_class_methods($this->getQuote()->getShippingAddress()));exit; 
+					$shipping_method = $this->getQuote()->getShippingAddress()->getShippingMethod() ? $this->getQuote()->getShippingAddress()->getShippingMethod() : 'udropship_Per Item Shipping';
+				?>
+				<!--<input name="shipping_method" type="hidden" value="<?php //echo $shipping_method ?>"  />-->
+                <input name="shipping_method" type="hidden" value="udropship_Per Item Shipping"  />
+			</form>
+
+<button type="button" title="<?php echo $this->__('Place Order') ?>" id="btn-checkout-1140" class="newaddcartbutton12092014" style="float:left;width:100%;margin-right:85%;" onclick="placeorderfunction();"><span><span style="font-size:1.2em;float:center;"><?php echo $this->__('Place Order') ?></span></span></button>
+				</div>
+			</div>	
+		</div>
+		
+		
+	<!--/form-->
+
+
+		</div>
+
+	</div>
+
+
+<?php 
+	/*CALLING CHECKOUT FOOTER STARTS*/
+	echo $this->getLayout()->createBlock('cms/block')->setBlockId('checkout-footer')->toHtml();
+	/*CALLING CHECKOUT FOOTER ENDS*/
+?>
+</div><!--Pre Wrapper ends-->
+<script type="text/javascript">
+//<![CDATA[
+    var shippingMethod = new ShippingMethod(
+                                    "<?php echo $this->getUrl('mtonestepcheckout/index/saveShippingMethod') ?>",
+                                    <?php echo Mage::helper('mtonestepcheckout')->isReloadPayment() ?>
+                                );
+//]]>
+</script>
+<script type="text/javascript">
+	function placeorderfunction(){
+		//shippingMethod.saveShippingMethod();
+		var validator = new Validation('checkout-payment-method-load');
+		if(validator.validate()) {
+			jQuery('.btn-checkout').hide();
+			jQuery('.ajaxloadermtosc').show();
+
+			review.save();
+			//$j.post('<?php //echo $this->getUrl('mtonestepcheckout/index/saveOrder') ?>');
+			
+			//jQuery('.btn-checkout').show();
+			//jQuery('.ajaxloadermtosc').hide();
+		}else{
+			alert('Invalid form. Kindly fill all the required fields.');
+		}
+	}
+//<![CDATA[
+
+    var onestepcheckout = new Onestepcheckout(
+                {
+                    //failure: '<?php //echo $this->getUrl('checkout/onepage/failure') ?>',
+					failure: '<?php echo $this->getUrl('secureebs/standard/failure/') ?>',
+                    reloadReview: '<?php echo $this->getUrl('mtonestepcheckout/index/reloadReview') ?>',
+                    reloadPayment: '<?php echo $this->getUrl('mtonestepcheckout/index/reloadPayment') ?>',
+                    success: '<?php echo $this->getUrl('checkout/onepage/success') ?>'
+                }
+            );
+    if($('billing-address-select')){
+        billing.setAddress($('billing-address-select').value);
+    }else{
+        if($('billing:use_for_shipping_yes') == undefined || $('billing:use_for_shipping_yes').checked == false) {
+            billing.saveCountry();
+        } else {
+            shipping.saveCountry();
+        }
+    }
+//]]>
+</script>
+    <script type="text/javascript">
+    //<![CDATA[
+		<?php $couponCode = 0;if($this->getQuote()->getCouponCode()) $couponCode = 1; ?>
+		var review = new Review('onestepcheckout-form',
+			'<?php echo $this->getUrl('mtonestepcheckout/index/coupon') ?>',
+			'<?php echo $couponCode ?>',
+			'<?php echo $this->getUrl('mtonestepcheckout/index/updateQty') ?>',
+			'<?php echo $this->getUrl('mtonestepcheckout/index/saveOrder') ?>',
+			$('checkout-agreements') 
+		);
+    //]]>
+    </script>
+<script type="text/javascript">
+		function populateShippingAddress(){
+			var isChecked = $j('input.shipping-check').attr('checked')?true:false;
+			var html = '';
+			if(isChecked){
+				html += '<div class="right-ship-name" style="font-size:1.4em;">'+$j('input[name="shipping[firstname]"]').val()+' '+$j('input[name="shipping[lastname]"]').val()+'</div>';
+				html += '<div class="right-ship-address" style="font-size:1.4em;">';
+				html +=$j('input[name="shipping[street][]"]').val()+' <br/>';
+				html +=$j('input[name="shipping[city]"]').val()+' <br/>';
+				html +=$j('input[name="shipping[postcode]"]').val()+' <br/>';
+				var regiontext = $j('select[name="shipping[region_id]"] option:selected').text();
+				if(regiontext == 'Please select region, state or province'){
+					regiontext = $j('input[name="shipping[region]"]').val();
+				}
+				html +=regiontext+' <br/> ';
+				html +=$j('select[name="shipping[country_id]"] option:selected').text()+' <br/>';
+				//html +=$j('input[name="shipping[country_id]"] option:selected').text();+' <br/>';
+				html +=$j('input[name="shipping[telephone]"]').val()+' ';
+				html += '</div>';
+			} else{
+				html += '<div class="right-ship-name" style="font-size:1.4em;">'+$j('input[name="billing[firstname]"]').val()+' '+$j('input[name="billing[lastname]"]').val()+'</div>';
+				html += '<div class="right-ship-address" style="font-size:1.4em;">';
+				html +=$j('input[name="billing[street][]"]').val()+' <br/>';
+				html +=$j('input[name="billing[city]"]').val()+' <br/>';
+				html +=$j('input[name="billing[postcode]"]').val()+' <br/>';
+				var regiontext = $j('select[name="billing[region_id]"] option:selected').text();
+				if(regiontext == 'Please select region, state or province'){
+					regiontext = $j('input[name="billing[region]"]').val();
+				}
+				html +=regiontext+' <br/> ';
+				html +=$j('select[name="billing[country_id]"] option:selected').text()+' <br/>';
+				html +=$j('input[name="billing[telephone]"]').val()+' ';
+				html += '</div>';
+			}
+			
+			$j('.shipping-addr-sidebar .shipping-addr-container').html(html);
+		}
+	$j(document).ready(new function(){
+		//$j('#checkout-payment-method-load input').attr('checked', 'false');
+		var reloadReviewUrl = '<?php echo $this->getUrl('mtonestepcheckout/index/reloadReviewh') ?>';
+		shippingMethod.saveShippingMethod();
+		reloadReview(reloadReviewUrl);
+		$j('#coupon_code-right').bind('keyup', function(){
+			$j('.coupon-hidden-code').val($j('#coupon_code-right').val());
+		})
+		//document.title = 'Checkout';
+		var $tabs = $j( "#tabs" ).tabs();
+		$tabs.tabs({disabled: [0,1]});
+		
+		$j('.nextstep div.btn').bind('click', function(){
+			gotonextstep();
+		});
+		
+		$j('.tab1inner').bind('keypress submit', function(e) {
+			if(e.which == 13) {
+				gotonextstep();
+				return false;
+			}
+		});
+		
+		function gotonextstep(){
+			
+			//shippingMethod.saveShippingMethod();
+			checkpostalcode('<?php echo $this->getUrl('mtonestepcheckout/index/postalcodecheck')?>');
+			//$j('.meth-cod-dd input').attr('checked', 'false');
+			//$j('#p_method_avenues_standard').attr('checked', 'true');
+			$j('.nextstep div.btn').hide();
+			var validator = new Validation('tab-1-inner');
+			if(validator.validate()) {
+				populateShippingAddress();
+					$j('.shipping-addr-sidebar').show();
+					$tabs.tabs({disabled: []});
+					$tabs.tabs('select', 1);
+					$j('.nextstep div.btn').show();
+					$j('nextstep .ajaxloadermtosc').hide();
+			reloadReview(reloadReviewUrl);
+			}else{
+				$j('html, body').animate({ scrollTop: 0}, 'slow');
+				$j('.nextstep div.btn').show();
+				$j('nextstep .ajaxloadermtosc').hide();
+			}
+		}
+		
+
+		
+		$j('#tab-1 .companyfield').hide();
+		$j('#tab-2 .onestepcheckout-shipping_method').hide();
+		$j('#tab-2 .onestepcheckout-review').hide();
+		
+		<?php if(!$this->isCustomerLoggedIn()): ?>
+			$j('#tab-1 .tab1inner').show();
+		<?php else:?>
+			$j('#tab-1 .loginstep').hide();
+		<?php endif;?>
+
+	});
+
+
+</script>
+
+<?php } ?>
+

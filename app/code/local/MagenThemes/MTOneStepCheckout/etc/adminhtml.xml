@@ -1,0 +1,69 @@
+<?xml version="1.0"?>
+<!--
+/******************************************************
+ * @package MT OneStepCheckOut module for Magento 1.4.x.x and Magento 1.5.x.x
+ * @version 1.5.2.1
+ * @author http://www.magentheme.com
+ * @copyright (C) 2011- MagenTheme.Com
+ * @license PHP files are GNU/GPL
+*******************************************************/
+-->
+<config>
+    <menu>
+        <magenthemes translate="title" module="mtonestepcheckout">
+            <title>MagenThemes</title>
+            <sort_order>71</sort_order>               
+            <children>
+                <mtonestepcheckout translate="title" module="mtonestepcheckout">
+                    <title>MT OneStepCheckout</title>
+                    <sort_order>0</sort_order>
+                    <children>
+                        <configuration>
+                            <title>Configuration</title>
+                            <sort_order>1</sort_order>
+                            <action>adminhtml/system_config/edit/section/mtonestepcheckout</action>
+                        </configuration>
+                    </children>
+                </mtonestepcheckout>
+            </children>
+        </magenthemes>
+    </menu>
+    <acl>
+        <resources>
+            <all>
+                <title>Allow Everything</title>
+            </all>
+            <admin>
+                <children>
+                    <system>
+                        <children>
+                            <config>
+                                <children>
+                                    <mtonestepcheckout translate="title">
+                                        <title>MTOneStepCheckout Module</title>
+                                        <sort_order>10</sort_order>
+                                    </mtonestepcheckout>
+                                </children>
+                            </config>
+                        </children>
+                    </system>
+                    <magenthemes translate="title" module="mtonestepcheckout">
+                        <title>MagenThemes</title>
+                        <sort_order>71</sort_order>
+                        <children>
+                            <mtonestepcheckout translate="title">
+                                <title>MT OneStepCheckout</title>
+                                <children>
+                                    <configuration translate="title">
+                                        <title>Configuration</title>
+                                        <sort_order>1</sort_order>
+                                    </configuration>
+                                </children>
+                            </mtonestepcheckout>
+                        </children>
+                    </magenthemes>
+                </children>
+            </admin>
+        </resources>
+    </acl>
+</config>

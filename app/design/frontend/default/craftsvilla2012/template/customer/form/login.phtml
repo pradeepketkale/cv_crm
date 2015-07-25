@@ -1,0 +1,61 @@
+<div style="margin-top: 8px;"></div>
+<?php /*custom breadcrumbs*/
+$breadcrumbs = $this->getLayout()->getBlock('breadcrumbs');
+ 
+$breadcrumbs->addCrumb('home', array('label'=>Mage::helper('cms')->__('Home'), 'title'=>Mage::helper('cms')->__('Home Page'), 'link'=>Mage::getBaseUrl()));
+ 
+$breadcrumbs->addCrumb('cart', array('label'=>'Login', 'title'=>'Login'));
+ 
+echo $this->getLayout()->getBlock('breadcrumbs')->toHtml();
+?>
+<div class="dashboard">
+	<div class="topLine"></div>
+	<div class="dashboard_head">
+        <!--<h1><?php //echo $this->__('Sign In and Start Referring!') ?> --><br />
+		<span id="nMmbr">Not A Member? <a href="<?php echo $this->getCreateAccountUrl() ?>">Signup!</a></span></h1>
+		<div class="breadcrumbs_bottom"></div>
+    </div>
+    <?php echo $this->getMessagesBlock()->getGroupedHtml() ?>
+    <form action="<?php echo $this->getPostActionUrl() ?>" method="post" id="login-form">
+            <div class="col-2 registered-users">
+                <div class="content">
+<!--                    <h2><?php //echo $this->__('Registered Customers') ?><span> (If you have an account with us, please log in.)</span></h2> -->
+                    
+                    <div class="clear"></div>
+                    <div class="input-fileds" style="width:500px;">
+                    	<ul class="form-list">
+                        	<li>
+                                <!-- <label for="email" class="required"><em>*</em><?php echo $this->__('Email Address') ?></label> -->
+                                <div class="input-box">
+                                    <input placeholder="Email Address" type="text" name="login[username]" value="<?php echo $this->htmlEscape($this->getUsername()) ?>" id="email" class="editInfoInput" title="<?php echo $this->__('Email Address') ?>" />
+								</div>
+                            </li>
+                            <li>
+                                <!-- <label for="pass" class="required"><em>*</em><?php echo $this->__('Password') ?></label> -->
+                                <div class="input-box">
+                                    <input placeholder="Password"  type="password" name="login[password]" class="editInfoInput" id="pass" title="<?php echo $this->__('Password') ?>" />
+                                </div>
+                            </li>
+                            <li><a class="links" href="<?php echo $this->getForgotPasswordUrl() ?>" class="f-left"><?php echo $this->__('Forgot Your Password?') ?></a></li>
+                            <li><button style="float:left;" type="submit" class="spriteimg continueMdm" title="<?php echo $this->__('Login') ?>" name="send" id="send2"><span><span><?php echo $this->__('Login') ?></span></span></button></li>
+                        </ul>
+                        <div class="clear"></div>
+                        <div class="fieldset" style="float:left;width:431px">
+                            <h2 class="legend"><?php echo $this->__('Connect with Facebook') ?></h1>
+                            <p><?php echo $this->__('Use your Facebook account to login or register within our store. You\'re just one click away.' ) ?></p>
+                            <button rel="facebook-connect" type="button" title="<?php echo $this->__('Connect with Facebook') ?>" class="loginFb"><span><span><?php echo $this->__(' ') ?></span></span></button>
+							<!--<p class="required"><?php echo $this->__('* Required Fields') ?></p>-->
+                            <br/><br/>
+                        </div>
+
+                    </div>
+                    <!-- <div class="fright"><img src="<?php //echo $this->getSkinUrl('images/refer_banner_small.jpg')?>"  alt="Refer A Friend" title="Refer A Friend"/></div> -->
+                </div>
+            </div>
+    </form>
+<script type="text/javascript">
+//<![CDATA[
+	var dataForm = new VarienForm('login-form', true);
+//]]>
+</script>
+</div>

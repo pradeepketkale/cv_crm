@@ -1,0 +1,165 @@
+
+<!--<div class="page-head">
+    <h3><?php //echo $this->__('Payment transaction has been canceled.') ?></h3>
+</div>
+<p><?php //echo $this->getErrorMessage() ?>.</p>
+<p><?php //echo $this->__('Please <a href="%s">continue shopping</a>.', $this->getContinueShoppingUrl()) ?></p>-->
+
+<?php 
+
+$incrementId = Mage::getSingleton('checkout/session')->getPayuCheckoutRealOrderId();
+$entId = Mage::getModel('sales/order')->loadByIncrementId($incrementId)->getEntityId();
+$comment = "Returned from Canceled page Of PayU";
+$comment1 = "Customer Has Created the Payment Link From the Payment Cancel Page of Payu";
+$status = "Pending";
+Mage::getModel('sales/order_status_history')
+							->setParentId($entId)
+							->setStatus($status)
+							->setComment($comment)
+							->setCreatedAt(NOW())
+							->save();
+ ?>
+<!--<div class="page-head">
+    <h3><?php //echo $this->__('Order payment has been failed') ?></h3>
+</div>
+<p><?php //echo $this->getErrorMessage() ?>.</p>
+<p><?php //echo $this->__('Please <a href="%s">continue shopping</a>.', $this->getContinueShoppingUrl()) ?></p>-->
+
+<div class="lft-bx">
+	<div class="category_desc_bot" style="background-color:#39708E;width:180px; height:20px; text-align:center; font-size:15px;padding:10px; color:#FFFFFF"><h3>RETRY YOUR PAYMENT</h3></div>
+
+<div class="category_desc_bot">
+<p>Sorry, it seems there was an error during payment process. We have saved your shopping cart. Below are your saved order details. You can click Pay Now button to complete your payment.  </p>
+</div>
+    <!--<div class="pnl-hdng"><?php //echo $this->__('Error occured'); ?></div>
+    <div class="lft-body"><?php //echo $this->__('There was an error occurred during paying process.'); ?></div>-->
+    <form method="post" action="<?php echo $this->getUrl('secureebs/standard/sendOrderpayulink') ?>">  
+    <input type="hidden" name ="orderId" value="<?php echo $incrementId;?>" />
+    <input type="hidden" name="comment" value="<?php echo $comment1 ?>"/>
+    <input height="30px" width="100px" type="submit" style="filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#CE3D49', endColorstr='#019ad2',GradientType=0); 	background-color:#CE3D49; 	-moz-border-radius:6px; 	-webkit-border-radius:6px; 	border-radius:6px; 	border:1px ; 	display:inline-block; 	cursor:pointer; 	color:#ffffff; 	font-family:arial; 	font-size:15px; 	font-weight:bold; 	padding:2px 20px; 	text-decoration:none; " value="CLICK HERE TO PAY NOW" id="paybutton" name="paybutton">
+    </form><span>OR</span>
+    <form method="post" action="<?php echo $this->getUrl('secureebs/standard/addProductTocart') ?>">  
+    <input type="hidden" name ="entityId" value="<?php echo $entId;?>" />
+   <input type="hidden" name="comment" value="<?php echo $comment1 ?>"/>
+    <input width="100px" type="submit" style="filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#CE3D49', endColorstr='#019ad2',GradientType=0); 	background-color:#CE3D49; 	-moz-border-radius:6px; 	-webkit-border-radius:6px; 	border-radius:6px; 	border:1px ; 	display:inline-block; 	cursor:pointer; 	color:#ffffff; 	font-family:arial; 	font-size:15px; 	font-weight:bold; 	padding:2px 20px; 	text-decoration:none; " value="RETRIEVE YOUR CART TO CONTINIUE SHOPPING" id="paybutton" name="paybutton">
+    </form>
+    <!--<div id="policy" style="width:170px"><img class="hovertext" src="<?php //echo Mage::getDesign()->getSkinUrl('images/5-shipping-icon1.png')?>" />
+<div><p><strong>Shipping Policy:</strong><br>
+  We deliver in India  within 10 days and outside of India within 21 days.<br> Currently our average delivery time in India is around 4 days and outside<br> of India within 18 days. You will get email and sms of tracking details of <br>domestic shipments within 5-7 days. You can also request seller for<br> expedited shipping by clicking the "Contact Seller" button on the product<br> page after you place the order. We deliver to over 100 countries<br> globally including USA, UK, Australia and Canada. </p>
+</div>&nbsp;&nbsp;
+<img class="hovertextpayment1" src="<?php //echo Mage::getDesign()->getSkinUrl('images/return-icon.jpg')?>"  />
+<div><p><strong>Refund Policy:</strong><br>
+We have a friendly return policy whereby we refund for products which are damaged,<br> broken, have manufacturing defects, wrong size or does not match with photo/description<br> as given on Craftsvilla. The customer/buyer has to get back to Craftsvilla customer care through<br> phone/email within 24 hours of receipt of damaged goods or goods not meeting description.<br> Craftsvilla will then log a dispute and initiate a process of resolution between the artisan/designer<br> and the customer. Customer will have to send an image of product on email in case she is claiming<br> that the product is damaged or not meeting description. </p>
+</div>&nbsp;
+<img class="hovertextpayment2" src="<?php //echo Mage::getDesign()->getSkinUrl('images/40by40.png')?>" />
+<div><p><strong>100% Secured Payments:</strong><br>
+We guarantee that your payment is 100% secured with us as your payment details<br> are never shared to anyone during the payment process. You transparently pay through<br> our payment gateway or Paypal and all the data is transferred through high level encryption<br> technology. Please note you pay to "Kribha Handicrafts Pvt Ltd" since that is the company <br>which owns Craftsvilla.com brand and online store. Craftsvilla.com is a brand you can<br> 100% trust. We have been convered widely in Indian and Western Media including newspapers<br> like Timesofindia, Economic Times, Hindu ad TV channels like CNBC, ETNow and Zee and<br> Western Media like Dow Jones and Techcruch.</p>
+</div></div>-->
+
+<?php
+
+
+$order_id = $incrementId;
+$order = Mage::getModel('sales/order')->loadByIncrementId($order_id);
+$shipaddId = $order->getShippingAddressId();
+$shippaddAll = Mage::getModel('sales/order_address')->load($shipaddId);
+$custName = $shippaddAll->getName();
+$custAddr = $shippaddAll->getStreetFull();
+$city = $shippaddAll->getCity();
+$region = $shippaddAll->getRegion();
+$country = $shippaddAll->getCountry();
+$allAddShipping = $custName.'<br/>'.$custAddr.'<br/>'.$city.'<br/>'.$region.'<br/>'.$country;
+$items = $order->getAllItems();
+?>
+
+<div id="prList" class="col2-set shipment-items feedback-cust">
+          
+          <div class="success-msg" id="success-msg-<?php echo $_masterId ?>" style="display:none;"></div>
+
+
+       <h3 class="greyheading">Order Items</h3>
+		<hr/>
+             <div class="oditems" style="width:100%;">
+			
+                  <table width="100%" cellspacing="0" class="table-border" id="order-items-3842">
+                    <thead>
+                      <tr>
+							<th>Image</th>
+							<th>Product Name</th>
+							<th>System/Vendor SKU</th>
+						<th class="a-center"><span class="nobr">Qty</span></th>
+							<th>Rate</th>
+							<th>Discount</th>
+                            <th>Shipping Amount</th>
+							<th>Amount</th>
+						</tr>
+                    </thead>
+                    <tbody>
+					<?php foreach ($items as $itemId => $item){
+							$sku= $item->getSku(); 
+							$product = Mage::getModel('catalog/product')->loadByAttribute('sku',$sku);  
+							$childId=$product->getId();
+							
+					?>
+					<tr>
+						<?php $sku= $item->getData('sku'); ?>
+							<?php $product = Mage::getModel('catalog/product')->loadByAttribute('sku',$sku);?>
+							<?php $childId=$product->getId(); ?>
+							<?php $parentIds = Mage::getResourceSingleton('catalog/product_type_configurable')->getParentIdsByChild($childId); ?>
+							<td align="left" valign="top" style="font-size:11px; padding:3px 9px;" width="60"><img src="<?php echo Mage::helper('catalog/image')->init($product, 'image')->resize(145);?>" alt=""  border="0"/></td>
+							<td valign="top" width="150">
+								<div>
+									<?php echo $item->getName(); ?>
+									<dl class="item-options item-optionsnew">
+										<?php  if(isset($parentIds[0])) : ?>
+										<?php $last_key = key(array_slice($parentIds, -1, 1, TRUE)); ?>
+										<?php $parentId=$parentIds[$last_key]; ?>
+												<?php $parentProduct = Mage::getModel('catalog/product')->load($parentId) ?>             
+												<?php $configurableAttributeCollection=$parentProduct->getTypeInstance()->getConfigurableAttributes() ?> 
+												<?php foreach($configurableAttributeCollection as $attribute):?> 
+												    <?php $attcode = $attribute->getProductAttribute()->getAttributeCode() ?> 
+												    <dt style="font-weight:bold"><?php echo $attribute->getProductAttribute()->getFrontend()->getLabel() ?></dt>
+												    <dd style="margin:0; padding-left:14px;"><?php echo Mage::getModel('catalog/product')->load($item->getProductID())->getAttributeText($attcode) ?></dd>
+												<?php endforeach; ?> 
+										<?php endif; ?>
+										</dl>
+								</div>
+							</td>
+							<td valign="top">
+								<?php 
+									echo $item->getSku();
+									if($product->getVendorsku())
+										echo  " / ".$product->getVendorsku();
+								?>
+							</td>
+                        <td><?php echo number_format($item->getQtyOrdered(), 0); ?></td>
+                        <td><?php echo $item->getOriginalPrice(); ?></td>
+                        <td><?php echo $item->getDiscountAmount() ?></td>
+                        <td><?php echo $item->getShippingcost() ?></td>
+                        <td><?php echo $item->getOriginalPrice()*number_format($item->getQtyOrdered(), 0)-$item->getDiscountAmount() ?></td>																		
+					</tr>
+					<?php }?>
+                    </tbody>
+                  </table>
+                  </div>
+                  <div class="col-1">
+            <div class="content">
+                <div class="col2-set">
+                    <div class="col-1">
+                        <table><tr ><th><strong>Shipping Address: </strong></th><br/>
+                        <td><?php echo $allAddShipping; ?></td></tr></table>
+                    </div>
+                    
+                </div>
+                <div class="clear"></div>
+                <br />
+
+    </ul>
+</form>
+   </div>
+</div>
+</div>
+</div>
+<div class="clear"></div>
+
+</div>

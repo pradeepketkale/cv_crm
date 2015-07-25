@@ -1,0 +1,137 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Craftsvilla_Productdownloadreq>
+            <version>0.1.0</version>
+        </Craftsvilla_Productdownloadreq>
+    </modules>
+    <frontend>
+        <routers>
+            <productdownloadreq>
+                <use>standard</use>
+                <args>
+                    <module>Craftsvilla_Productdownloadreq</module>
+                    <frontName>productdownloadreq</frontName>
+                </args>
+            </productdownloadreq>
+        </routers>
+        <layout>
+            <updates>
+                <productdownloadreq>
+                    <file>productdownloadreq.xml</file>
+                </productdownloadreq>
+            </updates>
+        </layout>
+    </frontend>
+    <admin>
+        <routers>
+			<productdownloadreq>
+				<use>admin</use>
+				<args>
+					<module>Craftsvilla_Productdownloadreq</module>
+					<frontName>productdownloadreq</frontName>
+				</args>
+			</productdownloadreq>
+        </routers>
+    </admin>
+    <adminhtml>
+			
+					<menu>
+		<catalog>
+		<children>
+			<productdownloadreq module="productdownloadreq">
+				<title>Bulk Download</title>
+				<sort_order>71</sort_order>               
+				<!--<children>
+					<items module="bulkuploadcsv">
+						<title>Manage Items</title>
+						<sort_order>0</sort_order>-->
+						<action>productdownloadreq/adminhtml_productdownloadreq</action>
+					</productdownloadreq>
+			</children>
+			</catalog>
+		</menu>
+		<acl>
+			<resources>
+				<all>
+					<title>Allow Everything</title>
+				</all>
+				<admin>
+				
+				<children>
+					    <catalog>
+					<children>
+								<productdownloadreq module="productdownloadreq">
+									<title>Productdownloadreq Module</title>
+									<sort_order>10</sort_order>
+								</productdownloadreq>
+							</children>
+							</catalog>
+					</children>	
+				</admin>
+			</resources>
+		</acl>
+		<layout>
+			<updates>
+				<productdownloadreq>
+					<file>productdownloadreq.xml</file>
+				</productdownloadreq>
+			</updates>
+		</layout>
+    </adminhtml>   
+    <global>
+		<template>
+		    <email>
+		        <bulkdownload_email_template module="productdownloadreq">
+		            <label>Bulkdownload Email</label>
+		            <file>bulkdownload_email_template.html</file>
+		            <type>html</type>
+		        </bulkdownload_email_template>
+			</email>	
+		</template>
+        <models>
+            <productdownloadreq>
+                <class>Craftsvilla_Productdownloadreq_Model</class>
+                <resourceModel>productdownloadreq_mysql4</resourceModel>
+            </productdownloadreq>
+            <productdownloadreq_mysql4>
+                <class>Craftsvilla_Productdownloadreq_Model_Mysql4</class>
+                <entities>
+                    <productdownloadreq>
+                        <table>productdownloadreq</table>
+                    </productdownloadreq>
+                </entities>
+            </productdownloadreq_mysql4>
+        </models>
+        <resources>
+            <productdownloadreq_setup>
+                <setup>
+                    <module>Craftsvilla_Productdownloadreq</module>
+                </setup>
+                <connection>
+                    <use>core_setup</use>
+                </connection>
+            </productdownloadreq_setup>
+            <productdownloadreq_write>
+                <connection>
+                    <use>core_write</use>
+                </connection>
+            </productdownloadreq_write>
+            <productdownloadreq_read>
+                <connection>
+                    <use>core_read</use>
+                </connection>
+            </productdownloadreq_read>
+        </resources>
+        <blocks>
+            <productdownloadreq>
+                <class>Craftsvilla_Productdownloadreq_Block</class>
+            </productdownloadreq>
+        </blocks>
+        <helpers>
+            <productdownloadreq>
+                <class>Craftsvilla_Productdownloadreq_Helper</class>
+            </productdownloadreq>
+        </helpers>
+    </global>
+</config>

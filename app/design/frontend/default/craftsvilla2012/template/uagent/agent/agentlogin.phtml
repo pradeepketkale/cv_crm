@@ -1,0 +1,39 @@
+<?php $_session = Mage::getSingleton('uagent/session') ?>
+<?php echo $this->getMessagesBlock()->getGroupedHtml() ?>
+<form action="#" method="post" id="login-form">
+ <div class="login-boxnew" id="centered-box">
+	<div class="page-head margin-left">
+		<h3 class="headingnew"><?php echo $this->__('Agent Log in') ?></h3>
+	</div>
+    <div class="col-1 registered-users raised-box">
+        <div class="content">
+           
+            <ul class="form-list form-listvl">
+                <li>
+                    <label for="email" style="display:block;"><?php echo $this->__('Username / Email Address') ?> <span class="required">*</span></label>
+                    <input name="login[username]" value="<?php echo $this->htmlEscape($_session->getUsername()) ?>" title="<?php echo $this->__('Email Address') ?>" id="email" type="text" class="input-text required-entry validate-email" style="width:250px;" />
+                </li>
+                <li class="clr">
+                    <label for="pass" style="display:block;"><?php echo $this->__('Password') ?> <span class="required">*</span></label>
+                    <input name="login[password]" type="password" class="input-text required-entry vaidate-password" id="pass" style="width:250px;" />
+                </li>
+            </ul>
+        	    <div class="clr">
+        	                <button class="form-button" type="submit" name="send"><span><?php echo $this->__('Login') ?></span></button>
+            <span class="required"><?php echo $this->__('* Required Fields') ?></span>            
+			<div class="paddtop"><a target="_blank" href="<?php echo $this->getUrl('uagent/register/register/')?>"><?php echo $this->__('Register New Account') ?></a> <b> | </b><a target="_blank" href="<?php echo $this->getUrl('uagent/register/password/')?>"><?php echo $this->__('Forgot Password') ?></a></div>
+       	    </div>
+        </div>
+    </div>
+</div>
+</form>
+<?php if (!$this->getRequest()->getParam('ajax')): ?>
+<script type="text/javascript">
+    var dataForm = new VarienForm('login-form', true);
+</script>
+<?php endif ?>
+<?php if ($_session->getUsername()): ?>
+<script type="text/javascript">
+$('pass').focus();
+</script>
+<?php endif ?>

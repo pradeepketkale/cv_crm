@@ -1,0 +1,73 @@
+<div class="right-box-form">
+	<div id="content-colum-var">
+		<div class="leftarea">
+        	<div class="grid-top-menu2">
+			<?php if( count($this->row)>0) {?>
+				<div>
+					<table rules="all" cellspacing="0" border="1" style="border-collapse: collapse;" id="ctl00_ContentPlaceHolder1_dlRedeem" class="table-grid">
+						<tbody>
+                        	<tr>
+								<th style="width: 100px;" scope="col">Voucher Type</th>
+                                <th style="width: 140px;" scope="col">Expire Date</th>
+                                <th style="width: 70px;" scope="col">Amount</th>
+                                <th style="width: 100px;" scope="col">Min Redeemable Amount</th>
+							</tr>
+							<?php foreach($this->row as $rows){
+  ?>
+  <tr>
+    <td><?php echo $rows['description'];?></td>
+     <td><?php echo $rows['expiration_date'];?></td>
+    <td><?php echo $rows['usage_limit'];?></td>
+    <td>$ <?php echo number_format($rows['discount_amount'],0);?></td>
+   <!-- <td><?php 
+		if($rows['status_id'] == 0)
+		{
+			echo $rows['code'];
+		}
+	?></td>-->
+   
+  </tr>
+  <?php }?><tr>
+			<td colspan="4"><table border="0">
+				<tbody><tr>
+					<td ><span>1</span></td><td><a href="javascript:__doPostBack('ctl00$ContentPlaceHolder1$dlRedeem','Page$2')">2</a></td><td><a href="javascript:__doPostBack('ctl00$ContentPlaceHolder1$dlRedeem','Page$3')">3</a></td><td><a href="javascript:__doPostBack('ctl00$ContentPlaceHolder1$dlRedeem','Page$4')">4</a></td><td><a href="javascript:__doPostBack('ctl00$ContentPlaceHolder1$dlRedeem','Page$5')">5</a></td><td><a href="javascript:__doPostBack('ctl00$ContentPlaceHolder1$dlRedeem','Page$6')">6</a></td><td><a href="javascript:__doPostBack('ctl00$ContentPlaceHolder1$dlRedeem','Page$7')">7</a></td><td><a href="javascript:__doPostBack('ctl00$ContentPlaceHolder1$dlRedeem','Page$8')">8</a></td><td><a href="javascript:__doPostBack('ctl00$ContentPlaceHolder1$dlRedeem','Page$9')">9</a></td><td><a href="javascript:__doPostBack('ctl00$ContentPlaceHolder1$dlRedeem','Page$10')">10</a></td><td><a href="javascript:__doPostBack('ctl00$ContentPlaceHolder1$dlRedeem','Page$11')">...</a></td>
+				</tr>
+			</tbody></table></td>
+		</tr>
+	</tbody></table>
+</div>
+<?php } else { ?>
+<div class="grid-top-menu2">
+            <div>
+	<table rules="all" cellspacing="0" border="1" style="border-collapse: collapse;" id="ctl00_ContentPlaceHolder1_dlRedeem" class="table-grid">
+		<tbody><tr>
+			<td colspan="4">
+                   
+                        <h3>
+                            <strong>You don't have any Credits... yet!</strong></h3>
+                        <br>
+                        <p>
+                            Share your shopping secret with your friends and get Rs 1000 credit on their first
+                            purchase.</p>
+                        <br>
+                       <p>
+                       </p><hr noshade="noshade" class="nonLeftMrg">
+
+                            <a onclick="javascript:return redirectURL();" href="#">
+                               <img align="right" alt="Save " src="<?php echo $this->getSkinUrl('images/fny_main/check-out.jpg')?>"></a>
+                    
+                        
+                </td>
+		</tr>
+	</tbody></table>
+</div>
+            </div>
+<?php } ?>			
+			
+			
+			
+            </div>
+        </div>
+        
+                </div>
+          </div>

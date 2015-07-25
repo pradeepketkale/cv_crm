@@ -1,0 +1,163 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Craftsvilla_Craftsvillacustomer>
+            <version>1.0.2</version>
+        </Craftsvilla_Craftsvillacustomer>
+    </modules>
+    <frontend>
+        <routers>
+            <craftsvillacustomer>
+                <use>standard</use>
+                <args>
+                    <module>Craftsvilla_Craftsvillacustomer</module>
+                    <frontName>craftsvillacustomer</frontName>
+                </args>
+            </craftsvillacustomer>
+        </routers>
+        <layout>
+            <updates>
+                <craftsvillacustomer>
+                    <file>craftsvillacustomer.xml</file>
+                </craftsvillacustomer>
+            </updates>
+        </layout>
+    </frontend>
+    <admin>
+        <routers>
+			<craftsvillacustomer>
+				<use>admin</use>
+				<args>
+					<module>Craftsvilla_Craftsvillacustomer</module>
+					<frontName>craftsvillacustomer</frontName>
+				</args>
+			</craftsvillacustomer>
+        </routers>
+    </admin>
+    <!--<adminhtml>
+		<menu>
+			<craftsvillacustomer module="craftsvillacustomer">
+				<title>Craftsvillacustomer</title>
+				<sort_order>71</sort_order>               
+				<children>
+					<items module="craftsvillacustomer">
+						<title>Manage Items</title>
+						<sort_order>0</sort_order>
+						<action>craftsvillacustomer/adminhtml_craftsvillacustomer</action>
+					</items>
+				</children>
+			</craftsvillacustomer>
+		</menu>
+		<acl>
+			<resources>
+				<all>
+					<title>Allow Everything</title>
+				</all>
+				<admin>
+					<children>
+						<Craftsvilla_Craftsvillacustomer>
+							<title>Craftsvillacustomer Module</title>
+							<sort_order>10</sort_order>
+						</Craftsvilla_Craftsvillacustomer>
+					</children>
+				</admin>
+			</resources>
+		</acl>
+		<layout>
+			<updates>
+				<craftsvillacustomer>
+					<file>craftsvillacustomer.xml</file>
+				</craftsvillacustomer>
+			</updates>
+		</layout>
+    </adminhtml>   -->
+    <global>
+	<template>
+	        <email>
+	            <sellerbuyer_comm_template module="referfriend">
+	                <label>Email Communication Between Seller and Buyer</label>
+	                <file>emailcommunication.html</file>
+	                <type>html</type>
+	            </sellerbuyer_comm_template>
+               </email>
+			   <email>
+			   <vendornote_reminder_email_template module="craftsvillacustomer">
+	                <label>Vendor Note</label>
+	                <file>vendornote_reminder_email_template.html</file>
+	                <type>html</type>
+	            </vendornote_reminder_email_template>
+               </email>
+        </template>
+        <models>
+            <craftsvillacustomer>
+                <class>Craftsvilla_Craftsvillacustomer_Model</class>
+                <resourceModel>craftsvillacustomer_mysql4</resourceModel>
+            </craftsvillacustomer>
+            <craftsvillacustomer_mysql4>
+                <class>Craftsvilla_Craftsvillacustomer_Model_Mysql4</class>
+                <entities>
+                    <craftsvillacustomer>
+                        <table>craftsvillacustomer</table>
+                    </craftsvillacustomer>
+                    <emailcommunication>
+                        <table>emailcommunication</table>
+                    </emailcommunication>
+                </entities>
+            </craftsvillacustomer_mysql4>
+        </models>
+        <resources>
+            <craftsvillacustomer_setup>
+                <setup>
+                    <module>Craftsvilla_Craftsvillacustomer</module>
+                </setup>
+                <connection>
+                    <use>core_setup</use>
+                </connection>
+            </craftsvillacustomer_setup>
+            <craftsvillacustomer_write>
+                <connection>
+                    <use>core_write</use>
+                </connection>
+            </craftsvillacustomer_write>
+            <craftsvillacustomer_read>
+                <connection>
+                    <use>core_read</use>
+                </connection>
+            </craftsvillacustomer_read>
+        </resources>
+        <blocks>
+            <craftsvillacustomer>
+                <class>Craftsvilla_Craftsvillacustomer_Block</class>
+            </craftsvillacustomer>
+        </blocks>
+        <helpers>
+            <craftsvillacustomer>
+                <class>Craftsvilla_Craftsvillacustomer_Helper</class>
+            </craftsvillacustomer>
+        </helpers>
+        
+        <routers>
+            <customer>
+                <rewrite>
+                  <account>
+                          <from><![CDATA[#^/customer/account/$#]]></from>
+                          <to>/craftsvillacustomer/account/</to>
+                  </account>
+                </rewrite>
+	   </customer>
+        </routers>
+        
+    </global>
+    
+    <frontend>
+            <routers>
+                    <customer>
+                            <args>
+                                <modules>
+                                        <Craftsvilla_Craftsvillacustomer before="Mage_Customer">Craftsvilla_Craftsvillacustomer</Craftsvilla_Craftsvillacustomer>
+                                </modules>
+                            </args>
+                    </customer>
+            </routers>
+    </frontend>
+</config>

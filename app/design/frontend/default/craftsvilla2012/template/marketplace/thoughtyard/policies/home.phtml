@@ -1,0 +1,81 @@
+<?php
+$_vendor = Mage::helper('umicrosite')->getCurrentVendor();
+/******** Code added by Mandar for vendor policy Stats on 4-05-2012 ********/
+Mage::getModel('udropship/vendor_stats')->setStats($_vendor->getVendorId(),'policy');
+/**************************************************************************/
+?>
+<h1 class="headingvendor homeprite">
+Shipping and Returns</h1>
+<div id="shop-policy" class="para">
+	<?php /*?><div class="social-vendor">
+		<!-- facebook -->
+		<?php $fb = $_vendor['facebook_link'];?>
+		<?php if($fb==true) { ?>
+		<a href="<?php echo $fb;?>" target="_blank">
+			<img src="<?php echo $this->getSkinUrl('images/dtl_fb.jpg') ?>" />
+		</a>
+		<?php } ; ?>
+		<!-- twitter -->
+		<a href="http://twitter.com/" target="_blank" target="_blank">
+			<img src="<?php echo $this->getSkinUrl('images/dtl_tw.jpg') ?>" />
+		</a>
+		<!-- mail -->
+		<a href="mailto:<?php echo $_vendor['email']; ?>">
+			<img src="<?php echo $this->getSkinUrl('images/dtl_mail.jpg') ?>" />
+		</a>
+	</div><?php */?>
+	<span class="clr"></span>
+	<div>
+		<p>
+			<?php echo $this->htmlEscape($_vendor->getShopDescription()); ?>
+			<div class="topLine"></div>
+		</p>
+	</div>
+	<?php
+	$country_code=$_vendor["country_id"];
+	$countryName = Mage::getModel('directory/country')->load($country_code)->getName();
+	//$countryName = $countryModel->getName();
+	//var_dump($countryName);?>
+	<div class="shippingPage">
+		<!--<table cellpadding="0" cellspacing="0" width="100%" style="margin-top: -5px;">
+			<tr valign="middle">
+				<td width="22%">SHIP TO</td>
+				<td width="18%">COST</td>
+				<td width="21%">WITH ANOTHER ITEM</td>
+				<td valign="middle" align="right">
+					<span class="redTd">Ships from the <?php// echo $countryName;?></span>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="4" style="padding-top: 5px;">
+					<div class="topLine"></div>
+				</td>
+			</tr>
+			<tr valign="middle" height="35px">
+				<td>United States</td>
+				<td>$5.00</td>
+				<td>$3.00</td>
+				<td></td>
+			</tr>
+			<tr>
+				<td colspan="4">
+					<div class="breadcrumbs_bottom" style="padding:0;"></div>
+				</td>
+			</tr>
+			<tr valign="middle" height="35px">
+				<td>Everywhere Else</td>
+				<td>$5.00</td>
+				<td>$3.00</td>
+				<td></td>
+			</tr>
+			<tr>
+				<td colspan="4">
+					<div class="breadcrumbs_bottom" style="padding:0;"></div>
+				</td>
+			</tr>
+		</table>-->
+	</div>
+	<p id="returnPolicy">
+		<?php echo $_vendor->getReturnPolicyDetail();?> 
+	</p>
+</div>

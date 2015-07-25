@@ -1,0 +1,28 @@
+tables:
+  helpdeskultimate/gateway:
+    -
+      id: 1
+      title: Main gateway
+      email: john.callvert@gmail.com
+      protocol: pop3
+      host: pop.gmail.com
+      port: 995
+      login: john.callvert@gmail.com
+      password: E3160383mo.
+      secure: ssl
+      delete_message: 0
+      is_active: 1
+      create_tickets: 1
+    -
+      id: 2
+      title: Yandex
+      email: helpdeskult2@yandex.ru
+      protocol: pop3
+      host: pop.yandex.ru
+      port: 110
+      login: helpdeskult
+      password: asd123
+      secure: none
+      delete_message: 0
+      is_active: 1
+      create_tickets: 1

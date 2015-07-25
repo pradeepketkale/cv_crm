@@ -1,0 +1,146 @@
+"<soapenv:Envelope xmlns:soapenv=""http://schemas.xmlsoap.org/soap/envelope/"" xmlns:v15=""http://fedex.com/ws/ship/v15"">
+   <soapenv:Header></soapenv:Header>
+   <soapenv:Body>
+      <v15:ProcessShipmentRequest>
+         <v15:WebAuthenticationDetail>
+            <v15:UserCredential>
+               <v15:Key>Input Your Information</v15:Key>
+               <v15:Password>Input Your Information</v15:Password>
+            </v15:UserCredential>
+         </v15:WebAuthenticationDetail>
+         <v15:ClientDetail>
+            <v15:AccountNumber>Input Your Information</v15:AccountNumber>
+            <v15:MeterNumber>Input Your Information</v15:MeterNumber>
+         </v15:ClientDetail>
+         <v15:TransactionDetail>
+            <v15:CustomerTransactionId>Ship v15 Request for SAME DAY CITY</v15:CustomerTransactionId>
+         </v15:TransactionDetail>
+         <v15:Version>
+            <v15:ServiceId>ship</v15:ServiceId>
+            <v15:Major>15</v15:Major>
+            <v15:Intermediate>0</v15:Intermediate>
+            <v15:Minor>0</v15:Minor>
+         </v15:Version>
+        <v15:RequestedShipment>
+            <v15:ShipTimestamp>2014-06-05T09:30:47-05:00</v15:ShipTimestamp>
+            <v15:DropoffType>DROP_BOX</v15:DropoffType>
+            <v15:ServiceType>FEDEX_EXPRESS_SAVER</v15:ServiceType>
+            <v15:PackagingType>YOUR_PACKAGING</v15:PackagingType>
+            <v15:PreferredCurrency>NMP</v15:PreferredCurrency>
+            <v15:Shipper>
+               <v15:Contact>
+                  <v15:PersonName>Input Your Information</v15:PersonName>
+                  <v15:CompanyName>Input Your Information</v15:CompanyName>
+                  <v15:PhoneNumber>Input Your Information</v15:PhoneNumber>
+                  <v15:EMailAddress>Input Your Information</v15:EMailAddress>
+               </v15:Contact>
+               <v15:Address>
+                  <v15:StreetLines>Input Your Information</v15:StreetLines>
+                  <v15:StreetLines>Input Your Information</v15:StreetLines>
+                  <v15:City>MEXICO CITY</v15:City>
+                  <v15:StateOrProvinceCode>DF</v15:StateOrProvinceCode>
+                  <v15:PostalCode>15520</v15:PostalCode>
+                  <v15:CountryCode>MX</v15:CountryCode>
+               </v15:Address>
+            </v15:Shipper>
+            <v15:Recipient>
+               <v15:Contact>
+                  <v15:PersonName>Input Your Information</v15:PersonName>
+                  <v15:CompanyName>Input Your Information</v15:CompanyName>
+                  <v15:PhoneNumber>Input Your Information</v15:PhoneNumber>
+                  <v15:EMailAddress>Input Your Information</v15:EMailAddress>
+               </v15:Contact>
+               <v15:Address>
+                  <v15:StreetLines>Input Your Information</v15:StreetLines>
+                  <v15:StreetLines>Input Your Information</v15:StreetLines>
+                  <v15:City>MEXICO CITY</v15:City>
+                  <v15:StateOrProvinceCode>DF</v15:StateOrProvinceCode>
+                  <v15:PostalCode>04230</v15:PostalCode>
+                  <v15:CountryCode>MX</v15:CountryCode>
+               </v15:Address>
+            </v15:Recipient>
+            <v15:ShippingChargesPayment>
+               <v15:PaymentType>SENDER</v15:PaymentType>
+               <v15:Payor>
+                  <v15:ResponsibleParty>
+                     <v15:AccountNumber>Input Your Information</v15:AccountNumber>
+                          <v15:Contact>
+                        <v15:ContactId>12345</v15:ContactId>
+                        <v15:PersonName>Input Your Information</v15:PersonName>
+                     </v15:Contact>
+                  </v15:ResponsibleParty>
+               </v15:Payor>
+            </v15:ShippingChargesPayment>
+            <v15:CustomsClearanceDetail>
+               <v15:DutiesPayment>
+                  <v15:PaymentType>SENDER</v15:PaymentType>
+                  <v15:Payor>
+                     <v15:ResponsibleParty>
+                        <v15:AccountNumber>Input Your Information</v15:AccountNumber>
+                           <v15:Contact>
+                           <v15:ContactId>12345</v15:ContactId>
+                           <v15:PersonName>Input Your Information</v15:PersonName>
+                        </v15:Contact>
+                     </v15:ResponsibleParty>
+                  </v15:Payor>
+               </v15:DutiesPayment>
+               <v15:DocumentContent>DOCUMENTS_ONLY</v15:DocumentContent>
+               <v15:CustomsValue>
+                  <v15:Currency>USD</v15:Currency>
+                  <v15:Amount>100.00</v15:Amount>
+               </v15:CustomsValue>
+               <v15:CommercialInvoice>
+                  <v15:TermsOfSale>FOB_OR_FCA</v15:TermsOfSale>
+               </v15:CommercialInvoice>
+               <v15:Commodities>
+                  <v15:NumberOfPieces>1</v15:NumberOfPieces>
+                  <v15:Description>ABCD</v15:Description>
+                  <v15:CountryOfManufacture>US</v15:CountryOfManufacture>
+                  <v15:Weight>
+                     <v15:Units>LB</v15:Units>
+                     <v15:Value>1.0</v15:Value>
+                  </v15:Weight>
+                  <v15:Quantity>1</v15:Quantity>
+                  <v15:QuantityUnits>cm</v15:QuantityUnits>
+                  <v15:UnitPrice>
+                     <v15:Currency>USD</v15:Currency>
+                     <v15:Amount>1.000000</v15:Amount>
+                  </v15:UnitPrice>
+                  <v15:CustomsValue>
+                     <v15:Currency>USD</v15:Currency>
+                     <v15:Amount>100.000000</v15:Amount>
+                  </v15:CustomsValue>
+               </v15:Commodities>
+               <v15:ExportDetail>
+                  <v15:ExportComplianceStatement>30.37(f)</v15:ExportComplianceStatement>
+               </v15:ExportDetail>
+            </v15:CustomsClearanceDetail>
+            <v15:LabelSpecification>
+               <v15:LabelFormatType>COMMON2D</v15:LabelFormatType>
+               <v15:ImageType>PNG</v15:ImageType>
+               <v15:LabelStockType>PAPER_7X4.75</v15:LabelStockType>
+            </v15:LabelSpecification>
+            <v15:RateRequestTypes>ACCOUNT</v15:RateRequestTypes>
+            <v15:PackageCount>1</v15:PackageCount>
+            <v15:RequestedPackageLineItems>
+               <v15:SequenceNumber>1</v15:SequenceNumber>
+               <v15:Weight>
+                  <v15:Units>LB</v15:Units>
+                  <v15:Value>20.0</v15:Value>
+               </v15:Weight>
+               <v15:Dimensions>
+                  <v15:Length>12</v15:Length>
+                  <v15:Width>12</v15:Width>
+                  <v15:Height>12</v15:Height>
+                  <v15:Units>IN</v15:Units>
+               </v15:Dimensions>
+               <v15:CustomerReferences>
+                  <v15:CustomerReferenceType>CUSTOMER_REFERENCE</v15:CustomerReferenceType>
+                  <v15:Value>string</v15:Value>
+               </v15:CustomerReferences>
+            </v15:RequestedPackageLineItems>
+         </v15:RequestedShipment>
+      </v15:ProcessShipmentRequest>
+   </soapenv:Body>
+</soapenv:Envelope>
+"

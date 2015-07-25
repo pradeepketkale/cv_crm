@@ -1,0 +1,64 @@
+<?php
+/**
+* aheadWorks Co.
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://ecommerce.aheadworks.com/AW-LICENSE-COMMUNITY.txt
+ *
+ * =================================================================
+ *                 MAGENTO EDITION USAGE NOTICE
+ * =================================================================
+ * This package designed for Magento COMMUNITY edition
+ * aheadWorks does not guarantee correct work of this extension
+ * on any other Magento edition except Magento COMMUNITY edition.
+ * aheadWorks does not provide extension support in case of
+ * incorrect edition usage.
+ * =================================================================
+ *
+ * @category   AW
+ * @package    AW_Helpdeskultimate
+ * @version    2.9.2
+ * @copyright  Copyright (c) 2010-2012 aheadWorks Co. (http://www.aheadworks.com)
+ * @license    http://ecommerce.aheadworks.com/AW-LICENSE-COMMUNITY.txt
+ */
+?>
+<?php if (($this->getTicketInfo()->getStatus() != AW_Helpdeskultimate_Model_Status::STATUS_CLOSED) && $this->canShowForm()
+):
+    // If ticket is closed, no reply form should be shown
+    ?>
+
+
+<div class="fieldset form-list formlistnew">
+<fieldset class="group-select">
+    <h2 class="legend"><?php echo $this->__('Post a reply')?></h2>
+    <a name="reply"></a>
+
+    <form action="<?php echo $this->getAction() ?>" method="post" id="helpdesk-reply-form"
+          enctype="multipart/form-data">
+        <div>
+            <label for="content_field"><?php echo $this->__('Reply') ?><span class="required">*</span></label><br/>
+            <textarea class="required-entry" name="content"
+                      id="content_field"><?php echo $this->htmlEscape($data->getContent()) ?></textarea>
+        </div>
+        <?php if (Mage::getStoreConfig(AW_Helpdeskultimate_Helper_Config::XML_PATH_ADVANCED_MANAGEFILES)): ?>
+        <div class="clear">
+            <label for="filename"><?php echo $this->__('Attachment') . $this->__(' (%sMb limit)', Mage::getStoreConfig('helpdeskultimate/advanced/maxupload'));?></label>
+          <p class="clear"><input class="input-file" name="filename" id="filename" style="width: 450px;" type="file"/></p>
+        </div>
+        <?php endif;?>
+        <div class="button-set">
+            <button class="continue right form-button" type="submit"><span><span><?php echo $this->__('Submit') ?></span></span>
+            </button>
+        </div>
+        <?php if ($this->isExternal()): ?>
+        <input type="hidden" name="uid" value="<?php echo $this->getRequest()->getParam('uid');?>"/>
+        <input type="hidden" name="key" value="<?php echo $this->getRequest()->getParam('key');?>"/>
+        <?php endif;?>
+    </form>
+</fieldset></div>
+
+<?php endif; ?>

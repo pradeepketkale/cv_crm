@@ -1,0 +1,39 @@
+<?php if (Mage::registry('current_category')): ?>
+<table class="aw_prevnext">
+	<tr>
+		<td class="awpn_prev">
+			<?php if ($this->getPreviousProductLink()!=''): ?>
+				<a id="awpn_prev" class="next2" href=<?php echo $this->getPreviousProductLink(); ?> title="<?php echo $this->getPreviousProductLabel()." ".$this->__('(Ctrl+Left)') ?>">
+				<?php if ($this->getPreviousProductImage()): ?>
+					<img class="awpn_prev_img" src="<?php echo $this->getPreviousProductImage(); ?>" />
+				<?php else: ?>
+					<?php echo $this->getPreviousProductText(); ?>
+				<?php endif; ?>
+				</a>
+			<?php endif; ?>
+		</td>
+		<td class="awpn_up">
+			<?php if ($this->getUpLevelLink()!=''): ?>
+				<a id="awpn_up" href=<?php echo $this->getUpLevelLink() ?> title="<?php echo $this->getUpCategoryLabel()." ".$this->__('(Ctrl+Up)') ?>">
+				<?php if ($this->getUpLevelImage()): ?>
+					<img class="awpn_up_img" src="<?php echo $this->getUpLevelImage(); ?>" />
+				<?php else: ?>
+					<?php echo $this->getUpLevelText(); ?>
+				<?php endif; ?>
+				</a>
+			<?php endif; ?>
+		</td>
+		<td class="awpn_next">
+			<?php if ($this->getNextProductLink()!=''): ?>
+				<a id="awpn_next" class="prev2" href=<?php echo $this->getNextProductLink() ?> title="<?php echo $this->getNextProductLabel()." ".$this->__('(Ctrl+Right)') ?>">
+				<?php if ($this->getNextProductImage()): ?>
+					<img class="awpn_next_img" src="<?php echo $this->getNextProductImage(); ?>" />
+				<?php else: ?>
+					<?php echo $this->getNextProductText(); ?>
+				<?php endif; ?>
+				</a>
+			<?php endif; ?>
+		</td>
+	</tr>
+</table>
+<?php endif; ?>

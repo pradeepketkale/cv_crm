@@ -1,0 +1,67 @@
+<dl class="sp-methods" id="checkout-payment-method-load">
+<?php 
+	//start Added by suresh on 19-01-2012 for do not display other payment methods if amount is 0(Issue #73)
+	if(Mage::getSingleton('checkout/session')->getQuote()->getGrandTotal() == 0) {
+?>
+<?php foreach ($this->getMethods() as $_method): $_code = $_method->getCode() ?>
+    <?php if( $_code == 'free' ): ?>
+    <dt>
+        <span class="no-display"><input id="p_method_<?php echo $_code ?>" value="<?php echo $_code ?>" type="radio" name="payment[method]" checked="checked" class="radio" /></span>
+        <label for="p_method_<?php echo $_code ?>"><?php echo $this->getMethodTitle($_method) ?> <?php echo $this->getMethodLabelAfterHtml($_method) ?></label>
+    </dt>
+    <?php if ($html = $this->getPaymentMethodFormHtml($_method)): ?>
+    <dd>
+        <?php echo $html; ?>
+    </dd>
+    <?php endif; ?>
+    <?php endif; ?>
+<?php endforeach; ?>
+<?php	
+	//End Added by suresh on 19-01-2012 for do not display other payment methods if amount is 0(Issue #73)
+	}
+	else {
+?>
+<?php foreach ($this->getMethods() as $_method): $_code = $_method->getCode() ?>
+    <dt>
+    <?php if( sizeof($this->getMethods()) > 1 ): ?>
+        <input  id="p_method_<?php echo $_code ?>" <?php if($amount_zero && $_code != 'free'){ echo "DISABLED";}else { echo ''; }?> value="<?php echo $_code ?>" type="radio" name="payment[method]" title="<?php echo $this->htmlEscape($_method->getTitle()) ?>" onclick="payment.switchMethod('<?php echo $_code ?>');"<?php if($this->getSelectedMethodCode()==$_code): ?> checked="checked"<?php endif; ?> class="radio" />
+    <?php else: ?>
+        <span class="no-display"><input id="p_method_<?php echo $_code ?>" <?php if($amount_zero && $_code != 'free'){ echo "DISABLED";}else { echo ''; }?> value="<?php echo $_code ?>" type="radio" name="payment[method]" checked="checked" class="radio" /></span>
+    <?php endif; ?>
+    		<label for="p_method_<?php echo $_code ?>"><?php echo $this->getMethodTitle($_method) ?> <?php echo $this->getMethodLabelAfterHtml($_method) ?></label>
+    		<?php if($_code=='gharpay_standard'):?>
+    				
+				    				<a title="Cash In Advance" href="#" onclick="fnShow()">How it works?</a>
+                                    <script>
+									document.getElementById("howit").style.display="none";
+									function fnShow() {
+											document.getElementById("howit").style.display="block";
+									}
+									
+									function fnhide() {
+											document.getElementById("howit").style.display="none";
+									
+									}
+									</script>
+                                    <div style="position:absolute; left:89px; top:-254px; z-index:99999; border: 4px solid #ccc; background-color:#FFF;" id="howit">
+                                    <div style="clear:both; float:right;font-size:14px; padding:5px 5px 0 0;"><a href="#" onclick="fnhide()">Close</a></div>
+                                    	<img src="<?php echo $this->getSkinUrl('images/gharpay.jpg')?>"  />
+                                    </div>
+    		<?php endif;?>
+    		
+    </dt>
+    <?php if ($html = $this->getPaymentMethodFormHtml($_method)): ?>
+    <dd>
+        <?php echo $html; ?>
+    </dd>
+    <?php endif; ?>
+<?php endforeach; ?>
+<?php }?>
+</dl>
+<?php echo $this->getChildChildHtml('additional'); ?>
+<script type="text/javascript">
+//<![CDATA[
+<?php echo $this->getChildChildHtml('scripts'); ?>
+payment.init();
+//]]>
+</script>

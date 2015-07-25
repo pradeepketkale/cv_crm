@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <modules>
+        <Insync_Basecurrency>
+            <version>1.0</version>
+        </Insync_Basecurrency>
+    </modules>
+    <global>
+        <models>
+            <basecurrency>
+                <class>Insync_Basecurrency_Model</class>
+            </basecurrency>
+        </models>
+    </global>
+</config>

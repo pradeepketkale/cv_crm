@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+    <disputeraised_adminhtml_disputeraised_index>
+        <reference name="content">
+            <block type="disputeraised/adminhtml_disputeraised" name="disputeraised" />
+        </reference>
+    </disputeraised_adminhtml_disputeraised_index>
+</layout>

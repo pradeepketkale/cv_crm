@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+    <vendorneftcode_adminhtml_vendorneftcode_index>
+        <reference name="content">
+            <block type="vendorneftcode/adminhtml_vendorneftcode" name="vendorneftcode" />
+        </reference>
+    </vendorneftcode_adminhtml_vendorneftcode_index>
+</layout>
+
+

@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+    <craftsvillacustomer_adminhtml_craftsvillacustomer_index>
+        <reference name="content">
+            <block type="craftsvillacustomer/adminhtml_craftsvillacustomer" name="craftsvillacustomer" />
+        </reference>
+    </craftsvillacustomer_adminhtml_craftsvillacustomer_index>
+</layout>

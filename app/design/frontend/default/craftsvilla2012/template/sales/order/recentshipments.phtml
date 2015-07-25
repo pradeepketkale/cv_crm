@@ -1,0 +1,86 @@
+<?php $_shipments = $this->getRecentShipments();
+$shipmentStatuses = Mage::getSingleton('udropship/source')->setPath('shipment_statuses')->toOptionHash();
+/*echo "<pre>";
+print_r($data); 
+print_r($_shipments->getData());
+echo "</pre>";
+echo sizeof($_shipments->getItems());*/
+?>
+
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2010 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<div class="box-account box-recent">
+    <div class="box-head">
+        <h2><?php echo $this->__('Recent Orders') ?></h2>
+        <?php if( sizeof($_shipments->getItems()) > 0 ): ?><a class="links" href="<?php echo $this->getUrl('sales/order/history') ?>"><?php echo $this->__('View All') ?></a><?php endif; ?>
+    </div>
+<?php if( sizeof($_shipments->getItems()) > 0 ): ?>
+    <table class="data-table" id="my-orders-table">
+    <col width="1" />
+    <col width="1" />
+    <col />
+    <col width="1" />
+    <col width="1" />
+    <col width="1" />
+        <thead>
+            <tr>
+                <th><?php echo $this->__('Order #') ?></th>
+                <th><?php echo $this->__('Date') ?></th>
+                <th><?php echo $this->__('Ship To') ?></th>
+                <th><span class="nobr"><?php echo $this->__('Order Total') ?></span></th>
+                <th><?php echo $this->__('Status') ?></th>
+                <th>&nbsp;</th>
+                <th>&nbsp;</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($_shipments as $_order): ?>
+                <tr>
+                    <td><?php echo $_order->getIncrementId() ?></td>
+                    <td><span class="nobr"><?php echo $this->formatDate($_order->getCreatedAt()) ?></span></td>
+                    <td><?php echo $_order->getShippingName() ? $this->htmlEscape($_order->getShippingName()) : '&nbsp;' ?></td>
+                    <td><?php echo $_order->getTotalValue() ?></td>
+                    <td><em><?php echo $shipmentStatuses[$_order->getUdropshipStatus()] ?></em></td>
+                    <td class="a-center">
+                        <span class="nobr">
+                        <a class="links" href="<?php echo $this->getShipmetUrl($_order) ?>"><?php echo $this->__('View Order') ?></a>
+                        </span>
+                    </td>
+					<td>
+                        <span class="nobr">
+                        <a href="<?php echo $this->getShipmetPrintUrl($_order) ?>" onclick="this.target='_blank'"><?php echo $this->__('Print Invoice') ?></a>
+                        </span>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+    <script type="text/javascript">decorateTable('my-orders-table')</script>
+<?php else: ?>
+    <p><?php echo $this->__('You have placed no orders.'); ?></p>
+<?php endif; ?>
+</div>

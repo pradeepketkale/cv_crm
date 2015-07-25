@@ -1,0 +1,40 @@
+#!/bin/bash
+
+rsync -avz --port=22  /var/www/html/app/code/ root@175.41.141.42:/var/www/html/app/code/ -e "ssh -i /home/newserver1.pem"
+rsync -avz --port=22  /var/www/html/app/code/ root@10.139.50.101:/var/www/html/app/code/ -e "ssh -i /home/newserver1.pem"
+rsync -avz --port=22  /var/www/html/app/code/ root@10.134.121.60:/var/www/html/app/code/ -e "ssh -i /home/newserver1.pem"
+rsync -avz --port=22  /var/www/html/app/code/ root@10.134.121.238:/var/www/html/app/code/ -e "ssh -i /home/newserver1.pem"
+rsync -avz --port=22  /var/www/html/app/code/ root@10.144.87.5:/var/www/html/app/code/ -e "ssh -i /home/newserver1.pem"
+rsync -avz --port=22  /var/www/html/app/code/ root@10.144.88.10:/var/www/html/app/code/ -e "ssh -i /home/newserver1.pem"
+rsync -avz --port=22  /var/www/html/app/code/ root@10.144.80.17:/var/www/html/app/code/ -e "ssh -i /home/newserver1.pem"
+rsync -avz --port=22  /var/www/html/app/code/ root@10.144.14.224:/var/www/html/app/code/ -e "ssh -i /home/newserver1.pem"
+rsync -avz --port=22  /var/www/html/app/code/ root@10.139.47.112:/var/www/html/app/code/ -e "ssh -i /home/newserver1.pem"
+rsync -avz --port=22  /var/www/html/app/code/ root@10.138.137.43:/var/www/html/app/code/ -e "ssh -i /home/newserver1.pem"
+rsync -avz --port=22  /var/www/html/app/code/ root@10.144.93.209:/var/www/html/app/code/ -e "ssh -i /home/newserver1.pem"
+rsync -avz --port=22  /var/www/html/app/code/ root@10.139.53.95:/var/www/html/app/code/ -e "ssh -i /home/newserver1.pem"
+rsync -avz --port=22  /var/www/html/app/code/ root@10.135.37.51:/var/www/html/app/code/ -e "ssh -i /home/newserver1.pem"
+rsync -avz --port=22  /var/www/html/app/code/ root@10.138.150.147:/var/www/html/app/code/ -e "ssh -i /home/newserver1.pem"
+rsync -avz --port=22  /var/www/html/app/code/ root@10.138.161.87:/var/www/html/app/code/ -e "ssh -i /home/newserver1.pem"
+rsync -avz --port=22  /var/www/html/app/code/ root@10.134.29.251:/var/www/html/app/code/ -e "ssh -i /home/newserver1.pem"
+
+
+
+rsync -avz --port=22  /var/www/html/app/design/ root@175.41.141.42:/var/www/html/app/design/ -e "ssh -i /home/newserver1.pem"
+rsync -avz --port=22  /var/www/html/app/design/ root@10.139.50.101:/var/www/html/app/design/ -e "ssh -i /home/newserver1.pem"
+rsync -avz --port=22  /var/www/html/app/design/ root@10.134.121.60:/var/www/html/app/design/ -e "ssh -i /home/newserver1.pem"
+rsync -avz --port=22  /var/www/html/app/design/ root@10.134.121.238:/var/www/html/app/design/ -e "ssh -i /home/newserver1.pem"
+rsync -avz --port=22  /var/www/html/app/design/ root@10.144.87.5:/var/www/html/app/design/ -e "ssh -i /home/newserver1.pem"
+rsync -avz --port=22  /var/www/html/app/design/ root@10.144.88.10:/var/www/html/app/design/ -e "ssh -i /home/newserver1.pem"
+rsync -avz --port=22  /var/www/html/app/design/ root@10.144.80.17:/var/www/html/app/design/ -e "ssh -i /home/newserver1.pem"
+rsync -avz --port=22  /var/www/html/app/design/ root@10.144.14.224:/var/www/html/app/design/ -e "ssh -i /home/newserver1.pem"
+rsync -avz --port=22  /var/www/html/app/design/ root@10.139.47.112:/var/www/html/app/design/ -e "ssh -i /home/newserver1.pem"
+rsync -avz --port=22  /var/www/html/app/design/ root@10.138.137.43:/var/www/html/app/design/ -e "ssh -i /home/newserver1.pem"
+rsync -avz --port=22  /var/www/html/app/design/ root@10.144.93.209:/var/www/html/app/design/ -e "ssh -i /home/newserver1.pem"
+rsync -avz --port=22  /var/www/html/app/design/ root@10.139.53.95:/var/www/html/app/design/ -e "ssh -i /home/newserver1.pem"
+rsync -avz --port=22  /var/www/html/app/design/ root@10.135.37.51:/var/www/html/app/design/ -e "ssh -i /home/newserver1.pem"
+rsync -avz --port=22  /var/www/html/app/design/ root@10.138.150.147:/var/www/html/app/design/ -e "ssh -i /home/newserver1.pem"
+rsync -avz --port=22  /var/www/html/app/design/ root@10.138.161.87:/var/www/html/app/design/ -e "ssh -i /home/newserver1.pem"
+rsync -avz --port=22  /var/www/html/app/design/ root@10.134.29.251:/var/www/html/app/design/ -e "ssh -i /home/newserver1.pem"
+
+echo 'rsync done'
+

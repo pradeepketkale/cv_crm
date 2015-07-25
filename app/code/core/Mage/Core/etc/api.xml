@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<config>
+	<api>
+		<resources>
+			<core_store translate="title" module="core">
+				<model>core/store_api</model>
+				<title>Store Api</title>
+				<acl>core/store</acl>
+				<methods>
+					<list translate="title" module="core">
+						<title>Data</title>
+						<method>itmes</method>
+					</list>
+					<info translate="title" module="core">
+						<title>Retrieve data</title>
+						<acl>info</acl>
+					</info>
+				</methods>
+			</core_store>
+			<core_website translate="title" module="core">
+				<model>core/website_api</model>
+				<title>WebSite Api</title>
+				<acl>core/website_api</acl>
+				<methods>
+					<all translate="title" module="core">
+						<title>Get All Website</title>
+						<acl>all</acl>
+					</all>
+				</methods>
+			</core_website>
+		</resources>
+		<resources_alias>
+			<store>core_store</store>
+			<website>core_website</website>
+		</resources_alias>
+		<v2>
+			<resources_function_prefix>
+				<store>coreStore</store>
+				<website>coreWebsite</website>
+			</resources_function_prefix>
+		</v2>
+		<acl>
+			<resources>
+				<core translate="title" module="core">
+					<title>Core</title>
+					<sort_order>5</sort_order>
+					<store translate="title" module="core">
+						<title>Store</title>
+					</store>
+					<website translate="title" module="core">
+						<title>Website</title>
+					</website>
+				</core>
+			</resources>
+		</acl>
+	</api>
+</config>

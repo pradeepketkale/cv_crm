@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout version="0.1.0">
+	
+	<!--<coupons_index_index>
+		<label>Customer My Account Order History</label>
+		<update handle="customer_account"/>
+		<reference name="my.account.wrapper">
+			<block type="Coupons/Coupons" name="coupons" template="coupons/index.phtml" />			
+		</reference>
+	</coupons_index_index>-->
+	
+	 <coupons_index_index translate="label">
+        <label>Customer My Account Order History</label>
+        <update handle="customer_account"/>
+        <reference name="root">
+            <action method="setHeaderTitle" translate="title" module="customer"><title>Edit Account Info</title></action>
+        </reference>
+        <reference name="my.account.wrapper">
+			<block type="Coupons/Coupons" name="coupons" template="coupons/index.phtml" />			
+		</reference>
+	</coupons_index_index>
+	
+	
+	<coupons_index_sendgift>
+		<reference name="root">
+			<action method="setTemplate"><template>page/1column.phtml</template></action>
+		</reference>
+		<reference name="content">
+			<block type="Coupons/Coupons" name="sendgift" template="coupons/sendgift.phtml" />
+		</reference>
+	</coupons_index_sendgift>
+
+	 <coupons_redeem_index>
+        <reference name="content">
+            <block type="Coupons/redeem" name="redeem" template="Coupons/redeem.phtml" />
+        </reference>
+    </coupons_redeem_index>
+
+</layout>

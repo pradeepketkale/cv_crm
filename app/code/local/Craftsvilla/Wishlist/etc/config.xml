@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <modules>
+        <Craftsvilla_Wishlist>
+            <version>0.1.0</version>
+        </Craftsvilla_Wishlist>
+        <depends>
+            <Mage_Wishlist />
+        </depends>
+    </modules>
+    
+    <global>
+        <blocks>
+            <wishlist>
+                    <rewrite>
+                        <customer_sidebar>Craftsvilla_Wishlist_Block_Customer_Sidebar</customer_sidebar>
+                        <customer_wishlist>Craftsvilla_Wishlist_Block_Customer_Wishlist</customer_wishlist>
+                    </rewrite>
+            </wishlist>
+        </blocks>
+       <models>
+                <wishlist>
+                    <rewrite>
+                            <wishlist>Craftsvilla_Wishlist_Model_Wishlist</wishlist>
+                    </rewrite>
+                </wishlist>
+        </models>
+        
+       <template>
+            
+			<email>
+			<!--Commented By dileswar on date 22-11-2012-->
+              <!--<add_wishlist_email_template module="wishlist">
+	                <label>Add Product In Wishlist</label>
+	                <file>add_wishlist.html</file>
+	                <type>html</type>
+                </add_wishlist_email_template>
+                <add_wishlist_email_template_vendor module="wishlist">
+	                <label>Add Product In Wishlist Vendor Mail</label>
+	                <file>add_wishlist_vendor.html</file>
+	                <type>html</type>
+                </add_wishlist_email_template_vendor>-->
+            </email>
+       </template>
+        
+    	<routers>
+            <wishlist>
+                <rewrite>
+                  <index>
+                          <from><![CDATA[#^/wishlist/index/$#]]></from>
+                          <to>/wishlist/index/</to>
+                  </index>
+                </rewrite>
+	   </wishlist>
+        </routers>
+    </global>
+    
+    <frontend>
+		<routers>
+			<wishlist>
+				<args>
+				    <modules>
+					    <Craftsvilla_Wishlist before="Mage_Wishlist">Craftsvilla_Wishlist</Craftsvilla_Wishlist>
+				    </modules>
+				</args>
+			</wishlist>
+		</routers>
+	</frontend>
+</config>

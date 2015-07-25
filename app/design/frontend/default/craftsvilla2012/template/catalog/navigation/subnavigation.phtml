@@ -1,0 +1,44 @@
+<?php $_categories=$this->getCurrentChildCategories(); ?>
+<div class="listing-type-list catalog-listing">
+<table width="100%" border="0" style=' float:left' cellspacing="3" cellpadding="3">
+    <tr>
+    <?php
+    $count=0;
+    foreach ($_categories as $_category):
+    ?>
+        <td width="33%">
+        <div class="listing-item">
+            <div class="product-image">    
+                <?php 
+                $imageUrl = $this->getImageUrl($_category);
+				if( $_category->getIsActive())
+				{
+					?>
+					<a href="<?php echo $_category->getURL() ?>" title="<?php echo $this->htmlEscape($_category->getName()) ?>" style="text-decoration:none">
+					<div align="center">
+					<img  src="<?php echo $imageUrl; ?>" width="200" height="200" alt="<?php echo $this->htmlEscape($_category->getName()) ?>" />
+					</div>
+					<div align="center" ><h4><?php echo $this->htmlEscape($_category->getName()) ?></h4></div>
+					<div align="center" ><h1>VIEW MORE</h1></div></a>
+					<?php 
+				}
+				?>
+            </div>
+		</div>
+		</td>
+    <?php 
+    if($count=='2')
+    {
+        $count=0;
+    ?>
+    </tr>
+	<?php 
+    }
+    else
+    {              
+        $count++; 
+    }
+    endforeach; 
+    ?>
+</table>
+</div>

@@ -1,0 +1,76 @@
+<?php
+$_vendor = Mage::helper('umicrosite')->getCurrentVendor();
+$products = Mage::getModel('catalog/product')->getCollection()->addAttributeToSelect('*')->addAttributeToFilter('status', 1)
+											->addAttributeToFilter('udropship_vendor', $_vendor->getId())
+											->addAttributeToSort('updated_at', 'desc')
+											->joinField('inventory_in_stock', 'cataloginventory_stock_item', 'is_in_stock', 'product_id=entity_id','is_in_stock',array('qty'=>'0','eq' => "0"))->setPage(1, 4)->load();
+$storeurl = Mage::helper('umicrosite')->getVendorUrl($_vendor->getData('vendor_id'));
+$level = Mage::getStoreConfig('udropship/microsite/subdomain_level');
+$url = parse_url(Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB));
+$hostArr = explode('.', trim($url['host'], '.'));
+$l = sizeof($hostArr);
+if ($l-$level>=0) {
+    $hostArr[$l-$level] = $_vendor->getUrlKey();
+} else {
+    array_unshift($hostArr, $_vendor->getUrlKey());
+}
+$baseUrl = $url['scheme'].'://'.join('.', $hostArr).(isset($url['path']) ? $url['path'] : '/');
+$_helpm = $this->helper('umicrosite');
+$url= $_helpm->getVendorUrl($_vendor->getVendorId());
+?>
+
+<h1 class="headingvendor homeprite">
+About <?php echo $_vendor->getShopName()!=''?$_vendor->getShopName():"US"?>
+</h1>
+<span class="clr"></span>
+<div class="para leftseller floatl">
+<div class="abtvendore">
+<p><?php echo $this->htmlEscape($_vendor->getShopDescription()); ?></p>
+</div>
+
+<!--<h1 class="botbor">Resources</h1>
+<div class="clmns">
+essential oils, absolutes, fractionated coconut oil, 
+jojoba oil
+</div>-->
+
+
+</div>
+
+<div class="floatr venprod abtvendore">
+<h2 class="venheadings">Products</h2>
+<?php 
+	if($products->getData()) { ?>
+<a href="<?php echo $storeurl?>">See More</a>
+  <span class="clr"></span>
+  <ul class="products-grid products-grid-small">
+<?php 
+	$storeUrl = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB);
+	$columnCount = 1;
+	$liClass = '';
+	foreach($products as $product){
+		//echo "<pre>"; print_r($product->getData()); exit;
+		if($columnCount%2==0)
+			$liClass = "item lastone";
+		else
+			$liClass = "item";
+		$columnCount++;
+		$productUrl = $storeUrl.$product->getUrlPath();
+?>
+	<li class="<?php echo $liClass ?>">
+    <div class="prCnr"> <a class="product-image" title="<?php echo $this->htmlEscape($this->getImageLabel($product, 'small_image')) ?>" href="<?php echo $productUrl ?>"><img alt="amit  test configure......" src="<?php echo $this->helper('catalog/image')->init($product, 'small_image')->resize(132, 132); ?>"></a>
+      <h1><a title="<?php echo $this->htmlEscape($product->getName()) ?>" href="<?php echo $productUrl ?>"><?php echo $this->htmlEscape($product->getName()) ?></a></h1>
+         <?php echo $this->getLayout()->createBlock('catalog/product')->getPriceHtml($product) ?> 
+      <div class="clear"></div>
+    </div>
+  </li>
+<?php 
+}
+?>
+</ul>
+<?php } else { ?>
+<p style="color: #444444;font-size: 13px;line-height: 22px;padding-bottom: 12px;">This vendor dosen't have any products..</p>
+<?php } ?>  
+</div>
+
+<span class="clr"></span>

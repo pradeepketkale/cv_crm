@@ -1,0 +1,211 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Craftsvilla_Uagent>
+            <version>0.8.0</version>
+        </Craftsvilla_Uagent>
+    </modules>
+    <frontend>
+      <routers>
+            <uagent>
+                <use>standard</use>
+                <args>
+                    <module>Craftsvilla_Uagent</module>
+                    <frontName>uagent</frontName>
+                </args>
+            </uagent>
+        </routers>
+        <layout>
+            <updates>
+                <uagent>
+                    <file>uagent.xml</file>
+                </uagent>
+            </updates>
+        </layout>
+    </frontend>
+    <admin>
+        <routers>
+			<uagent>
+				<use>admin</use>
+				<args>
+					<module>Craftsvilla_Uagent</module>
+					<frontName>uagent</frontName>
+				</args>
+			</uagent>
+        </routers>
+    </admin>
+    <adminhtml>
+		<menu>
+			<sales>
+				<children>
+					<uagent module="uagent">
+						<title>Uagent</title>
+						<sort_order>80</sort_order>
+						<action>uagent/adminhtml_uagent</action>
+					</uagent>
+				</children>
+			</sales>
+		</menu>
+		<acl>
+			<resources>
+				<all>
+					<title>Allow Everything</title>
+				</all>
+				<admin>
+					<children>
+						<sales>
+							<children>					
+								<uagent>
+									<title>Uagent Module</title>
+									<sort_order>10</sort_order>
+								</uagent>
+							</children>	
+						</sales>	
+					</children>
+				</admin>
+			</resources>
+		</acl>
+		<layout>
+			<updates>
+				<uagent>
+					<file>uagent.xml</file>
+				</uagent>
+			</updates>
+		</layout>
+    </adminhtml>   
+    <global>
+		<template>
+			<email>
+				<uagent_welcome_email_template module="uagent">
+		            <label>Welcome Login</label>
+		            <file>uagent_welcome.html</file>
+		            <type>html</type>
+		        </uagent_welcome_email_template>
+				<send_agent_order_detail module="uagent">
+		            <label>send order email</label>
+		            <file>send_agent_order_detail.html</file>
+		            <type>html</type>
+		        </send_agent_order_detail>
+				<coupon_applied_by_agent module="uagent">
+		            <label>coupon by agent</label>
+		            <file>coupon_applied_by_agent.html</file>
+		            <type>html</type>
+		        </coupon_applied_by_agent>
+				<send_agent_paid_order_detail module="uagent">
+		            <label>send paid order email</label>
+		            <file>send_agent_paid_order_detail.html</file>
+		            <type>html</type>
+		        </send_agent_paid_order_detail>3
+				
+				<agent_catalaog_email_template module="uagent">
+		            <label>Agent Catalog</label>
+		            <file>agent_catalaog_email_template.html</file>
+		            <type>html</type>
+		        </agent_catalaog_email_template>
+			</email>
+		</template>
+		
+		<models>
+            <uagent>
+                <class>Craftsvilla_Uagent_Model</class>
+                <resourceModel>uagent_mysql4</resourceModel>
+            </uagent>
+            <uagent_mysql4>
+                <class>Craftsvilla_Uagent_Model_Mysql4</class>
+             <entities>
+                    <uagent>
+                        <table>uagent</table>
+                    </uagent>
+					
+					<cataloguecraftsvilla>
+                        <table>cataloguecraftsvilla</table>
+                    </cataloguecraftsvilla>
+                </entities>
+            </uagent_mysql4>
+        </models>
+        <resources>
+            <uagent_setup>
+                <setup>
+                    <module>Craftsvilla_Uagent</module>
+                </setup>
+                <connection>
+                    <use>core_setup</use>
+                </connection>
+            </uagent_setup>
+            <uagent_write>
+                <connection>
+                    <use>core_write</use>
+                </connection>
+            </uagent_write>
+            <uagent_read>
+                <connection>
+                    <use>core_read</use>
+                </connection>
+            </uagent_read>
+        </resources>
+        <blocks>
+            <uagent>
+                <class>Craftsvilla_Uagent_Block</class>
+            </uagent>
+        </blocks>
+        <helpers>
+            <uagent>
+                <class>Craftsvilla_Uagent_Helper</class>
+            </uagent>
+        </helpers>
+		<events>
+			<uagent>
+				<class>uagent/observer</class>
+				<method></method>
+				<type>singleton</type>
+			</uagent>
+			<controller_front_init_routers>
+                <observers>
+                    <uagent>
+                        <type>singleton</type>
+                        <class>uagent/observer</class>
+                        <method>controller_front_init_before</method>
+                    </uagent>
+                </observers>
+            </controller_front_init_routers>
+			
+			<uagent_index_login>
+				<observers>
+					<uagent>
+						<type>singleton</type>
+						<class>uagent/observer</class>
+						<method>uagent_index_login</method>
+					</uagent>
+				</observers>
+			</uagent_index_login>
+			<uagent_index_logout>
+				<observers>
+					<uagent>
+						<type>singleton</type>
+						<class>uagent/observer</class>
+						<method>uagent_index_logout</method>
+					</uagent>
+				</observers>
+			</uagent_index_logout>
+			<controller_action_predispatch_adminhtml_index_logout>
+                <observers>
+                    <uagent>
+                        <type>singleton</type>
+                        <class>uagent/observer</class>
+                        <method>controller_action_predispatch_adminhtml_index_logout</method>
+                    </uagent>
+                </observers>
+            </controller_action_predispatch_adminhtml_index_logout>
+
+            <controller_action_postdispatch_adminhtml_index_logout>
+                <observers>
+                    <uagent>
+                        <type>singleton</type>
+                        <class>uagent/observer</class>
+                        <method>controller_action_postdispatch_adminhtml_index_logout</method>
+                    </uagent>
+                </observers>
+            </controller_action_postdispatch_adminhtml_index_logout>
+		</events>
+    </global>
+</config>

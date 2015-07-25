@@ -1,0 +1,17 @@
+<?xml version="1.0" ?>  
+<layout>  
+	<default>  
+		<reference name="header">  
+			<reference name="top.links">  
+				<remove name="checkout_cart_link"/>  
+				<block type="cartview/view" name="cartview_toplink" template="cartview/toplink.phtml">  
+					<block type="checkout/cart_sidebar" name="cart_sidebar" as="topcart" template="checkout/cart/sidebar.phtml"/>  
+				</block>  
+				<action method="addLinkBlock"><blockname>cartview_toplink</blockName></action>  
+				<block type="checkout/links" name="checkout_cart_link_cartview">  
+					<action method="addCheckoutLink"></action>  
+				</block>  
+			</reference>  
+		</reference>  
+	</default>  
+</layout>

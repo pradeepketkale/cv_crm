@@ -1,0 +1,541 @@
+<?php
+$_hlp = Mage::helper('udropship');
+$_hlp = Mage::helper('udropship');
+$_shipments = Mage::helper('core')->decorateArray($_hlp->getVendorShipmentCollection(), '');
+$_vendor = Mage::getSingleton('udropship/session')->getVendor();
+$urlVendor = $_vendor->getUrlKey();
+//print_R($_shipments); exit;
+$_vendorMethods = $_vendor->getShippingMethods();
+$_statuses = $_hlp->getVendorShipmentStatuses(); //print_r($_statuses); exit;
+$_ajaxInfoUrl = $this->getUrl('udropship/vendor/returnedshipmentsInfo/id/ID/ajax/1');
+$_ajaxPostUrl = $this->getUrl('udropship/vendor/returnedVendorShipments/id/ID/ajax/1');
+$_sortBy = $this->getRequest()->getParam('sort_by');
+$_sortDir = $this->getRequest()->getParam('sort_dir');
+$_filterMethods = $this->getRequest()->getParam('filter_method');
+$_filterStatuses = $this->getRequest()->getParam('filter_status');
+$_filterPayout = $this->getRequest()->getParam('filter_payout');
+$_filterDate = Mage::app()->getLocale()->date();
+$_filterDate->subDay(30);			
+$curdate= date("Y-m-d", Mage::getModel('core/date')->timestamp(time()));
+$befdate = $_filterDate->toString(Varien_Date::DATE_INTERNAL_FORMAT);
+//echo $befdate; exit;
+
+?> 
+<?php echo $this->getMessagesBlock()->getGroupedHtml(); ?>
+
+<div class="box-head">
+        <h1>Returned Shipments</h1>
+</div>
+    
+<div class="page-title">
+        <h1>Search By Filter</h1>
+    </div>
+
+<form method="get" id="shipments-filter-form">
+   
+<div class="fieldset mkpdash"><h2 class="legend"><div class="box-head bighead">
+    	    <div class="col3-set"><a class="action" href="javascript:void(0);" onclick="toggleSGFilterBox(this)"><span class="open"></span></a> Filter Shipments</div>
+</div></h2>
+                 
+    <div class="generic-box filter">
+    	
+    	<div class="col3-set">
+        <div>
+        
+         <div class="col-1"><ul class="form-list">
+                <li>
+                    <label for="filter-order_id-from"><?php echo $_hlp->__('Shipment ID') ?></label>
+                    <input id="filter-order_id-from" name="filter_order_id_from" title="<?php echo $_hlp->__('From Shipment ID') ?>" type="text" class="input-text" style="width:120px;" value="<?php echo $this->getRequest()->getParam('filter_order_id_from') ?>" /> -
+                    <input id="filter-order_id-to" name="filter_order_id_to" title="<?php echo $_hlp->__('To Shipment ID') ?>" type="text" class="input-text" style="width:120px;" value="<?php echo $this->getRequest()->getParam('filter_order_id_to') ?>" />
+                </li>
+                <li>
+                    <label for="filter-order_date-from"><?php echo $_hlp->__('Shipment Date') ?></label>
+                    <input id="filter-order_date-from" name="filter_order_date_from" title="<?php echo $_hlp->__('From Shipment Date') ?>" type="text" class="input-text" style="width:120px;" value="<?php if($this->getRequest()->getParam('filter_order_date_from')){echo $this->getRequest()->getParam('filter_order_date_from');}else { echo $befdate;}?>" /> -
+                    <input id="filter-order_date-to" name="filter_order_date_to" title="<?php echo $_hlp->__('To Shipment Date') ?>" type="text" class="input-text" style="width:120px;" value="<?php if($this->getRequest()->getParam('filter_order_date_to')){echo $this->getRequest()->getParam('filter_order_date_to');}else { echo $curdate;} ?>" />
+                </li>
+                
+                <li>
+                    <label for="filter-sort-by"><?php echo $_hlp->__('Sort By') ?></label>
+                    
+                    <select id="filter-sort-by" name="sort_by" title="<?php echo $_hlp->__('Sort By') ?>" class="select" style="width:120px;">
+                        <option value="increment_id" <?php if ($_sortBy=='increment_id'):?>selected="selected"<?php endif ?>><?php echo $_hlp->__('Shipment ID') ?></option>
+                         <option value="shipment_date" <?php if ($_sortBy=='shipment_date'):?>selected="selected"<?php endif ?>><?php echo $_hlp->__('Shipment Date') ?></option>
+                        
+                        <option value="udropship_status" <?php if ($_sortBy=='udropship_status'):?>selected="selected"<?php endif ?>><?php echo $_hlp->__('Shipping Status') ?></option>
+                    </select>
+                    <select id="filter-sort-dir" name="sort_dir" title="<?php echo $_hlp->__('Direction') ?>" class="select" style="width:100px;">
+                        <option value="asc" <?php if ($_sortDir=='asc'):?>selected="selected"<?php endif ?>><?php echo $_hlp->__('Ascending') ?></option>
+                        <option value="desc" <?php if ($_sortDir=='desc'):?>selected="selected"<?php endif ?>><?php echo $_hlp->__('Descending') ?></option>
+                    </select>
+                </li>
+            </ul></div>
+             
+            
+          <div class="col-2">
+			<ul class="form-list">
+                <li>
+                    <label class="labhead"><?php echo $_hlp->__('Shipping Status') ?></label>
+                    
+                    <?php foreach ($_statuses as $_v=>$_l): 
+                    	if($_l == 'Processing' || $_l == 'Shipped To Customer' || $_l == 'Shipped To Craftsvilla' || $_l == 'Product Out Of Stock' || $_l == 'Shipment Delayed' || $_l == 'Partially Shipped' || $_l == 'Handed To Courier' || $_l == 'Return Recieved From Customer' || $_l == 'Packing Slip Printed'):
+                    ?>
+                        <label for="filter-status-<?php echo $_v ?>" class="shippstatus"><input id="filter-status-<?php echo $_v ?>" name="filter_status[<?php echo $_v ?>]" value="1" title="<?php echo $_hlp->__($_l) ?>" type="checkbox" class="checkbox" <?php if (!empty($_filterStatuses[$_v])):?>checked="checked"<?php endif ?> /> <?php echo $_hlp->__($_l)?></label>
+
+                    <?php
+					
+					if(isset($_filterStatuses[$_v]))
+					{
+						unset($_filterStatuses[$_v]);
+					}
+                    endif; 
+                  endforeach ?>
+                </li>
+            </ul>
+
+
+           </div>
+        </div>
+       <div class="clear"></div>
+            <input type="submit" value="search" style="display:none" />
+            <input type="hidden" name="apply_filter" value="search"/>
+            <button class="form-button" name="apply_filter" type="submit" id="filter-search" value="search"><span><?php echo $_hlp->__('Apply Filter') ?></span></button>
+        </div>
+    </div>
+ </div>
+    
+</form>
+
+<p><span class="required"><b>Note: The shipment details below are for last 30 days only. To see shipments beyond 30 days, please choose larger date range above.</b> </span></p>
+
+<form id="shipments-massaction-form">
+            <div class="batch-actions">
+            	<h3 id="hdngBg1">Canceled Shipments</h3>
+              </div>
+</form>
+
+
+    
+<div id="debug"></div>
+
+<?php echo $this->getChildHtml('toolbar') ?>
+<table cellspacing="1" class="data-table table-gride vtop" id="shipment-grid">
+    <col width="1" />
+    <col />
+    <col />
+    <col />
+    <col />
+    <col />
+    <col width="1" />
+    <col />
+    
+    
+    <thead>
+        <tr>
+            <th><?php echo $_hlp->__('')?></th>
+            <th><?php echo $_hlp->__('Shipment ID /  <br>Order ID')?></th>
+            <th><?php echo $_hlp->__('Date')?></th>
+            <th><?php echo $_hlp->__('Pay Method')?></th>
+            <th><?php echo $_hlp->__('Track Number')?></th>
+            <th><?php echo $_hlp->__('Courier Name')?></th>
+            <th><?php echo $_hlp->__('Shipment Status')?></th>
+            </tr>
+    </thead>
+    <tbody>
+
+
+<?php if ($_shipments): ?>
+
+    <?php foreach ($_shipments as $_id=>$_s):
+	  //echo $_id; //exit;
+	  
+			$shipmentOrder = Mage::getModel('sales/order')->load($_s->getOrderId());
+			//echo '<pre>'; print_r($shipmentOrder); exit;
+			$testPayment1 = $shipmentOrder->getPayment();
+			$testPayment = $testPayment1->getMethodInstance()->getTitle(); 
+			
+			$shipmentStatus = $_s->getUdropshipStatus();
+			if($shipmentStatus == 25 || $shipmentStatus == 32 || $shipmentStatus == 26):
+			$shipmentOrder->getIncrementId(); 
+	?>
+        <tr id="row-<?php echo $_id?>" class="trigger <?php echo $_s->getIsEven() ? 'even' : 'odd'?>">
+            <td><a class="action" href="#" onclick="return false"><span></span></a></td>
+            <td><?php echo $_s->getIncrementId().' / '.$shipmentOrder->getIncrementId()?></td>
+            <td><?php echo Mage::helper('core')->formatDate($_s->getCreatedAt(), 'short', true) ?></td>
+			<td>
+            <?php  
+					if($testPayment!="NULL"){
+						try
+							{
+								//echo $testPayment;
+								if($testPayment != 'Cash On Delivery') {
+									$testPayment = 'PREPAID';
+									echo $testPayment;
+								} 
+								else 
+								{
+									echo $testPayment;
+								}
+								
+							}
+							catch(Exception $e){}
+						}								
+			 ?>
+            
+            </td>
+            <?php 
+			$checkTrack12 = Mage::getModel('sales/order_shipment_track')->load($_id,'parent_id');
+			$courierTitle = $checkTrack12->getTitle();
+			$courierName = $checkTrack12->getCourierName(); 
+			$trackNumber = $checkTrack12->getNumber(); 
+			?>
+			<td><?php echo $trackNumber; ?></td>
+            <td><?php echo $courierName; ?></td>
+            
+            <td id="status-<?php echo $_id ?>"><?php echo $_hlp->__($_hlp->getShipmentStatusName($_s)) ?></td>
+            
+        </tr>
+        <tr id="info-<?php echo $_id?>" class="collapsed" style="display:none;">
+            <td id="container-<?php echo $_id?>" colspan="10" class="expanded">
+                <span class="shipment-info-loader"><?php echo $_hlp->__('Please wait, loading shipment information...')?></span>
+
+            </td>
+        </tr>
+    <?php endif ?>
+	<?php endforeach ?>
+<?php endif ?>
+    </tbody>
+</table>
+<?php echo $this->getChildHtml('toolbar') ?>
+</div>
+
+<script type="text/javascript">
+var dateFields = ['filter-order_date-from', 'filter-order_date-to'];
+for (var i=0, l=dateFields.length; i<l; i++) {
+    Calendar.setup({inputField : dateFields[i], ifFormat : "%Y-%m-%d", showsTime : false});
+}
+
+$$('#shipment-grid tbody tr.trigger').each(function (row) {
+    var a = row.down('a.action');
+    a.observe('click', expandRow.curry(false, row));
+});
+
+function expandRow(openFlag, row) {
+    var a = row.down('a.action');
+    var id = row.id.split('-')[1];
+    var info = $('info-'+id), container = $('container-'+id), img = a.down('span');
+    if (!info.isInfoLoaded) {
+        info.isInfoLoaded = true;
+        new Ajax.Updater(container, '<?php echo $_ajaxInfoUrl ?>'.replace('ID', id), {
+            onComplete: function (transport) { initShipmentForm.defer(id); },
+            evalScripts: true
+        });
+    }
+    if (openFlag) info.show();
+    else info.toggle();
+    if (openFlag) {
+        info.removeClassName('collapsed');
+    } else if (info.hasClassName('collapsed')) {
+        info.removeClassName('collapsed');
+    } else {
+        info.addClassName('collapsed');
+    }
+    if (info.hasClassName('collapsed')) {
+        img.removeClassName('open');
+    } else {
+        img.addClassName('open');
+    }
+}
+
+function onSubmitActionChange(el) {
+    if (el.value=='updateShipmentsStatus') {
+        $('batch_update_status').show();
+    } else {
+        $('batch_update_status').hide();
+    }
+}
+
+function massActionSubmit(form) {
+    if (validateSearch(form)) {
+        action = '<?php echo $this->getUrl('udropship/vendor') ?>'+'?'
+        action = action + '&' + serializeFormElements('shipments-filter-form')
+        action = action + '&' + serializeFormElements(form.id)
+        setLocation(action)
+        return true;
+    }
+    return false;
+}
+
+function validateSearch(form) {
+    var downloadAction
+    switch ($('submit_action').value) {
+    case 'labelBatch':
+        if (confirm('<?php echo $_hlp->__('This action will create shipping labels for all filtered shipments and mark them as shipped.') ?>')) {
+            downloadAction = true
+        }
+        break
+
+    case 'packingSlips':
+        if (confirm('<?php echo $_hlp->__('This action will print packing slips for all filtered shipments and mark them as ready to ship.') ?>')) {
+            downloadAction = true
+        }
+        break
+
+    case 'existingLabelBatch':
+        if (confirm('<?php echo $_hlp->__('This action will print existing shipping labels for all filtered shipments.') ?>')) {
+            downloadAction = true
+        }
+        break
+
+    case 'updateShipmentsStatus':
+        if (!$('batch_update_status').value) {
+            alert('<?php echo $_hlp->__('Please select a status.') ?>');
+            return false;
+        }
+        return confirm('<?php echo $_hlp->__('This action will update status for all filtered shipments.') ?>');
+    }
+    if (downloadAction) {
+        var qs = serializeFormElements('shipments-filter-form', true)
+        Object.extend(qs, serializeFormElements('shipments-massaction-form', true))
+        qs.update_status = ''
+        qs.use_json_response = 1
+        var ifrId = 'ifr_id_'+(new Date()).getTime()
+        if (Prototype.Browser.IE) {
+            Element.insert($('download_iframe'), {after: '<iframe id="'+ifrId+'" src="?'+Object.toQueryString(qs)
+                +'" style="display:none" onreadystatechange="ieDownloadSubmitWrapper(\''+ifrId+'\')"></iframe>'
+            })
+        } else {
+            Element.insert($('download_iframe'), {after: '<iframe id="'+ifrId+'" src="?'+Object.toQueryString(qs)
+                +'" style="display:none" onload="afterDownloadSubmit(\''+ifrId+'\')"></iframe>'
+            })
+        }
+    } 
+    return false;
+}
+
+function ieDownloadSubmitWrapper(ifrId) {
+    if ($(ifrId) && ($(ifrId).readyState=='complete' || $(ifrId).readyState=='interactive')) {
+        afterDownloadSubmit.defer(ifrId)
+        $(ifrId).onreadystatechange = Prototype.emptyFunction
+    }
+}
+
+function afterDownloadSubmit(ifrId) {
+    var response
+    try {
+        response = $(ifrId).contentDocument.body.innerHTML.evalJSON()
+    } catch(e) {}
+    if (response && response.error) {
+        if (response.message) {
+            alert(response.message)
+        } else {
+            alert('Unknown error')
+        }
+    } else {
+        var qs = serializeFormElements('shipments-filter-form', true)
+        Object.extend(qs, serializeFormElements('shipments-massaction-form', true))
+        if ($('batch_update_status').value) {
+            qs.submit_action = 'updateShipmentsStatus'
+        } else {
+            qs.submit_action = ''
+        }
+        setLocation('?'+Object.toQueryString(qs))
+    }
+  }
+
+function serializeFormElements(form, options) {
+    var elements = [];
+    $$('#'+form+' *').each(function(child) {
+        if (Form.Element.Serializers[child.tagName.toLowerCase()]) {
+            elements.push(Element.extend(child));
+        }
+    });
+    return Form.serializeElements(elements, options);
+}
+
+function initShipmentForm(id) {
+    var statusUpdate = $('status-update-'+id), statusCell = $('status-'+id);
+    if (statusUpdate && statusUpdate.innerHTML!=statusCell.innerHTML) {
+        statusCell.innerHTML = statusUpdate.innerHTML;
+        var h = new Effect.Highlight(statusCell);
+    }
+
+    var downloadUrl = $('download-url-'+id);
+    if (downloadUrl) {
+        $('download_iframe').src = downloadUrl.innerHTML;
+    }
+
+    $$('#container-'+id+' .highlight').each(function(el){ var h = new Effect.Highlight(el); });
+    $$('#container-'+id+' .item-gift-message-trigger').each(function(el) {
+        $(el).observe('click', function(e) {
+            e.stop();
+            $(this).up().next('div.item-gift-message-content').toggle();
+        });
+    });
+
+    $('submit-'+id).observe('click', function () {
+        var parameters = serializeFormElements('shipment-form-'+id);
+        if (parameters == 'tracking_id=&comment=') {
+            return;
+        }
+        $('submit-'+id).disabled = true;
+        $('submit-loader-'+id).show();
+
+        new Ajax.Updater($('container-'+id), '<?php echo $_ajaxPostUrl ?>'.replace('ID', id), {
+            method: 'post',
+            parameters: parameters,
+            onComplete: function (transport) { initShipmentForm(id).defer(); }
+        });
+    });
+}
+
+function toggleLabelForm(el, id) {
+    var i, l, t;
+    for (i=1; i<20; i++) {
+        l = $('label_info-'+i+'-'+id);
+        t = $('tracking_id-'+i+'-'+id);
+        if (el.checked) {
+            l && l.show(); t && t.hide();
+            $('change_status-'+id).value = '';
+        } else {
+            l && l.hide(); t && t.show();
+            $('is_shipped-'+id).checked = false;
+        }
+    }
+    if (!el.checked) {
+        showExtraLabelForm(id, false)
+    }
+}
+
+function toggleExtraLabelForm(el, id) {
+    var i, l, t;
+    for (i=1; i<20; i++) {
+        l = $('label_info-ext-'+i+'-'+id);
+        if (el.checked) {
+            l && l.show();
+            l && l.select('input').invoke('enable');
+            l && l.select('select').invoke('enable');
+            l && l.select('textarea').invoke('enable');
+        } else {
+            l && l.hide();
+            l && l.select('input').invoke('disable');
+            l && l.select('select').invoke('disable');
+            l && l.select('textarea').invoke('disable');
+        }
+    }
+}
+
+function showExtraLabelForm(id, showFlag) {
+    var i, l, t;
+    for (i=1; i<10; i++) {
+        l = $('label_info-ext-'+i+'-'+id);
+        if (showFlag) {
+            l && l.show();
+            l && l.select('input').invoke('enable');
+            l && l.select('select').invoke('enable');
+            l && l.select('textarea').invoke('enable');
+        } else {
+            l && l.hide();
+            l && l.select('input').invoke('disable');
+            l && l.select('select').invoke('disable');
+            l && l.select('textarea').invoke('disable');
+        }
+    }
+}
+
+function switchPartialAvailability(el, id) {
+	$$('#order-items-'+id+' .partial-qty').each(function(el) {
+        $(el).remove();
+    });
+	var val = el.id;
+    switch (el.value) {
+    case 'inform':
+        $$('#order-items-'+id+' thead tr').each(function(el) {
+            $(el).insert({bottom:'<th class="partial-qty"><?php echo $_hlp->__('Qty Available')?></th>'});
+        });
+        $$('#order-items-'+id+' tbody tr').each(function(el) {
+            var idx = val.match(/[0-9]+/);
+            if (!idx) {
+                $(el).insert({bottom:'<td class="partial-qty">&nbsp;</td>'});
+            } else {
+                $(el).insert({bottom:'<td class="partial-qty" width="60"><input type="text" class="input-text" name="partial_qty['+idx+']" id="partial_qty-'+idx+'"/></td>'});
+            }
+        });
+        break;
+
+    case 'ship':
+        $$('#order-items-'+id+' thead tr').each(function(el) {
+            $(el).insert({bottom:'<th class="partial-qty"><?php echo $_hlp->__('Left / Ship')?></th>'});
+        });
+        $$('#order-items-'+id+' tbody tr').each(function(el) {
+            var idx = el.id.match(/[0-9]+/);
+            if (!idx) {
+                $(el).insert({bottom:'<td class="partial-qty">&nbsp;</td>'});
+            } else {
+                $(el).insert({bottom:'<td class="partial-qty"><input type="text" class="input-text" name="partial_qty['+idx+']" id="partial_qty-'+idx+'"/><span id="partial_left-'+idx+'">1</span></td>'});
+            }
+        });
+        break;
+    }
+}
+
+function toggleSGFilterBox(elem)
+{
+    $(elem).select('span').invoke('toggleClassName', 'open');
+    $(elem).up(4).down('.col3-set',1).toggle();
+    $(elem).up(4).down('.buttons-set').toggle();
+}
+
+function reprintLabel(shipmentId, trackId) {
+    $('download_iframe').src = '<?php echo $_reprintUrl ?>'.replace('TRACKID', trackId);
+}
+
+function reprintLabelBatch(shipmentId, batchId) {
+    $('download_iframe').src = '<?php echo $_reprintBatchUrl ?>'.replace('BATCHID', batchId);
+}
+
+function deleteTrack(shipmentId, trackId) {
+    if (!confirm('<?php echo $_hlp->__('Proceed with tracking ID deletion?')?>')) {
+        return;
+    }
+    new Effect.Highlight($('old_tracking_id-'+trackId));
+    new Ajax.Updater($('container-'+shipmentId), '<?php echo $_ajaxPostUrl ?>'.replace('ID', shipmentId), {
+        method: 'post',
+        parameters: { delete_track:trackId },
+        onComplete: function (transport) { initShipmentForm(shipmentId).defer(); }
+    });
+}
+
+function collapseAllRows() {
+    $$('#shipment-grid tbody tr.trigger').each(function(row) {
+        var id = row.id.split('-')[1];
+        $('info-'+id).addClassName('collapsed');
+        row.down('a.action span').removeClassName('open');
+    });
+}
+
+function expandAllRows() {
+    $$('#shipment-grid tbody tr.trigger').each(expandRow.curry(true));
+}
+
+var importForm = new varienForm('import_form');
+function displayLoadingMask()
+            {
+                var loaderArea = $$('#html-body .wrapper')[0]; // Blocks all page
+                Position.clone($(loaderArea), $('loading-mask'), {offsetLeft:-2});
+                toggleSelectsUnderBlock($('loading-mask'), false);
+                Element.show('loading-mask');
+            }
+
+
+</script>
+<div class="clear"></div>
+<iframe id="download_iframe" name="download_iframe" style="display:none"></iframe>
+
+
+
+
+ 
+
+
+
+

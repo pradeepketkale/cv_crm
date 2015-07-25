@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <api>
+		<resources>
+            <basecurrency_basecurrency translate="title" module="basecurrency">
+            	<title>Base Currency Resource</title>
+            	<model>basecurrency/basecurrency_api</model>
+            	<methods>
+                	<list translate="title" module="basecurrency">
+                    	<title>Get list of Base Currencies</title>
+                    	<method>info</method>
+                   	</list>
+					<!--<exchange translate="title" module="basecurrency">
+                    	<title>Get the exchange rate</title>
+                    	<method>exchangeRate</method>
+                   </exchange>-->
+            	 </methods>
+            </basecurrency_basecurrency>
+		</resources>
+		
+		<resources_alias>
+        	<basecurrency_basecurrency>basecurrency_basecurrency</basecurrency_basecurrency>
+        </resources_alias>
+		
+		<v2>
+        	<resources_function_prefix>
+                <basecurrency_basecurrency>basecurrencyBasecurrency</basecurrency_basecurrency>
+            </resources_function_prefix>
+        </v2>
+		
+    </api>
+</config>

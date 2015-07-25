@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<config>
+	<modules>
+		<Craftsvilla_ReferFriend>
+			<active>false</active>
+			<codePool>local</codePool>
+		</Craftsvilla_ReferFriend>
+	</modules>
+</config>

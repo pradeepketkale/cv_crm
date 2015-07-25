@@ -1,0 +1,1777 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>World Ethnic Day by Craftsvilla.com | 19 June, 2015</title>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href='http://fonts.googleapis.com/css?family=Roboto+Slab:400,700,300|Open+Sans' rel='stylesheet' type='text/css'>
+        <link href="http://assets1.craftsvilla.com/CWED/css/ethnicall_v5.css" rel="stylesheet">  
+         
+        <!--script type="text/javascript" src="jquery-2.1.3.min.js"></script>-->      
+        <script src="http://assets1.craftsvilla.com/CWED/js/ethnicall.js" type="text/javascript"></script>
+        <script src="http://assets1.craftsvilla.com/CWED/js/jquery-1.9.1.min.js" type="text/javascript"></script>
+        <script src="http://assets1.craftsvilla.com/CWED/js/bootstrap.min.js" type="text/javascript"></script>
+        <script src="http://assets1.craftsvilla.com/CWED/js/docs.min.js" type="text/javascript"></script>
+        <script src="http://assets1.craftsvilla.com/CWED/js/jssor.slider.mini.js" type="text/javascript"></script>
+        <script type="text/javascript" src="http://www.craftsvilla.com/js/GoogleAnalyticsPlus/distilled.FirstTouch.js"></script>
+        <!--script type="text/javascript" src="jssor.js"></script>
+    <script type="text/javascript" src="jssor.slider.js"></script>
+              <!-- it works the same with all jquery version from 1.x to 2.x -->
+    <!--<script type="text/javascript" src="jquery-1.9.1.min.js"></script>-->
+    <!-- use jssor.slider.mini.js (40KB) instead for release -->
+    <!-- jssor.slider.mini.js = (jssor.js + jssor.slider.js) -->
+    
+    <script>
+        jQuery(document).ready(function ($) {
+            //Reference http://www.jssor.com/development/slider-with-slideshow-jquery.html
+            //Reference http://www.jssor.com/development/tool-slideshow-transition-viewer.html
+
+            var _SlideshowTransitions = [
+            //Fade in R
+            {$Duration: 1200, x: -0.3, $During: { $Left: [0.3, 0.7] }, $Easing: { $Left: $JssorEasing$.$EaseInCubic, $Opacity: $JssorEasing$.$EaseLinear }, $Opacity: 2 }
+            //Fade out L
+            , { $Duration: 1200, x: 0.3, $SlideOut: true, $Easing: { $Left: $JssorEasing$.$EaseInCubic, $Opacity: $JssorEasing$.$EaseLinear }, $Opacity: 2 }
+            ];
+
+            var options = {
+                $AutoPlay: true,                                    //[Optional] Whether to auto play, to enable slideshow, this option must be set to true, default value is false
+                $AutoPlaySteps: 1,                                  //[Optional] Steps to go for each navigation request (this options applys only when slideshow disabled), the default value is 1
+                $AutoPlayInterval: 4000,                            //[Optional] Interval (in milliseconds) to go for next slide since the previous stopped if the slider is auto playing, default value is 3000
+                $PauseOnHover: 1,                               //[Optional] Whether to pause when mouse over if a slider is auto playing, 0 no pause, 1 pause for desktop, 2 pause for touch device, 3 pause for desktop and touch device, 4 freeze for desktop, 8 freeze for touch device, 12 freeze for desktop and touch device, default value is 1
+
+                $ArrowKeyNavigation: true,                          //[Optional] Allows keyboard (arrow key) navigation or not, default value is false
+                $SlideDuration: 500,                                //[Optional] Specifies default duration (swipe) for slide in milliseconds, default value is 500
+                $MinDragOffsetToSlide: 20,                          //[Optional] Minimum drag offset to trigger slide , default value is 20
+                //$SlideWidth: 600,                                 //[Optional] Width of every slide in pixels, default value is width of 'slides' container
+                //$SlideHeight: 300,                                //[Optional] Height of every slide in pixels, default value is height of 'slides' container
+                $SlideSpacing: 0,                                   //[Optional] Space between each slide in pixels, default value is 0
+                $DisplayPieces: 1,                                  //[Optional] Number of pieces to display (the slideshow would be disabled if the value is set to greater than 1), the default value is 1
+                $ParkingPosition: 0,                                //[Optional] The offset position to park slide (this options applys only when slideshow disabled), default value is 0.
+                $UISearchMode: 1,                                   //[Optional] The way (0 parellel, 1 recursive, default value is 1) to search UI components (slides container, loading screen, navigator container, arrow navigator container, thumbnail navigator container etc).
+                $PlayOrientation: 1,                                //[Optional] Orientation to play slide (for auto play, navigation), 1 horizental, 2 vertical, 5 horizental reverse, 6 vertical reverse, default value is 1
+                $DragOrientation: 3,                                //[Optional] Orientation to drag slide, 0 no drag, 1 horizental, 2 vertical, 3 either, default value is 1 (Note that the $DragOrientation should be the same as $PlayOrientation when $DisplayPieces is greater than 1, or parking position is not 0)
+
+                $SlideshowOptions: {                                //[Optional] Options to specify and enable slideshow or not
+                    $Class: $JssorSlideshowRunner$,                 //[Required] Class to create instance of slideshow
+                    $Transitions: _SlideshowTransitions,            //[Required] An array of slideshow transitions to play slideshow
+                    $TransitionsOrder: 1,                           //[Optional] The way to choose transition to play slide, 1 Sequence, 0 Random
+                    $ShowLink: true                                    //[Optional] Whether to bring slide link on top of the slider when slideshow is running, default value is false
+                },
+
+                $BulletNavigatorOptions: {                                //[Optional] Options to specify and enable navigator or not
+                    $Class: $JssorBulletNavigator$,                       //[Required] Class to create navigator instance
+                    $ChanceToShow: 2,                               //[Required] 0 Never, 1 Mouse Over, 2 Always
+                    $Lanes: 1,                                      //[Optional] Specify lanes to arrange items, default value is 1
+                    $SpacingX: 10,                                   //[Optional] Horizontal space between each item in pixel, default value is 0
+                    $SpacingY: 10                                    //[Optional] Vertical space between each item in pixel, default value is 0
+                },
+
+                $ArrowNavigatorOptions: {
+                    $Class: $JssorArrowNavigator$,              //[Requried] Class to create arrow navigator instance
+                    $ChanceToShow: 2,                                //[Required] 0 Never, 1 Mouse Over, 2 Always
+                    $AutoCenter: 2                                 //[Optional] Auto center navigator in parent container, 0 None, 1 Horizontal, 2 Vertical, 3 Both, default value is 0
+                },
+
+                $ThumbnailNavigatorOptions: {
+                    $Class: $JssorThumbnailNavigator$,              //[Required] Class to create thumbnail navigator instance
+                    $ChanceToShow: 2,                               //[Required] 0 Never, 1 Mouse Over, 2 Always
+                    $ActionMode: 0,                                 //[Optional] 0 None, 1 act by click, 2 act by mouse hover, 3 both, default value is 1
+                    $DisableDrag: true                              //[Optional] Disable drag or not, default value is false
+                }
+            };
+
+            var jssor_sliderb = new $JssorSlider$("sliderb_container", options);
+            //responsive code begin
+            //you can remove responsive code if you don't want the slider scales while window resizes
+            function ScaleSlider() {
+                var parentWidth = jssor_sliderb.$Elmt.parentNode.clientWidth;
+                if (parentWidth)
+                    jssor_sliderb.$ScaleWidth(Math.min(parentWidth, 600));
+                else
+                    window.setTimeout(ScaleSlider, 30);
+            }
+            ScaleSlider();
+
+            $(window).bind("load", ScaleSlider);
+            $(window).bind("resize", ScaleSlider);
+            $(window).bind("orientationchange", ScaleSlider);
+            //responsive code end
+        });
+    </script>
+    <!-- Jssor Slider Begin -->
+    <!-- To move inline styles to css file/block, please specify a class name for each element. --> 
+
+        <script type="text/javascript">
+//<![CDATA[
+            (function() {
+                var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;ga.src = 'http://www.google-analytics.com/ga.js';
+                var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+            })();
+            var _gaq = _gaq || [];
+
+            _gaq.push(["_setAccount", "UA-20414065-1"] ,["_setDomainName",".craftsvilla.com"]);
+            asyncDistilledFirstTouch(_gaq);
+            _gaq.push(["_trackPageview","/world-ethnic-day.html"], ["_trackPageLoadTime"]);
+
+
+            if(Ajax.Responders){
+                Ajax.Responders.register({
+                  onComplete: function(response){
+                    if(!response.url.include("progress")){
+                        if(response.url.include("saveOrder")){
+                            _gaq.push(["_trackPageview", "/world-ethnic-day.html"+ "/opc-review-placeOrderClicked"]);
+                        }else if(accordion.currentSection){
+                            _gaq.push(["_trackPageview", "/world-ethnic-day.html/"+ accordion.currentSection]);
+                        }
+                    }
+                  }
+                });
+            }
+
+//]]>
+    
+
+        <!--<link rel="stylesheet" type="text/css" href="http://assets1.craftsvilla.com/CWED/css/latin.css" data-reactid=".0.0.$http=2//static=1parastorage=1com/services/santa/1=1550=117/static/css/user-site-fonts/latin=1css">-->
+        <!--<link rel="stylesheet" type="text/css" href="http://assets1.craftsvilla.com/CWED/css/css" data-reactid=".0.0.$gf_0"> -->
+        <!--<link href="css/bootstrap.min.css" rel="stylesheet" />    -->
+        
+        <script src="http://code.jquery.com/jquery-1.11.0.min.js" type="text/javascript"></script>
+        <!--<script src="http://assets1.craftsvilla.com/CWED/js/custom.js" type="text/javascript"></script>-->
+        <!-- Bootstrap core CSS -->
+        
+        <!-- sctered image slider ends -->
+
+        <!-- bottom slider content starts -->
+        <!--<script async="" src="http://assets1.craftsvilla.com/CWED/js/bottomsliderjs/dc.js" type="text/javascript"></script>-->
+        <script>
+            // BEAT MESSAGE
+        try {
+            window.wixBiSession = {
+                initialTimestamp : Date.now(),
+                viewerSessionId: 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c)
+                        { var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8); return v.toString(16); }
+                )
+            };
+            (new Image()).src = 'http://frog.wix.com/bt?src=29&evid=3&pn=1&et=1&v=3.0&vsi=' + wixBiSession.viewerSessionId +
+                    '&url=' + encodeURIComponent(location.href.replace(/^http(s)?:\/\/(www\.)?/, '')) +
+                    '&isp=0&st=2&ts=0&c=' + wixBiSession.initialTimestamp;
+        } catch (e){}
+        // BEAT MESSAGE END
+        </script><!-- META DATA -->
+
+        <script type="text/javascript">
+
+        var serviceTopology = {"serverName":"app9.aus","cacheKillerVersion":"1","staticServerUrl":"http://static.parastorage.com/","usersScriptsRoot":"http://static.parastorage.com/services/wix-users/2.487.0","biServerUrl":"http://frog.wix.com/","userServerUrl":"http://users.wix.com/","billingServerUrl":"http://premium.wix.com/","mediaRootUrl":"http://static.wixstatic.com/","logServerUrl":"http://frog.wix.com/plebs","monitoringServerUrl":"http://TODO/","usersClientApiUrl":"https://users.wix.com/wix-users","publicStaticBaseUri":"http://static.parastorage.com/services/wix-public/1.160.0","basePublicUrl":"http://www.wix.com/","postLoginUrl":"http://www.wix.com/my-account","postSignUpUrl":"http://www.wix.com/new/account","baseDomain":"wix.com","staticMediaUrl":"http://static.wixstatic.com/media","staticAudioUrl":"http://storage.googleapis.com/static.wixstatic.com/mp3","emailServer":"http://assets.wix.com/common-services/notification/invoke","blobUrl":"http://static.parastorage.com/wix_blob","htmlEditorUrl":"http://editor.wix.com/html","siteMembersUrl":"https://users.wix.com/wix-sm","scriptsLocationMap":{"wixapps":"http://static.parastorage.com/services/wixapps/2.461.6","tpa":"http://static.parastorage.com/services/tpa/2.1027.0","santa-resources":"http://static.parastorage.com/services/santa-resources/1.0.0","bootstrap":"http://static.parastorage.com/services/bootstrap/2.1144.54","ck-editor":"http://static.parastorage.com/services/ck-editor/1.87.2","it":"http://static.parastorage.com/services/experiments/it/1.37.0","skins":"http://static.parastorage.com/services/skins/2.1144.54","core":"http://static.parastorage.com/services/core/2.1144.54","sitemembers":"http://static.parastorage.com/services/sm-js-sdk/1.31.0","automation":"http://static.parastorage.com/services/automation/1.23.0","web":"http://static.parastorage.com/services/web/2.1144.54","ecommerce":"http://static.parastorage.com/services/ecommerce/1.190.0","hotfixes":"http://static.parastorage.com/services/experiments/hotfixes/1.15.0","langs":"http://static.parastorage.com/services/langs/2.550.0","santa-versions":"http://static.parastorage.com/services/santa-versions/1.266.0","ut":"http://static.parastorage.com/services/experiments/ut/1.2.0"},"developerMode":false,"productionMode":true,"staticServerFallbackUrl":"https://sslstatic.wix.com/","userFilesUrl":"http://static.parastorage.com/","staticHTMLComponentUrl":"http://bhagyashrees752.wix.com.usrfiles.com/","secured":false,"ecommerceCheckoutUrl":"https://www.safer-checkout.com/","premiumServerUrl":"https://premium.wix.com/","appRepoUrl":"http://assets.wix.com/wix-lists-ds-webapp","digitalGoodsServerUrl":"http://dgs.wixapps.net/","wixCloudBaseDomain":"cloud.wix.com","publicStaticsUrl":"http://static.parastorage.com/services/wix-public/1.160.0","staticDocsUrl":"http://media.wix.com/ugd"};
+            var santaModels = true;
+        var rendererModel = {"metaSiteId":"fbffb97b-7265-4c02-8593-53a447c67663","siteInfo":{"documentType":"UGC","applicationType":"HtmlWeb","siteId":"a52683aa-c599-4b75-b67e-9e638e0ccf1f","siteTitleSEO":"world-ethnic-day"},"clientSpecMap":{"0":{"type":"appbuilder","applicationId":0,"appDefinitionId":"3d590cbc-4907-4cc4-b0b1-ddf2c5edf297","instanceId":"13dbea34-fef7-8c91-f92e-7a209a8d17d4","state":"Initialized"},"14":{"type":"public","applicationId":14,"appDefinitionId":"139ef4fa-c108-8f9a-c7be-d5f492a2c939","appDefinitionName":"Smart Actions","instance":"S1hItYaGJ9QiCGHFwrLo83PRVGC9xC6P1H8Y6nNoDg8.eyJpbnN0YW5jZUlkIjoiMTNkZDJiNTgtOWY2Mi1hZDhiLWZmYjAtNjUzMDFiZTc0NGQwIiwic2lnbkRhdGUiOiIyMDE1LTA1LTEzVDA2OjAxOjE1LjUxMloiLCJ1aWQiOiJiNjlhNjNmYy1mZWFiLTQ2MjAtYmM1Yy01MzZmZDkzN2ZhMmQiLCJwZXJtaXNzaW9ucyI6Ik9XTkVSIiwiaXBBbmRQb3J0IjoiMTAzLjI5LjE1Ni44Mi82MDE4MSIsImRlbW9Nb2RlIjpmYWxzZSwiYmlUb2tlbiI6ImU4MjI5MjIzLWVkMDctZTE4OS03YTIzLTM2OTQ1YzIxMzJiMyJ9","sectionPublished":true,"sectionMobilePublished":false,"sectionSeoEnabled":true,"widgets":{},"appRequirements":{"requireSiteMembers":false},"installedAtDashboard":true,"permissions":{"revoked":false}},"13":{"type":"public","applicationId":13,"appDefinitionId":"135c3d92-0fea-1f9d-2ba5-2a1dfb04297e","appDefinitionName":"Wix ShoutOut","instance":"JjEEIz3bGeXlYxJopvEwtk45-VxbJAgQM6uwI6xQIRo.eyJpbnN0YW5jZUlkIjoiMTNkZDJiNTgtOTk4YS05OGMyLTljN2ItODViNGYyOGYxMGQ0Iiwic2lnbkRhdGUiOiIyMDE1LTA1LTEzVDA2OjAxOjE1LjUxMloiLCJ1aWQiOiJiNjlhNjNmYy1mZWFiLTQ2MjAtYmM1Yy01MzZmZDkzN2ZhMmQiLCJwZXJtaXNzaW9ucyI6Ik9XTkVSIiwiaXBBbmRQb3J0IjoiMTAzLjI5LjE1Ni44Mi82MDE4MSIsImRlbW9Nb2RlIjpmYWxzZX0","sectionPublished":true,"sectionMobilePublished":false,"sectionSeoEnabled":true,"widgets":{},"appRequirements":{"requireSiteMembers":false},"installedAtDashboard":true,"permissions":{"revoked":false}},"12":{"type":"wixapps","applicationId":12,"appDefinitionId":"61f33d50-3002-4882-ae86-d319c1a249ab","datastoreId":"13dbea34-fbac-7b46-6f5b-5d1b2d342c8d","packageName":"blog","state":"Initialized","widgets":{"56ab6fa4-95ac-4391-9337-6702b8a77011":{"widgetId":"56ab6fa4-95ac-4391-9337-6702b8a77011","defaultHeight":400,"defaultWidth":210},"31c0cede-09db-4ec7-b760-d375d62101e6":{"widgetId":"31c0cede-09db-4ec7-b760-d375d62101e6","defaultHeight":600,"defaultWidth":680},"1b8c501f-ccc2-47e7-952a-47e264752614":{"widgetId":"1b8c501f-ccc2-47e7-952a-47e264752614","defaultHeight":280,"defaultWidth":916},"33a9f5e0-b083-4ccc-b55d-3ca5d241a6eb":{"widgetId":"33a9f5e0-b083-4ccc-b55d-3ca5d241a6eb","defaultHeight":220,"defaultWidth":210},"c7f57b50-8940-4ff1-83c6-6756d6f0a1f4":{"widgetId":"c7f57b50-8940-4ff1-83c6-6756d6f0a1f4","defaultHeight":220,"defaultWidth":210},"f72fe377-8abc-40f2-8656-89cfe00f3a22":{"widgetId":"f72fe377-8abc-40f2-8656-89cfe00f3a22","defaultHeight":300,"defaultWidth":210},"c340212a-6e2e-45cd-9dc4-58d01a5b63a7":{"widgetId":"c340212a-6e2e-45cd-9dc4-58d01a5b63a7","defaultHeight":300,"defaultWidth":210},"ea63bc0f-c09f-470c-ac9e-2a408b499f22":{"widgetId":"ea63bc0f-c09f-470c-ac9e-2a408b499f22","defaultHeight":800,"defaultWidth":800},"4de5abc5-6da2-4f97-acc3-94bb74285072":{"widgetId":"4de5abc5-6da2-4f97-acc3-94bb74285072","defaultHeight":800,"defaultWidth":800},"e000b4bf-9ff1-4e66-a0d3-d4b365ba3af5":{"widgetId":"e000b4bf-9ff1-4e66-a0d3-d4b365ba3af5","defaultHeight":400,"defaultWidth":210},"43c2a0a8-f224-4a29-bd19-508114831a3a":{"widgetId":"43c2a0a8-f224-4a29-bd19-508114831a3a","defaultHeight":40,"defaultWidth":210}}},"11":{"type":"sitemembers","applicationId":11,"collectionType":"Open","smtoken":"9dc278e271780295f39284234a561627b38847db9750236ac2fa6f8103f2bd9225643c0ec509fbd16ffff7dc2088d8d99e37b1e019c424e7f9141e8a8824dc822fa0aa88cf98bc61cc5050052b123b0b2abbcdb767bf89a752e9afce571f89f8","smcollectionId":"ef8f2626-3cec-4747-bd31-10bdfcabb81a"}},"premiumFeatures":[],"geo":"IND","languageCode":"en","previewMode":false,"userId":"b69a63fc-feab-4620-bc5c-536fd937fa2d","siteMetaData":{"preloader":{"enabled":false},"adaptiveMobileOn":true,"quickActions":{"socialLinks":[],"colorScheme":"dark","configuration":{"quickActionsMenuEnabled":false,"navigationMenuEnabled":true,"phoneEnabled":false,"emailEnabled":false,"addressEnabled":false,"socialLinksEnabled":false}},"contactInfo":{"companyName":"","phone":"","fax":"","email":"","address":""}},"runningExperiments":{"autogeneratedshapesskins":"new","lang_no":"new","ngcore":"new","sandboxiframeineditor":"new","lang_nl":"new","wixappsgalleries":"new","ecomgalleries":"new","disablehorizontalmenu":"new","lazyprovision":"new","atntfixlists":"new","mobileactionsmenu":"new","exitmobilemode":"new","workaroundsaveddeadcompskin":"new","nougcanalytics":"new","appbuilderdeletetype":"new","sitepagesvalidation":"new","redirectfeature301data":"new","linkfixeroverride":"new","redirectfeature301":"new","lazyprovisiontemp":"new","animation3dfix":"new","landingpagesupport":"new","lang_sv":"new","wixappstranslation":"new","subscribeformsendnewsletter":"new","lesserwidthissue":"new","appbuildertags":"new","sitenavigationrefactor":"new","blogrss":"new","animationnewbehaviors":"new","customsitemenu":"new","blogmanager":"new"}};
+        var publicModel = {"domain":"wix.com","externalBaseUrl":"http:\/\/bhagyashrees752.wix.com\/world-ethnic-day","pageList":{"masterPage":["http:\/\/static.wixstatic.com\/sites\/b69a63_ecbd7b78270a92dcc7d64cecfe89d500_37.json.z?v=3","http:\/\/staticorigin.wixstatic.com\/sites\/b69a63_ecbd7b78270a92dcc7d64cecfe89d500_37.json.z?v=3","http:\/\/fallback.wix.com\/wix-html-editor-pages-webapp\/page\/b69a63_ecbd7b78270a92dcc7d64cecfe89d500_37.json"],"pages":[{"pageId":"mainPage","title":"Gallery","urls":["http:\/\/static.wixstatic.com\/sites\/b69a63_4a9cfc2f34b23ad03d63e85a7443441a_37.json.z?v=3","http:\/\/staticorigin.wixstatic.com\/sites\/b69a63_4a9cfc2f34b23ad03d63e85a7443441a_37.json.z?v=3","http:\/\/fallback.wix.com\/wix-html-editor-pages-webapp\/page\/b69a63_4a9cfc2f34b23ad03d63e85a7443441a_37.json"]}],"mainPageId":"mainPage"},"timeSincePublish":34710,"favicon":""};
+
+
+
+        var googleAnalytics = "";
+        var googleRemarketing = "";
+        var facebookRemarketing = "";
+        </script>
+        <meta content="!" name="fragment"><!-- DATA -->
+
+        <script type="text/javascript">
+            var adData = {"topLabel":"<span class=\"smallMusa\">(Wix-Logo) <\/span>Create a <span class=\"smallLogo\">Wix<\/span> site!","topContent":"100s of templates<br />No coding needed<br /><span class=\"emphasis spacer\">Start now >><\/span>","footerLabel":"<div class=\"adFootBox\"><div class=\"siteBanner\" ><div class=\"siteBanner\"><div class=\"wrapper\"><div class=\"bigMusa\">(Wix Logo)<\/div><div class=\"txt shd\" style=\"color:#fff\">This site was created using <\/div> <div class=\"txt shd\"><a  href=\"http://www.wix.com?utm_campaign=vir_wixad_live&experiment_id=abtestbanner122400001\" style=\"color:#fff\"> WIX.com. <\/a><\/div> <div class=\"txt shd\" style=\"color:#fff\"> Create your own for FREE <span class=\"emphasis\"> >><\/span><\/div><\/div><\/div><\/div><\/div>","adUrl":"http://www.wix.com/lpviral/stun-vrl-lil-seo?utm_campaign=vir_wixad_live&experiment_id=abtestbanner122400001"};
+            var mobileAdData = {"footerLabel":"7c3dbd_67131d7bd570478689be752141d4e28a.jpg","adUrl":"http://www.wix.com?utm_campaign=vir_wixad_live&experiment_id=abtestbanner122400001"};
+            var usersDomain = "https://users.wix.com/wix-users";
+        </script>
+        <script type="text/javascript">
+            var santaBase = '';
+            var clientSideRender = true;
+        </script>
+        <!--<script src="http://assets1.craftsvilla.com/CWED/js/bottomsliderjs/require.min.js2"></script>-->
+        <!--<script src="http://assets1.craftsvilla.com/CWED/js/bottomsliderjs/main-r.js"></script>-->
+        <link href="http://static.parastorage.com/services/santa-versions/1.266.0/viewer.css" rel="stylesheet">    
+        <!-- bottom slider content ends -->
+        
+    </head>
+    <body>    
+        <div style="min-height: 50px;">
+            <div class="sldiercenterimageformobile">
+                <img src="http://assets1.craftsvilla.com/CWED/img/riboon1.png" alt="world_ethnic_day_logo" style=""/>
+            </div>                         
+            <div id="slider1_container" class="fullslider" style="display: none; position: relative; margin: 0 auto;top: 0px; left: 0px; width: 1300px; height: 890px; overflow: hidden;">
+                <img src="http://assets1.craftsvilla.com/CWED/img/riboon1.png" alt="world_ethnic_day_logo" class="sldiercenterimage" style="height:880px;"/>
+                    <!-- left: 100px;top: 40px;width:250px; -->
+                <!-- Loading Screen -->
+                <div u="loading" style="position: absolute; top: 0px; left: 0px;">
+                    <div style="filter: alpha(opacity=70); opacity: 0.7; position: absolute; display: block;top: 0px; left: 0px; width: 100%; height: 100%;"></div>
+                    <div style="position: absolute; display: block; background: url(../img/loading.gif) no-repeat center center;top: 0px; left: 0px; width: 100%; height: 100%;"></div>
+                </div>
+                <!-- Slides Container -->
+                <div u="slides" style="cursor: move; position: absolute; left: 0px; top: 0px; width: 1300px; height: 831px; overflow: hidden;">                
+                    <div>
+                        <img u="image" src="http://assets1.craftsvilla.com/CWED/img/1920/slider3.png" />                    
+                    </div>
+                    <div>
+                        <img u="image" src="http://assets1.craftsvilla.com/CWED/img/1920/slider2.png" />
+                    </div>
+                    <div>
+                        <img u="image" src="http://assets1.craftsvilla.com/CWED/img/1920/slider1.png" />
+                    </div>                                    
+                </div>
+                <style>
+                    /* jssor slider bullet navigator skin 21 css */
+                    /*
+                    .jssorb21 div           (normal)
+                    .jssorb21 div:hover     (normal mouseover)
+                    .jssorb21 .av           (active)
+                    .jssorb21 .av:hover     (active mouseover)
+                    .jssorb21 .dn           (mousedown)
+                    */
+                    .jssorb21 {
+                        position: absolute;
+                    }
+                    .jssorb21 div, .jssorb21 div:hover, .jssorb21 .av {
+                        position: absolute;
+                        /* size of bullet elment */
+                        width: 19px;
+                        height: 19px;
+                        text-align: center;
+                        line-height: 19px;
+                        color: white;
+                        font-size: 12px;
+                        background: url(img/b21.png) no-repeat;
+                        overflow: hidden;
+                        cursor: pointer;
+                    }
+                    .jssorb21 div { background-position: -5px -5px; }
+                    .jssorb21 div:hover, .jssorb21 .av:hover { background-position: -35px -5px; }
+                    .jssorb21 .av { background-position: -65px -5px; }
+                    .jssorb21 .dn, .jssorb21 .dn:hover { background-position: -95px -5px; }
+                </style>
+                <!-- bullet navigator container -->
+                <!--<div u="navigator" class="jssorb21" style="bottom: 26px; right: 6px;">
+                    <!-- bullet navigator item prototype -->
+                    <!--<div u="prototype"></div>
+                </div>-->
+                <!--#endregion Bullet Navigator Skin End -->
+                
+                <!--#region Arrow Navigator Skin Begin -->
+                <!-- Help: http://www.jssor.com/development/slider-with-arrow-navigator-jquery.html -->
+                <style>
+                    /* jssor slider arrow navigator skin 21 css */
+                    /*
+                    .jssora21l                  (normal)
+                    .jssora21r                  (normal)
+                    .jssora21l:hover            (normal mouseover)
+                    .jssora21r:hover            (normal mouseover)
+                    .jssora21l.jssora21ldn      (mousedown)
+                    .jssora21r.jssora21rdn      (mousedown)
+                    */
+                    .jssora21l, .jssora21r {
+                        display: block;
+                        position: absolute;
+                        /* size of arrow element */
+                        width: 55px;
+                        height: 55px;
+                        cursor: pointer;
+                        background: url(img/a21.png) center center no-repeat;
+                        overflow: hidden;
+                    }
+                    .jssora21l { background-position: -3px -33px; }
+                    .jssora21r { background-position: -63px -33px; }
+                    .jssora21l:hover { background-position: -123px -33px; }
+                    .jssora21r:hover { background-position: -183px -33px; }
+                    .jssora21l.jssora21ldn { background-position: -243px -33px; }
+                    .jssora21r.jssora21rdn { background-position: -303px -33px; }
+                </style>
+                <!-- Arrow Left -->
+                <span u="arrowleft" class="jssora21l" style="top: 123px; left: 8px;">
+                </span>
+                <!-- Arrow Right -->
+                <span u="arrowright" class="jssora21r" style="top: 123px; right: 8px;">
+                </span>
+                <!--#endregion Arrow Navigator Skin End -->
+                <!--<a style="display: block" href="http://www.jssor.com">Bootstrap Slider</a>-->
+            </div>
+            <!-- Jssor Slider End -->
+            <!-- *************************** --> 
+
+           <div class="why">
+           <div id="why_wrapper">
+            <!-- style="background-image:url('img/World-Map-12.png');background-size: 60% 100%;background-repeat:no-repeat;" -->
+                <img src="http://assets1.craftsvilla.com/CWED/img/World-Map-12.png" alt="worldmap" height="100%" width="50%" style="position: absolute; opacity: 0.05;" />
+                <div class="why_title">What is World Ethnic Day?</div>
+                <div class="why_content">
+                    <p>
+                    World Ethnic Day is an opportunity to celebrate the cultures of different countries together on a single day. In the digital world, "World is One" yet we all carry different identities represented by what we wear, eat, believe and celebrate. Lets come together and celebrate our diversity as "One World". World Ethnic Day is a day of fun, dance, music, food and party in a traditional way. Let's go back to our roots and share with others our uniqueness. Let's be One. Let's be Ethnic.
+                
+                    <p>
+                    <div class="statistics" style="">
+                        <div class="stats stats1" style="">
+                            <div class="stats_info">
+                            <!--<br/><span style="font-size:24px;font-weight:bold;color:rgb(255,100,0);">236</span> <br/> Ethinicities-->
+                                <span style="font-size:24px;font-weight:bold;color:rgb(255,100,0);line-height:120%;">5000</span>
+                                <span style="">Ethinicities</span>
+                            </div>
+                        </div>
+                    <div class="stats stats2">
+                            <div class="stats_info">
+                            <!--<br/><span style="font-size:24px;font-weight:bold;color:rgb(255,100,0);">236</span> <br/> Languages-->
+                                <span style="font-size:24px;font-weight:bold;color:rgb(255,100,0);line-height:120%;">6500</span>
+                                <span style="">Languages</span>
+                            </div>
+                        </div>
+                        <div class="stats stats3">
+                            <div class="stats_info">                        
+                                <!--<br/><span style="font-size:24px;font-weight:bold;color:rgb(255,100,0);">236</span><br/>Countries-->
+                                <span style="font-size:24px;font-weight:bold;color:rgb(255,100,0);line-height:120%;">196</span>
+                                <span style="">Countries</span>
+                            </div>
+                        </div>
+                        <div class="stats stats4" style="">
+                            <div class="stats_info">
+                                <!--<br/><span style="font-size:24px;font-weight:bold;color:rgb(255,100,0);">236</span> <br/> Festivals-->
+                                <span style="font-size:24px;font-weight:bold;color:rgb(255,100,0);clear:right;text-align:center; line-height:120%;">1000s</span>
+                                </br>
+                                <span style="">Festivals</span>
+                            </div>
+                        </div>
+                    </div>                 
+                </div> 
+               <div id="twitter_feed"> 
+                <a class="twitter-timeline" href="https://twitter.com/hashtag/worldethnicday" data-widget-id="606336954091773953">#worldethnicday Tweets</a>
+                </div>
+    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script> 
+        
+ <iframe  src="http://www.facebook.com/plugins/likebox.php?href=http%3A%2F%2Fwww.facebook.com%2Fworldethnicday&amp;width=490&amp;colorscheme=light&amp;show_faces=true&amp;border_color&amp;stream=true&amp;header=true&amp;height=475" scrolling="yes" frameborder="0" class="facebook_feed" style="background-color:ghostwhite;" allowTransparency="true"></iframe>
+ <iframe id="video" width="400" height="250" src="https://www.youtube.com/embed/uqX_itJvqwA" frameborder="0" allowfullscreen style=""></iframe>
+
+ </video>
+              </div>
+           </div>
+           <div class="how">            
+               
+                    <div class="how_right_content" style="">
+                        <div class="how_title">How to Celebrate World Ethnic Day?</div>
+                        <div id="icon_group">
+                            <img src="http://assets1.craftsvilla.com/CWED/icons/food.png" title="">
+                            <img src="http://assets1.craftsvilla.com/CWED/icons/dress.png" title="">
+                            <img src="http://assets1.craftsvilla.com/CWED/icons/gift.png" title="">
+                            <img src="http://assets1.craftsvilla.com/CWED/icons/rangoli.png" title="">
+                            <img src="http://assets1.craftsvilla.com/CWED/icons/party.png" title="">
+                            <img src="http://assets1.craftsvilla.com/CWED/icons/yoga.png" title="">
+                            <img src="http://assets1.craftsvilla.com/CWED/icons/game.png" title="">
+                            <img src="http://assets1.craftsvilla.com/CWED/icons/mehndi.png" title="">
+                            <div class="title upper"><p>Cook Ethnic Food</p></div>
+                            <div class="title upper2"><p>Wear Ethnic Dress</p></div>
+                            <div class="title upper3"><p>Gift Ethnic</p></div>
+                            <div class="title upper4"><p>Design Rangoli</p></div>
+                            <div class="title lower"><p>Celebrate Ethnic Party</p></div>
+                            <div class="title lower2"><p>Do Yoga</p></div>
+                            <div class="title lower3"><p>Play Old School Games</p></div>
+                            <div class="title lower4"><p>Put Mehendi on hands</p></div>
+
+                        </div>
+                        <br>
+                        
+                        <p style="font-size:18px; font-family:serif;line-height:1.2;">
+                        You can do simple things to celebrate this day. The simplest way is to wear traditional ethnic clothes on this day. Wear your favourite colourful and trendy kimono, cheongsam, drindl, baianas, baju kuring, hijaab, polleras, traje de flamenca, salwar suits, sarees, kurtis or kurtas. You can also gift someone something ethnic on this day like handicrafts, sweets, musical instruments or books. You can also indulge in an ethnic party with lots of delicious traditional food and music. You can play old school games, cook a unique ethnic dish you were waiting to make or just relax and read some good spiritual or history book on our culture and civilization. This is a free form day. Flaunt your ethnicity on this day and share it.
+                        </p>
+                    </div>
+                
+           </div>
+                <div class="contest">
+                    <div id="contest_wrapper">
+                    <div class="contest_container">
+                   
+                       <figure>
+                           <a href="http://www.facebook.com/worldethnicday" target="blank"><img src="http://assets1.craftsvilla.com/CWED/img/participate_contest.jpg"></a>
+                           </figure>
+                    <div class="product">
+                        <div class="product_box">
+                            <div class="product_head">
+                                World Ethnic Day Offers
+                            </div>
+                            
+                          
+    <div id="sliderb_container" style="position: absolute; top: 40px; left:35px; width: 500px;
+        height: 240px; ">
+
+        <!-- Loading Screen -->
+        
+
+        <!-- Slides Container -->
+        <div u="slides" style="cursor: move; position: absolute; left: 0px; top: 0px; width: 600px; height: 300px;
+            overflow: hidden;">
+            <div>
+                              <div class="prod_box">
+                                <div class="product_container">
+                                    <a href=" http://www.craftsvilla.com/catalog/product/view/id/1768518/s/heavy-designer-orange-and-light-pink-colour-saree-in-unic-style-2809/" target="blank"><img src="http://assets1.craftsvilla.com/CWED/product/product_Series1/product1_1.jpg"></a>
+                                    <br>
+                                    <br>
+
+                                    <p style="font-size:14px; text-indent:30px; color:red;"> Rs. <b><del>4,999</del></b></p>
+                                    <p style="font-size:14px; text-indent:30px; pading-bottom:5px; line-height:80%; color:green;"> Rs. 3,249</p>
+                                    <a href=" http://www.craftsvilla.com/catalog/product/view/id/1768518/s/heavy-designer-orange-and-light-pink-colour-saree-in-unic-style-2809/" target="blank"><button style="font-weight:bold;color:#fff;margin-left:13px; margin-top:5px; font-size:16px;background:#FF0000;">BUY NOW</button></a>
+                                </div>
+                                <div class="product_container">
+                                    <a href="http://www.craftsvilla.com/catalog/product/view/id/2156088/s/1007-royal-blue-new-designer-party-gown-by-hanin/" target="blank"><img src="http://assets1.craftsvilla.com/CWED/product/product_Series1/product2_1.jpg"></a>
+                                    <br>
+                                    <br>
+
+                                    <p style="font-size:14px; text-indent:30px; color:red;"> Rs. <b><del>4,999</del></b></p>
+                                    <p style="font-size:14px; text-indent:30px; pading-bottom:5px; line-height:80%; color:green;"> Rs. 3,099</p>
+                                    <a href="http://www.craftsvilla.com/catalog/product/view/id/2156088/s/1007-royal-blue-new-designer-party-gown-by-hanin/" target="blank"><button style="font-weight:bold;color:#fff;margin-left:13px; margin-top:5px; font-size:16px;background:#FF0000;">BUY NOW</button></a>
+                                </div>
+                                <div class="product_container">
+                                    <a href="http://www.craftsvilla.com/catalog/product/view/id/1871821/s/metroz-women-s-sky-blue-chanderi-unstitched-designer-dress-material/" target="blank"><img src="http://assets1.craftsvilla.com/CWED/product/product_Series1/product3_1.jpg"></a>
+                                    <br>
+                                    <br>
+
+                                    <p style="font-size:14px; text-indent:30px; color:red;"> Rs. <b><del>1,850</del></b></p>
+                                    <p style="font-size:14px; text-indent:30px; pading-bottom:5px; line-height:80%; color:green;"> Rs. 849</p>
+                                    <a href="http://www.craftsvilla.com/catalog/product/view/id/1871821/s/metroz-women-s-sky-blue-chanderi-unstitched-designer-dress-material/" target="blank"><button style="font-weight:bold;color:#fff;margin-left:13px; margin-top:5px; font-size:16px;background:#FF0000;">BUY NOW</button></a>
+                                </div>
+                              </div>  
+                           
+                
+            </div>
+            <div>
+                              <div class="prod_box">
+                                <div class="product_container">
+                                    <a href=" http://www.craftsvilla.com/catalog/product/view/id/2148302/s/fabboom-new-heavy-blue-designer-anarkali-suits/" target="blank"><img src="http://assets1.craftsvilla.com/CWED/product/product_Series1/product4_1.jpg"></a>
+                                    <br>
+                                    <br>
+
+                                    <p style="font-size:14px; text-indent:30px; color:red;"> Rs. <b><del>2,999</del></b></p>
+                                    <p style="font-size:14px; text-indent:30px; pading-bottom:5px; line-height:80%; color:green;"> Rs. 1,999</p>
+                                    <a href="http://www.craftsvilla.com/catalog/product/view/id/2148302/s/fabboom-new-heavy-blue-designer-anarkali-suits/" target="blank"><button style="font-weight:bold;color:#fff;margin-left:13px; margin-top:5px; font-size:16px;background:#FF0000;">BUY NOW</button></a>
+                                </div>
+                                <div class="product_container">
+                                    <a href="http://www.craftsvilla.com/catalog/product/view/id/1350787/s/thankar-new-attractive-sangeeta-ghosh-maroon-anarkali-suit/" target="blank"><img src="http://assets1.craftsvilla.com/CWED/product/product_Series1/product5_1.jpg"></a>
+                                    <br>
+                                    <br>
+
+                                    <p style="font-size:14px; text-indent:30px; color:red;"> Rs. <b><del>5,999</del></b></p>
+                                    <p style="font-size:14px; text-indent:30px; pading-bottom:5px; line-height:80%; color:green;"> Rs. 1,399</p>
+                                    <a href="http://www.craftsvilla.com/catalog/product/view/id/1350787/s/thankar-new-attractive-sangeeta-ghosh-maroon-anarkali-suit/" target="blank"><button style="font-weight:bold;color:#fff;margin-left:13px; margin-top:5px; font-size:16px;background:#FF0000;">BUY NOW</button></a>
+                                </div>
+                                <div class="product_container">
+                                    <a href="http://www.craftsvilla.com/catalog/product/view/id/1888602/s/rock-shape-box-in-bidriware/" target="blank"><img src="http://assets1.craftsvilla.com/CWED/product/product_Series1/product6_1.jpg"></a>
+                                    <br>
+                                    <br>
+                                    <br>
+                                    <p style="font-size:14px; text-indent:30px; pading-bottom:5px; line-height:80%; color:green;"> Rs. 2,000</p>
+                                    <a href="http://www.craftsvilla.com/catalog/product/view/id/1888602/s/rock-shape-box-in-bidriware/" target="blank"><button style="font-weight:bold;color:#fff;margin-left:13px; margin-top:12px; font-size:16px;background:#FF0000;">BUY NOW</button></a>
+                                </div>
+
+                               </div> 
+                            
+                
+            </div>
+                       <div>
+                            <div class="prod_box">
+                                <div class="product_container">
+                                    <a href="http://www.craftsvilla.com/catalog/product/view/id/872857" target="blank"><img src="http://assets1.craftsvilla.com/CWED/product/product_Series1/product7_1.jpg"></a>
+                                    <br>
+                                    <br>
+
+                                    <br>
+                                    <p style="font-size:14px; text-indent:30px; pading-bottom:5px; line-height:80%; color:green;"> Rs. 1,295</p>
+                                    <a href="http://www.craftsvilla.com/catalog/product/view/id/872857" target="blank"><button style="font-weight:bold;color:#fff;margin-left:13px; margin-top:5px; font-size:16px;background:#FF0000;">BUY NOW</button></a>
+                                </div>
+                                <div class="product_container">
+                                    <a href="http://www.craftsvilla.com/catalog/product/view/id/599346" target="blank"><img src="http://assets1.craftsvilla.com/CWED/product/product_Series1/product8_1.jpg"></a>
+                                    <br>
+                                    <br>
+
+                                    <br>
+                                    <p style="font-size:14px; text-indent:30px; pading-bottom:5px; line-height:80%; color:green;"> Rs. 795</p>
+                                    <a href="http://www.craftsvilla.com/catalog/product/view/id/599346" target="blank"><button style="font-weight:bold;color:#fff;margin-left:13px; margin-top:5px; font-size:16px;background:#FF0000;">BUY NOW</button></a>
+                                </div>
+                                <div class="product_container">
+                                    <a href="http://www.craftsvilla.com/catalog/product/view/id/313051" target="blank"><img src="http://assets1.craftsvilla.com/CWED/product/product_Series1/product9_1.jpg"></a>
+                                    <br>
+                                    <br>
+
+                                    <br>
+                                    <p style="font-size:14px; text-indent:30px; pading-bottom:5px; line-height:80%; color:green;"> Rs. 15,000</p>
+                                    <a href="http://www.craftsvilla.com/catalog/product/view/id/313051" target="blank"><button style="font-weight:bold;color:#fff;margin-left:13px; margin-top:5px; font-size:16px;background:#FF0000;">BUY NOW</button></a>
+                                </div>
+                            </div>    
+                            
+                
+                   </div >
+                         <div>
+                              <div class="prod_box">
+                                <div class="product_container">
+                                    <a href="http://www.craftsvilla.com/catalog/product/view/id/370101" target="blank"><img src="http://assets1.craftsvilla.com/CWED/product/product_Series1/product10_1.jpg"></a>
+                                    <br>
+                                    <br>
+
+                                    <p style="font-size:14px; text-indent:30px; color:red;"> Rs. <b><del>2,599</del></b></p>
+                                    <p style="font-size:14px; text-indent:30px; pading-bottom:5px; line-height:80%; color:green;"> Rs. 699</p>
+                                    <a href="http://www.craftsvilla.com/catalog/product/view/id/370101" target="blank"><button style="font-weight:bold;color:#fff;margin-left:13px; margin-top:5px; font-size:16px;background:#FF0000;">BUY NOW</button></a>
+                                </div>
+                                <div class="product_container">
+                                <a href="http://www.craftsvilla.com/uniquecrafts" target="blank"><img src="http://assets1.craftsvilla.com/CWED/product/product_Series1/product11_1.jpg"></a>
+                                <br>
+                                    <br>
+
+                                    <br>
+                                    <p style="font-size:14px; text-indent:30px; pading-bottom:5px; line-height:80%; color:green;"> Rs. 19,500</p>
+                                    <a href="http://www.craftsvilla.com/bronze-ganesh-urli.html" target="blank"><button style="font-weight:bold;color:#fff;margin-left:13px; margin-top:12px; font-size:16px;background:#FF0000;">BUY NOW</button></a>
+
+                                </div>
+                                <div class="product_container">
+                                    <a href="http://www.craftsvilla.com/catalog/product/view/id/1892955/s/kalista-embellished-embroidered-brasso-saree/" target="blank"><img src="http://assets1.craftsvilla.com/CWED/product/product_Series2/product1_2.jpg"></a>
+                                    <br>
+                                    <br>
+
+                                    <p style="font-size:14px; text-indent:30px; color:red;"> Rs. <b><del>9,460</del></b></p>
+
+                                    <p style="font-size:14px; text-indent:30px; pading-bottom:5px; line-height:80%; color:green;"> Rs. 2,860</p>
+                                     <a href="http://www.craftsvilla.com/catalog/product/view/id/1892955/s/kalista-embellished-embroidered-brasso-saree/" target="blank"><button style="font-weight:bold;color:#fff;margin-left:13px; margin-top:5px; font-size:16px;background:#FF0000;">BUY NOW</button></a>
+                                </div>
+                             </div>   
+                    
+                           
+                       </div>
+                        <div>
+                              <div class="prod_box">
+                                <div class="product_container">
+                                    <a href="http://www.craftsvilla.com/catalog/product/view/id/1874937/s/pink-georgette-light-work-sari/" target="blank"><img src="http://assets1.craftsvilla.com/CWED/product/product_Series2/product2_2.jpg"></a>
+                                    <br>
+                                    <br>
+
+                                    <p style="font-size:14px; text-indent:30px; color:red;"> Rs. <b><del>2,695</del></b></p>
+                                    <p style="font-size:14px; text-indent:30px; pading-bottom:5px; line-height:80%; color:green;"> Rs. 999</p>
+                                    <a href="http://www.craftsvilla.com/catalog/product/view/id/1874937/s/pink-georgette-light-work-sari/" target="blank"><button style="font-weight:bold;color:#fff;margin-left:13px; margin-top:5px; font-size:16px;background:#FF0000;">BUY NOW</button></a>
+                                </div>
+                                <div class="product_container">
+                                    <a href=" http://www.craftsvilla.com/nnazaquat" target="blank"><img src="http://assets1.craftsvilla.com/CWED/product/product_Series2/product3_2.jpg"></a>
+                                    <br>
+                                    <br>
+                                    <br>
+                                
+                                    <p style="font-size:14px; text-indent:30px; pading-bottom:5px; line-height:80%; color:green;"> Rs. 1,800</p>
+                                    <a href="http://www.craftsvilla.com/catalog/product/view/id/2043160/s/oxidized-thread-necklace/" target="blank"><button style="font-weight:bold;color:#fff;margin-left:13px; margin-top:12px; font-size:16px;background:#FF0000;">BUY NOW</button></a>
+                                </div>
+                                <div class="product_container">
+                                    <a href="http://www.craftsvilla.com/catalog/product/view/id/2080716/s/new-designer-cream-printed-saree/" target="blank"><img src="http://assets1.craftsvilla.com/CWED/product/product_Series3/product1_3.jpg"></a>
+                                    <br>
+                                    <br>
+                                     <br>
+                                    
+                                    <p style="font-size:14px; text-indent:30px; pading-bottom:5px; line-height:80%; color:green;"> Rs. 1,399</p>
+                                    <a href="http://www.craftsvilla.com/catalog/product/view/id/2080716/s/new-designer-cream-printed-saree/" target="blank"><button style="font-weight:bold;color:#fff;margin-left:13px; margin-top:12px; font-size:16px;background:#FF0000;">BUY NOW</button></a>
+                                </div>
+                             </div>   
+                    
+                           
+                       </div>
+                       <div>
+                              <div class="prod_box">
+                                <div class="product_container">
+                                    <a href="http://www.craftsvilla.com/catalog/product/view/id/1982246/s/a-bhagalpuri-cotton-printed-saree/" target="blank"><img src="http://assets1.craftsvilla.com/CWED/product/product_Series3/product2_3.jpg"></a>
+                                    <br>
+                                    <br>
+
+                                    <p style="font-size:14px; text-indent:30px; color:red;"> Rs. <b><del>1,200</del></b></p>
+                                    <p style="font-size:14px; text-indent:30px; pading-bottom:5px; line-height:80%; color:green;"> Rs. 799</p>
+                                    <a href="http://www.craftsvilla.com/catalog/product/view/id/1982246/s/a-bhagalpuri-cotton-printed-saree/" target="blank"><button style="font-weight:bold;color:#fff;margin-left:13px; margin-top:5px; font-size:16px;background:#FF0000;">BUY NOW</button></a>
+                                </div>
+                                <div class="product_container">
+                                    <a href="http://www.craftsvilla.com/catalog/product/view/id/2108087/s/beautiful-designer-red-semi-stitched-anarkali-suit-online-shopping-for-by-stylishfashion/" target="blank"><img src="http://assets1.craftsvilla.com/CWED/product/product_Series3/product3_3.jpg"></a>
+                                    <br>
+                                    <br>
+
+                                    <p style="font-size:14px; text-indent:30px; color:red;"> Rs. <b><del>6,000</del></b></p>
+                                    <p style="font-size:14px; text-indent:30px; pading-bottom:5px; line-height:80%; color:green;"> Rs. 1,999</p>
+                                    <a href="http://www.craftsvilla.com/catalog/product/view/id/2108087/s/beautiful-designer-red-semi-stitched-anarkali-suit-online-shopping-for-by-stylishfashion/" target="blank"><button style="font-weight:bold;color:#fff;margin-left:13px; margin-top:5px; font-size:16px;background:#FF0000;">BUY NOW</button></a>
+                                </div>
+                                <div class="product_container">
+                                    <a href="http://www.craftsvilla.com/catalog/product/view/id/1366650/s/pink-and-yellow-crepe-georgette-saree-with-embroidered-blouse/" target="blank"><img src="http://assets1.craftsvilla.com/CWED/product/product_Series3/product4_3.jpg"></a>
+                                    <br>
+                                    <br>
+
+                                    <p style="font-size:14px; text-indent:30px; color:red;"> Rs. <b><del>4,120</del></b></p>
+                                    <p style="font-size:14px; text-indent:30px; pading-bottom:5px; line-height:80%; color:green;"> Rs. 2,884</p>
+                                    <a href="http://www.craftsvilla.com/catalog/product/view/id/1366650/s/pink-and-yellow-crepe-georgette-saree-with-embroidered-blouse/" target="blank"><button style="font-weight:bold;color:#fff;margin-left:13px; margin-top:5px; font-size:16px;background:#FF0000;">BUY NOW</button></a>
+                                </div>
+                             </div>   
+                    
+                           
+                       </div>
+                       <div>
+                              <div class="prod_box">
+                                <div class="product_container">
+                                    <a href="http://www.craftsvilla.com/catalog/product/view/id/2090092" target="blank"><img src="http://assets1.craftsvilla.com/CWED/product/product_Series3/product5_3.jpg"></a>
+                                    <br>
+                                    <br>
+
+                                    <p style="font-size:14px; text-indent:30px; color:red;"> Rs. <b><del>1,300</del></b></p>
+                                    <p style="font-size:14px; text-indent:30px; pading-bottom:5px; line-height:80%; color:green;"> Rs. 1,200</p>
+                                    <a href="http://www.craftsvilla.com/catalog/product/view/id/2090092" target="blank"><button style="font-weight:bold;color:#fff;margin-left:13px; margin-top:5px; font-size:16px;background:#FF0000;">BUY NOW</button></a>
+                                </div>
+                                <div class="product_container">
+                                    <a href="http://www.craftsvilla.com/catalog/product/view/id/749476/s/chaarpai-with-brass-ganesha/" target="blank"><img src="http://assets1.craftsvilla.com/CWED/product/product_Series3/product6_3.jpg"></a>
+                                    <br>
+                                    <br>
+
+                                    <p style="font-size:14px; text-indent:30px; color:red;"> Rs. <b><del>1,350</del></b></p>
+                                    <p style="font-size:14px; text-indent:30px; pading-bottom:5px; line-height:80%; color:green;"> Rs. 1,250</p>
+                                    <a href="http://www.craftsvilla.com/catalog/product/view/id/749476/s/chaarpai-with-brass-ganesha/" target="blank"><button style="font-weight:bold;color:#fff;margin-left:13px; margin-top:5px; font-size:16px;background:#FF0000;">BUY NOW</button></a>
+                                </div>
+                                <div class="product_container">
+                                    <a href="http://www.craftsvilla.com/catalog/product/view/id/1280897/s/sayona-01/" target="blank"><img src="http://assets1.craftsvilla.com/CWED/product/product_Series3/product7_3.jpg"></a>
+                                    <br>
+                                    <br>
+
+                                    <p style="font-size:14px; text-indent:30px; color:red;"> Rs. <b><del>2,999</del></b></p>
+                                    <p style="font-size:14px; text-indent:30px; pading-bottom:5px; line-height:80%; color:green;"> Rs. 1,199</p>
+                                    <a href="http://www.craftsvilla.com/catalog/product/view/id/1280897/s/sayona-01/" target="blank"><button style="font-weight:bold;color:#fff;margin-left:13px; margin-top:5px; font-size:16px;background:#FF0000;">BUY NOW</button></a>
+                                </div>
+                             </div>   
+                    
+                           
+                       </div>
+                       <div>
+                              <div class="prod_box">
+                                <div class="product_container">
+                                    <a href="http://www.craftsvilla.com/catalog/product/view/id/1242072" target="blank"><img src="http://assets1.craftsvilla.com/CWED/product/product_Series3/product8_3.jpg"></a>
+                                    <br>
+                                    <br>
+
+                                    <p style="font-size:14px; text-indent:30px; color:red;"> Rs. <b><del>899</del></b></p>
+                                    <p style="font-size:14px; text-indent:30px; pading-bottom:5px; line-height:80%; color:green;"> Rs. 299</p>
+                                    <a href="http://www.craftsvilla.com/catalog/product/view/id/1242072" target="blank"><button style="font-weight:bold;color:#fff;margin-left:13px; margin-top:5px; font-size:16px;background:#FF0000;">BUY NOW</button></a>
+                                </div>
+                                <div class="product_container">
+                                    <a href="http://www.craftsvilla.com/catalog/product/view/id/2195643/s/rajasthani-lady-churning-butter/" target="blank"><img src="http://assets1.craftsvilla.com/CWED/product/product_Series3/product9_3.jpg"></a>
+                                    <br>
+                                    <br>
+
+                                    <p style="font-size:14px; text-indent:30px; color:red;"> Rs. <b><del>1,099</del></b></p>
+                                    <p style="font-size:14px; text-indent:30px; pading-bottom:5px; line-height:80%; color:green;"> Rs. 999</p>
+                                     <a href="http://www.craftsvilla.com/catalog/product/view/id/2195643/s/rajasthani-lady-churning-butter/" target="blank"><button style="font-weight:bold;color:#fff;margin-left:13px; margin-top:5px; font-size:16px;background:#FF0000;">BUY NOW</button></a>
+                                </div>
+                                <div class="product_container">
+                                    <a href="http://www.craftsvilla.com/catalog/product/view/id/406036/s/diamond-and-golden-beads-payal/" target="blank"><img src="http://assets1.craftsvilla.com/CWED/product/product_Series3/product10_3.jpg"></a>
+                                    <br>
+                                    <br>
+
+                                    <br>
+                                    <p style="font-size:14px; text-indent:30px; pading-bottom:5px; line-height:80%; color:green;"> Rs. 320</p>
+                                    <a href="http://www.craftsvilla.com/catalog/product/view/id/406036/s/diamond-and-golden-beads-payal/" target="blank"><button style="font-weight:bold;color:#fff;margin-left:13px; margin-top:12px; font-size:16px;background:#FF0000;">BUY NOW</button></a>
+                                </div>
+                             </div>   
+                    
+                           
+                       </div>
+                       <div>
+                              <div class="prod_box">
+                                <div class="product_container">
+                                    <a href="http://www.craftsvilla.com/catalog/product/view/id/803717/s/beautiful-pearl-bangles/" target="blank"><img src="http://assets1.craftsvilla.com/CWED/product/product_Series3/product11_3.jpg"></a>
+                                    <br>
+                                    <br>
+                                    <br>
+                                    <p style="font-size:14px; text-indent:30px; pading-bottom:5px; line-height:80%; color:green;"> Rs.249</p>
+                                    <a href="http://www.craftsvilla.com/catalog/product/view/id/803717/s/beautiful-pearl-bangles/" target="blank"><button style="font-weight:bold;color:#fff;margin-left:13px; margin-top:12px; font-size:16px;background:#FF0000;">BUY NOW</button></a>
+                                </div>
+                                <div class="product_container">
+                                    <a href="http://www.craftsvilla.com/maitricrafts" target="blank"><img src="http://assets1.craftsvilla.com/CWED/product/product_Series3/product12_3.jpg"></a>
+                                    <br>
+                                    <br>
+                              
+                                    <p style="font-size:14px; text-indent:30px; color:red;"> Rs. <b><del>685</del></b></p>
+                                    <p style="font-size:14px; text-indent:30px; pading-bottom:5px; line-height:80%; color:green;"> Rs. 599</p>
+                                    <a href="http://www.craftsvilla.com/catalog/product/view/id/2012515/s/terracotta-jewelry-medium-terracotta-set-tsa2191/" target="blank"><button style="font-weight:bold;color:#fff;margin-left:13px; margin-top:5px; font-size:16px;background:#FF0000;">BUY NOW</button></a>
+
+                                </div>
+                                
+                             </div>   
+                    
+                           
+                       </div>
+                       
+        </div>
+
+        
+        <!--#region Thumbnail Navigator Skin Begin -->
+        <!-- Help: http://www.jssor.com/development/slider-with-thumbnail-navigator-jquery.html -->
+        <!-- thumbnail navigator container -->
+        <!-- Help: http://www.jssor.com/development/slider-with-thumbnail-navigator-jquery.html -->
+        <!--div u="thumbnavigator" style="position: absolute; bottom: 0px; left: 0px; height:45px; width:600px;">
+            <div style="filter: alpha(opacity=40); opacity:0.4; position: absolute; display: block;
+                background-color: #000000; top: 0px; left: 0px; width: 100%; height: 100%;">
+            </div>
+            <!-- Thumbnail Item Skin Begin -->
+            <!--div u="slides">
+                <div u="prototype" style="POSITION: absolute; WIDTH: 600px; HEIGHT: 45px; TOP: 0; LEFT: 0;">
+                    <div u="thumbnailtemplate" style="font-family: verdana; font-weight: normal; POSITION: absolute; WIDTH: 100%; HEIGHT: 100%; TOP: 0; LEFT: 0; color:#fff; line-height: 45px; font-size:20px; padding-left:10px;"></div>
+                </div>
+            </div>
+            <!-- Thumbnail Item Skin End -->
+        <!--/div-->
+        <!--#endregion ThumbnailNavigator Skin End -->
+        
+        <!--#region Bullet Navigator Skin Begin -->
+        <!-- Help: http://www.jssor.com/development/slider-with-bullet-navigator-jquery.html -->
+        <style>
+            /* jssor slider bullet navigator skin 01 css */
+            /*
+            .jssorb01 div           (normal)
+            .jssorb01 div:hover     (normal mouseover)
+            .jssorb01 .av           (active)
+            .jssorb01 .av:hover     (active mouseover)
+            .jssorb01 .dn           (mousedown)
+            */
+            .jssorb01 {
+                position: absolute;
+            }
+            .jssorb01 div, .jssorb01 div:hover, .jssorb01 .av {
+                position: absolute;
+                /* size of bullet elment */
+                width: 12px;
+                height: 12px;
+                filter: alpha(opacity=70);
+                opacity: .7;
+                overflow: hidden;
+                cursor: pointer;
+                border: #000 1px solid;
+            }
+            .jssorb01 div { background-color: gray; }
+            .jssorb01 div:hover, .jssorb01 .av:hover { background-color: #d3d3d3; }
+            .jssorb01 .av { background-color: #fff; }
+            .jssorb01 .dn, .jssorb01 .dn:hover { background-color: #555555; }
+        </style>
+        <!-- bullet navigator container -->
+        
+        <!--#endregion Bullet Navigator Skin End -->
+        
+        <!--#region Arrow Navigator Skin Begin -->
+        <!-- Help: http://www.jssor.com/development/slider-with-arrow-navigator-jquery.html -->
+        <style>
+            /* jssor slider arrow navigator skin 05 css */
+            /*
+            .jssora05l                  (normal)
+            .jssora05r                  (normal)
+            .jssora05l:hover            (normal mouseover)
+            .jssora05r:hover            (normal mouseover)
+            .jssora05l.jssora05ldn      (mousedown)
+            .jssora05r.jssora05rdn      (mousedown)
+            */
+            .jssora05l, .jssora05r {
+                display: block;
+                position: absolute;
+                /* size of arrow element */
+                width: 40px;
+                height: 40px;
+                cursor: pointer;
+                background: url(../img/a17.png) no-repeat;
+                overflow: hidden;
+            }
+            .jssora05l { background-position: -10px -40px; background:url(http://assets1.craftsvilla.com/CWED/product/left2.png) no-repeat rgba(0,0,0,.8);  background-size: 100% 100%;
+                -webkit-transition:.4s all linear;
+                 -moz-transition:.4s all linear;
+                 -os-transition:.4s all linear;
+                 -o-transition:.4s all linear;}
+            .jssora05r { background-position: -70px -40px; background:url(http://assets1.craftsvilla.com/CWED/product/right2.png) no-repeat rgba(0,0,0,.8);  background-size: 100% 100%;
+             -webkit-transition:.4s all linear;
+                 -moz-transition:.4s all linear;
+                 -os-transition:.4s all linear;
+                 -o-transition:.4s all linear;}
+            /**.jssora05l:hover { background-position: -130px -40px; }
+            .jssora05r:hover { background-position: -190px -40px; }**/
+            .jssora05l.jssora05ldn { background-position: -250px -40px; }
+            .jssora05r.jssora05rdn { background-position: -310px -40px; }
+            .product:hover .jssora05l, .product:hover .jssora05r{
+                 opacity: 1;
+            }
+        </style>
+        <!-- Arrow Left -->
+        <span u="arrowleft" class="jssora05l" style="top: 0px; left: -28px; border-radius:50% 50%; ">
+        
+        </span>
+        <!-- Arrow Right -->
+        <span u="arrowright" class="jssora05r" style="top: 0px; right: 5px;  border-radius:50% 50%;">
+        
+        </span>
+        
+        <!-- Trigger -->
+    </div>
+                                
+     </div>     
+    
+        </div>
+
+    </div>
+    <div class="offer" style="position:relative; margin-left:1070px; margin-top:370px;padding-left:15px; font-size:16px; font-weight:bold;"><a href="http://www.craftsvilla.com/craftsvilla-deals.html" target="blank">  More Offers available here </a>
+    </div>
+
+ </div>
+               
+           <div class="main_content"style="background-color:#222;">
+                <!-- -->
+                <div class="bottomslidertitle" style="display:block;">Ethnic Traditions Across the World</div>
+                <div class="bottomslidetabs" id="tabs" style="">
+                    <div class="bottomslidertab cusine" style="cursor:pointer;" onclick="showcusinecontent()">Cuisine</div>
+                    <div class="bottomslidertab jewellary" style="cursor:pointer;" onclick="showjewellarycontent()">Jewellery</div>
+                    <div class="bottomslidertab clothing" style="cursor:pointer;" onclick="showclothingcontent()">Clothing</div>
+                    <div class="bottomslidertab hanidcrafts" style="cursor:pointer;" onclick="showhandicraftcontent()">Art & Handicrafts</div>
+                </div>
+<script type="text/javascript">
+        function showcontent()
+        {
+            $('#img1').css('display','none');
+            $('#img1hover').css('display','block');
+            //$('#img1').css('z-index',99);            
+        }
+        function hidecontent()
+        {
+            $('#img1').css('display','block');    
+            $('#img1hover').css('display','none');
+            //$('#img1').css('z-index',101);
+        }
+        function showcontent2()
+        {
+            $('#img2').css('display','none');
+            $('#img2hover').css('display','block');
+            //$('#img1').css('z-index',99);            
+        }
+        function hidecontent2()
+        {
+            $('#img2').css('display','block');    
+            $('#img2hover').css('display','none');
+            //$('#img1').css('z-index',101);
+        }
+         function showcontent3()
+        {
+            $('#img3').css('display','none');
+            $('#img3hover').css('display','block');
+            //$('#img1').css('z-index',99);            
+        }
+        function hidecontent3()
+        {
+            $('#img3').css('display','block');    
+            $('#img3hover').css('display','none');
+            //$('#img1').css('z-index',101);
+        }
+         function showcontent4()
+        {
+            $('#img4').css('display','none');
+            $('#img4hover').css('display','block');
+            //$('#img1').css('z-index',99);            
+        }
+        function hidecontent4()
+        {
+            $('#img4').css('display','block');    
+            $('#img4hover').css('display','none');
+            //$('#img1').css('z-index',101);
+        }
+         function showcontent5()
+        {
+            $('#img5').css('display','none');
+            $('#img5hover').css('display','block');
+            //$('#img1').css('z-index',99);            
+        }
+        function hidecontent5()
+        {
+            $('#img5').css('display','block');    
+            $('#img5hover').css('display','none');
+            //$('#img1').css('z-index',101);
+        }
+         function showcontent6()
+        {
+            $('#img6').css('display','none');
+            $('#img6hover').css('display','block');
+            //$('#img1').css('z-index',99);            
+        }
+        function hidecontent6()
+        {
+            $('#img6').css('display','block');    
+            $('#img6hover').css('display','none');
+            //$('#img1').css('z-index',101);
+        }
+         function showcontent7()
+        {
+            $('#img7').css('display','none');
+            $('#img7hover').css('display','block');
+            //$('#img1').css('z-index',99);            
+        }
+        function hidecontent7()
+        {
+            $('#img7').css('display','block');    
+            $('#img7hover').css('display','none');
+            //$('#img1').css('z-index',101);
+        }
+         function showcontent8()
+        {
+            $('#img8').css('display','none');
+            $('#img8hover').css('display','block');
+            //$('#img1').css('z-index',99);            
+        }
+        function hidecontent8()
+        {
+            $('#img8').css('display','block');    
+            $('#img8hover').css('display','none');
+            //$('#img1').css('z-index',101);
+        }
+         function showcontent21()
+        {
+            $('#img21').css("display","none");
+            $('#img21hover').css('display','block');
+            //$('#img1').css('z-index',99);            
+        }
+        function hidecontent21()
+        {
+            $('#img21').css('display','block');    
+            $('#img21hover').css('display','none');
+            //$('#img1').css('z-index',101);
+        }
+         function showcontent22()
+        {
+            $('#img22').css('display','none');
+            $('#img22hover').css('display','block');
+            //$('#img1').css('z-index',99);            
+        }
+        function hidecontent22()
+        {
+            $('#img22').css('display','block');    
+            $('#img22hover').css('display','none');
+            //$('#img1').css('z-index',101);
+        }
+         function showcontent23()
+        {
+            $('#img23').css('display','none');
+            $('#img23hover').css('display','block');
+            //$('#img1').css('z-index',99);            
+        }
+        function hidecontent23()
+        {
+            $('#img23').css('display','block');    
+            $('#img23hover').css('display','none');
+            //$('#img1').css('z-index',101);
+        }
+         function showcontent24()
+        {
+            $('#img24').css('display','none');
+            $('#img24hover').css('display','block');
+            //$('#img1').css('z-index',99);            
+        }
+        function hidecontent24()
+        {
+            $('#img24').css('display','block');    
+            $('#img24hover').css('display','none');
+            //$('#img1').css('z-index',101);
+        }
+         function showcontent25()
+        {
+            $('#img25').css('display','none');
+            $('#img25hover').css('display','block');
+            //$('#img1').css('z-index',99);            
+        }
+        function hidecontent25()
+        {
+            $('#img25').css('display','block');    
+            $('#img25hover').css('display','none');
+            //$('#img1').css('z-index',101);
+        }
+         function showcontent26()
+        {
+            $('#img26').css('display','none');
+            $('#img26hover').css('display','block');
+            //$('#img1').css('z-index',99);            
+        }
+        function hidecontent26()
+        {
+            $('#img26').css('display','block');    
+            $('#img26hover').css('display','none');
+            //$('#img1').css('z-index',101);
+        }
+         function showcontent27()
+        {
+            $('#img27').css('display','none');
+            $('#img27hover').css('display','block');
+            //$('#img1').css('z-index',99);            
+        }
+        function hidecontent27()
+        {
+            $('#img27').css('display','block');    
+            $('#img27hover').css('display','none');
+            //$('#img1').css('z-index',101);
+        }
+         function showcontent28()
+        {
+            $('#img28').css('display','none');
+            $('#img28hover').css('display','block');
+            //$('#img1').css('z-index',99);            
+        }
+        function hidecontent28()
+        {
+            $('#img28').css('display','block');    
+            $('#img28hover').css('display','none');
+            //$('#img1').css('z-index',101);
+        }
+         function showcontent31()
+        {
+            $('#img31').css('display','none');
+            $('#img31hover').css('display','block');
+            //$('#img1').css('z-index',99);            
+        }
+        function hidecontent31()
+        {
+            $('#img31').css('display','block');    
+            $('#img31hover').css('display','none');
+            //$('#img1').css('z-index',101);
+        }
+         function showcontent32()
+        {
+            $('#img32').css('display','none');
+            $('#img32hover').css('display','block');
+            //$('#img1').css('z-index',99);            
+        }
+        function hidecontent32()
+        {
+            $('#img32').css('display','block');    
+            $('#img32hover').css('display','none');
+            //$('#img1').css('z-index',101);
+        }
+         function showcontent33()
+        {
+            $('#img33').css('display','none');
+            $('#img33hover').css('display','block');
+            //$('#img1').css('z-index',99);            
+        }
+        function hidecontent33()
+        {
+            $('#img33').css('display','block');    
+            $('#img33hover').css('display','none');
+            //$('#img1').css('z-index',101);
+        }
+         function showcontent34()
+        {
+            $('#img34').css('display','none');
+            $('#img34hover').css('display','block');
+            //$('#img1').css('z-index',99);            
+        }
+        function hidecontent34()
+        {
+            $('#img34').css('display','block');    
+            $('#img34hover').css('display','none');
+            //$('#img1').css('z-index',101);
+        }
+         function showcontent35()
+        {
+            $('#img35').css('display','none');
+            $('#img35hover').css('display','block');
+            //$('#img1').css('z-index',99);            
+        }
+        function hidecontent35()
+        {
+            $('#img35').css('display','block');    
+            $('#img35hover').css('display','none');
+            //$('#img1').css('z-index',101);
+        }
+         function showcontent36()
+        {
+            $('#img36').css('display','none');
+            $('#img36hover').css('display','block');
+            //$('#img1').css('z-index',99);            
+        }
+        function hidecontent36()
+        {
+            $('#img36').css('display','block');    
+            $('#img36hover').css('display','none');
+            //$('#img1').css('z-index',101);
+        }
+         function showcontent37()
+        {
+            $('#img37').css('display','none');
+            $('#img37hover').css('display','block');
+            //$('#img1').css('z-index',99);            
+        }
+        function hidecontent37()
+        {
+            $('#img37').css('display','block');    
+            $('#img37hover').css('display','none');
+            //$('#img1').css('z-index',101);
+        }
+         function showcontent38()
+        {
+            $('#img38').css('display','none');
+            $('#img38hover').css('display','block');
+            //$('#img1').css('z-index',99);            
+        }
+        function hidecontent38()
+        {
+            $('#img38').css('display','block');    
+            $('#img38hover').css('display','none');
+            //$('#img1').css('z-index',101);
+        }
+    </script>
+</script>
+                <div class="cusinecontent">
+                
+                    <div class="switch_container" style="">
+                        <div class="switch" style=""  
+                            id="food1" onmouseover="showcontent()" onmouseout="hidecontent()">
+                            <img id="img1" src="http://assets1.craftsvilla.com/CWED/img/soba.jpg" alt=""/>
+                            <div id="img1hover" class="split" style="">
+                            <p style="font-size:2em;font-family:Niconne,Robo slab;font-weight:bold;text-align:center;top:5px;"> Japan</p>
+                            <p style="margin:10px 10px; text-align:center; font-size:1.3em;">
+                              Soba – long, thin buckwheat noodles – has long been a staple of Japanese cuisine, particularly in the mountainous regions where hardy buckwheat fares better than rice. The noodles are served in  a hot, soy sauce-flavoured broth  on a bamboo mat with broth on the side for dipping.
+                            </p>
+                            </div>
+                        </div>
+                        <div class="switch" style="" id="food2" onmouseover="showcontent2()" onmouseout="hidecontent2()">
+                            <img id="img2" src="http://assets1.craftsvilla.com/CWED/img/auss.jpg" alt=""/>
+                            <div id="img2hover" class="split" style="">
+                            <p style="font-size:2em;font-family:Niconne,Robo slab;font-weight:bold;text-align:center;top:5px;"> Australia</p>    
+                            <p style="margin:10px 10px; text-align:center; font-size:1.3em;">
+                            Australia has a rich variety of foods and drinks, adopted and adapted since colonisation and developed as part of a multi-cultural society. A dim sim is a Chinese-inspired meat or vegetable dumpling-style snack food, popular in Australia and to a lesser extent in New Zealand.
+                            </p>
+                            </div>
+                        </div>
+                        <div class="switch" style="" 
+                        id="food3" onmouseover="showcontent3()" onmouseout="hidecontent3()">
+                            <img id="img3" src="http://assets1.craftsvilla.com/CWED/img/saudi1.jpg" alt=""/>
+                            <div id="img3hover" class="split" style="">
+                                <p style="font-size:2em;font-family:Niconne,Robo slab;font-weight:bold;text-align:center;top:5px;"> Saudi Arabia
+                                </p>
+                               <p style="margin:10px 10px; text-align:center; font-size:1.3em;">   
+                                The Arabian people have consumed the same type of food for thousands of years. Some of the common food items in Saudi Arabian cuisine include wheat, rice, lamb, chicken, potatoes and dates. Shawarma and Falafel are two common dishes which are originally Levantine and Egyptian dishes respectively.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="switch" style=""
+                        id="food4" onmouseover="showcontent4()" onmouseout="hidecontent4()">
+                            <img id="img4" src="http://assets1.craftsvilla.com/CWED/img/mapo1.jpg" alt=""/>
+                            <div id="img4hover" class="split" style="">
+                            <p style="font-size:2em;font-family:Niconne,Robo slab;font-weight:bold;text-align:center;top:5px;"> China</p>
+                             <p style="margin:10px 10px; text-align:center; font-size:1.3em;">
+                            Ma po tofu is one of the most famous dishes in Chuan Cuisine with a history of more than 100 years. Ma describes a spicy and hot taste which comes from pepper powder, one kind of condiment  used in Chuan Cuisine.The milky tofu is enriched with brownish red ground beef and chopped green onion.
+                            </p>
+                            </div>
+                        </div>                        
+                    </div>
+                     <div class="switch_container" style="">
+                        <div class="switch" style=""
+                        id="food5" onmouseover="showcontent5()" onmouseout="hidecontent5()">
+                            <img id="img5" src="http://assets1.craftsvilla.com/CWED/img/paris1.jpg" alt=""/>
+                            <div id="img5hover" class="split" style="">
+                               <p style="font-size:2em;font-family:Niconne,Robo slab;font-weight:bold;text-align:center;top:5px;"> France</p> 
+                               <p style="margin:10px 10px; text-align:center;font-size:1.3em;">
+                               Food and culture are strongly interconnected, and regional cuisine shapes a significant part of any culture. Piperade  or Piperrada, from piper is a typical Basque dish prepared with onion, green peppers, and tomatoes sautéd and flavoured with red Espelette pepper.
+                               </p>
+                            </div>
+                        </div>
+                        <div class="switch" style=""
+                        id="food6" onmouseover="showcontent6()" onmouseout="hidecontent6()">
+                            <img id="img6" src="http://assets1.craftsvilla.com/CWED/img/italy1.jpg" alt=""/>
+                            <div id="img6hover" class="split" style="">
+                            <p style="font-size:2em;font-family:Niconne,Robo slab;font-weight:bold;text-align:center;top:5px;"> Italy</p>
+                              <p style="margin:10px 10px; text-align:center; font-size:1.3em;">
+                              Italian cuisine has ancient origins and has spread around the world with
+          products and dishes of its culinary tradition: pizza, spaghetti, ravioli, lasagna, Parmiggiano Reggiano parmesan cheese, prosciutto ham, ice cream, espresso and more.
+                              </p> 
+                            </div>
+                        </div>
+                        <div class="switch" style="" 
+                         id="food7" onmouseover="showcontent7()" onmouseout="hidecontent7()">
+                            <img id="img7" src="http://assets1.craftsvilla.com/CWED/img/argen.jpg" alt=""/>
+                            <div id="img7hover" class="split" style="">
+                              <p style="font-size:2em;font-family:Niconne,Robo slab;font-weight:bold;text-align:center;top:5px;"> Argentina</p>  
+                              <p style="margin:10px 10px; text-align:center;font-size:1.3em;">
+                            Empanadas are hot, cheap and portable meal and popular amongst working classes in  Argentina.Empanadas are deep-fried or baked and filled with sweet and savoury stuffing. Dessert empanadas are  packed with quince jam, sweet potato paste and sprinkled with cinnamon and sugar.  
+                              </p>
+                            </div>
+                        </div>
+                        <div class="switch" style=""
+                        id="food8" onmouseover="showcontent8()" onmouseout="hidecontent8()">
+                            <img id="img8" src="http://assets1.craftsvilla.com/CWED/img/laks.jpg" alt=""/>
+                            <div id="img8hover" class="split" style="">
+                           <p style="font-size:2em;font-family:Niconne,Robo slab;font-weight:bold;text-align:center;top:5px;"> Singapore</p>     
+                            <p style="margin:10px 10px;text-align:center; font-size:1.3em;">
+                            The Confit de Poitrine de Porc  or simply Pork Belly Confit is cured in a mixture of sea salt, brown sugar and aromatics. The pork belly is served with garlic mash, seasonal vegetables, and mustard sauce.
+                            </p>
+                            </div>
+                        </div>                        
+                    </div>                  
+                </div>
+                <div class="jewellarycontent" >
+                    <div class="switch_container" style="">
+                        <div class="switch" style=""
+                        id="jewel1" onmouseover="showcontent21()" onmouseout="hidecontent21()">
+                            <img id="img21" src="http://assets1.craftsvilla.com/CWED/img/jewellery/china1.jpg" alt=""/>
+                            <div id="img21hover" class="split" style="">
+                            <p style="font-size:2em;font-family:Niconne,Robo slab;font-weight:bold;text-align:center;top:5px;">China</p>
+                            <p style="margin:10px 10px;text-align:center; font-size:1.3em;">A typical buyao was a hairpin adorned with movable flower branch-shaped pendants. It would constantly shake with the wearer's steps, hence the name "buyao", literally meaning "shake as you go". Most buyaos were made of gold into the shape of a dragon or phoenix and adorned with pearls and jade.
+                           </p>
+
+
+                            </div>
+                        </div>
+                        <div class="switch" style=""
+                        id="jewel2" onmouseover="showcontent22()" onmouseout="hidecontent22()">
+                            <img id="img22" src="http://assets1.craftsvilla.com/CWED/img/jewellery/usa1.jpg" alt=""/>
+                            <div id="img22hover" class="split" style="">
+                            <p style="font-size:2em;font-family:Niconne,Robo slab;font-weight:bold;text-align:center;top:5px;">America</p>
+                            <p style="margin:10px 10px;text-align:center; font-size:1.3em;">
+                                Native American jewelry can be made from naturally occurring materials such as various metals, hardwoods, vegetal fibers, or precious and semi-precious gemstones; animal materials such as teeth, bones and hide; or man-made materials like beadwork and quillwork.  
+                            </p>
+                            </div>
+                        </div>
+                        <div class="switch" style=""
+                        id="jewel3" onmouseover="showcontent23()" onmouseout="hidecontent23()">
+                            <img id="img23" src="http://assets1.craftsvilla.com/CWED/img/jewellery/jai.jpg" alt=""/>
+                            <div id="img23hover" class="split" style="">
+                                 <p style="font-size:2em;font-family:Niconne,Robo slab;font-weight:bold;text-align:center;top:5px;"> India</p>
+                               <p style="margin:10px 10px; text-align:center; font-size:1.3em;">
+                                   Jadau Jewellery forms one of the major examples of high skilled craftsmanship that was brought into India by Mughals. Historically speaking, the tradition of Jadau work has been in practice in the states of Rajasthan and Gujarat since the Mughal Era. Jadau jewellery is also called Engraved Jewellery. 
+                               </p>  
+                            </div>
+                        </div>
+                        <div class="switch" style=""
+                        id="jewel4" onmouseover="showcontent24()" onmouseout="hidecontent24()">
+                            <img id="img24" src="http://assets1.craftsvilla.com/CWED/img/jewellery/japanese.jpg" alt=""/>
+                            <div id="img24hover" class="split" style="">
+                              <p style="font-size:2em;font-family:Niconne,Robo slab;font-weight:bold;text-align:center;top:5px;">Japan</p>
+                               <p style="margin:10px 10px; text-align:center; font-size:1.3em;">
+                                   Kanzashi are hair ornaments used in traditional Japanese hairstyles. Kanzashi were first used in Japan during the Jōmon period. During that time, a single thin rod or stick was considered to have mystical powers which could ward off evil spirits so people would wear them in their hair
+                               </p>
+                            </div>
+                        </div>                        
+                    </div>
+                     <div class="switch_container" style="">
+                        <div class="switch" style=""
+                        id="jewel5" onmouseover="showcontent25()" onmouseout="hidecontent25()">
+                            <img id="img25" src="http://assets1.craftsvilla.com/CWED/img/jewellery/jewe1.jpg" alt=""/>
+                            <div id="img25hover" class="split" style="">
+                                <p style="font-size:2em;font-family:Niconne,Robo slab;font-weight:bold;text-align:center;top:5px;">Australia</p>
+                                 <p style="margin:10px 10px; text-align:center; font-size:1.3em;">
+                                    Aboriginal tribal jewellery is made from beading elephant, kangaroo teeth, maireener or mariner shells.Also they use ceramics, glass, wood, shell, metal and even recycled paper!
+                                 </p>
+                            </div>
+                        </div>
+                        <div class="switch" style=""
+                        id="jewel6" onmouseover="showcontent26()" onmouseout="hidecontent26()">
+                            <img id="img26" src="http://assets1.craftsvilla.com/CWED/img/jewellery/sa1.jpg" alt=""/>
+                            <div id="img26hover" class="split" style="">
+                  <p style="font-size:2em;font-family:Niconne,Robo slab;font-weight:bold;text-align:center;top:5px;">South Africa</p>    <p style="margin:10px 10px;text-align:center; font-size:1.3em;">
+                   The Maasai tribe of Africa is well known for its traditional handmade bead jewelry. Beadwork has been an important part of Maasai culture for many years. 
+                       A married Maasai woman will wear a Nborro, which is a long necklace with blue beads.
+
+                  </p>           
+                            </div>
+                        </div>
+                        <div class="switch" style=""
+                        id="jewel7" onmouseover="showcontent27()" onmouseout="hidecontent27()">
+                            <img id="img27" src="http://assets1.craftsvilla.com/CWED/img/jewellery/yemen2.jpg" alt=""/>
+                            <div id="img27hover" class="split" style="">
+                              <p style="font-size:2em;font-family:Niconne,Robo slab;font-weight:bold;text-align:center;top:5px;"> Yemen</p>
+                               <p style="margin:10px 10px; text-align:center; font-size:1.3em;">
+                               The jewellery given is worn by women during their wedding. According to Rubaih, from the great variety of traditional jewelry made in Yemen, the most exquisite was done by the Jewish silversmiths in the northern mountains and in the large cities. 
+                               </p>   
+                            </div>
+                        </div>
+                        <div class="switch" style=""
+                        id="jewel8" onmouseover="showcontent28()" onmouseout="hidecontent28()">
+                            <img id="img28" src="http://assets1.craftsvilla.com/CWED/img/jewellery/pop1.jpg" alt=""/>
+                            <div id="img28hover" class="split" style="">
+                                <p style="font-size:2em;font-family:Niconne,Robo slab;font-weight:bold;text-align:center;top:5px;">Papua New Guinea</p>
+                                <p style="margin:10px 10px; text-align:center; font-size:1.3em;">
+                                This piece of traditional jewellery made with the naturally beautiful Elytra (wings) of the Green Jewel beetle (Sternocera aequisignata.) This necklace features the natural green color of the jewel beetle. The elytra shift in color from green to teal green, with touches of blue. 
+                                </p>
+                            </div>
+                        </div>                        
+                    </div>
+                </div>
+                <div class="clothingcontent">
+                    
+        
+        <div id="SITE_CONTAINER">            
+            <div data-reactid=".0">
+                <div data-reactid=".0.0">
+                    
+                    <style type="text/css" data-reactid=".0.0.$s5">
+                        .s5_pos {height:2.3em;position:absolute;right:0;bottom:0;left:0;text-align:center;}
+                        .s5showMore {cursor:pointer;display:inline-block;line-height:2.3em !important;padding:0 10px;text-decoration:underline !important;color:#000000;font:normal normal normal 13px/1.4em Caudex,serif ;}
+                        .s5itemsContainer {position:absolute;top:0;right:0;bottom:2.3em;left:0;}
+                        .s5[data-state~="fullView"] .s5showMore {display:none;}
+                        .s5imageItemtitle {overflow:hidden;text-overflow:ellipsis;white-space:pre-line;font:normal normal normal 31px/1.4em Niconne,fantasy ;  color:#000000;white-space:nowrap;}
+                        .s5imageItemdescription {overflow:hidden;text-overflow:ellipsis;white-space:pre-line;color:#000000;font:normal normal normal 13px/1.4em Caudex,serif ;}
+                        .s5imageItemimage,.s5imageItem_imgBorder,.s5imageItemimageWrapper,.s5imageItemzoom {border-radius:0;}
+                        .s5imageItemimageWrapper,.s5imageItem_imgBorder,.s5imageItemzoom {position:absolute;top:0;right:0;bottom:0;left:0;}
+                        .s5imageItemimageWrapper {box-shadow:0 1px 4px rgba(0, 0, 0, 0.6);;}
+                        .s5imageItem_imgBorder {border:solid 0px rgba(0, 0, 0, 1);background:rgba(0, 0, 0, 1);}
+                        .s5imageItemzoom {background:rgba(197, 189, 160, 0.6);padding:10px;opacity:0;transition: opacity 0.4s ease 0s;  overflow:hidden;}
+                        .s5imageItemlink {color:#000000;font:normal normal normal 13px/1.4em Caudex,serif ;  position:absolute;left:10px;right:10px;bottom:10px;text-decoration:underline !important;white-space:nowrap;}
+                        .s5imageItemtitle,.s5imageItemdescription {overflow:hidden;text-overflow:ellipsis;}
+                        .s5imageItem[data-state~="noLink"] .s5imageItemlink {display:none;}
+                        .s5imageItem:hover .s5imageItemzoom {opacity:1;transition: opacity 0.4s ease 0s;}
+                        .s5imageItemimageimage {position:static;box-shadow:#000 0 0 0;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;}
+                        .s5imageItemimage[data-state~="loading"] .s5imageItemimageimage {background:url(//static.wix.com/services/skins/2.1113.24/images/wysiwyg/core/themes/editor_web/gif_preloader.gif) center no-repeat;}
+                    </style>
+                    
+                    <div data-reactid=".0.0.r"></div>
+                </div>
+                
+                <div class="SITE_ROOT" id="SITE_ROOT" style="width:960px;padding-bottom:41px;" data-reactid=".0.$SITE_ROOT">
+                    <div id="SITE_STRUCTURE" style="position: static; top: 0px; " data-reactid=".0.$SITE_ROOT.$desktop_siteRoot">
+                        <!--<div class="bottomslidertitle">Ethnic Traditions Across the World</div>
+                        <div class="bottomslidetabs" style="">
+                            <div class="bottomslidertab" style="" onclick="showcusinecontent()">Cusine</div>
+                            <div class="bottomslidertab" style="" onclick="showjewellarycontent()">Jewellary</div>
+                            <div class="bottomslidertab" style="" onclick="showclothingcontent()">Clothing</div>
+                            <div class="bottomslidertab" style="" onclick="showhandicraftcontent()">Handicrafts</div>
+                        </div>-->                       
+                        <div style="position: absolute; top: 0px !important; height: 1590px; width: 960px; left: 0px;" class="s2" data-state="" id="PAGES_CONTAINER" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER">
+                            <div id="PAGES_CONTAINERscreenWidthBackground" class="s2screenWidthBackground" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.0" style="width: 1349px; left: -185px;"></div>
+                            <div id="PAGES_CONTAINERcenteredContent" class="s2centeredContent" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1">
+                                <div id="PAGES_CONTAINERbg" class="s2bg" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.0"></div>
+                                <div id="PAGES_CONTAINERinlineContent" class="s2inlineContent" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1">
+                                    <div style="position: absolute; top: 0px; height: 1590px; width: 960px; left: 0px;" class="s3" id="SITE_PAGES" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES">
+                                        <div style="position: absolute; top: 0px; height: 1590px; width: 960px; left: 0px;" class="s4" id="mainPage" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage">
+                                            <div id="mainPagebg" class="s4bg" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.0"></div>
+                                            <div id="mainPageinlineContent" class="s4inlineContent" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1">
+                                                <div data-height-diff="25" data-width-diff="0" data-presented-row="3" style="height: 1570px; position: absolute; top: 0px; width: 921px; left: 29px;" data-min-height="1570" class="s5" data-state="notMobile desktopView fullView" id="i9ffgotv" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv">
+                                                    <div style="height: 1570px;" id="i9ffgotvitemsContainer" class="s5itemsContainer" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0">
+                                                        <div data-displayer-width="646" data-displayer-height="1512" data-displayer-uri="b69a63_073bb4ceb75d4155a31f4f92e40d299b.jpg" data-height-diff="0" data-width-diff="0" data-bottom-gap="0" data-image-wrapper-right="0" data-image-wrapper-left="0" data-image-wrapper-top="0" data-image-wrapper-bottom="0" data-margin-to-container="0" style="" class="s5imageItem" data-state="notShowPanel desktopView alignCenter unselected clipImage noTransition normal noLink" id="i9ffgotvi017550" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i01755">
+                                                            <div style="height: 505px; width: 219px; margin: 0px;" id="i9ffgotvi017550imageWrapper" class="s5imageItemimageWrapper" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i01755.0">
+                                                                <div class="s5imageItem_imgBorder" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i01755.0.0">
+                                                                    <div id="i9ffgotvi017550image" style="width: 219px; height: 505px; position: relative; overflow: hidden;" class="s5imageItemimage" data-state="loaded" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i01755.0.0.0">
+                                                                        <img alt="" style="width: 219px; height: 505px; object-fit: cover;" src="http://assets1.craftsvilla.com/CWED/img/b69a63_073bb4ceb75d4155a31f4f92e40d299b.jpg_srz_p_219_505_75_22_0.50_1.20_0.00_jpg_srz" id="i9ffgotvi017550imageimage" class="s5imageItemimageimage" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i01755.0.0.0.0">
+                                                                    </div>
+                                                                    <div style="cursor:pointer;" id="i9ffgotvi017550zoom" class="s5imageItemzoom" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i01755.0.0.1">
+                                                                        <div style="text-align:center;font-size:24px;margin-top:30px;" id="i9ffgotvi017550title" class="s5imageItemtitle" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i01755.0.0.1.0">India</div>
+                                                                        <div style="text-align:center;" id="i9ffgotvi017550description" class="s5imageItemdescription" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i01755.0.0.1.1">
+                                                                            <span data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i01755.0.0.1.1.0">Sari</span><br data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i01755.0.0.1.1.1">
+                                                                            <span data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i01755.0.0.1.1.2">Sari is a piece of traditional women’s attire which is usually four to nine yards long in length. It is essentially a  piece of cloth draped over the body in different styles and ways. Saris are worn by women in many countries such as India, Pakistan, Malaysia, Nepal, Sri Lanka, and Burma. This traditional costume is worn over a petticoat and a blouse stitched in either full or half sleeves.</span>
+                                                                        </div>
+                                                                        <a style="display:none;" id="i9ffgotvi017550link" class="s5imageItemlink" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i01755.0.0.1.2">
+                                                                        </a>
+                                                                        <a style="cursor:pointer;height:100%;display:block;width:100%;position:absolute;top:0px;left:0px;background-color:#ffffff;filter:alpha(opacity=0);opacity:0;user-select:none;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-drag:none;-webkit-user-drag:none;-moz-user-drag:none;-ms-user-drag:none;user-modify:read-only;-webkit-user-modify:read-only;-moz-user-modify:read-only;-ms-user-modify:read-only;" data-page-item-context="c1fvu" href="javascript:void(0)" target="_self" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i01755.0.0.1.3"></a>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div data-displayer-width="400" data-displayer-height="600" data-displayer-uri="b69a63_68034dfa30a54bb18d0d1b60d6b83cb3.jpg" data-height-diff="0" data-width-diff="0" data-bottom-gap="0" data-image-wrapper-right="0" data-image-wrapper-left="0" data-image-wrapper-top="0" data-image-wrapper-bottom="0" data-margin-to-container="0" style="width:219px;height:505px;position:absolute;" class="s5imageItem" data-state="notShowPanel desktopView alignCenter unselected clipImage noTransition normal noLink" id="i9ffgotvi124h81" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i124h8">
+                                                            <div style="height: 505px; width: 219px; margin: 0px;" id="i9ffgotvi124h81imageWrapper" class="s5imageItemimageWrapper" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i124h8.0">
+                                                                <div class="s5imageItem_imgBorder" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i124h8.0.0">    
+                                                                    <div id="i9ffgotvi124h81image" style="width: 219px; height: 505px; position: relative; overflow: hidden;" class="s5imageItemimage" data-state="loaded" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i124h8.0.0.0">
+                                                                        <img alt="" style="width: 219px; height: 505px; object-fit: cover;" src="http://assets1.craftsvilla.com/CWED/img/b69a63_68034dfa30a54bb18d0d1b60d6b83cb3.jpg_srz_p_219_505_75_22_0.50_1.20_0.00_jpg_srz" id="i9ffgotvi124h81imageimage" class="s5imageItemimageimage" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i124h8.0.0.0.0">
+                                                                    </div>
+                                                                    <div style="cursor:pointer;" id="i9ffgotvi124h81zoom" class="s5imageItemzoom" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i124h8.0.0.1">
+                                                                        <div style="text-align:center;font-size:24px;margin-top:30px;" id="i9ffgotvi124h81title" class="s5imageItemtitle" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i124h8.0.0.1.0">Japan</div>
+                                                                        <div style="text-align:center;" id="i9ffgotvi124h81description" class="s5imageItemdescription" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i124h8.0.0.1.1">
+                                                                            Kimono and yukata are considered as Japanese traditional clothes and they are worn during festive times.
+                                                                        </div>
+                                                                        <a style="display:none;" id="i9ffgotvi124h81link" class="s5imageItemlink" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i124h8.0.0.1.2"></a>
+                                                                        <a style="cursor:pointer;height:100%;display:block;width:100%;position:absolute;top:0px;left:0px;background-color:#ffffff;filter:alpha(opacity=0);opacity:0;user-select:none;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-drag:none;-webkit-user-drag:none;-moz-user-drag:none;-ms-user-drag:none;user-modify:read-only;-webkit-user-modify:read-only;-moz-user-modify:read-only;-ms-user-modify:read-only;" data-page-item-context="c1fvu" href="javascript:void(0)" target="_self" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i124h8.0.0.1.3"></a>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div data-displayer-width="528" data-displayer-height="842" data-displayer-uri="b69a63_dd8f4c339a6949a3ae7e48d9008d115c.jpg" data-height-diff="0" data-width-diff="0" data-bottom-gap="0" data-image-wrapper-right="0" data-image-wrapper-left="0" data-image-wrapper-top="0" data-image-wrapper-bottom="0" data-margin-to-container="0" style="" class="s5imageItem" data-state="notShowPanel desktopView alignCenter unselected clipImage noTransition normal noLink" id="i9ffgotvi2d192" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i2d19">
+                                                            <div style="height: 505px; width: 219px; margin: 0px;" id="i9ffgotvi2d192imageWrapper" class="s5imageItemimageWrapper" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i2d19.0">
+                                                                <div class="s5imageItem_imgBorder" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i2d19.0.0">
+                                                                    <div id="i9ffgotvi2d192image" style="width: 219px; height: 505px; position: relative; overflow: hidden;" class="s5imageItemimage" data-state="loaded" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i2d19.0.0.0">
+                                                                        <img alt="" style="width: 219px; height: 505px; object-fit: cover;" src="http://assets1.craftsvilla.com/CWED/img/b69a63_dd8f4c339a6949a3ae7e48d9008d115c.jpg_srz_p_219_505_75_22_0.50_1.20_0.00_jpg_srz" id="i9ffgotvi2d192imageimage" class="s5imageItemimageimage" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i2d19.0.0.0.0">
+                                                                    </div>
+                                                                    <div style="cursor:pointer;" id="i9ffgotvi2d192zoom" class="s5imageItemzoom" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i2d19.0.0.1">
+                                                                        <div style="text-align:center;font-size:24px;margin-top:30px;" id="i9ffgotvi2d192title" class="s5imageItemtitle" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i2d19.0.0.1.0">China</div>
+                                                                        <div style="text-align:center;" id="i9ffgotvi2d192description" class="s5imageItemdescription" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i2d19.0.0.1.1">
+                                                                            <span data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i2d19.0.0.1.1.0">CHEONGSAM</span>
+                                                                            <br data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i2d19.0.0.1.1.1">
+                                                                            <span data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i2d19.0.0.1.1.2">
+                                                                                Cheongsam is the traditional costume of China wore by chinese women. It is a body hugging one piece gown which goes down to the toes. It was created in the 1920’s in the city of Shanghai and then later was adopted as a popular style and fashion statement by the middle class and upper class Chinese population.
+                                                                            </span>
+                                                                        </div>
+                                                                        <a style="display:none;" id="i9ffgotvi2d192link" class="s5imageItemlink" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i2d19.0.0.1.2"></a>
+                                                                        <a style="cursor:pointer;height:100%;display:block;width:100%;position:absolute;top:0px;left:0px;background-color:#ffffff;filter:alpha(opacity=0);opacity:0;user-select:none;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-drag:none;-webkit-user-drag:none;-moz-user-drag:none;-ms-user-drag:none;user-modify:read-only;-webkit-user-modify:read-only;-moz-user-modify:read-only;-ms-user-modify:read-only;" data-page-item-context="c1fvu" href="javascript:void(0)" target="_self" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i2d19.0.0.1.3"></a>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div data-displayer-width="300" data-displayer-height="400" data-displayer-uri="b69a63_76b6ce8a36f941a492ca341dd962ba37.jpg" data-height-diff="0" data-width-diff="0" data-bottom-gap="0" data-image-wrapper-right="0" data-image-wrapper-left="0" data-image-wrapper-top="0" data-image-wrapper-bottom="0" data-margin-to-container="0" style=" " class="s5imageItem" data-state="notShowPanel desktopView alignCenter unselected clipImage noTransition normal noLink" id="i9ffgotvi322663" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i32266">
+                                                            <div style="height: 505px; width: 219px; margin: 0px;" id="i9ffgotvi322663imageWrapper" class="s5imageItemimageWrapper" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i32266.0">
+                                                                <div class="s5imageItem_imgBorder" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i32266.0.0">
+                                                                    <div id="i9ffgotvi322663image" style="width: 219px; height: 505px; position: relative; overflow: hidden;" class="s5imageItemimage" data-state="loaded" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i32266.0.0.0">
+                                                                        <img alt="" style="width: 219px; height: 505px; object-fit: cover;" src="http://assets1.craftsvilla.com/CWED/img/b69a63_76b6ce8a36f941a492ca341dd962ba37.jpg_srz_p_173_400_75_22_0.50_1.20_0.00_jpg_srz" id="i9ffgotvi322663imageimage" class="s5imageItemimageimage" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i32266.0.0.0.0">
+                                                                    </div>
+                                                                    <div style="cursor:pointer;" id="i9ffgotvi322663zoom" class="s5imageItemzoom" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i32266.0.0.1">
+                                                                        <div style="text-align:center;font-size:24px;margin-top:30px;" id="i9ffgotvi322663title" class="s5imageItemtitle" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i32266.0.0.1.0">Germany<!--, Austria, Switzerland--></div>
+                                                                        <div style="text-align:center;" id="i9ffgotvi322663description" class="s5imageItemdescription" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i32266.0.0.1.1">
+                                                                            <span data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i32266.0.0.1.1.0">DIRNDL</span>
+                                                                            <br data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i32266.0.0.1.1.1">
+                                                                            <span data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i32266.0.0.1.1.2">
+                                                                                 The Dirndl is a type of outfit which comprises  a long skirt, shirt, bodice and an apron. Austrian people adopted it as a high fashion garment.
+                                                                            </span>
+                                                                        </div>
+                                                                        <a style="display:none;" id="i9ffgotvi322663link" class="s5imageItemlink" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i32266.0.0.1.2"></a>
+                                                                        <a style="cursor:pointer;height:100%;display:block;width:100%;position:absolute;top:0px;left:0px;background-color:#ffffff;filter:alpha(opacity=0);opacity:0;user-select:none;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-drag:none;-webkit-user-drag:none;-moz-user-drag:none;-ms-user-drag:none;user-modify:read-only;-webkit-user-modify:read-only;-moz-user-modify:read-only;-ms-user-modify:read-only;" data-page-item-context="c1fvu" href="javascript:void(0)" target="_self" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i32266.0.0.1.3"></a>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div data-displayer-width="500" data-displayer-height="750" data-displayer-uri="b69a63_8bb11426da2346628200e9be4e3449ea.jpg" data-height-diff="0" data-width-diff="0" data-bottom-gap="0" data-image-wrapper-right="0" data-image-wrapper-left="0" data-image-wrapper-top="0" data-image-wrapper-bottom="0" data-margin-to-container="0" style="" class="s5imageItem" data-state="notShowPanel desktopView alignCenter unselected clipImage noTransition normal noLink" id="i9ffgotvi4fwk4" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i4fwk">
+                                                            <div style="height: 505px; width: 219px; margin: 0px;" id="i9ffgotvi4fwk4imageWrapper" class="s5imageItemimageWrapper" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i4fwk.0">
+                                                                <div class="s5imageItem_imgBorder" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i4fwk.0.0">
+                                                                    <div id="i9ffgotvi4fwk4image" style="width: 219px; height: 505px; position: relative; overflow: hidden;" class="s5imageItemimage" data-state="loaded" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i4fwk.0.0.0">
+                                                                        <img alt="" style="width: 219px; height: 505px; object-fit: cover;" src="http://assets1.craftsvilla.com/CWED/img/b69a63_8bb11426da2346628200e9be4e3449ea.jpg_srz_p_219_505_75_22_0.50_1.20_0.00_jpg_srz" id="i9ffgotvi4fwk4imageimage" class="s5imageItemimageimage" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i4fwk.0.0.0.0">
+                                                                    </div>
+                                                                    <div style="cursor:pointer;" id="i9ffgotvi4fwk4zoom" class="s5imageItemzoom" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i4fwk.0.0.1">
+                                                                        <div style="text-align:center;font-size:24px;margin-top:30px;" id="i9ffgotvi4fwk4title" class="s5imageItemtitle" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i4fwk.0.0.1.0">  Vietnam
+                                                                        </div>
+                                                                        <div style="text-align:center;" id="i9ffgotvi4fwk4description" class="s5imageItemdescription" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i4fwk.0.0.1.1">
+                                                                            <span data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i4fwk.0.0.1.1.0">AO DAI</span>
+                                                                            <br data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i4fwk.0.0.1.1.1">
+                                                                            <span data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i4fwk.0.0.1.1.2">Ao Dai is the national costume of Vietnam and is adorned by women on every special traditional and formal occasions. It is a tight outfit made of silk, represents feminine beauty, and is an important part of Vietnamese culture. The word ‘Ao’ represents the upper part of the outfit where Dai means ‘long’.
+                                                                            </span>
+                                                                        </div>
+                                                                        <a style="display:none;" id="i9ffgotvi4fwk4link" class="s5imageItemlink" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i4fwk.0.0.1.2"></a>
+                                                                        <a style="cursor:pointer;height:100%;display:block;width:100%;position:absolute;top:0px;left:0px;background-color:#ffffff;filter:alpha(opacity=0);opacity:0;user-select:none;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-drag:none;-webkit-user-drag:none;-moz-user-drag:none;-ms-user-drag:none;user-modify:read-only;-webkit-user-modify:read-only;-moz-user-modify:read-only;-ms-user-modify:read-only;" data-page-item-context="c1fvu" href="hjavascript:void(0)" target="_self" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i4fwk.0.0.1.3">
+                                                                        </a>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div data-displayer-width="333" data-displayer-height="500" data-displayer-uri="b69a63_7f9d7a737dba4222a1dcb2bae564914a.jpg" data-height-diff="0" data-width-diff="0" data-bottom-gap="0" data-image-wrapper-right="0" data-image-wrapper-left="0" data-image-wrapper-top="0" data-image-wrapper-bottom="0" data-margin-to-container="0" style="" class="s5imageItem" data-state="notShowPanel desktopView alignCenter unselected clipImage noTransition normal noLink" id="i9ffgotvi53q15" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i53q1">
+                                                            <div style="height: 505px; width: 219px; margin: 0px;" id="i9ffgotvi53q15imageWrapper" class="s5imageItemimageWrapper" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i53q1.0">
+                                                                <div class="s5imageItem_imgBorder" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i53q1.0.0">
+                                                                    <div id="i9ffgotvi53q15image" style="width: 219px; height: 505px; position: relative; overflow: hidden;" class="s5imageItemimage" data-state="loaded" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i53q1.0.0.0">
+                                                                        <img alt="" style="width: 219px; height: 505px; object-fit: cover;" src="http://assets1.craftsvilla.com/CWED/img/b69a63_7f9d7a737dba4222a1dcb2bae564914a.jpg_srz_p_217_500_75_22_0.50_1.20_0.00_jpg_srz" id="i9ffgotvi53q15imageimage" class="s5imageItemimageimage" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i53q1.0.0.0.0">            
+                                                                    </div>
+                                                                    <div style="cursor:pointer;" id="i9ffgotvi53q15zoom" class="s5imageItemzoom" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i53q1.0.0.1">
+                                                                        <div style="text-align:center;font-size:24px;margin-top:30px;" id="i9ffgotvi53q15title" class="s5imageItemtitle" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i53q1.0.0.1.0">  Brazil
+                                                                        </div>
+                                                                        <div style="text-align:center;" id="i9ffgotvi53q15description" class="s5imageItemdescription" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i53q1.0.0.1.1"> 
+                                                                            Baianas are women dressed in the traditional white hoop skirt, lace blouse and African turban. They represent the cultural impact that bringing slaves from Africa has left on Bahia and Brazil.
+                                                                        </div>
+                                                                        <a style="display:none;" id="i9ffgotvi53q15link" class="s5imageItemlink" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i53q1.0.0.1.2"></a>
+                                                                        <a style="cursor:pointer;height:100%;display:block;width:100%;position:absolute;top:0px;left:0px;background-color:#ffffff;filter:alpha(opacity=0);opacity:0;user-select:none;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-drag:none;-webkit-user-drag:none;-moz-user-drag:none;-ms-user-drag:none;user-modify:read-only;-webkit-user-modify:read-only;-moz-user-modify:read-only;-ms-user-modify:read-only;" data-page-item-context="c1fvu" href="javascript:void(0)" target="_self" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i53q1.0.0.1.3"> </a>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+
+
+                                                        <div data-displayer-width="414" data-displayer-height="753" data-displayer-uri="b69a63_b1537a9116db49f4bd7b251e39d12bc5.jpg" data-height-diff="0" data-width-diff="0" data-bottom-gap="0" data-image-wrapper-right="0" data-image-wrapper-left="0" data-image-wrapper-top="0" data-image-wrapper-bottom="0" data-margin-to-container="0" style="" class="s5imageItem" data-state="notShowPanel desktopView alignCenter unselected clipImage noTransition normal noLink" id="i9ffgotvi6zzs6" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i6zzs">
+                                                            <div style="height: 505px; width: 219px; margin: 0px;" id="i9ffgotvi6zzs6imageWrapper" class="s5imageItemimageWrapper" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i6zzs.0">
+                                                                <div class="s5imageItem_imgBorder" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i6zzs.0.0">
+                                                                    <div id="i9ffgotvi6zzs6image" style="width: 219px; height: 505px; position: relative; overflow: hidden;" class="s5imageItemimage" data-state="loaded" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i6zzs.0.0.0">
+                                                                        <img alt="" style="width: 219px; height: 505px; object-fit: cover;" src="http://assets1.craftsvilla.com/CWED/img/b69a63_b1537a9116db49f4bd7b251e39d12bc5.jpg_srz_p_219_505_75_22_0.50_1.20_0.00_jpg_srz" id="i9ffgotvi6zzs6imageimage" class="s5imageItemimageimage" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i6zzs.0.0.0.0">
+                                                                    </div>
+                                                                    <div style="cursor:pointer;" id="i9ffgotvi6zzs6zoom" class="s5imageItemzoom" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i6zzs.0.0.1">
+                                                                        <div style="text-align:center;font-size:24px;margin-top:30px;" id="i9ffgotvi6zzs6title" class="s5imageItemtitle" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i6zzs.0.0.1.0">
+                                                                            Malaysia <!--&amp; Brunei-->
+                                                                        </div>
+                                                                        <div style="text-align:center;" id="i9ffgotvi6zzs6description" class="s5imageItemdescription" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i6zzs.0.0.1.1">
+                                                                            The Baju Kurung is a traditional Malay dress and is the national dress for Brunei and Malaysia. The popularity of this traditional outfit  dates back to the 1970’s and 1980’s when the Islamisation of Malaysia took place. This dress is adorned out of respect at all festivals and traditional occasions. This outfit is also seen worn at traditional events in Singapore and Thailand, where a lot of ethnic Malays reside. It is known as the ‘enclosed dress’ because of its closed structure.
+                                                                        </div>
+                                                                        <a style="display:none;" id="i9ffgotvi6zzs6link" class="s5imageItemlink" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i6zzs.0.0.1.2">
+                                                                
+                                                                        </a>
+                                                                        <a style="cursor:pointer;height:100%;display:block;width:100%;position:absolute;top:0px;left:0px;background-color:#ffffff;filter:alpha(opacity=0);opacity:0;user-select:none;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-drag:none;-webkit-user-drag:none;-moz-user-drag:none;-ms-user-drag:none;user-modify:read-only;-webkit-user-modify:read-only;-moz-user-modify:read-only;-ms-user-modify:read-only;" data-page-item-context="c1fvu" href="javascript:void(0)" target="_self" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i6zzs.0.0.1.3">
+                                                                
+                                                                        </a>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <!--<div data-displayer-width="414" data-displayer-height="753" data-displayer-uri="b69a63_b1537a9116db49f4bd7b251e39d12bc5.jpg" data-height-diff="0" data-width-diff="0" data-bottom-gap="0" data-image-wrapper-right="0" data-image-wrapper-left="0" data-image-wrapper-top="0" data-image-wrapper-bottom="0" data-margin-to-container="0" style="width:219px;height:505px;position:absolute;left:468px;top:520px;" class="s5imageItem" data-state="notShowPanel desktopView alignCenter unselected clipImage noTransition normal noLink" id="i9ffgotvi6zzs6" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i6zzs">
+                                                        </div>-->
+                                                        <div data-displayer-width="588" data-displayer-height="465" data-displayer-uri="b69a63_fe8ca351ccd445529f97473cb54a7988.jpg" data-height-diff="0" data-width-diff="0" data-bottom-gap="0" data-image-wrapper-right="0" data-image-wrapper-left="0" data-image-wrapper-top="0" data-image-wrapper-bottom="0" data-margin-to-container="0" style="" class="s5imageItem" data-state="notShowPanel desktopView alignCenter unselected clipImage noTransition normal noLink" id="i9ffgotvi7101w7" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i7101w">
+                                                            <div style="height: 505px; width: 219px; margin: 0px;" id="i9ffgotvi7101w7imageWrapper" class="s5imageItemimageWrapper" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i7101w.0">
+                                                                <div class="s5imageItem_imgBorder" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i7101w.0.0">
+                                                                    <div id="i9ffgotvi7101w7image" style="width: 219px; height: 505px; position: relative; overflow: hidden;" class="s5imageItemimage" data-state="loaded" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i7101w.0.0.0">
+                                                                        <img alt="" style="width: 219px; height: 505px; object-fit: cover;" src="http://assets1.craftsvilla.com/CWED/img/b69a63_fe8ca351ccd445529f97473cb54a7988.jpg_srz_p_202_465_75_22_0.50_1.20_0.00_jpg_srz" id="i9ffgotvi7101w7imageimage" class="s5imageItemimageimage" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i7101w.0.0.0.0">
+                                                                    </div>
+                                                                    <div style="cursor:pointer;" id="i9ffgotvi7101w7zoom" class="s5imageItemzoom" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i7101w.0.0.1">
+                                                                        <div style="text-align:center;font-size:24px;margin-top:30px;" id="i9ffgotvi7101w7title" class="s5imageItemtitle" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i7101w.0.0.1.0">        Latin America<!-- Latin America-->
+                                                                        </div>
+                                                                        <div style="text-align:center;" id="i9ffgotvi7101w7description" class="s5imageItemdescription" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i7101w.0.0.1.1">
+                                                                            <span data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i7101w.0.0.1.1.0">
+                                                                                POLLERAS
+                                                                            </span>
+                                                                            <br data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i7101w.0.0.1.1.1">
+                                                                            <span data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i7101w.0.0.1.1.2">
+                                                                                A Pollera is a Spanish outfit worn by  Latin Americans. The outfit's history dates back to the 16th and the 17th centuries when they were a form of popular Spanish colonial dress. Polleras are big one piece skirts, popularly worn during traditional festivals and events. They can be of different  materials, but the most popular type of polleras are  silk and  cotton.
+                                                                            </span>
+                                                                        </div>
+                                                                        <a style="display:none;" id="i9ffgotvi7101w7link" class="s5imageItemlink" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i7101w.0.0.1.2"></a><a style="cursor:pointer;height:100%;display:block;width:100%;position:absolute;top:0px;left:0px;background-color:#ffffff;filter:alpha(opacity=0);opacity:0;user-select:none;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-drag:none;-webkit-user-drag:none;-moz-user-drag:none;-ms-user-drag:none;user-modify:read-only;-webkit-user-modify:read-only;-moz-user-modify:read-only;-ms-user-modify:read-only;" data-page-item-context="c1fvu" href="javascript:void(0)" target="_self" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i7101w.0.0.1.3">
+                                                                            
+                                                                        </a>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div data-displayer-width="736" data-displayer-height="953" data-displayer-uri="b69a63_e47d439b8b594151b78f052f19ca5c03.jpg" data-height-diff="0" data-width-diff="0" data-bottom-gap="0" data-image-wrapper-right="0" data-image-wrapper-left="0" data-image-wrapper-top="0" data-image-wrapper-bottom="0" data-margin-to-container="0" style="" class="s5imageItem" data-state="notShowPanel desktopView alignCenter unselected clipImage noTransition normal noLink" id="i9ffgotvi81ijn8" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i81ijn">
+                                                            <div style="height: 505px; width: 219px; margin: 0px;" id="i9ffgotvi81ijn8imageWrapper" class="s5imageItemimageWrapper" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i81ijn.0">
+                                                                <div class="s5imageItem_imgBorder" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i81ijn.0.0">
+                                                                    <div id="i9ffgotvi81ijn8image" style="width: 219px; height: 505px; position: relative; overflow: hidden;" class="s5imageItemimage" data-state="loaded" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i81ijn.0.0.0">
+                                                                        <img alt="" style="width: 219px; height: 505px; object-fit: cover;" src="http://assets1.craftsvilla.com/CWED/img/b69a63_e47d439b8b594151b78f052f19ca5c03.jpg_srz_p_219_505_75_22_0.50_1.20_0.00_jpg_srz" id="i9ffgotvi81ijn8imageimage" class="s5imageItemimageimage" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i81ijn.0.0.0.0">
+                                                                    </div>
+                                                                    <div style="cursor:pointer;" id="i9ffgotvi81ijn8zoom" class="s5imageItemzoom" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i81ijn.0.0.1">
+                                                                        <div style="text-align:center;font-size:24px;margin-top:30px;" id="i9ffgotvi81ijn8title" class="s5imageItemtitle" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i81ijn.0.0.1.0">        Hawaii
+                                                                        </div>
+                                                                        <div style="text-align:center;" id="i9ffgotvi81ijn8description" class="s5imageItemdescription" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i81ijn.0.0.1.1">        The muumuu is a piece of formal clothing worn during  parties and other festivals and weddings. This outfit is also adorned for its classy look by women working in the hotel industry. This dress is loose and the sleeves hang a little loosely from the shoulders.
+                                                                        </div>
+                                                                        <a style="display:none;" id="i9ffgotvi81ijn8link" class="s5imageItemlink" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i81ijn.0.0.1.2"></a>
+                                                                        <a style="cursor:pointer;height:100%;display:block;width:100%;position:absolute;top:0px;left:0px;background-color:#ffffff;filter:alpha(opacity=0);opacity:0;user-select:none;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-drag:none;-webkit-user-drag:none;-moz-user-drag:none;-ms-user-drag:none;user-modify:read-only;-webkit-user-modify:read-only;-moz-user-modify:read-only;-ms-user-modify:read-only;" data-page-item-context="c1fvu" href="javascript:void(0)" target="_self" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i81ijn.0.0.1.3">
+                                                                        </a>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div data-displayer-width="736" data-displayer-height="1111" data-displayer-uri="b69a63_f747d88b468d4b4399d6e144195e7c2e.jpg" data-height-diff="0" data-width-diff="0" data-bottom-gap="0" data-image-wrapper-right="0" data-image-wrapper-left="0" data-image-wrapper-top="0" data-image-wrapper-bottom="0" data-margin-to-container="0" style="" class="s5imageItem" data-state="notShowPanel desktopView alignCenter unselected clipImage noTransition rollover noLink" id="i9ffgotvi9t7x9" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i9t7x">
+                                                            <div style="height: 505px; width: 219px; margin: 0px;" id="i9ffgotvi9t7x9imageWrapper" class="s5imageItemimageWrapper" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i9t7x.0">
+                                                                <div class="s5imageItem_imgBorder" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i9t7x.0.0">
+                                                                    <div id="i9ffgotvi9t7x9image" style="width: 219px; height: 505px; position: relative; overflow: hidden;" class="s5imageItemimage" data-state="loaded" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i9t7x.0.0.0">
+                                                                        <img alt="" style="width: 219px; height: 505px; object-fit: cover;" src="http://assets1.craftsvilla.com/CWED/img/b69a63_f747d88b468d4b4399d6e144195e7c2e.jpg_srz_p_219_505_75_22_0.50_1.20_0.00_jpg_srz" id="i9ffgotvi9t7x9imageimage" class="s5imageItemimageimage" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i9t7x.0.0.0.0">
+                                                                    </div>
+                                                                    <div style="cursor:pointer;" id="i9ffgotvi9t7x9zoom" class="s5imageItemzoom" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i9t7x.0.0.1"> 
+                                                                        <div style="text-align:center;font-size:24px;margin-top:30px;" id="i9ffgotvi9t7x9title" class="s5imageItemtitle" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i9t7x.0.0.1.0">
+                                                                            Spain
+                                                                        </div>
+                                                                        <div style="text-align:center;" id="i9ffgotvi9t7x9description" class="s5imageItemdescription" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i9t7x.0.0.1.1">
+                                                                            <span data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i9t7x.0.0.1.1.0">TRAJE DE FLAMENCA</span>
+                                                                            <br data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i9t7x.0.0.1.1.1">
+                                                                            <span data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i9t7x.0.0.1.1.2">
+                                                                                This type of costume called the Traje de Flamenca is worn by the Flamenco dancers in Spain during their dance performances and shows. The costume is beautifully decorated, both in plain or polka dots, and usually in bright colours such as red or yellow, or even blue. The dress is long enough to reach  the knees. The ruffles on the skirt and sleeves make this a  striking outfit.
+                                                                            </span>
+                                                                        </div>
+                                                                        <a style="display:none;" id="i9ffgotvi9t7x9link" class="s5imageItemlink" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i9t7x.0.0.1.2"></a>
+                                                                        <a style="cursor:pointer;height:100%;display:block;width:100%;position:absolute;top:0px;left:0px;background-color:#ffffff;filter:alpha(opacity=0);opacity:0;user-select:none;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-drag:none;-webkit-user-drag:none;-moz-user-drag:none;-ms-user-drag:none;user-modify:read-only;-webkit-user-modify:read-only;-moz-user-modify:read-only;-ms-user-modify:read-only;" data-page-item-context="c1fvu" href="javascript:void(0)" target="_self" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i9t7x.0.0.1.3">
+                                                                        </a>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div data-displayer-width="400" data-displayer-height="623" data-displayer-uri="b69a63_ddf5f745738f4bbf8ed010e9a233486b.jpg" data-height-diff="0" data-width-diff="0" data-bottom-gap="0" data-image-wrapper-right="0" data-image-wrapper-left="0" data-image-wrapper-top="0" data-image-wrapper-bottom="0" data-margin-to-container="0" style=" " class="s5imageItem" data-state="notShowPanel desktopView alignCenter unselected clipImage noTransition normal noLink" id="i9ffgotvi1054f10" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i1054f">
+                                                            <div style="height: 505px; width: 219px; margin: 0px;" id="i9ffgotvi1054f10imageWrapper" class="s5imageItemimageWrapper" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i1054f.0">
+                                                                <div class="s5imageItem_imgBorder" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i1054f.0.0">
+                                                                    <div id="i9ffgotvi1054f10image" style="width: 219px; height: 505px; position: relative; overflow: hidden;" class="s5imageItemimage" data-state="loaded" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i1054f.0.0.0">
+                                                                        <img alt="" style="width: 219px; height: 505px; object-fit: cover;" src="http://assets1.craftsvilla.com/CWED/img/b69a63_ddf5f745738f4bbf8ed010e9a233486b.jpg_srz_p_219_505_75_22_0.50_1.20_0.00_jpg_srz" id="i9ffgotvi1054f10imageimage" class="s5imageItemimageimage" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i1054f.0.0.0.0">
+                                                                    </div>
+                                                                    <div style="cursor:pointer;" id="i9ffgotvi1054f10zoom" class="s5imageItemzoom" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i1054f.0.0.1">
+                                                                        <div style="text-align:center;font-size:24px;margin-top:30px;" id="i9ffgotvi1054f10title" class="s5imageItemtitle" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i1054f.0.0.1.0">Fiji</div>
+                                                                        <div style="text-align:center;" id="i9ffgotvi1054f10description" class="s5imageItemdescription" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i1054f.0.0.1.1">
+                                                                            <span data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i1054f.0.0.1.1.0">Sulu Skirt</span>
+                                                                            <br data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i1054f.0.0.1.1.1">
+                                                                            <span data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i1054f.0.0.1.1.2">A sulu is a type of skirt traditionally worn by men and women in Fiji. It is regarded as Fiji's national dress.</span>
+                                                                            <br data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i1054f.0.0.1.1.3">
+                                                                            <span data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i1054f.0.0.1.1.4">
+                                                                                It consists of a rectangular cloth of varying length, between below-knee and ankle-length, wrapped around the hips and legs and traditionally fastened by tying at the waist. Modern men's sulus may be fastened with buckles. Women's casual or everyday sulus are known as sulu-i-ra, and more elegant full-length ones for dressy occasions as sulu jaba
+                                                                            </span>
+                                                                        </div>
+                                                                        <a style="display:none;" id="i9ffgotvi1054f10link" class="s5imageItemlink" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i1054f.0.0.1.2"></a><a style="cursor:pointer;height:100%;display:block;width:100%;position:absolute;top:0px;left:0px;background-color:#ffffff;filter:alpha(opacity=0);opacity:0;user-select:none;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-drag:none;-webkit-user-drag:none;-moz-user-drag:none;-ms-user-drag:none;user-modify:read-only;-webkit-user-modify:read-only;-moz-user-modify:read-only;-ms-user-modify:read-only;" data-page-item-context="c1fvu" href="javascript:void(0)" target="_self" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i1054f.0.0.1.3">
+                                                                            
+                                                                        </a>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div data-displayer-width="400" data-displayer-height="868" data-displayer-uri="b69a63_73639005a753493ab1637478c5ea1ed7.jpg" data-height-diff="0" data-width-diff="0" data-bottom-gap="0" data-image-wrapper-right="0" data-image-wrapper-left="0" data-image-wrapper-top="0" data-image-wrapper-bottom="0" data-margin-to-container="0" style="" class="s5imageItem" data-state="notShowPanel desktopView alignCenter unselected clipImage noTransition normal noLink" id="i9ffgotvi111tf911" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i111tf9">
+                                                            <div style="height: 505px; width: 219px; margin: 0px;" id="i9ffgotvi111tf911imageWrapper" class="s5imageItemimageWrapper" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i111tf9.0">
+                                                                <div class="s5imageItem_imgBorder" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i111tf9.0.0">
+                                                                    <div id="i9ffgotvi111tf911image" style="width: 219px; height: 505px; position: relative; overflow: hidden;" class="s5imageItemimage" data-state="loaded" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i111tf9.0.0.0">
+                                                                        <img alt="" style="width: 219px; height: 505px; object-fit: cover;" src="http://assets1.craftsvilla.com/CWED/img/b69a63_73639005a753493ab1637478c5ea1ed7.jpg_srz_p_219_505_75_22_0.50_1.20_0.00_jpg_srz" id="i9ffgotvi111tf911imageimage" class="s5imageItemimageimage" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i111tf9.0.0.0.0">
+                                                                    </div>
+                                                                    <div style="cursor:pointer;" id="i9ffgotvi111tf911zoom" class="s5imageItemzoom" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i111tf9.0.0.1">
+                                                                        <div style="text-align:center;font-size:24px;margin-top:30px;" id="i9ffgotvi111tf911title" class="s5imageItemtitle" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i111tf9.0.0.1.0">     Central Greece
+                                                                        </div>
+                                                                        <div style="text-align:center;" id="i9ffgotvi111tf911description" class="s5imageItemdescription" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i111tf9.0.0.1.1">     The Karagouna is the famous female costume from Thessaly in Central Greece. The Karagouna costume is a wedding dress with bright colors symbolizing the wealth of the valley of Thessaly. The name came out of the way the women could move only their heads because of the weight of the costume and their jewellery.
+                                                                        </div>
+                                                                        <a style="display:none;" id="i9ffgotvi111tf911link" class="s5imageItemlink" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i111tf9.0.0.1.2">
+                                                                        </a>
+                                                                        <a style="cursor:pointer;height:100%;display:block;width:100%;position:absolute;top:0px;left:0px;background-color:#ffffff;filter:alpha(opacity=0);opacity:0;user-select:none;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-drag:none;-webkit-user-drag:none;-moz-user-drag:none;-ms-user-drag:none;user-modify:read-only;-webkit-user-modify:read-only;-moz-user-modify:read-only;-ms-user-modify:read-only;" data-page-item-context="c1fvu" href="hjavascript:void(0)" target="_self" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.0.$#i111tf9.0.0.1.3">
+                                                                            
+                                                                        </a>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="s5_pos" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.1">
+                                                        <div id="i9ffgotvshowMore" class="s5showMore" data-reactid=".0.$SITE_ROOT.$desktop_siteRoot.$PAGES_CONTAINER.1.1.$SITE_PAGES.$mainPage.1.$i9ffgotv.1.0">
+                                                            Show More
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div data-reactid=".0.$siteAspectsContainer"></div>
+            </div>
+        </div>                                </div>
+                <div class="handicraftcontent">
+                    <div class="craftsbox" style="">
+                        <div style="width:220px;height:220px;float:left; margin-left:21.5px;margin-top:25px; cursor:pointer;"
+                        id="arts1" onmouseover="showcontent31()" onmouseout="hidecontent31()">
+                            <img id="img31" src="http://assets1.craftsvilla.com/CWED/img/art/mad1.jpg" alt=""/>
+                            <div id="img31hover" class="split" style="display:none;width:220px;height:220px;background-color:white;opacity:0.7;">
+                   <p style="font-size:2em;font-family:Niconne,Robo slab;font-weight:bold;text-align:center;top:5px;">Madhubani Painting- India</p>
+                   <p style="margin:10px 10px; text-align:center; font-size:1.3em;">
+                       Madhubani  painting originated in a small village, known as Maithili, of the Bihar state of India. Initially, the womenfolk of the village drew the paintings on the walls of their home, as an illustration of their thoughts, hopes and dreams. With time, the paintings started becoming a part of festivities and special events.
+                   </p>
+                            </div>
+                        </div>
+                        <div style="width:220px;height:220px;float:left; margin-left:21.5px;margin-top:25px; cursor:pointer;" 
+                        id="arts2" onmouseover="showcontent32()" onmouseout="hidecontent32()">
+                            <img id="img32" src="http://assets1.craftsvilla.com/CWED/img/art/sand1.jpg" alt=""/>
+                            <div id="img32hover" class="split" style="display:none;width:220px;height:220px;background-color:white;opacity:0.7;">
+                                <p style="font-size:2em;font-family:Niconne,Robo slab;font-weight:bold;text-align:center;top:5px;">Bottled Sand Art- Jordan</p>
+                   <p style="margin:10px 10px; text-align:center; font-size:1.3em;">
+                      Bottled Sand Art -  commonly known as sand art was originated in the city of Petra in Jordan, during the early 20th century. The craft was inspired by the multi-coloured sand and rocks found in the Petra Mountains.
+                   </p>
+                            </div>
+                        </div>
+                        <div style="width:220px;height:220px;float:left; margin-left:21.5px;margin-top:25px; cursor:pointer;"
+                        id="arts3" onmouseover="showcontent33()" onmouseout="hidecontent33()">
+                            <img id="img33" src="http://assets1.craftsvilla.com/CWED/img/art/water.jpg" alt=""/>
+                            <div id="img33hover" class="split" style="display:none;width:220px;height:220px;background-color:white;opacity:0.7;">
+                <p style="font-size:2em;font-family:Niconne,Robo slab;font-weight:bold;text-align:center;top:5px;">Suminagashi- Japan</p>
+                <p style="margin:10px 10px; text-align:center; font-size:1.3em;">
+                Suminagashi is the ancient Japanese technique of painting on water to create marbleized effects on paper. The patterns are the result of colour floated on either plain water or a viscous solution, and then carefully transferred to an absorbent surface, such as paper or fabric. 
+                </p>
+                            </div>
+                        </div>
+                                                
+                    </div>
+                     <div class="craftsbox" style="">
+                     <div style="width:220px;height:220px;float:left; margin-left:21.5px;margin-top:25px; cursor:pointer;"
+                     id="arts4" onmouseover="showcontent34()" onmouseout="hidecontent34()">
+                            <img id="img34" src="http://assets1.craftsvilla.com/CWED/img/art/doll1.jpg" alt=""/>
+                            <div id="img34hover" class="split" style="display:none;width:220px;height:220px;background-color:white;opacity:0.7;">
+          <p style="font-size:2em;font-family:Niconne,Robo slab;font-weight:bold;text-align:center;top:5px;">Matrioshka Dolls- Russia</p>
+                <p style="margin:10px 10px; text-align:center; font-size:1.3em;">
+                Russian nesting dolls are well-known symbols. These sets of dolls, known as matrioshka dolls, consist of a wooden figure that can be pulled apart to reveal another smaller version of the same image inside, and so on, often with six or more dolls nested inside one another.
+                </p>
+                            </div>
+                        </div>
+                        <div style="width:220px;height:220px;float:left; margin-left:21.5px;margin-top:25px; cursor:pointer;"
+                        id="arts5" onmouseover="showcontent35()" onmouseout="hidecontent35()">
+                            <img id="img35" src="http://assets1.craftsvilla.com/CWED/img/art/mask.jpg" alt=""/>
+                            <div id="img35hover" class="split" style="display:none;width:220px;height:220px;background-color:white;opacity:0.7;">
+                                <p style="font-size:2em;font-family:Niconne,Robo slab;font-weight:bold;text-align:center;top:5px;">Traditional Masks- China</p>
+                <p style="margin:10px 10px; text-align:center; font-size:1.3em;">
+                Chinese Masks are used within two main elements of Chinese culture. The New Year masks are worn by Chinese people to welcome the New Year throughout the world. The Opera masks which are painted and drawn on the faces   are used to depict the traits and characteristics of the role each actor is playing.
+                </p>
+                            </div>
+                        </div>
+                        <div style="width:220px;height:220px;float:left; margin-left:21.5px;margin-top:25px; cursor:pointer;"
+                        id="arts6" onmouseover="showcontent36()" onmouseout="hidecontent36()">
+                            <img id="img36" src="http://assets1.craftsvilla.com/CWED/img/art/eggs.jpg" alt=""/>
+                            <div id="img36hover" class="split" style="display:none;width:220px;height:220px;background-color:white;opacity:0.7;">
+                           <p style="font-size:2em;font-family:Niconne,Robo slab;font-weight:bold;text-align:center;top:5px;">Painted Eggs- Romania</p>
+                <p style="margin:10px 10px; text-align:center; font-size:1.3em;">      
+                The most readily recognizable examples of Romanian art are the famed painted eggs, especially prominent around Easter time.  Painting of real hollowed-out eggs is an integral part of preparations for this festival of renewal. The oldest known were painted with aqua fortis  on a traditional red background.
+                </p>
+                            </div>
+                        </div>
+                        
+                                                
+                    </div>
+                </div>            
+                <!-- -->
+           </div>
+           <!--div class="feed">
+               <ul>
+                   <li><a href="https://twitter.com/intent/tweet?button_hashtag=WinGOSF14&text=Win%20Rs.%202.5%20Lakh%20on%20Craftsvilla.com%20%23craftsvilla%20%23craftsvillagosf" target="blank">
+                   Tweet#winGOSF14</a></li>
+                   <li><a href="https://twitter.com/intent/tweet?button_hashtag=Craftsvilla&text=Win%20Rs.%202.5%20Lakh%20on%20Craftsvilla.com%20%23craftsvilla%20%23craftsvillagosf" target="blank">
+                   Tweet#worldethnicday</a></li>
+                   <li><a href="https://twitter.com/intent/tweet?screen_name=craftsvilla&text=Win%20Rs.%202.5%20Lakh%20Worth%20of%20Shopping%20on%20Craftsvilla.com%20%23wingosf14%20%23craftsvillagosf" target="blank">Tweet to @worldethnicday</a></li>
+                   <li><a href="https://twitter.com/craftsvilla" target="blank">Follow @worldethnicday</a></li>
+                   <li><a href="https://twitter.com/share" target="blank">Tweet About worldethnicday</a></li>
+               </ul>
+           </div-->
+
+           <div class="footer">       
+                <a href="https://www.facebook.com/worldethnicday" target="_blank"><img src="http://assets1.craftsvilla.com/CWED/img/socialnetworkicons/face1.jpg" alt="facebook" width="32" height="32" class="links"/></a>
+                <a href="https://twitter.com/worldethnicday" target="_blank"><img src="http://assets1.craftsvilla.com/CWED/img/socialnetworkicons/twit1.jpg" alt="twitter" width="32" height="32" class="links"/></a>
+                <a href="https://instagram.com/worldethnicday" target="_blank"><img src="http://assets1.craftsvilla.com/CWED/img/socialnetworkicons/ins1.jpg" alt="Instagram" width="32" height="32" class="links"/></a>
+            </div>                 
+            <!-- *************************** -->
+        </div>
+        <!--<script src="http://assets1.craftsvilla.com/CWED/js/jquery-1.9.1.min.js"></script>-->
+        <!--<script src="http://assets1.craftsvilla.com/CWED/js/bootstrap.min.js"></script>-->
+        <!--<script src="http://assets1.craftsvilla.com/CWED/js/docs.min.js"></script>-->
+        <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+        <!--<script src="http://assets1.craftsvilla.com/CWED/js/ie10-viewport-bug-workaround.js"></script>-->
+        <!-- jssor slider scripts-->
+        <!-- use jssor.js + jssor.slider.js instead for development -->
+        <!-- jssor.slider.mini.js = (jssor.js + jssor.slider.js) -->
+        <!--<script type="text/javascript" src="http://assets1.craftsvilla.com/CWED/js/jssor.slider.mini.js"></script>-->
+        <script>
+            jQuery(document).ready(function ($) {
+
+                var options = {
+                    $FillMode: 2,                                       //[Optional] The way to fill image in slide, 0 stretch, 1 contain (keep aspect ratio and put all inside slide), 2 cover (keep aspect ratio and cover whole slide), 4 actual size, 5 contain for large image, actual size for small image, default value is 0
+                    $AutoPlay: true,                                    //[Optional] Whether to auto play, to enable slideshow, this option must be set to true, default value is false
+                    $AutoPlayInterval: 4000,                            //[Optional] Interval (in milliseconds) to go for next slide since the previous stopped if the slider is auto playing, default value is 3000
+                    $PauseOnHover: 1,                                   //[Optional] Whether to pause when mouse over if a slider is auto playing, 0 no pause, 1 pause for desktop, 2 pause for touch device, 3 pause for desktop and touch device, 4 freeze for desktop, 8 freeze for touch device, 12 freeze for desktop and touch device, default value is 1
+
+                    $ArrowKeyNavigation: true,                          //[Optional] Allows keyboard (arrow key) navigation or not, default value is false
+                    $SlideEasing: $JssorEasing$.$EaseOutQuint,          //[Optional] Specifies easing for right to left animation, default value is $JssorEasing$.$EaseOutQuad
+                    $SlideDuration: 800,                               //[Optional] Specifies default duration (swipe) for slide in milliseconds, default value is 500
+                    $MinDragOffsetToSlide: 20,                          //[Optional] Minimum drag offset to trigger slide , default value is 20
+                    //$SlideWidth: 600,                                 //[Optional] Width of every slide in pixels, default value is width of 'slides' container
+                    //$SlideHeight: 300,                                //[Optional] Height of every slide in pixels, default value is height of 'slides' container
+                    $SlideSpacing: 0,                                   //[Optional] Space between each slide in pixels, default value is 0
+                    $DisplayPieces: 1,                                  //[Optional] Number of pieces to display (the slideshow would be disabled if the value is set to greater than 1), the default value is 1
+                    $ParkingPosition: 0,                                //[Optional] The offset position to park slide (this options applys only when slideshow disabled), default value is 0.
+                    $UISearchMode: 1,                                   //[Optional] The way (0 parellel, 1 recursive, default value is 1) to search UI components (slides container, loading screen, navigator container, arrow navigator container, thumbnail navigator container etc).
+                    $PlayOrientation: 1,                                //[Optional] Orientation to play slide (for auto play, navigation), 1 horizental, 2 vertical, 5 horizental reverse, 6 vertical reverse, default value is 1
+                    $DragOrientation: 1,                                //[Optional] Orientation to drag slide, 0 no drag, 1 horizental, 2 vertical, 3 either, default value is 1 (Note that the $DragOrientation should be the same as $PlayOrientation when $DisplayPieces is greater than 1, or parking position is not 0)
+                  
+                    $BulletNavigatorOptions: {                          //[Optional] Options to specify and enable navigator or not
+                        $Class: $JssorBulletNavigator$,                 //[Required] Class to create navigator instance
+                        $ChanceToShow: 2,                               //[Required] 0 Never, 1 Mouse Over, 2 Always
+                        $AutoCenter: 1,                                 //[Optional] Auto center navigator in parent container, 0 None, 1 Horizontal, 2 Vertical, 3 Both, default value is 0
+                        $Steps: 1,                                      //[Optional] Steps to go for each navigation request, default value is 1
+                        $Lanes: 1,                                      //[Optional] Specify lanes to arrange items, default value is 1
+                        $SpacingX: 8,                                   //[Optional] Horizontal space between each item in pixel, default value is 0
+                        $SpacingY: 8,                                   //[Optional] Vertical space between each item in pixel, default value is 0
+                        $Orientation: 1,                                //[Optional] The orientation of the navigator, 1 horizontal, 2 vertical, default value is 1
+                        $Scale: false                                   //Scales bullets navigator or not while slider scale
+                    },
+
+                    $ArrowNavigatorOptions: {                           //[Optional] Options to specify and enable arrow navigator or not
+                        $Class: $JssorArrowNavigator$,                  //[Requried] Class to create arrow navigator instance
+                        $ChanceToShow: 1,                               //[Required] 0 Never, 1 Mouse Over, 2 Always
+                        $AutoCenter: 2,                                 //[Optional] Auto center arrows in parent container, 0 No, 1 Horizontal, 2 Vertical, 3 Both, default value is 0
+                        $Steps: 1                                       //[Optional] Steps to go for each navigation request, default value is 1
+                    }
+                };
+
+                //Make the element 'slider1_container' visible before initialize jssor slider.
+                $("#slider1_container").css("display", "block");
+                var jssor_slider1 = new $JssorSlider$("slider1_container", options);
+
+                //responsive code begin
+                //you can remove responsive code if you don't want the slider scales while window resizes
+                function ScaleSlider() {
+                    var bodyWidth = document.body.clientWidth;
+                    if (bodyWidth)
+                        jssor_slider1.$ScaleWidth(Math.min(bodyWidth, 1920));
+                    else
+                        window.setTimeout(ScaleSlider, 30);
+                }
+                ScaleSlider();
+
+                $(window).bind("load", ScaleSlider);
+                $(window).bind("resize", ScaleSlider);
+                $(window).bind("orientationchange", ScaleSlider);
+                //responsive code end
+            });
+        </script>
+        <!--<link href="http://assets1.craftsvilla.com/CWED/css/customstyles.css" rel="stylesheet" type="text/css"/>-->
+    </body>
+</html>

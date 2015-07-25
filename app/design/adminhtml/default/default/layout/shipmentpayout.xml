@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+    <shipmentpayout_adminhtml_shipmentpayout_index>
+        <reference name="content">
+            <block type="shipmentpayout/adminhtml_shipmentpayout" name="shipmentpayout" />
+        </reference>
+    </shipmentpayout_adminhtml_shipmentpayout_index>
+</layout>

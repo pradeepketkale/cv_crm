@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <AW_Productrelater>
+            <active>false</active>
+            <codePool>community</codePool>
+        </AW_Productrelater>
+    </modules>
+</config> 

@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<config>
+      <modules>
+        <Craftsvilla_Mobileapp>
+          <version>0.1.0</version>
+        </Craftsvilla_Mobileapp>
+      </modules>
+	  <frontend>
+      <routers>
+        <mobileapp>
+          <use>standard</use>
+         <args>
+           <module>Craftsvilla_Mobileapp</module>
+           <frontName>mobileapp</frontName>
+         </args>
+        </mobileapp>
+      </routers>
+	  <layout>
+          <updates>
+              <mobileapp>
+                  <file>mobileapp.xml</file>
+              </mobileapp>
+          </updates>
+      </layout>
+    </frontend>
+   <global>
+	<helpers>
+		<mobileapp>
+			<class>Craftsvilla_Mobileapp_Helper</class>
+		</mobileapp>
+	</helpers>   
+<blocks>
+	<mobileapp>
+		<class>Craftsvilla_Mobileapp_Block</class>
+	</mobileapp>
+</blocks>
+</global> 
+  
+
+</config> 

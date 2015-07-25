@@ -1,0 +1,293 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Craftsvilla_Shipmentpayout>
+            <version>0.2.0</version>
+        </Craftsvilla_Shipmentpayout>
+    </modules>
+    <frontend>
+        <routers>
+            <shipmentpayout>
+                <use>standard</use>
+                <args>
+                    <module>Craftsvilla_Shipmentpayout</module>
+                    <frontName>shipmentpayout</frontName>
+                </args>
+            </shipmentpayout>
+        </routers>
+        <layout>
+            <updates>
+                <shipmentpayout>
+                    <file>shipmentpayout.xml</file>
+                </shipmentpayout>
+            </updates>
+        </layout>
+    </frontend>
+    <admin>
+        <routers>
+			<shipmentpayout>
+				<use>admin</use>
+				<args>
+					<module>Craftsvilla_Shipmentpayout</module>
+					<frontName>shipmentpayout</frontName>
+				</args>
+			</shipmentpayout>
+        </routers>
+    </admin>
+    <adminhtml>
+		<menu>
+			<report>
+				<children>
+					<shipmentpayout module="shipmentpayout">
+						<title>Manage Shipmentpayout</title>
+						<action>shipmentpayout/adminhtml_shipmentpayout</action>
+                                                <children>
+                                                    <import translate="title">
+                                                        <title>Import</title>
+                                                        <sort_order>15</sort_order>
+                                                            <children>
+                                                                <importutr translate="title">
+                                                                    <title>Import UTR Number</title>
+                                                                    <action>shipmentpayout/adminhtml_importutr</action>
+                                                                    <sort_order>20</sort_order>
+                                                                </importutr>
+                                                            </children>
+                                                            <children>
+                                                                <importtype translate="title">
+                                                                    <title>Import Payment and Type</title>
+                                                                    <action>shipmentpayout/adminhtml_importpaytype</action>
+                                                                    <sort_order>20</sort_order>
+                                                                </importtype>
+                                                            </children>
+															 <children>
+                                                                <importlogistic translate="title">
+                                                                    <title>Import Logistic Charge</title>
+                                                                    <action>shipmentpayout/adminhtml_importlogistic</action>
+                                                                    <sort_order>20</sort_order>
+                                                                </importlogistic>
+																<importcod translate="title">
+                                                                    <title>Import UTR COD</title>
+                                                                    <action>shipmentpayout/adminhtml_importcod</action>
+                                                                    <sort_order>20</sort_order>
+                                                                </importcod>
+                                                            
+                                                            	<importneft translate="title">
+                                                                    <title>Import NEFT CODE</title>
+                                                                    <action>shipmentpayout/adminhtml_importneft</action>
+                                                                    <sort_order>20</sort_order>
+                                                                </importneft>
+															</children>
+                                                     </import>       
+                                                </children>
+					</shipmentpayout>
+				</children>
+			</report>
+                        <sales>
+                             <children>
+                                <shipmentpayout translate="title">
+                                    <title>Shipment Tracking</title>
+                                    <sort_order>15</sort_order>
+                                    <children>
+                                        <import translate="title">
+                                            <title>Import</title>
+                                            <action>shipmentpayout/adminhtml_import</action>
+                                            <sort_order>20</sort_order>
+                                        </import>
+                                    </children>
+                                </shipmentpayout>
+                            </children>
+                        </sales>
+						<catalog>
+                             <children>
+                                <shipmentpayout translate="title">
+                                    <title>Stock Update</title>
+                                    <sort_order>18</sort_order>
+                                    <children>
+                                        <import translate="title">
+                                            <title>Import Stock Update</title>
+                                            <action>shipmentpayout/adminhtml_importstockupdate</action>
+                                            <sort_order>20</sort_order>
+                                        </import>
+                                    </children>
+                                </shipmentpayout>
+                            </children>
+                        </catalog>
+		</menu>
+		<acl>
+                    <resources>
+                        <admin>
+                            <children>
+                                <report>
+                                    <children>
+                                        <shipmentpayout translate="title">
+                                            <title>Manage Shipmentpayout</title>
+                                                <children>
+                                                    <import translate="title">
+                                                        <title>Import</title>
+                                                        <sort_order>15</sort_order>
+                                                            <children>
+                                                                <importutr translate="title">
+                                                                    <title>Import UTR Number</title>
+                                                                    <!--<action>shipmentpayout/adminhtml_importutr</action>-->
+                                                                    <sort_order>20</sort_order>
+                                                                </importutr>
+                                                            </children>
+                                                            <children>
+                                                                <importtype translate="title">
+                                                                    <title>Import Payment and Type</title>
+                                                                    <!--<action>shipmentpayout/adminhtml_importutr</action>-->
+                                                                    <sort_order>20</sort_order>
+                                                                </importtype>
+																<importlogistic translate="title">
+                                                                    <title>Import Logistic Charge</title>
+                                                                    <!--<action>shipmentpayout/adminhtml_importutr</action>-->
+                                                                    <sort_order>20</sort_order>
+                                                                </importlogistic>
+
+                                                                <importcod translate="title">
+                                                                    <title>Import UTR COD</title>
+                                                                    <!--<action>shipmentpayout/adminhtml_importutr</action>-->
+                                                                    <sort_order>20</sort_order>
+                                                                </importcod>
+                                                            
+                                                            	<importneft translate="title">
+                                                                    <title>Import NEFT CODE</title>
+                                                                    <!--<action>shipmentpayout/adminhtml_importneft</action>-->
+                                                                    <sort_order>20</sort_order>
+                                                                </importneft>
+															</children>
+                                                            
+                                                     </import>       
+                                                </children>
+                                        </shipmentpayout>
+                                    </children>
+                                </report>
+                                <sales>
+                                     <children>
+                                        <shipmentpayout translate="title">
+                                            <title>Shipment Tracking</title>
+                                            <sort_order>15</sort_order>
+                                            <children>
+                                                <import translate="title">
+                                                    <title>Import</title>
+                                                    <action>shipmentpayout/adminhtml_import</action>
+                                                    <sort_order>20</sort_order>
+                                                </import>
+                                            </children>
+                                        </shipmentpayout>
+                                    </children>
+                                </sales>
+								<catalog>
+                                     <children>
+                                        <shipmentpayout translate="title">
+                                            <title>Stock Update</title>
+                                            <sort_order>19</sort_order>
+                                            <children>
+                                                <import translate="title">
+                                                    <title>Import Stockupdate</title>
+                                                    <action>shipmentpayout/adminhtml_importstockupdate</action>
+                                                    <sort_order>20</sort_order>
+                                                </import>
+                                            </children>
+                                        </shipmentpayout>
+                                    </children>
+                                </catalog>
+                            </children>
+                        </admin>
+                    </resources>
+                </acl>
+					
+         <translate>
+            <modules>
+                <shipmentpayout>
+                    <files>
+                        <default>shipmenttracking.csv</default>
+                    </files>
+                </shipmentpayout>
+            </modules>
+        </translate>
+		<layout>
+			<updates>
+				<shipmentpayout>
+					<file>shipmentpayout.xml</file>
+				</shipmentpayout>
+			</updates>
+		</layout>
+    </adminhtml>   
+    
+    <!--<default>
+        <shipmentpayout>
+            <import>
+                <default_tracking_title></default_tracking_title>
+                <send_email>1</send_email>
+                <shipping_comment></shipping_comment>
+                <include_comment>0</include_comment>
+            </import>
+        </shipmentpayout>
+    </default>-->
+    
+    <global>
+        <models>
+            <shipmentpayout>
+                <class>Craftsvilla_Shipmentpayout_Model</class>
+                <resourceModel>shipmentpayout_mysql4</resourceModel>
+            </shipmentpayout>
+            <shipmentpayout_mysql4>
+                <class>Craftsvilla_Shipmentpayout_Model_Mysql4</class>
+                <entities>
+                    <shipmentpayout>
+                        <table>shipmentpayout</table>
+                    </shipmentpayout>
+                </entities>
+            </shipmentpayout_mysql4>
+        </models>
+        <resources>
+            <shipmentpayout_setup>
+                <setup>
+                    <module>Craftsvilla_Shipmentpayout</module>
+                </setup>
+                <connection>
+                    <use>core_setup</use>
+                </connection>
+            </shipmentpayout_setup>
+            <shipmentpayout_write>
+                <connection>
+                    <use>core_write</use>
+                </connection>
+            </shipmentpayout_write>
+            <shipmentpayout_read>
+                <connection>
+                    <use>core_read</use>
+                </connection>
+            </shipmentpayout_read>
+        </resources>
+        <blocks>
+            <shipmentpayout>
+                <class>Craftsvilla_Shipmentpayout_Block</class>
+            </shipmentpayout>
+        </blocks>
+        <helpers>
+            <shipmentpayout>
+                <class>Craftsvilla_Shipmentpayout_Helper</class>
+            </shipmentpayout>
+        </helpers>
+    	<template>
+		<email>
+			<shipmentpayout_export_csv module="shipmentpayout">
+					<label>shipmentpayout csv</label>
+					<file>shipmentpayout_export_csv.html</file>
+					<type>html</type>
+			</shipmentpayout_export_csv>
+			
+			<shipmentpayments_to_vendors module="shipmentpayout">
+					<label>shipmentpayout csv</label>
+					<file>shipmentpayments_to_vendors.html</file>
+					<type>html</type>
+			</shipmentpayments_to_vendors>
+		
+		</email>
+	</template>
+	
+	</global>
+	
+</config>

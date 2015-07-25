@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns:typens="urn:{{var wsdl.name}}" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+    xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns="http://schemas.xmlsoap.org/wsdl/"
+    name="{{var wsdl.name}}" targetNamespace="urn:{{var wsdl.name}}">
+	<types>
+		<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="urn:Magento">
+			<import namespace="http://schemas.xmlsoap.org/soap/encoding/" schemaLocation="http://schemas.xmlsoap.org/soap/encoding/" />
+			<complexType name="productAllEntityArray">
+				<complexContent>
+					<restriction base="soapenc:Array">
+						<attribute ref="soapenc:arrayType" wsdl:arrayType="typens:productAllEntity[]" />
+					</restriction>
+				</complexContent>
+			</complexType>
+			<complexType name="productAllEntity">
+				<all>
+					<element name="productId" type="xsd:string" minOccurs="0" />
+					<element name="attributeSetId" type="xsd:string" minOccurs="0" />
+					<element name="attributeSetName" type="xsd:string" minOccurs="0" />
+					<element name="productType" type="xsd:string" minOccurs="0" />
+					<element name="websiteId" type="typens:ArrayOfString" minOccurs="0" />
+					<element name="productWebsiteCode" type="typens:ArrayOfString" minOccurs="0" />
+					<element name="productStoreIds" type="typens:ArrayOfString" minOccurs="0" />
+					<element name="productStoreCode" type="typens:ArrayOfString" minOccurs="0" />
+					<element name="productTaxClass" type="xsd:string" minOccurs="0" />
+					<element name="sku" type="xsd:string" minOccurs="0" />
+					<element name="productName" type="xsd:string" minOccurs="0" />
+					<element name="productDescription" type="xsd:string" minOccurs="0" />
+					<element name="productShortDescription" type="xsd:string" minOccurs="0" />
+					<element name="productPrice" type="typens:productAllPriceEntityArray" minOccurs="0" />
+					<element name="productStatus" type="xsd:string" minOccurs="0" />
+					<element name="productStatusName" type="xsd:string" minOccurs="0" />
+					<element name="productVisibilityId" type="xsd:string" minOccurs="0" />
+					<element name="productVisibility" type="xsd:string" minOccurs="0" />
+					<element name="categories" type="typens:productAllCategoriesEntityArray" minOccurs="0" />
+					<element name="image" type="typens:productAllImageEntityArray" minOccurs="0" />
+					<element name="smallimage" type="typens:productAllSmallImageEntityArray" minOccurs="0" />
+					<element name="thumbnail" type="typens:productAllThumbnailEntityArray" minOccurs="0" />
+					<element name="gallery" type="typens:productAllGalleryEntityArray" minOccurs="0" />
+					<element name="attribute" type="typens:productAllAttributeEntityArray" minOccurs="0" />
+					<element name="options" type="typens:productAllOptionsEntityArray" minOccurs="0" />
+					<element name="configurableattributes" type="typens:productAllConfigAttributeEntityArray" minOccurs="0" />
+					<element name="associatedproduct" type="typens:productAllAssociatedEntityArray" minOccurs="0" />
+					<element name="groupedproduct" type="typens:productAllGroupEntityArray" minOccurs="0" />
+					<element name="skutype" type="xsd:string" minOccurs="0" />
+					<element name="skutypename" type="xsd:string" minOccurs="0" />
+					<element name="weighttype" type="xsd:string" minOccurs="0" />
+					<element name="weighttypename" type="xsd:string" minOccurs="0" />
+					<element name="pricetype" type="xsd:string" minOccurs="0" />
+					<element name="pricetypename" type="xsd:string" minOccurs="0" />
+					<element name="priceview" type="xsd:string" minOccurs="0" />
+					<element name="priceviewname" type="xsd:string" minOccurs="0" />
+					<element name="shipmenttype" type="xsd:string" minOccurs="0" />
+					<element name="shipmenttypename" type="xsd:string" minOccurs="0" />
+					<element name="bundleoptions" type="typens:productAllBundleEntityArray" minOccurs="0" />
+				</all>
+			</complexType>
+			<complexType name="productAllPriceEntityArray">
+				<complexContent>
+					<restriction base="soapenc:Array">
+						<attribute ref="soapenc:arrayType" wsdl:arrayType="typens:productAllPriceEntity[]" />
+					</restriction>
+				</complexContent>
+			</complexType>
+			<complexType name="productAllPriceEntity">
+				<all>
+					<element name="websiteId" type="xsd:string" minOccurs="0" />
+					<element name="price" type="xsd:string" minOccurs="0" />
+					<element name="baseCurrency" type="xsd:string" minOccurs="0" />
+				</all>
+			</complexType>
+			<complexType name="productAllCategoriesEntityArray">
+				<complexContent>
+					<restriction base="soapenc:Array">
+						<attribute ref="soapenc:arrayType" wsdl:arrayType="typens:productAllCategoriesEntity[]" />
+					</restriction>
+				</complexContent>
+			</complexType>
+			<complexType name="productAllCategoriesEntity">
+				<all>
+					<element name="categoryId" type="xsd:string" minOccurs="0" />
+					<element name="categoryName" type="xsd:string" minOccurs="0" />
+				</all>
+			</complexType>
+			<complexType name="productAllImageEntityArray">
+				<complexContent>
+					<restriction base="soapenc:Array">
+						<attribute ref="soapenc:arrayType" wsdl:arrayType="typens:productAllImageEntity[]" />
+					</restriction>
+				</complexContent>
+			</complexType>
+			<complexType name="productAllImageEntity">
+				<all>
+					<element name="name" type="xsd:string" minOccurs="0" />
+					<element name="path" type="xsd:string" minOccurs="0" />
+					<element name="extn" type="xsd:string" minOccurs="0" />
+					<element name="ftppath" type="xsd:string" minOccurs="0" />
+				</all>
+			</complexType>
+			<complexType name="productAllSmallImageEntityArray">
+				<complexContent>
+					<restriction base="soapenc:Array">
+						<attribute ref="soapenc:arrayType" wsdl:arrayType="typens:productAllSmallImageEntity[]" />
+					</restriction>
+				</complexContent>
+			</complexType>
+			<complexType name="productAllSmallImageEntity">
+				<all>
+					<element name="name" type="xsd:string" minOccurs="0" />
+					<element name="path" type="xsd:string" minOccurs="0" />
+					<element name="extn" type="xsd:string" minOccurs="0" />
+					<element name="ftppath" type="xsd:string" minOccurs="0" />
+				</all>
+			</complexType>
+			<complexType name="productAllThumbnailEntityArray">
+				<complexContent>
+					<restriction base="soapenc:Array">
+						<attribute ref="soapenc:arrayType" wsdl:arrayType="typens:productAllThumbnailEntity[]" />
+					</restriction>
+				</complexContent>
+			</complexType>
+			<complexType name="productAllThumbnailEntity">
+				<all>
+					<element name="name" type="xsd:string" minOccurs="0" />
+					<element name="path" type="xsd:string" minOccurs="0" />
+					<element name="extn" type="xsd:string" minOccurs="0" />
+					<element name="ftppath" type="xsd:string" minOccurs="0" />
+				</all>
+			</complexType>
+			<complexType name="productAllGalleryEntityArray">
+				<complexContent>
+					<restriction base="soapenc:Array">
+						<attribute ref="soapenc:arrayType" wsdl:arrayType="typens:productAllGalleryEntity[]" />
+					</restriction>
+				</complexContent>
+			</complexType>
+			<complexType name="productAllGalleryEntity">
+				<all>
+					<element name="name" type="xsd:string" minOccurs="0" />
+					<element name="path" type="xsd:string" minOccurs="0" />
+					<element name="extn" type="xsd:string" minOccurs="0" />
+					<element name="ftppath" type="xsd:string" minOccurs="0" />
+				</all>
+			</complexType>
+			<complexType name="productAllAttributeEntityArray">
+				<complexContent>
+					<restriction base="soapenc:Array">
+						<attribute ref="soapenc:arrayType" wsdl:arrayType="typens:productAllAttributeEntity[]" />
+					</restriction>
+				</complexContent>
+			</complexType>
+			<complexType name="productAllAttributeEntity">
+				<all>
+					<element name="attributeid" type="xsd:string" minOccurs="0" />
+					<element name="code" type="xsd:string" minOccurs="0" />
+					<element name="attributename" type="xsd:string" minOccurs="0" />
+					<element name="attributevalueid" type="xsd:string" minOccurs="0" />
+					<element name="attributevalue" type="xsd:string" minOccurs="0" />
+				</all>
+			</complexType>
+			<complexType name="productAllOptionsEntityArray">
+				<complexContent>
+					<restriction base="soapenc:Array">
+						<attribute ref="soapenc:arrayType" wsdl:arrayType="typens:productAllOptionsEntity[]" />
+					</restriction>
+				</complexContent>
+			</complexType>
+			<complexType name="productAllOptionsEntity">
+				<all>
+					<element name="optionid" type="xsd:string" minOccurs="0" />
+					<element name="optiontype" type="xsd:string" minOccurs="0" />
+					<element name="optionisrequire" type="xsd:string" minOccurs="0" />
+					<element name="optiontitle" type="xsd:string" minOccurs="0" />
+					<element name="optionvalue" type="typens:productAllOptionsOptionvaluesEntityArray" minOccurs="0" />
+				</all>
+			</complexType>
+
+			<complexType name="productAllOptionsOptionvaluesEntityArray">
+				<complexContent>
+					<restriction base="soapenc:Array">
+						<attribute ref="soapenc:arrayType" wsdl:arrayType="typens:productAllOptionsOptionvaluesEntity[]" />
+					</restriction>
+				</complexContent>
+			</complexType>
+			<complexType name="productAllOptionsOptionvaluesEntity">
+				<all>
+					<element name="optionvalueid" type="xsd:string" minOccurs="0" />
+					<element name="optionvaluesku" type="xsd:string" minOccurs="0" />
+					<element name="optionvaluetitle" type="xsd:string" minOccurs="0" />
+					<element name="optionvalueprice" type="xsd:string" minOccurs="0" />
+					<element name="optionvaluepricetype" type="xsd:string" minOccurs="0" />
+				</all>
+			</complexType>
+			<complexType name="productAllConfigAttributeEntityArray">
+				<complexContent>
+					<restriction base="soapenc:Array">
+						<attribute ref="soapenc:arrayType" wsdl:arrayType="typens:productAllConfigAttributeEntity[]" />
+					</restriction>
+				</complexContent>
+			</complexType>
+			<complexType name="productAllConfigAttributeEntity">
+				<all>
+					<element name="configurableattributeid" type="xsd:string" minOccurs="0" />
+					<element name="configurableattributecode" type="xsd:string" minOccurs="0" />
+				</all>
+			</complexType>
+			<complexType name="productAllAssociatedEntityArray">
+				<complexContent>
+					<restriction base="soapenc:Array">
+						<attribute ref="soapenc:arrayType" wsdl:arrayType="typens:productAllAssociatedEntity[]" />
+					</restriction>
+				</complexContent>
+			</complexType>
+			<complexType name="productAllAssociatedEntity">
+				<all>
+					<element name="associatedproductid" type="xsd:string" minOccurs="0" />
+					<element name="associatedproductsku" type="xsd:string" minOccurs="0" />
+				</all>
+			</complexType>
+
+			<complexType name="productAllGroupEntityArray">
+				<complexContent>
+					<restriction base="soapenc:Array">
+						<attribute ref="soapenc:arrayType" wsdl:arrayType="typens:productAllGroupEntity[]" />
+					</restriction>
+				</complexContent>
+			</complexType>
+			<complexType name="productAllGroupEntity">
+				<all>
+					<element name="groupedproductid" type="xsd:string" minOccurs="0" />
+					<element name="groupedproductsku" type="xsd:string" minOccurs="0" />
+				</all>
+			</complexType>
+
+			<complexType name="productAllBundleEntityArray">
+				<complexContent>
+					<restriction base="soapenc:Array">
+						<attribute ref="soapenc:arrayType" wsdl:arrayType="typens:productAllBundleEntity[]" />
+					</restriction>
+				</complexContent>
+			</complexType>
+			<complexType name="productAllBundleEntity">
+				<all>
+					<element name="defaulttitle" type="xsd:string" minOccurs="0" />
+					<element name="type" type="xsd:string" minOccurs="0" />
+					<element name="required" type="xsd:string" minOccurs="0" />
+					<element name="bundleselections" type="typens:ArrayOfBundleSelection" minOccurs="0" />
+				</all>
+			</complexType>
+
+			<complexType name="ArrayOfBundleSelection">
+				<complexContent>
+					<restriction base="soapenc:Array">
+						<attribute ref="soapenc:arrayType" wsdl:arrayType="typens:ArrayOfBundleSelectionEntity[]" />
+					</restriction>
+				</complexContent>
+			</complexType>
+			<complexType name="ArrayOfBundleSelectionEntity">
+				<all>
+					<element name="sku" type="xsd:string" minOccurs="0" />
+					<element name="selectionqty" type="xsd:string" minOccurs="0" />
+					<element name="usercanchangeqty" type="xsd:string" minOccurs="0" />
+					<element name="defaultselection" type="xsd:string" minOccurs="0" />
+					<element name="selectionpricetype" type="xsd:string" minOccurs="0" />
+					<element name="selectionpricevalue" type="xsd:string" minOccurs="0" />
+				</all>
+			</complexType>
+
+			<complexType name="productAllSyncEntityArray">
+				<complexContent>
+					<restriction base="soapenc:Array">
+						<attribute ref="soapenc:arrayType" wsdl:arrayType="typens:productAllSyncEntity[]" />
+					</restriction>
+				</complexContent>
+			</complexType>
+		</schema>
+	</types>
+
+	<message name="productAllListRequest">
+		<part name="sessionId" type="xsd:string" />
+		<part name="prodtype" type="xsd:string" />
+	</message>
+	<message name="productAllListResponse">
+		<part name="products" type="typens:productAllEntityArray" />
+	</message>
+
+	<message name="productAllSyncRequest">
+		<part name="sessionId" type="xsd:string" />
+		<part name="productId" type="xsd:string" />
+		<part name="syncFlag" type="xsd:string" />
+	</message>
+	<message name="productAllSyncResponse">
+		<part name="result" type="xsd:boolean" />
+	</message>
+
+	<portType name="{{var wsdl.handler}}PortType">
+		<operation name="productAllList">
+			<documentation>Get list of all Products</documentation>
+			<input message="typens:productAllListRequest" />
+			<output message="typens:productAllListResponse"/>
+		</operation>
+		<operation name="productAllSync">
+			<documentation>Sync Products with SBO</documentation>
+			<input message="typens:productAllSyncRequest" />
+			<output message="typens:productAllSyncResponse"/>
+		</operation>
+	</portType>
+	<binding name="{{var wsdl.handler}}Binding" type="typens:{{var wsdl.handler}}PortType">
+		<soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http" />
+		<operation name="productAllList">
+			<soap:operation soapAction="urn:{{var wsdl.handler}}Action" />
+			<input>
+				<soap:body namespace="urn:{{var wsdl.name}}" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+			</input>
+			<output>
+				<soap:body namespace="urn:{{var wsdl.name}}" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+			</output>
+		</operation>
+		<operation name="productAllSync">
+			<soap:operation soapAction="urn:{{var wsdl.handler}}Action" />
+			<input>
+				<soap:body namespace="urn:{{var wsdl.name}}" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+			</input>
+			<output>
+				<soap:body namespace="urn:{{var wsdl.name}}" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+			</output>
+		</operation>
+	</binding>
+	<service name="{{var wsdl.name}}Service">
+		<port name="{{var wsdl.handler}}Port" binding="typens:{{var wsdl.handler}}Binding">
+			<soap:address location="{{var wsdl.url}}" />
+		</port>
+	</service>
+</definitions>

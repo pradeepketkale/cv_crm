@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+    <noticeboard_adminhtml_noticeboard_index>
+        <reference name="content">
+            <block type="noticeboard/adminhtml_noticeboard" name="noticeboard" />
+        </reference>
+    </noticeboard_adminhtml_noticeboard_index>
+</layout>

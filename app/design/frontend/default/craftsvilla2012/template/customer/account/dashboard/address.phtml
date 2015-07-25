@@ -1,0 +1,38 @@
+<div class="left-info dashboard-info">
+	<ul>
+		<li class="red_info">SHIPPING<br/> ADDRESS</li>
+		<li><?php echo $this->getPrimaryShippingAddressHtml() ?><br />
+		<span class="info_edit"><a href="<?php echo $this->getPrimaryShippingAddressEditUrl() ?>"><?php echo $this->__('Edit') ?></a></span></li>
+	</ul>
+</div>
+<div class="right-info dashboard-info">
+	<ul>
+		<li class="red_info">BILLING<br /> ADDRESS</li>
+		<li><?php echo $this->getPrimaryBillingAddressHtml() ?><br />
+		<span class="info_edit"><a href="<?php echo $this->getPrimaryBillingAddressEditUrl() ?>"><?php echo $this->__('Edit') ?></a></span></li>
+	</ul>
+</div>
+
+
+<!--<div class="fieldsetCntnr marginRt">
+    <div class="fieldset minHt">
+        <h2 class="legend">Address Book</h2>
+        <a href="<?php echo $this->getAddressBookUrl() ?>"><?php echo $this->__('Manage Addresses') ?></a><br/>
+        <h5><?php echo $this->__('Default Billing Address') ?></h5>
+        <address>
+            <?php echo $this->getPrimaryBillingAddressHtml() ?><br />
+            <a href="<?php echo $this->getPrimaryBillingAddressEditUrl() ?>"><?php echo $this->__('Edit Address') ?></a>
+        </address>
+    </div>
+</div>
+
+<div class="fieldsetCntnr">
+    <div class="fieldset minHt">
+        <h2 class="legend">Default Shipping Address</h2>
+        <h5>Shipping Address</h5>
+        <address>
+            <?php echo $this->getPrimaryShippingAddressHtml() ?><br />
+            <a href="<?php echo $this->getPrimaryShippingAddressEditUrl() ?>"><?php echo $this->__('Edit Address') ?></a>
+        </address>
+    </div>
+</div>-->

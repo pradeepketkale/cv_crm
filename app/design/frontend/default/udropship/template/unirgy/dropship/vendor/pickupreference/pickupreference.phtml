@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+table, th, td {
+border: 1px solid #fff;
+text-align: center;
+margin: 0px auto;
+}
+
+th{
+padding-top: 5px;
+padding-bottom: 5px;
+vertical-align: top;
+text-align: center;
+}
+
+td{
+text-align: left;
+padding-top: 7px;
+padding-bottom: 7px;
+vertical-align: top;
+text-align: center;
+}
+
+</style>
+</head>
+<body>
+<div id="centertable" style="margin: 0px auto;text-align: center;  ">
+<?php
+require_once 'app/Mage.php';
+Mage::app();
+$hlp = Mage::helper('generalcheck');
+$mainConn= $hlp->getMaindbconnection();
+
+
+
+
+
+$_v = Mage::getSingleton('udropship/session')->getVendor();
+$vendorid = $_v->getVendorId();
+
+$sql = "SELECT * FROM aramex_pickup_request_number where  `created_date` >= DATE_SUB(CURDATE(), INTERVAL 1 MONTH) and Vendor_id= '".$vendorid."'   ORDER BY created_date DESC ";
+$pickup = mysql_query($sql);
+$numbrow = mysql_num_rows($pickup);
+
+$rowsperpage = 15;
+
+$totalpages = ceil($numbrow / $rowsperpage);
+
+
+if (isset($_GET['currentpage']) && is_numeric($_GET['currentpage'])) {
+
+$currentpage = (int) $_GET['currentpage'];
+
+} else {
+
+$currentpage = 1;
+}
+
+
+if ($currentpage > $totalpages) {
+
+$currentpage = $totalpages;
+
+
+} 
+if ($currentpage < 1) {
+
+$currentpage = 1;
+} 
+
+
+$offset = ($currentpage-1) * $rowsperpage;
+
+$sqlqu = "SELECT * FROM aramex_pickup_request_number where `created_date` >= DATE_SUB(CURDATE(), INTERVAL 1 MONTH) and Vendor_id= '".$vendorid."'  ORDER BY created_date DESC  LIMIT $offset, $rowsperpage ";
+$pickuppagin = mysql_query($sqlqu);
+
+$format = "
+<table border=1>
+<caption><bPickup References List</b></caption>
+<tr bgcolor=#f2e7e1>
+<th><font color=#a62305><b>Date</b></font></th>
+<th><font color=#a62305><b>Courier Name</b></font></th>
+<th><font color=#a62305><b>Pickup Id</b></font></th>
+</tr>";
+
+
+while($detail=mysql_fetch_array($pickuppagin)){
+$datetypechange = date('d M', strtotime($detail['created_date']));
+
+$firstupp= ucfirst($detail['courier_name']);
+$defaultaramex = $firstupp ?: 'Aramex';
+$format .="<tr bgcolor=#F2F2F2 >
+<td width= 150  ><font color=#000>".$datetypechange."</font></td>
+<td width= 200 ><font color=#000>".$defaultaramex."</font></td>
+<td width= 200 ><font color=#000>".$detail['Reference_Number']."</font></td></tr>";
+
+
+}
+
+$format .= "</table><br><br>";
+
+echo $format; 
+
+
+$range = 3;
+
+
+if ($currentpage > 1) {
+
+echo " <a href='pickupreference.phtml?currentpage=1'><<</a> ";
+
+$prevpage = $currentpage - 1;
+
+echo " <a href='pickupreference.phtml?currentpage=$prevpage'><</a> ";
+} 
+
+
+for ($x = ($currentpage - $range); $x < (($currentpage + $range) + 1); $x++) {
+
+if (($x > 0) && ($x <= $totalpages)) {
+
+if ($x == $currentpage) {
+
+ echo " <b>$x</b> ";
+
+} else {
+
+ echo " <a href='pickupreference.phtml?currentpage=$x'>$x</a> ";
+} 
+} 
+} 
+
+
+if ($currentpage != $totalpages) {
+
+$nextpage = $currentpage + 1;
+
+echo " <a href='pickupreference.phtml?currentpage=$nextpage'>></a> ";
+
+echo " <a href='pickupreference.phtml?currentpage=$totalpages'>>></a> ";
+} 
+
+
+
+?>
+
+
+</div>
+</body>
+</html>

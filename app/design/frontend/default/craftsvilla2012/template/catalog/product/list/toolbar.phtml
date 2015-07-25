@@ -1,0 +1,175 @@
+<?php
+$hlp = Mage::helper('generalcheck');
+$ismobile = $hlp->ismobile();
+
+if(!$ismobile)
+{?> 
+<?php
+	/*echo "Bow Bow<pre>";
+	//print_r($this->getCollection()->getData());
+	echo "Bow Bow Bow Bow:".$this->getLastNum();
+	exit();*/
+
+?>
+
+<style type="text/css">
+.prcheck {
+	-moz-box-shadow:inset 0px 1px 0px 0px #cae3fc;
+	-webkit-box-shadow:inset 0px 1px 0px 0px #cae3fc;
+	box-shadow:inset 0px 1px 0px 0px #cae3fc;
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #79bbff), color-stop(1, #4197ee) );
+	background:-moz-linear-gradient( center top, #79bbff 5%, #4197ee 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#79bbff', endColorstr='#4197ee');
+	background-color:#79bbff;
+	-webkit-border-top-left-radius:20px;
+	-moz-border-radius-topleft:20px;
+	border-top-left-radius:20px;
+	-webkit-border-top-right-radius:20px;
+	-moz-border-radius-topright:20px;
+	border-top-right-radius:20px;
+	-webkit-border-bottom-right-radius:20px;
+	-moz-border-radius-bottomright:20px;
+	border-bottom-right-radius:20px;
+	-webkit-border-bottom-left-radius:20px;
+	-moz-border-radius-bottomleft:20px;
+	border-bottom-left-radius:20px;
+	text-indent:0;
+	border:1px solid #469df5;
+	display:inline-block;
+	color:#ffffff;
+	font-family:Arial;
+	font-size:12px;
+	font-weight:bold;
+	font-style:normal;
+	height:20px;
+	line-height:20px;
+	width:140px;
+	text-decoration:none;
+	text-align:center;
+	text-shadow:1px 1px 0px #287ace;
+}
+.prcheck:hover {
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #4197ee), color-stop(1, #79bbff) );
+	background:-moz-linear-gradient( center top, #4197ee 5%, #79bbff 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#4197ee', endColorstr='#79bbff');
+	background-color:#4197ee;
+}.prcheck:active {
+	position:relative;
+	top:1px;
+}</style>
+<?php
+//echo '<pre>';print_r($this->getCollection());exit;
+ if($this->getCollection()->getSize()): ?>
+<div class="toolbar">
+    <div class="pager">
+    <div class="amount">
+      	
+            <?php if($this->getLastPageNum()>1): ?>
+                <?php echo $this->__('Items <span>%s</span> to <span>%s</span> of <span>%s</span> total', $this->getFirstNum(), $this->getLastNum(), $this->getTotalNum()) ?>
+            <?php else: ?>
+                <strong><?php echo $this->__('%s Item(s)', $this->getTotalNum()) ?></strong>
+            <?php endif; ?></div>
+          <div class="topLine"></div>
+
+
+       <!-- <div class="amount">
+      
+            <?php //if($this->getLastPageNum()>1): ?>
+                <?php //echo $this->__('Items <span>%s</span> to <span>%s</span> of <span>%s</span> total', $this->getFirstNum(), $this->getLastNum(), $this->getTotalNum()) ?>
+            <?php //else: ?>
+                <strong><?php //echo $this->__('%s Item(s)', $this->getTotalNum()) ?></strong>
+            <?php //endif; ?>
+        </div>-->
+        <?php //echo $this->getPagerHtml() ?>
+        <div class="sort-by">
+              
+              <?php //print_r($this->getCurrentDirection());exit;?>
+            <!-- <label style="line-height:20px"><?php //echo $this->__('Sort by') ?></label>-->
+                <select onchange="setLocation(this.value)" >
+                 <option value=""><?php echo $this->__('Sort By') ?></option>
+
+                  <option value="<?php echo $this->getOrderUrl('price', 'asc') ?>"<?php if($this->isOrderCurrent('price') && $this->getCurrentDirection() == 'asc'): ?> selected="selected"<?php endif; ?>><?php echo $this->__('Price Low To High') ?></option>
+                  <option value="<?php echo $this->getOrderUrl('price', 'desc')?>"<?php if($this->isOrderCurrent('price') && $this->getCurrentDirection() == 'desc'): ?> selected="selected"<?php endif; ?>> <?php echo $this->__('Price High To Low') ?></option>
+                    <option value="<?php echo $this->getOrderUrl('discount', 'asc')?>"<?php if($this->isOrderCurrent('discount') && $this->getCurrentDirection() == 'asc'): ?> selected="selected"<?php endif; ?>> <?php echo $this->__('Discount Low To High') ?></option>
+                      <option value="<?php echo $this->getOrderUrl('discount', 'desc')?>"<?php if($this->isOrderCurrent('discount') && $this->getCurrentDirection() == 'desc'): ?> selected="selected"<?php endif; ?>> <?php echo $this->__('Discount High To Low') ?></option>
+                      <option value="<?php echo $this->getOrderUrl('shippingtime', 'asc')?>"<?php if($this->isOrderCurrent('shippingtime') && $this->getCurrentDirection() == 'asc'): ?> selected="selected"<?php endif; ?>> <?php echo $this->__('Fastest Shipping') ?></option>
+                  
+              
+           
+                </select>
+               
+              <!-- <input type="button" id="prnear" value="See Products Near You" />-->
+             <!-- <select id="filter-sort-price" name="sort_price" title="<?php //echo $this->__('SORT BY:') ?>" class="select" style="width:100px;">
+                        <option value="asc" <?php //echo $this->getOrderUrl(null, 'asc')?>selected="selected" ><?php //echo $this->__('Lowest-To-Highest') ?></option>
+                        <option value="desc" <?php //echo $this->getOrderUrl(null, 'desc')?>selected="selected" ><?php //echo $this->__('Highest-To-Lowest') ?></option>
+                    </select>
+			<!--<strong><?php //echo $this->__('SORT BY:') ?></strong>-->
+			<!--<ul id="sortby">
+				<li><a href="#">MOST RECENT</a></li>
+				<li><a href="#">LOWEST PRICE</a></li> 
+				<li><a href="#">HIGHEST PRICE</a></li>
+			</ul>
+            <label><?php //echo $this->__('Sort By') ?></label>-->
+            <!--<ul id="sortby" onclick="setLocation(this.value)">-->
+            <?php //foreach($this->getAvailableOrders() as $_key=>$_order): ?>
+                <?php //if (($_order != 'Position') && ($_order != 'Newest') && ($_order != 'Name')) : // Remove "Position" from the sort option list ?>
+                    <!--<li value="<?php //echo $this->getOrderUrl($_key, 'asc') ?>"<?php //if($this->isOrderCurrent($_key)): ?> class="selected"<?php //endif; ?>>
+                        <a href="<?php //echo $this->getOrderUrl($_key, 'asc') ?>" rel="nofollow"><?php //echo $this->__($_order) ?></a>
+                    </li>-->
+                <?php //endif;?>
+            <?php //endforeach; ?>
+           <!-- </ul>-->
+            <?php //if($this->getCurrentDirection() == 'desc'): ?>
+                <!--<a class="sort-direction" href="<?php //echo $this->getOrderUrl(null, 'asc') ?>" title="<?php //echo $this->__('Set Ascending Direction') ?>"  rel="nofollow"><img src="<?php //echo $this->getSkinUrl('images/i_desc_arrow.gif') ?>" alt="<?php //echo $this->__('Set Ascending Direction') ?>" class="v-middle" /></a>-->
+            <?php //else: ?>
+                <!--<a class="sort-direction" href="<?php //echo $this->getOrderUrl(null, 'desc') ?>" title="<?php //echo $this->__('Set Descending Direction') ?>"  rel="nofollow"><img src="<?php //echo $this->getSkinUrl('images/i_asc_arrow.gif') ?>" alt="<?php //echo $this->__('Set Descending Direction') ?>" class="v-middle" /></a>-->
+            <?php //endif; ?>
+        </div>
+        <!--<div id='pincode_form'>
+ <label id='check'><font size='-1'>
+ Check Cash On Delivery Below:</font></label><br>
+ <input type='text' name='pincode_value' placeholder='Enter Pincode' id='pincode_value' style='width:90px;height:30px'>
+  
+<a href='#pincode' class='prcheck' onClick='submitform();return false;'> CHECK </a>
+</div>-->
+      <div class="verticalline" style="left:161px"></div>&nbsp;&nbsp;&nbsp;
+       <div class="nearpr" style="margin-left:20px"><input type="button" name="submit" onClick="rewriteUrloffiltersCod2135()" value="<?php echo $this->__('Show Only COD Products') ?>" style="background-color: rgb(57, 112, 142);font-size: 12px; color: rgb(255, 255, 255); height:23px; text-shadow: black 2px 2px 3px;box-shadow:0px 0px 0px -8px rgb(57, 112, 142) inset;-webkit-border-top-left-radius:9px;	-moz-border-radius-topleft:9px;	border-top-left-radius:9px;	-webkit-border-top-right-radius:9px;	-moz-border-radius-topright:9px;
+	border-top-right-radius:9px;	-webkit-border-bottom-right-radius:9px;	-moz-border-radius-bottomright:9px;	border-bottom-right-radius:9px;	-webkit-border-bottom-left-radius:9px;	-moz-border-radius-bottomleft:9px;	border-bottom-left-radius:9px; width:155px; cursor:pointer" title="<?php echo $this->__('Show Only COD Products') ?>"/><!--<a class="nearpr" id="showcod" name="showcod" href="<?php //echo "?cod=showcod" ?>" title="<?php //echo $this->__('Show Only COD Products') ?>"  rel="nofollow"><?php //echo $this->__('Show Only COD Products') ?></a>--></div>
+       <?php //if($this->getCurrentCod() == 'showcod'): ?>
+      <!--<div id = ""class="spriteimg remove" onClick = "removefiltersCod()" style="z-index:10;cursor:pointer"></div>-->
+       <?php //endif;?>
+       
+       
+       <div class="verticalline" style="left:350px"></div>
+       <div class="pincodeproduct" style="margin-left:45px">
+       
+       <input type="button" name="submit" onClick="rewriteUrloffilterszip()" value="<?php echo $this->__('See Products Near You') ?>" style="background-color: rgb(57, 112, 142);font-size: 12px; color: rgb(255, 255, 255); height:23px;text-shadow: black 2px 2px 3px;box-shadow:0px 0px 0px -8px rgb(57, 112, 142) inset;-webkit-border-top-left-radius:9px;	-moz-border-radius-topleft:9px;	border-top-left-radius:9px;	-webkit-border-top-right-radius:9px;	-moz-border-radius-topright:9px;
+	border-top-right-radius:9px;	-webkit-border-bottom-right-radius:9px;	-moz-border-radius-bottomright:9px;	border-bottom-right-radius:9px;	-webkit-border-bottom-left-radius:9px;	-moz-border-radius-bottomleft:9px;	border-bottom-left-radius:9px; width:140px; cursor:pointer" title="<?php echo $this->__('See Products Near You') ?>"/>
+       
+       <!--//width: 120px; font-size: 10px; color: rgb(255, 255, 255); text-align: left; padding: 10px; height: 24px; vertical-align:text-top-->
+       <input type="text" name='pincode_value' placeholder='Enter Pincode' id='pincode_value' style='width:90px;height:12px'/>
+       </div>
+     	<?php //if($this->getCurrentZip()): ?>
+<!--<div id="removeFiltZipcode85258" class="spriteimg remove" onClick = "removefilterszip()" style="z-index:10;cursor:pointer"></div>-->
+      <!--<div class="remove"> <a href="<?php //echo ""?>" title="<?php //echo $this->__('Remove item')?>" class="spriteimg remove"></a></div>-->
+       <?php //endif;?>
+       
+
+     <!-- <div class="amount">
+            <?php  //if($this->getLastPageNum()>1): ?>
+                <?php //echo $this->__('Items <span>%s</span> to <span>%s</span> of <span>%s</span> total', $this->getFirstNum(), $this->getLastNum(), $this->getTotalNum()) ?>
+            <?php //else: ?>
+                <strong><?php //echo $this->__('%s Item(s)', $this->getTotalNum()) ?></strong>
+            <?php //endif; ?>
+			
+        </div>-->
+        <?php //echo $this->getPagerHtml() ?>
+   </div>
+	<?php echo $this->getPagerHtml() ?>
+</div>
+<?php endif ?>
+<?php }else{?>
+<?php echo $this->getPagerHtml() ?>
+
+<?php } ?>
+

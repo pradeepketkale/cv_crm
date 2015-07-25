@@ -1,0 +1,186 @@
+<?php
+    $_session = Mage::getSingleton('udropship/session');
+    if (Mage::helper('udropship')->isModuleActive('Unirgy_DropshipMicrosite')
+        && $_session->isLoggedIn()
+        && $_session->getVendor()->getShowProductsMenuItem()):
+		 //echo "<pre>"; print_r($_session->getVendor());
+?> 
+<div class="page-title">
+        <h1>Bulk Update Of Inventory</h1>
+    </div>
+<?php echo $this->getMessagesBlock()->getGroupedHtml() ?>
+
+	<table cellspacing="1" cellpadding="0" class="data-table table-gride vtop">
+      
+      <tbody>
+           <?php 
+		$sellerprty = Mage::getSingleton('udropship/session')->getVendor();
+		$formatpath = Mage::getBaseUrl('media') . 'csvformat'. '/';
+		$format = 'Bulk_Inventory_Format.xls';
+		$csvformat = $formatpath.$format;
+		 
+		 
+		   ?>
+			   
+                         <font size="+1">You Can Download Template</font> <font size="+1"> <a href="<?php echo $csvformat ?>">here</a></font></button></form>
+                        <div class="fieldset mkpdash">
+ <form id="import_form" action="<?php echo $this->getUrl('udropship/vendor/inventoryimport') ?>" method="post" enctype="multipart/form-data">
+                           <button class="form-button" type="submit" name="uploadinventory"><span><?php echo $button_label = Mage::helper('udropship')->__('Bulk Update Of Inventory'); ?></span></button>
+                            <?php echo $this->getButtonHtml($button_label, "this.form.submit();displayLoadingMask();") ?>                           &nbsp;&nbsp;&nbsp;  <input type="file" name="import" class="input-file required-entry"/><br />File Format: Only csv is Accepted. You can download the example template above.<br /><br /></form></div>
+            
+	  </tbody>
+    </table> <br /><br />
+    <div class="a-left" style="margin:10px 9">
+
+<div style="max-height: 517px;overflow: scroll;width: 703px;">    
+    <table cellspacing="1" cellpadding="20" class="data-table table-gride vtop">
+     <thead>
+        <tr>
+         <th><?php echo $this->__('Uploaded')?></th>
+          <th><?php echo $this->__('ID')?></th>
+          <th><?php echo $this->__('File Name')?></th>
+          <th><?php echo $this->__('Status')?></th>
+           <th><?php echo $this->__('No. Submitted')?></th>
+           <th><?php echo $this->__('Upload Report')?></th>
+         </tr>
+      </thead>
+     
+<tbody>
+      	<?php
+		$vendorId = Mage::getSingleton('udropship/session')->getVendorId();
+		$collection = Mage::getModel('bulkinventoryupdate/bulkinventoryupdate')->getCollection()
+						->addFieldToFilter('vendor', $vendorId)
+						->setOrder('bulkinventoryupdateid', 'DESC');
+						$collection->getSelect()->limit(10);
+				//echo '<prE>';print_r($collection->getData());exit;
+		//  echo $filename = $bulkuploadcsv['filename'];exit;
+		
+	foreach ($collection as $collect) 
+		{
+			$filename = $collect['filename'];
+			$reportfile = $collect['errorreport'];
+			$status = $collect['status'];
+			if($status==1)
+		   {
+			   $collect['status'] = 'Processing';
+		   }
+		   elseif($status==2)
+		   {
+			   $collect['status'] = 'Completed';
+		   }
+		   elseif($status==3)
+		   {
+			   $collect['status'] = 'Submitted';
+		   }
+		   elseif($status==5)
+		   {
+			   $collect['status'] = 'Approved';
+		   }
+		   else
+		   {
+			   $collect['status'] = 'Rejected';
+		   }
+		   
+		  $filepath = Mage::getBaseUrl('media'). 'inventorycsv'.'/';
+		$filenamepath = $filepath.$filename;
+		 $pathreport = Mage::getBaseUrl('media').'errorcsv'.'/';
+		$errorcsvpath = $pathreport.$reportfile;
+		
+		?>	
+		<tr>
+         <td><?php echo $collect->getUploaded();?></td>
+          <td><?php echo $collect->getBulkinventoryupdateid();?></td>
+          <td><a href="<?php echo $filenamepath ?>"><?php echo $collect->getFilename();?></a></td>
+          <td><?php echo $collect->getStatus();?></td>
+          <td><?php echo $collect->getTotalproducts();?></td>
+          <td><a href="<?php echo $errorcsvpath ?>"><?php echo $collect->getErrorreport();?></a></td>
+         <?php
+		  
+		 } ?>
+           
+        </tr> 
+ </tbody>
+</table>
+    
+    <div class="clr"></div>
+    <!--<div class="a-right" style="margin:10px 0">
+      <button class="form-button" type="submit"><?php //echo $this->__('Update Information On This Page') ?></button>
+    </div>
+</div>-->
+
+<?php endif;?>
+<script type="text/javascript">
+//<![CDATA[
+enUS = {"m":{"wide":["January","February","March","April","May","June","July","August","September","October","November","December"],"abbr":["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]}}; // en_US locale reference
+Calendar._DN = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"]; // full day names
+Calendar._SDN = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"]; // short day names
+Calendar._FD = 0; // First day of the week. "0" means display Sunday first, "1" means display Monday first, etc.
+Calendar._MN = ["January","February","March","April","May","June","July","August","September","October","November","December"]; // full month names
+Calendar._SMN = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]; // short month names
+Calendar._am = "AM"; // am/pm
+Calendar._pm = "PM";
+
+// tooltips
+Calendar._TT = {};
+Calendar._TT["INFO"] = "About the calendar";
+
+Calendar._TT["ABOUT"] =
+"DHTML Date/Time Selector\n" +
+"(c) dynarch.com 2002-2005 / Author: Mihai Bazon\n" +
+"For latest version visit: http://www.dynarch.com/projects/calendar/\n" +
+"Distributed under GNU LGPL. See http://gnu.org/licenses/lgpl.html for details." +
+"\n\n" +
+"Date selection:\n" +
+"- Use the \xab, \xbb buttons to select year\n" +
+"- Use the " + String.fromCharCode(0x2039) + ", " + String.fromCharCode(0x203a) + " buttons to select month\n" +
+"- Hold mouse button on any of the above buttons for faster selection.";
+Calendar._TT["ABOUT_TIME"] = "\n\n" +
+"Time selection:\n" +
+"- Click on any of the time parts to increase it\n" +
+"- or Shift-click to decrease it\n" +
+"- or click and drag for faster selection.";
+
+Calendar._TT["PREV_YEAR"] = "Prev. year (hold for menu)";
+Calendar._TT["PREV_MONTH"] = "Prev. month (hold for menu)";
+Calendar._TT["GO_TODAY"] = "Go Today";
+Calendar._TT["NEXT_MONTH"] = "Next month (hold for menu)";
+Calendar._TT["NEXT_YEAR"] = "Next year (hold for menu)";
+Calendar._TT["SEL_DATE"] = "Select date";
+Calendar._TT["DRAG_TO_MOVE"] = "Drag to move";
+Calendar._TT["PART_TODAY"] = ' (' + "Today" + ')';
+
+// the following is to inform that "%s" is to be the first day of week
+Calendar._TT["DAY_FIRST"] = "Display %s first";
+
+// This may be locale-dependent. It specifies the week-end days, as an array
+// of comma-separated numbers. The numbers are from 0 to 6: 0 means Sunday, 1
+// means Monday, etc.
+Calendar._TT["WEEKEND"] = "0,6";
+
+Calendar._TT["CLOSE"] = "Close";
+Calendar._TT["TODAY"] = "Today";
+Calendar._TT["TIME_PART"] = "(Shift-)Click or drag to change value";
+
+// date formats
+Calendar._TT["DEF_DATE_FORMAT"] = "%b %e, %Y";
+Calendar._TT["TT_DATE_FORMAT"] = "%B %e, %Y";
+
+Calendar._TT["WK"] = "Week";
+Calendar._TT["TIME"] = "Time:";
+
+//]]>
+
+</script>
+   
+  
+
+<script language="javascript">
+var importForm = new varienForm('import_form');
+function displayLoadingMask()
+            {
+                var loaderArea = $$('#html-body .wrapper')[0]; // Blocks all page
+                Position.clone($(loaderArea), $('loading-mask'), {offsetLeft:-2});
+                toggleSelectsUnderBlock($('loading-mask'), false);
+                Element.show('loading-mask');
+            }
+</script>

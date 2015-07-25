@@ -1,0 +1,150 @@
+<?php
+$hlp = Mage::helper('generalcheck');
+$ismobile = $hlp->ismobile();
+
+if(!$ismobile)
+{?> 
+<?php if ($this->getIsNeedToDisplaySideBar()):?>
+<div class="tpCrtBg"></div>
+<div class="block block-cart topCart">
+    <?php $_cartQty = $this->getSummaryCount() ?>
+    <div class="block-content ">
+
+    <?php //$_items = $this->getRecentItems() ?>
+    <?php $_items = $this->getItems() ?>
+    <?php if(count($_items)): ?>
+		<div class="order-review-sidebar sidebar-blocks">
+			<div class="sidebar-title"><?php echo $this->__('Review Your Order')?></div>
+			<ol id="cart-sidebar" class="mini-products-list"><?php foreach($_items as $_item): ?>
+			 
+				<?php echo $this->getItemHtml($_item) ?>
+			
+			<?php endforeach; ?></ol>
+            
+		</div>
+        <script type="text/javascript">decorateList('cart-sidebar', 'none-recursive')</script>
+    <?php else: ?>
+        <p class="empty"><?php echo $this->__('You have no items in your shopping cart.') ?></p>
+    <?php endif ?>
+    </div>
+	<div class="order-summary-sidebar sidebar-blocks">
+		<div class="sidebar-title"><?php echo $this->__('Order Summary')?></div>
+			<div class="order-summary-container data-table" id="checkout-review-div">
+            
+				<!--table class="data-table" id="checkout-review-table">
+					<?php if ($this->helper('tax')->displayCartBothPrices()): $colspan = $rowspan = 2; else: $colspan = $rowspan = 1; endif; ?>
+					<col />
+					<col width="1" />
+					<col width="1" />
+					<col width="1" />
+					<?php if ($this->helper('tax')->displayCartBothPrices()): ?>
+					<col width="1" />
+					<col width="1" />
+					<?php endif; ?>
+					<thead>
+						<?php if ($this->helper('tax')->displayCartBothPrices()): ?>
+							<tr>
+								<th class="a-right"><?php echo $this->helper('tax')->getIncExcTaxLabel(false) ?></th>
+								<th><?php echo $this->helper('tax')->getIncExcTaxLabel(true) ?></th>
+								<th class="a-right"><?php echo $this->helper('tax')->getIncExcTaxLabel(false) ?></th>
+								<th><?php echo $this->helper('tax')->getIncExcTaxLabel(true) ?></th>
+							</tr>
+						<?php endif; ?>
+					</thead>
+					<div class="total-contents"><?php echo $this->getChildHtml('totals'); ?></div>
+				</table-->
+			</div>
+	</div>
+	
+	<?php if(Mage::helper('mtonestepcheckout')->includeCoupon()): ?>
+		<div id="coupon" ><?php echo $this->getChildHtml('coupon') ?></div>
+	<?php endif; ?>
+
+	
+	<div class="shipping-addr-sidebar sidebar-blocks" style="display:none;">
+		<div class="sidebar-title"><?php echo $this->__('Shipping Address')?></div>
+		<div class="shipping-addr-container"></div>
+	</div>
+	
+</div>
+<?php endif;?>
+<script type="text/javascript">
+	//jQuery(document).ready(new function(){
+	
+	//})
+</script>
+
+<?php }else {?>
+<?php if ($this->getIsNeedToDisplaySideBar()):?>
+<div class="tpCrtBg"></div>
+<div class="block block-cart topCart" style="width:100%;">
+    <?php $_cartQty = $this->getSummaryCount() ?>
+    <div class="block-content" style="width:100%;" >
+	
+		<?php if(Mage::helper('mtonestepcheckout')->includeCoupon()): ?>
+		<div id="coupon" style="width:100%;" ><?php echo $this->getChildHtml('coupon') ?></div>
+	<?php endif; ?>
+
+	
+
+
+    <?php //$_items = $this->getRecentItems() ?>
+    <?php $_items = $this->getItems() ?>
+    <?php if(count($_items)): ?>
+		<div class="order-review-sidebar sidebar-blocks">
+			<div class="sidebar-title"><?php echo $this->__('Review Your Order')?></div>
+			<ol id="cart-sidebar" class="mini-products-list" style=width:95%;><?php foreach($_items as $_item): ?>
+			 
+				<?php echo $this->getItemHtml($_item) ?>
+			
+			<?php endforeach; ?></ol>
+            
+		</div>
+        <script type="text/javascript">decorateList('cart-sidebar', 'none-recursive')</script>
+    <?php else: ?>
+        <p class="empty"><?php echo $this->__('You have no items in your shopping cart.') ?></p>
+    <?php endif ?>
+    </div>
+	<div class="order-summary-sidebar sidebar-blocks">
+		<div class="sidebar-title"><?php echo $this->__('Order Summary')?></div>
+			<div class="order-summary-container data-table" id="checkout-review-div">
+            
+				<!--table class="data-table" id="checkout-review-table">
+					<?php if ($this->helper('tax')->displayCartBothPrices()): $colspan = $rowspan = 2; else: $colspan = $rowspan = 1; endif; ?>
+					<col />
+					<col width="1" />
+					<col width="1" />
+					<col width="1" />
+					<?php if ($this->helper('tax')->displayCartBothPrices()): ?>
+					<col width="1" />
+					<col width="1" />
+					<?php endif; ?>
+					<thead>
+						<?php if ($this->helper('tax')->displayCartBothPrices()): ?>
+							<tr>
+								<th class="a-right"><?php echo $this->helper('tax')->getIncExcTaxLabel(false) ?></th>
+								<th><?php echo $this->helper('tax')->getIncExcTaxLabel(true) ?></th>
+								<th class="a-right"><?php echo $this->helper('tax')->getIncExcTaxLabel(false) ?></th>
+								<th><?php echo $this->helper('tax')->getIncExcTaxLabel(true) ?></th>
+							</tr>
+						<?php endif; ?>
+					</thead>
+					<div class="total-contents"><?php echo $this->getChildHtml('totals'); ?></div>
+				</table-->
+			</div>
+	</div>
+	
+	
+	<div class="shipping-addr-sidebar sidebar-blocks" style="display:none;">
+		<div class="sidebar-title"><?php echo $this->__('Shipping Address')?></div>
+		<div class="shipping-addr-container"></div>
+	</div>
+	
+</div>
+<?php endif;?>
+<script type="text/javascript">
+	//jQuery(document).ready(new function(){
+	
+	//})
+</script>
+<?php } ?>

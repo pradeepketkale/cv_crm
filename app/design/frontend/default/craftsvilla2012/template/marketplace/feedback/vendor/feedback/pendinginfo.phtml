@@ -1,0 +1,104 @@
+<?php
+$order_id = $this->getRequest()->getParam('id');
+$order = Mage::getModel('sales/order')->load($order_id);
+$shipaddId = $order->getShippingAddressId();
+$shippaddAll = Mage::getModel('sales/order_address')->load($shipaddId);
+$custName = $shippaddAll->getName();
+$custAddr = $shippaddAll->getStreetFull();
+$city = $shippaddAll->getCity();
+$region = $shippaddAll->getRegion();
+$country = $shippaddAll->getCountry();
+$allAddShipping = $custName.'<br/>'.$custAddr.'<br/>'.$city.'<br/>'.$region.'<br/>'.$country;
+$items = $order->getAllItems();
+?>
+
+<div id="prList" class="col2-set shipment-items feedback-cust">
+          
+          <div class="success-msg" id="success-msg-<?php echo $_masterId ?>" style="display:none;"></div>
+
+
+       <h3 class="greyheading">Order Items</h3>
+		<hr/>
+             <div class="oditems" style="width:100%;">
+			
+                  <table width="100%" cellspacing="0" class="table-border" id="order-items-3842">
+                    <thead>
+                      <tr>
+							<th>Image</th>
+							<th>Product Name</th>
+							<th>System/Vendor SKU</th>
+						<th class="a-center"><span class="nobr">Qty</span></th>
+							<th>Rate</th>
+							<th>Discount</th>
+                            <th>Shipping Amount</th>
+							<th>Amount</th>
+						</tr>
+                    </thead>
+                    <tbody>
+					<?php foreach ($items as $itemId => $item){
+							$sku= $item->getSku(); 
+							//$product = Mage::getModel('catalog/product')->loadByAttribute('sku',$sku);  
+							$product = Mage::getModel('catalog/product')->load($item->getProductId());  
+							$childId=$product->getId();
+							
+					?>
+					<tr>
+						<?php //$sku= $item->getData('sku'); ?>
+							<?php //$product = Mage::getModel('catalog/product')->loadByAttribute('sku',$sku);?>
+							<?php //$childId=$product->getId(); ?>
+							<?php $parentIds = Mage::getResourceSingleton('catalog/product_type_configurable')->getParentIdsByChild($childId); ?>
+							<td align="left" valign="top" style="font-size:11px; padding:3px 9px;" width="60"><img src="<?php echo Mage::helper('catalog/image')->init($product, 'image')->resize(145);?>" alt=""  border="0"/></td>
+							<td valign="top" width="150">
+								<div>
+									<?php echo $item->getName(); ?>
+									<dl class="item-options item-optionsnew">
+										<?php  if(isset($parentIds[0])) : ?>
+										<?php $last_key = key(array_slice($parentIds, -1, 1, TRUE)); ?>
+										<?php $parentId=$parentIds[$last_key]; ?>
+												<?php $parentProduct = Mage::getModel('catalog/product')->load($parentId) ?>             
+												<?php $configurableAttributeCollection=$parentProduct->getTypeInstance()->getConfigurableAttributes() ?> 
+												<?php foreach($configurableAttributeCollection as $attribute):?> 
+												    <?php $attcode = $attribute->getProductAttribute()->getAttributeCode() ?> 
+												    <dt style="font-weight:bold"><?php echo $attribute->getProductAttribute()->getFrontend()->getLabel() ?></dt>
+												    <dd style="margin:0; padding-left:14px;"><?php echo Mage::getModel('catalog/product')->load($item->getProductID())->getAttributeText($attcode) ?></dd>
+												<?php endforeach; ?> 
+										<?php endif; ?>
+										</dl>
+								</div>
+							</td>
+							<td valign="top">
+								<?php 
+									echo $item->getSku();
+									if($product->getVendorsku())
+										echo  " / ".$product->getVendorsku();
+								?>
+							</td>
+                        <td><?php echo number_format($item->getQtyOrdered(), 0); ?></td>
+                        <td><?php echo $item->getOriginalPrice(); ?></td>
+                        <td><?php echo $item->getDiscountAmount() ?></td>
+                        <td><?php echo $item->getShippingcost() ?></td>
+                        <td><?php echo $item->getOriginalPrice()*number_format($item->getQtyOrdered(), 0)-$item->getDiscountAmount() ?></td>																		
+					</tr>
+					<?php }?>
+                    </tbody>
+                  </table>
+                  </div>
+                  <div class="col-1">
+            <div class="content">
+                <div class="col2-set">
+                    <div class="col-1">
+                        <table><tr ><th><strong>Shipping Address</strong></th><br/>
+                        <td><?php echo $allAddShipping; ?></td></tr></table>
+                    </div>
+                    
+                </div>
+                <div class="clear"></div>
+                <br />
+
+    </ul>
+</form>
+   </div>
+</div>
+</div>
+</div>
+<div class="clear"></div>

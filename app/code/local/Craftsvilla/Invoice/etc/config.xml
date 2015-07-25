@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Craftsvilla_Invoice>
+            <version>0.1.0</version>
+        </Craftsvilla_Invoice>
+    </modules>
+    <admin>
+        <routers>
+			<invoice>
+				<use>admin</use>
+				<args>
+					<module>Craftsvilla_Invoice</module>
+					<frontName>invoice</frontName>
+				</args>
+			</invoice>
+        </routers>
+    </admin>
+    <global>
+        <blocks>
+            <invoice>
+                <class>Craftsvilla_Invoice_Block</class>
+            </invoice>
+		<adminhtml>
+		<rewrite>
+			<sales_order_invoice_view>Craftsvilla_Invoice_Block_Adminhtml_Order_Invoice_View</sales_order_invoice_view>
+		</rewrite>
+	</adminhtml>
+        </blocks>
+    </global>
+</config>

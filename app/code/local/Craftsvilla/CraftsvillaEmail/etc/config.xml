@@ -1,0 +1,137 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Craftsvilla_CraftsvillaEmail>
+            <version>0.1.0</version>
+        </Craftsvilla_CraftsvillaEmail>
+    </modules>
+    <global>
+        <template>
+            <email>
+             <disputeraisedresponse_reminderto_customer_email_template module="udropship">
+		            <label>Dispute Response Reminder Email To Customer</label>
+		            <file>disputeraisedresponse_reminderto_customer_email_template.html</file>
+		            <type>html</type>
+		   </disputeraisedresponse_reminderto_customer_email_template>
+		   <disputeraisedresponse_reminderto_vendor_email_template module="udropship">
+		            <label>Dispute Response Reminder Email To Vendor</label>
+		            <file>disputeraisedresponse_reminderto_vendor_email_template.html</file>
+		            <type>html</type>
+		   </disputeraisedresponse_reminderto_vendor_email_template>
+		   <disputeraisebycustomer_email_template module="udropship">
+		            <label>Dispute Raised Email To Customer</label>
+		            <file>disputeraisebycustomer_email_template.html</file>
+		            <type>html</type>
+		   </disputeraisebycustomer_email_template>
+		    <disputeraisedshipmentclosed_email_template module="udropship">
+		            <label>Dispute Raised Closed Email To Vendor</label>
+		            <file>disputeraisedshipmentclosed_email_template.html</file>
+		            <type>html</type>
+		   </disputeraisedshipmentclosed_email_template>
+
+			<cancel_email_to_customer_email_template module="craftsvillaemail">
+		            <label>Cancelled Email to customer</label>
+		            <file>cancel_email_to_customer_email_template.html</file>
+		            <type>html</type>
+		   </cancel_email_to_customer_email_template>
+			
+			<refundtodo_email_to_customer module="craftsvillaemail">
+		            <label>Cancelled Email to customer</label>
+		            <file>refundtodo_email_to_customer.html</file>
+		            <type>html</type>
+		   </refundtodo_email_to_customer>
+		<refundtodo_email_to_vendor module="craftsvillaemail">
+		            <label>Cancelled Email to customer</label>
+		            <file>refundtodo_email_to_vendor_notification.html</file>
+		            <type>html</type>
+		   </refundtodo_email_to_vendor>
+		<cancel_email_to_seller_from_customer_email_template module="craftsvillaemail">
+		       <label>cancel_email_to_seller_from_customer_email_template</label>
+		       <file>cancel_email_to_seller_from_customer_email_template.html</file>
+		       <type>html</type>
+	   </cancel_email_to_seller_from_customer_email_template>
+		
+		<create_coupon_email_template module="craftsvillaemail">
+		       <label>create_coupon_email_template</label>
+		       <file>create_coupon_email_template.html</file>
+		       <type>html</type>
+	   </create_coupon_email_template>
+
+		
+		<customer_bankaccount_details_template module="craftsvillaemail">
+		       <label>customer_bankaccount_details_template</label>
+		       <file>customer_bankaccount_details_template.html</file>
+		       <type>html</type>
+	   </customer_bankaccount_details_template>
+	   
+	   <disputeraisecustomer_bankaccount_details_vendor_template module="craftsvillaemail">
+		       <label>disputeraisecustomer_bankaccount_details_vendor_template</label>
+		       <file>disputeraisecustomer_bankaccount_details_vendor_template.html</file>
+		       <type>html</type>
+	   </disputeraisecustomer_bankaccount_details_vendor_template>
+	   
+	         
+		<Mail_Return_Survey module="craftsvillaemail">
+		       <label>Mail_Return_Survey</label>
+		       <file>Mail_Return_Survey.html</file>
+		       <type>html</type>
+	   </Mail_Return_Survey>
+		<sendDisputeRaisedMail module="craftsvillaemail">
+		       <label>sendDisputeRaisedMail</label>
+		       <file>sendDisputeRaisedMail.html</file>
+		       <type>html</type>
+	   </sendDisputeRaisedMail>
+	   <disputeraise_seller_template module="craftsvillaemail">
+		       <label>disputeraise_seller_template</label>
+		       <file>disputeraise_seller_template.html</file>
+		       <type>html</type>
+	   </disputeraise_seller_template>
+	   <disputedcustomer_trackdetails_to_vendor module="craftsvillaemail">
+		       <label>disputedcustomer_trackdetails_to_vendor</label>
+		       <file>disputedcustomer_trackdetails_to_vendor.html</file>
+		       <type>html</type>
+	   </disputedcustomer_trackdetails_to_vendor>
+	   <remarksreject_email_to_customer module="craftsvillaemail">
+		       <label>remarksreject_email_to_customer</label>
+		       <file>remarksreject_email_to_customer.html</file>
+		       <type>html</type>
+	   </remarksreject_email_to_customer>
+		<remarksreject_email_to_vendor module="craftsvillaemail">
+		       <label>remarksreject_email_to_vendor</label>
+		       <file>remarksreject_email_to_vendor.html</file>
+		       <type>html</type>
+	   </remarksreject_email_to_vendor>
+	   <disputeraisedprepaid_track_email_to_customer module="craftsvillaemail">
+		       <label>disputeraisedprepaid_track_email_to_customer</label>
+		       <file>disputeraisedprepaid_track_email_to_customer.html</file>
+		       <type>html</type>
+	   </disputeraisedprepaid_track_email_to_customer>
+	   <disputeraisedprepaid_track_email_to_vendor module="craftsvillaemail">
+		       <label>disputeraisedprepaid_track_email_to_vendor</label>
+		       <file>disputeraisedprepaid_track_email_to_vendor.html</file>
+		       <type>html</type>
+	   </disputeraisedprepaid_track_email_to_vendor>
+	   
+	   
+		<survey_email_template module="craftsvillaemail">
+				   <label>survey_email_template</label>
+				   <file>survey_email_template.html</file>
+				   <type>html</type>
+		</survey_email_template>
+		
+		
+	</email>
+        </template>
+
+	<helpers>
+            <craftsvillaEmail>
+                <class>Craftsvilla_CraftsvillaEmail_Helper</class>
+            </craftsvillaEmail>
+        </helpers>
+
+
+    </global>
+
+
+
+</config>

@@ -1,0 +1,8 @@
+<config>
+	<modules>
+		<Fontis_Customer>
+			<active>false</active>
+			<codePool>community</codePool>
+		</Fontis_Customer>
+	</modules>
+</config>

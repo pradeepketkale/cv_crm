@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config>
+	<modules>
+                
+		<Craftsvilla_Wishlist>
+			<active>true</active>
+			<codePool>local</codePool>
+		</Craftsvilla_Wishlist>
+	</modules>
+</config>

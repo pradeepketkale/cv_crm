@@ -1,0 +1,103 @@
+<div class="right-box-form">
+	<div id="content-colum-var">
+		<div class="leftarea">
+			<div class="grid-top-menu2 grid-top-menunew">
+           <?php $rows = $this->getCouponData(); ?>
+				<?php if( count($rows)>0) {?>
+                <div>
+                 
+                 <div class="pageTtl2">
+        <h1>My Gift Coupons</h1>
+    </div>
+              <tr>
+              <td bgcolor="#f2e7e1"><b class="colrorgl txt12px"></b></td>
+              <td bgcolor="#f2e7e1"><b class="colrorgl txt12px"></b></td>
+              <td bgcolor="#f2e7e1"><b class="colrorgl txt12px"></b></td>
+			  <td bgcolor="#f2e7e1"><b class="colrorgl txt12px"></b></td>
+			  <td bgcolor="#f2e7e1"><b class="colrorgl txt12px"></b></td>
+			  <td bgcolor="#f2e7e1"><b class="colrorgl txt12px"></b></td>
+			</tr>
+              <table border="0" cellspacing="0" cellpadding="2" class="table-border" width="100%">
+                <tr >
+                  <th>Code Description</th>
+                  <th>Coupon Value</th>
+                  <th>Code</th>
+                  <th>Expiry Date</th>
+                  <th>Status</th>
+                </tr>
+                
+                 <?php foreach($rows as $row) { 
+				 ?>
+                <tr>
+                  <td><?php echo $row['name'];?></td>
+                  <td><?php echo number_format($row['discount_amount'],0);?></td>
+                  <td><?php if($row['status_id'] == 0){ echo $row['code']; }?></td>
+                  <td><?php echo $row['expiration_date'];?></td>                 
+                  <td><?php if($row['times_used'] == 0){ echo "Unused"; } elseif($row['times_used'] == 1) { echo "Used"; }?></td>
+                </tr>
+                  <?php }?>
+               <!-- <tr>
+                    <td colspan="4">
+                        <table border="0">
+                            <tbody>
+                                <tr>
+                                    <td ><span>1</span></td>
+                                    <td><a href="javascript:__doPostBack('ctl00$ContentPlaceHolder1$dlRedeem','Page$2')">2</a></td>
+                                    <td><a href="javascript:__doPostBack('ctl00$ContentPlaceHolder1$dlRedeem','Page$3')">3</a></td>
+                                    <td><a href="javascript:__doPostBack('ctl00$ContentPlaceHolder1$dlRedeem','Page$4')">4</a></td>
+                                    <td><a href="javascript:__doPostBack('ctl00$ContentPlaceHolder1$dlRedeem','Page$5')">5</a></td>
+                                    <td><a href="javascript:__doPostBack('ctl00$ContentPlaceHolder1$dlRedeem','Page$6')">6</a></td>
+                                    <td><a href="javascript:__doPostBack('ctl00$ContentPlaceHolder1$dlRedeem','Page$7')">7</a></td>
+                                    <td><a href="javascript:__doPostBack('ctl00$ContentPlaceHolder1$dlRedeem','Page$8')">8</a></td>
+                                    <td><a href="javascript:__doPostBack('ctl00$ContentPlaceHolder1$dlRedeem','Page$9')">9</a></td>
+                                    <td><a href="javascript:__doPostBack('ctl00$ContentPlaceHolder1$dlRedeem','Page$10')">10</a></td>
+                                    <td><a href="javascript:__doPostBack('ctl00$ContentPlaceHolder1$dlRedeem','Page$11')">...</a></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>-->
+              </table>
+                </div>
+                <?php } else { ?>
+               <div class="pageTtl2">
+        <h1>My Gift Coupons</h1>
+    </div>
+               
+                
+				<div class="grid-top-menu2 coupnotexit">
+                You Do Not Have Any Coupons
+                    
+                </div>
+				<?php } ?>			
+			</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">// <![CDATA[
+function sendInvite() {
+var invite_friends = document.getElementById('Invite1_txtEmail').value;
+ var reg = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
+
+if(invite_friends=='')
+{
+	alert("Please enter invite email");
+}
+else if(reg.test(invite_friends) == false) {
+      alert('Please enter valid email');      
+}
+else {
+	var reloadurl = "<?php echo $this->getUrl('referfriend/index/send/')?>";
+	new Ajax.Request(reloadurl, {
+	method: 'post',
+	parameters: {invite_friends:invite_friends,invite_box:'1',Submit:'Send Invites',homeInvite:'1'},
+	onComplete: function(transport) {
+	//alert('ashu');
+	//$('output-div').innerHTML = "";
+	//$('output-div').innerHTML = transport.responseText;
+		alert('Invite mail has been sent!');
+	}
+	});
+}
+}
+// ]]></script>

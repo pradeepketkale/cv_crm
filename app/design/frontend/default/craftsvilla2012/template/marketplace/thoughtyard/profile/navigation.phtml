@@ -1,0 +1,426 @@
+<?php
+$_helpm = $this->helper('umicrosite');
+$vendorIfo = $_helpm->getCurrentVendor(); 
+$storeurl = $_helpm->getVendorUrl($vendorIfo->getVendorId());
+$vendorLogo = $vendorIfo->getShopLogo()!='' ? $vendorIfo->getShopLogo() : 'vendor/noimage/noimage.jpg';
+$_currentUrl = $this->helper('core/url')->getCurrentUrl();
+?>
+<div class="sellerlogosection"> 
+	<img src="<?php echo $_helpm->getResizedUrl($vendorLogo,186); ?>" alt="" border="0"/>
+	<!------------- Craftsvilla Comment - Added By Amit Pitre To Show Followers link --------------------------------->
+    	<!------------- Craftsvilla Comment - Removed To hide Followers link --------------------------------->
+	<?php //echo $this->getLayout()->createBlock('follow/follow')->setTemplate('follow/follow.phtml')->toHtml();?>
+	<!---------------------------------------------------------------------------------------------------------------->
+	<ul class="sellerlinks">
+		<li <?php if($_currentUrl == $storeurl)echo 'class="current"'; ?>><a href="<?php echo substr($storeurl, 0, -1); ?>">The Shop</a></li>
+		<li <?php if($_currentUrl == $storeurl."thoughtyard/profile/")echo 'class="current"'; ?>><a href="<?php echo $storeurl; ?>thoughtyard/profile/">Profile</a></li>
+		<li <?php if($_currentUrl == $storeurl."thoughtyard/policies/")echo 'class="current"'; ?>><a href="<?php echo $storeurl; ?>thoughtyard/policies/">Shipping and Returns</a></li>  
+        <!--Commented for block Feedback & recent sales On dated 13-12-12-->                                                                                                             
+            <!--<li <?php //if($_currentUrl == $storeurl."thoughtyard/recentsales/")echo 'class="current"'; ?>><a href="<?php //echo $storeurl; ?>thoughtyard/recentsales/">Recent sales</a></li>
+          <li <?php //if($_currentUrl == $storeurl."feedback")echo 'class="current"'; ?>><a href="<?php //echo $storeurl; ?>feedback">Feedback</a></li>-->
+                <li>
+                    <?php if(Mage::getSingleton('customer/session')->isLoggedIn()): ?>
+                    <a class="fancybox" href="#contact_seller">Contact</a>
+                    <?php else: ?>
+                    <a class="fancybox" href="#login">Contact</a>
+                    <?php endif; ?>
+                </li>
+                <!--Added by Gayatri to display coupon details on vendor shop-->
+              <li>  <a class="fancybox" href="#shopcoupon" onClick="process_shop_coupon(<?php echo $vendorIfo->getVendorId()?>)">View Coupons of This Store</a>
+                   </li>
+ 	</ul>
+        
+    <span class="dtlLink-select">
+
+		<?php 
+			$country = $vendorIfo["country_id"];
+			?>
+			<?php $state_list = Mage::getModel('directory/region_api')->items($country);
+			$region = $vendorIfo['region_id'];
+			foreach($state_list as $key => $value) {
+				if ($value['region_id'] == $region) {
+					$state_name = $value['name'];
+					break;
+				}
+		} ?>
+		<span style="display:block;margin-top:-20px;">
+			<?php print_r($vendorIfo['city']);?>, <?php echo $state_name;?> 
+		</span>
+		<!--Commneted for block stats page views on dated 13-12-12 -->
+        
+        <span style="display:block;margin-top:10px;">
+                    Pageviews: <?php if(Mage::getModel('udropship/vendor_stats')->getTotalpageviewsByVendor($vendorIfo->getData('vendor_id')) > 0){ echo Mage::getModel('udropship/vendor_stats')->getTotalpageviewsByVendor($vendorIfo->getData('vendor_id'));}else{ echo 0;}?>
+                </span>
+           <span style="display:block;margin-top:10px;">     
+         <?php $vendorAdminPaymentMethods = $vendorIfo->getVendoradminPaymentMethods();
+			$vendorCOD = true;
+			foreach ($vendorAdminPaymentMethods as $method)
+				{
+				   if($method == 'cashondelivery')
+					{
+						$vendorCOD = false;
+						break;
+					}
+				
+				}
+			 if ($vendorCOD)
+				{?>
+				  <div id="craftsvilla_cash_on_delivery"><div class="active">Cash On Delivery Available</div></div><br></span>
+                  <?php
+				}
+			?>
+	</span>
+   
+</div><br />
+   <?php /*?> <div class="block-title-new">
+        <?php echo $this->__('Browse By') ?>
+    </div><?php */$symbol = Mage::app()->getLocale()->currency(Mage::app()->getStore()->getCurrentCurrencyCode())->getSymbol();
+	$baseCurrencyCode = Mage::app()->getStore()->getBaseCurrencyCode(); 
+$currentCurrencyCode = Mage::app()->getStore()->getCurrentCurrencyCode(); 
+ // price should be in  base CurrencyCode 
+$precision=2; //float point of price
+$Range1 = 500;
+$Range2 = 1000;
+$Range3 = 2000;
+$Range4 = 5000;
+ if ($baseCurrencyCode != $currentCurrencyCode) {
+        // convert price from current currency to base currency
+        $Range1 = round((Mage::helper('directory')->currencyConvert(500, $baseCurrencyCode, $currentCurrencyCode)*1.5),0);
+		$Range2 = round((Mage::helper('directory')->currencyConvert(1000, $baseCurrencyCode, $currentCurrencyCode)*1.5),0);
+		$Range3 = round((Mage::helper('directory')->currencyConvert(2000, $baseCurrencyCode, $currentCurrencyCode)*1.5),0);
+		$Range4 = round((Mage::helper('directory')->currencyConvert(5000, $baseCurrencyCode, $currentCurrencyCode)*1.5),0);
+
+        // convert price from base currency to current currency
+        //$priceTwo = Mage::helper('directory')->currencyConvert($amount, $baseCurrencyCode, $currentCurrencyCode);
+    }
+	
+?>
+        <div style="height: auto;
+width: 149px;
+border: 1px groove #DFDFDF; margin:3px;">
+
+         <dl id="narrow-by-list">
+         
+            <dt style="margin-left:5px"><?php echo $this->__('Filter By Price') ?></dt>
+            <dd style="margin-left:3px">
+                    
+       
+      <form><div onclick="submitprice()" style="cursor:pointer;"><font color="#0192B5"><?php echo $symbol;?><?php echo '0'; ?>  - <?php echo $symbol;?><?php echo $Range1;?></font></div></form>
+       <form><div onclick="submitprice1()" style="cursor:pointer;"><font color="#0192B5"><?php echo $symbol;?><?php echo $Range1; ?>  - <?php echo $symbol;?><?php echo $Range2;?></font></div></form>
+        <form><div onclick="submitprice2()" style="cursor:pointer;"><font color="#0192B5"><?php echo $symbol;?><?php echo $Range2; ?>  - <?php echo $symbol;?><?php echo $Range3;?></font></div></form>
+      <form><div onclick="submitprice3()" style="cursor:pointer;"><font color="#0192B5"><?php echo $symbol;?><?php echo $Range3; ?>  - <?php echo $symbol;?><?php echo $Range4;?></font></div></form>
+  <!-- <form> <div onclick="submitprice4()" style="cursor:pointer;"><input type="text" id="max_value4" name="max_value" class="subreadonly" onClick='this.readOnly = true;'  value="Above Rs. 5000" disabled="disabled" style="width:92px; color:#0192B5;border: none;background: transparent;
+    outline:none;margin-left:2px;" /></div></form>-->
+    <form> <div onclick="submitprice4()" style="cursor:pointer;"> <input type="text" id="min_value4" name="min_value" onfocus="this.blur()" class="subreadonly" readonly="readonly" value="" style="width:0px; color:#0192B5;border: none;background: transparent;
+    outline:none;cursor:pointer"><input type="text" id="max_value4" name="max_value" onfocus="this.blur()" class="subreadonly" value="Above <?php echo $symbol.''.$Range4;?>" readonly="readonly" style="width:92px; color:#0192B5;border: none;background: transparent;
+    outline:none;margin-left:-15px;cursor:pointer" /></div></form><br />
+    
+   
+      
+     <div style="color: #0192B5; size: 2px; margin-left:-2px; margin-top:-15px">         
+     Rs.<input type="text" name='min_value' placeholder='' id='min_value5' style='width:33px;height:10px' /><font color="#0192B5"> - </font>             
+             
+      <!--<div style="color: #0192B5; size: 2px; margin-left:5px; margin-top:-15px">         
+      To: &nbsp;&nbsp;&nbsp;&nbsp;-->
+       
+      
+     Rs.<input type="text" name='max_value' placeholder='' id='max_value5' style='width:33px;height:10px' /></div><br />
+             
+         
+        
+        <input type="button" name="submit" onClick="submitprice5()" value="Price Search" style='width:126px;height:26px;background-color: #39708E;font-size: 12px;text-shadow: black 2px 2px 3px;box-shadow:0px 0px 0px -8px #0192B5 inset;-webkit-border-top-left-radius:9px;	-moz-border-radius-topleft:9px;	border-top-left-radius:9px;	-webkit-border-top-right-radius:9px;	-moz-border-radius-topright:9px;border-top-right-radius:9px;-webkit-border-bottom-right-radius:9px;	-moz-border-radius-bottomright:9px;	border-bottom-right-radius:9px;	-webkit-border-bottom-left-radius:9px;	-moz-border-radius-bottomleft:9px;	border-bottom-left-radius:9px; cursor:pointer; margin-top:-26px; color:#FFF; margin-left:11px' />
+  
+
+          </dd>
+      <div style="font-size:11px;margin-top:-26px" align="center"> <a href="<?php echo "?"?>" title="<?php echo $this->__('Remove item')?>">Clear Price Filter</a></div>
+      
+
+        
+             
+        </dl>   </div>
+ 
+<!--Added By Dileswar On dated 01-09-2014 for showing Left banner on shop page     Start-->
+
+<div class="banner_index_leftclmn"  style="margin-left:-1px;">
+
+		<?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('banner_left')->toHtml(); ?>   
+
+	</div>
+
+<!--Added By Dileswar On dated 01-09-2014 for showing Left banner on shop page       End-->   
+<script type="text/javascript">
+jQuery('.sellerlinks li').hover(function(){
+    jQuery(this).css('background','url(\'/skin/frontend/default/craftsvilla2012/img/side_nav.png\') no-repeat');
+  },function(){
+	  
+    jQuery(this).css('background','none');
+  }
+);
+</script>
+<?php 
+$messageId=$this->helper('craftsvillacustomer')->getMessageId();
+$url = Mage::getBaseUrl().'craftsvillacustomer/index/sendemailcommunication'; 
+$_custImgResize=$this->helper('craftsvillacustomer');
+$_customer=Mage::getSingleton('customer/session')->getCustomer();
+$customerId=$_customer->getId();
+$customerName=$_customer->getFirstname();
+$customerEmail=$_customer->getEmail();
+$recepientEmail=$vendorIfo->getData('email');
+$recepientName=$vendorIfo->getData('vendor_name');
+
+
+if($_customer->getCustomerPhoto()!=''){
+    $_imageCustomer = $_customer->getCustomerPhoto();
+    $imgurl=Mage::getBaseUrl('media');
+    $imageCustomerImg=split($imgurl,$_imageCustomer);//trim($_imageCustomer,$url);
+    $_image=$_custImgResize->getResizedUrl($imageCustomerImg[1],75);
+}
+else{
+    $_image=$this->getSkinUrl('img/messages/default_avatar_75px.png');
+}
+
+
+?>    
+<!--Seller Contact pop up-->
+    <div id="contact_seller">
+    
+    <div id="welcome_img"><span class="popuoheading">Welcome to <?php echo $vendorIfo->getData('vendor_name'); ?></span></div>
+    <div id="bg_welcome"> 
+    
+    <form id="sellercontact" enctype="multipart/form-data">
+      <div id="craft-thumb" class="fleft"><img width="75" height="75" src="<?php echo $_image; ?>" /></div>
+      <div id="craft-message" class="fleft">
+
+        <p><input type="text" name="subject" id="craft-subject" placeholder="Subject"  class="required-entry" /></p>
+        <p><textarea rows="11" name="message_text" id="craft-textarea" placeholder="Message text" onkeyup="valid(this)" class="required-entry"></textarea></p>
+        <p><span class="required">*</span> Email Address and Website Address are not allowed</p>
+        
+        <div id="craft-upload-frame"><input type="file" name="imgfile" id="craft-upload-shim" /><a href="#">Attach image</a></div>
+        <div class="positionrelative" id="imgshow" style="display:none">
+            <p class="up_cust"><img id="show_img" height="75" width="75" src="" /></p>
+        </div>
+        <input type="hidden" name="custid" id="reqvalues1" value="<?php echo $customerId; ?>" />
+        <input type="hidden" name="recmail" id="reqvalues2" value="<?php echo $recepientEmail; ?>" />
+        <input type="hidden" name="recname" id="reqvalues3" value="<?php echo $recepientName; ?>" />
+        <input type="hidden" name="msgid" id="reqvalues4" value="<?php echo $messageId; ?>" />
+        <input type="hidden" name="vendorid" id="reqvalues5" value="<?php echo $vendorIfo->getData('vendor_id') ?>" />
+        <input type="hidden" name="sendname" id="reqvalues6" value="<?php echo $customerName ?>" />
+        <input type="hidden" name="sendemail" id="reqvalues7" value="<?php echo $customerEmail ?>" />
+        
+      </div>
+      <span class="button-large" id="craft-send"><span>
+        <input type="submit" id="submit_val" value="Send" class="spriteimg floatr clr continueMdm" />
+        </span></span>
+    </form>
+ </div>
+
+ </div>
+ 
+ 
+      
+<!--Seller Contact pop up Info-->
+ 
+<div id="successmessage">
+    <p>Your message has been sent</p>
+</div>
+
+<div id="notsuccessmessage" style="display:none">
+    <p>Image size should be less than 2MB</p>
+</div>
+
+<div id="filetypeext" style="display:none">
+    <p>It is not valid file type</p>
+</div>
+
+<script type="text/javascript">
+    
+   jQuery(document).ready(function() {
+       
+       
+       var thumb = jQuery('img#show_img');	
+                new AjaxUpload('craft-upload-shim', { 
+    		action: '<?php echo Mage::getBaseUrl().'craftsvillacustomer/index/previewimage/'; ?>',
+    		name: 'imgfile',
+                onSubmit: function(file, extension) {
+    			jQuery('#imgshow').show();
+    		},
+    		onComplete: function(file, response) {
+                    if(response == 'image size!')
+                    {	
+                           jQuery.fancybox({width:'430px', height:'22px',href:"#notsuccessmessage"});
+                    }
+                    if(response == 'filetype')
+                    {	
+                           jQuery.fancybox({width:'430px', height:'22px',href:"#filetypeext"});
+                    }
+                    
+                    thumb.attr('src', response);
+                }    
+                });
+       
+       
+      
+    var options = { 
+        success:       showResponse
+    };
+    
+   jQuery('#sellercontact').submit(function() { 
+        
+        if(jQuery('#craft-subject').val()==''){
+            alert("Subject cannot be left blank");
+            return false;
+        }
+        if(jQuery('#craft-textarea').val()==''){
+            alert("Message text cannot be left blank");
+            return false;
+        }
+        jQuery('#submit_val').fadeOut("slow");
+        jQuery("#sellercontact").ajaxSubmit({url: '<?php echo $url; ?>', type: 'post',success:showResponse})
+        return false; 
+   });
+    
+});
+    
+function valid(f) {
+    /[@]/.test(f.value)?f.value = f.value.replace(/[@]/g,''):null;
+    return false;
+}
+
+function showResponse(responseText){ 
+	if(responseText == 'message sent!'){
+		jQuery.fancybox({width:'430px', height:'22px',href:"#successmessage"});
+                jQuery('#craft-subject').val('')
+                jQuery('#craft-textarea').val('');
+                jQuery('#submit_val').show();
+                jQuery('#imgshow').hide();
+	}
+}
+</script>
+<!--Added by Gayatri to display coupon details on vendor shop-->
+ <div id="shopcoupon" style="display:none">
+    
+    <div id="welcome_img"><span class="popuoheading">Coupons of <?php echo $vendorIfo['vendor_name']; ?></span></div>
+    <div id="bg_welcome"> </div>
+    
+    
+    <form id="couponcode" method="post" name="couponcode" enctype="multipart/form-data">
+    
+            <div id="craft-message" class="fleft">
+		
+           
+      </div>
+      <span class="button-large" id="craft-send">
+      <span><input type="submit" id="submit_val" value="Close" class="spriteimg floatr clr continueMdm" /></span>
+      </span>
+    </form>
+ </div>
+
+ </div>
+<script language="javascript">
+function process_shop_coupon(vendor_id) {
+	
+	var param = 'vendor_id='+vendor_id;
+	
+	window.scrollTo(0, 0);
+	jQuery.ajax({
+	
+		url : "http://www.craftsvilla.com/index.php/shopcoupon/coupon/coupongetvalues",
+		
+		cache : false,
+		data : param,
+		success : function(response_shop) {
+			var myObject_shop = eval('(' + response_shop + ')');
+			var html_value = myObject_shop.cache;
+						jQuery('#shopcoupon').html(html_value);
+						
+					jQuery.fancybox({maxWidth:'700px', maxHeight:'500px',href:"#shopcoupon", fitToView   : true, width: '90%', height: 1300, 'scrolling' : 'yes',});
+			window.scrollTo(0, 0);
+			return false;
+			
+		}
+	})
+	}
+
+
+function submitprice(){
+	
+		   var min_value = 10;
+		   var max_value = 500;
+
+    var pathname = window.location.pathname;
+	var url = "?min_value="+min_value+"&max_value="+max_value;
+	
+		 
+	window.location.href = pathname+"?min_value=" + min_value+"&max_value="+max_value;
+
+}
+
+function submitprice1(){
+		   var min_value = 500;
+		   var max_value = 1000;
+
+    var pathname = window.location.pathname;
+	var url = "?min_value="+min_value+"&max_value="+max_value;
+		 
+	window.location.href = pathname+"?min_value=" + min_value+"&max_value="+max_value;
+
+}
+
+
+function submitprice2(){
+		   var min_value = 1000;
+		   var max_value = 2000;
+
+    var pathname = window.location.pathname;
+	var url = "?min_value="+min_value+"&max_value="+max_value;
+		 
+	window.location.href = pathname+"?min_value=" + min_value+"&max_value="+max_value;
+
+}
+
+
+function submitprice3(){
+		   var min_value = 2000;
+		   var max_value = 5000;
+
+    var pathname = window.location.pathname;
+	var url = "?min_value="+min_value+"&max_value="+max_value;
+		 
+	window.location.href = pathname+"?min_value=" + min_value+"&max_value="+max_value;
+
+}
+
+function submitprice4(){
+		   var min_value = 5000;
+		   var max_value = 100000;
+
+    var pathname = window.location.pathname;
+	var url = "?min_value="+min_value+"&max_value="+max_value;
+		 
+	window.location.href = pathname+"?min_value=" + min_value+"&max_value="+max_value;
+
+}
+
+function submitprice5(){
+		   var min_value = document.getElementById("min_value5").value;
+		   var max_value = document.getElementById("max_value5").value;
+		  
+		   if(min_value=='')
+		   {
+			   min_value = '0';
+
+		   }
+		   if(max_value=='')
+		   {
+			   max_value= '100000';
+			   
+		   }
+    var pathname = window.location.pathname;
+	var url = "?min_value="+min_value+"&max_value="+max_value;
+		 
+	window.location.href = pathname+"?min_value=" + min_value+"&max_value="+max_value;
+
+}
+
+
+</script>

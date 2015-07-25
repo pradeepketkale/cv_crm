@@ -1,0 +1,59 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $this->getLang() ?>" lang="<?php echo $this->getLang() ?>">
+<head>
+<?php echo $this->getChildHtml('head') ?>
+</head>
+<body<?php echo $this->getBodyClass()?' class="'.$this->getBodyClass().'"':'' ?>>
+<div class="page">
+<?php echo $this->getChildHtml('after_body_start') ?>
+
+    <?php echo $this->getChildHtml('global_notices') ?>
+    <?php echo $this->getChildHtml('header') ?>
+  
+
+
+
+
+        <?php echo $this->getChildHtml('breadcrumbs') ?>
+        <div class="clmnRht">
+            <?php echo $this->getChildHtml('global_messages') ?>
+            <?php echo $this->getChildHtml('content') ?>
+        </div>
+        
+        
+        
+        
+        
+    </div>
+    </div>
+    </div></div>
+    
+    
+    </div>
+     </div>
+    
+    <?php echo $this->getChildHtml('footer') ?>
+    <?php echo $this->getChildHtml('before_body_end') ?>
+</div>
+<?php echo $this->getAbsoluteFooter() ?>
+<?php if($_SERVER['SERVER_ADDR'] == "10.134.214.27" || $_SERVER['SERVER_ADDR'] == "10.134.226.28"){?>
+		<!--chart beat -->
+<!--<script type="text/javascript">
+    var _sf_async_config={uid:27315,domain:"craftsvilla.com"};
+        function loadChartbeat() {
+            window._sf_endpt=(new Date()).getTime();
+            var e = document.createElement('script');
+            e.setAttribute('language', 'javascript');
+            e.setAttribute('type', 'text/javascript');
+            e.setAttribute('src',
+            (("https:" == document.location.protocol) ? "https://a248.e.akamai.net/chartbeat.download.akamai.com/102508/" : "http://static.chartbeat.com/") + "js/chartbeat.js");
+            document.body.appendChild(e);
+    }
+var oldonload = window.onload;
+window.onload = (typeof window.onload != 'function') ? loadChartbeat : function() { oldonload(); loadChartbeat(); };
+</script>-->
+<!-- end chart beat -->
+<?php }?>
+</div>
+</body>
+</html>

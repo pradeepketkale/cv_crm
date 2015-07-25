@@ -1,0 +1,25 @@
+<!--<ol class="countdis">-->
+<?php 
+	/*Start
+	 * Craftsvilla Comment
+	 * Added nofollow to link for price filters
+	 * added by suresh on 28-06-2012
+	 */
+	/*if($this->getType() == 'catalog/layer_filter_price')
+	{
+		$nofollow_val = 'rel="nofollow"';
+	}
+	else {
+		$nofollow_val = '';
+	}*/
+?>
+<?php //foreach ($this->getItems() as $_item): ?>
+    <!--<li>
+        <?php //if ($_item->getCount() > 0): ?>
+        <a <?php //echo $nofollow_val; ?> href="<?php //echo $this->urlEscape($_item->getUrl()) ?>"><?php //echo $_item->getLabel() ?></a>
+        <?php //else: echo $_item->getLabel() ?>
+        <?php //endif; ?>
+        (<?php //echo $_item->getCount() ?>)
+    </li>
+<?php //endforeach ?>
+</ol>-->

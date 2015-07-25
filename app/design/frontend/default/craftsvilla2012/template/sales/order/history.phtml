@@ -1,0 +1,325 @@
+
+<?php 
+require_once 'app/Mage.php';
+Mage::app();
+
+$path = Mage::getBaseDir()."/TrackWebServiceFedex.php";
+ $a =  Mage::getBaseDir().'/app/code/local/Craftsvilla/ShopCoupon/controllers/TrackController'; 
+$_orders = $this->getOrders();
+$shipmentStatuses = Mage::getSingleton('udropship/source')->setPath('shipment_statuses')->toOptionHash();
+$i=1;
+//print_r($_orders); exit;
+$_ajaxInfoUrl = $this->getUrl('feedback/vendor/feedbackinfo/id/ID');
+$_hlp = Mage::helper('udropship');
+?>
+ 
+<div class="postcontent paddingpager">
+<div class="pageTtl2">
+  <h1><?php echo $this->__('Confirmed Orders') ?></h1>
+</div>
+
+<?php  $msg = Mage::getSingleton('customer/session')->getMessages(true);
+        $this->getLayout()->getMessagesBlock()->addMessages($msg);
+        echo $this->getMessagesBlock()->getGroupedHtml(); ?>
+
+<!--HTML Code-->
+<?php echo $this->getPagerHtml(); ?>
+<?php if($_orders->getSize()): ?>
+
+<table cellspacing="1" class="table-border feedcust" width="100%" id="shipment-grid">
+
+  <thead>
+    <tr>
+      <th></th>
+      <th>Order #</th>
+      <th>Name</th>
+      <th>QTY</th>
+      <th>Date</th>
+      <th>Status</th>
+      <th>Estimated <br/>Delivery Date</th>
+      <th>Tracking Number</th>
+      <th>Courier Name</th>
+      <th>Action</th>
+	<th>Cancel Action</th>	
+    </tr>
+  </thead>
+  <tbody>
+
+      <?php 
+
+$courierName = '';
+$_tracknumber = '';
+
+foreach($_orders as $order):
+			
+        $_items=$order->getAllItems();
+		$_id = $order->getId(); 
+		$getOrderId = $order->getOrderId(); 
+		$orderDetailD = Mage::getModel('sales/order')->load($getOrderId);  //load order 
+		$payment = $orderDetailD->getPayment()->getMethod(); 
+		
+		$vendorShippHandling = array();
+		$newdate = '';
+		$_datediff = '';
+		$_shippmentCreateDate = $order->getCreatedAt();
+		$vendor = $_hlp->getVendor($order->getUdropshipVendor());
+		if($vendorShippHandling[1] == 'hours')
+		$vendorShippHandling = explode(" ",$vendor->getShipHandlingTime());
+					$vendorShippHandling[0] = $vendorShippHandling[0]/24;
+
+		$_datediff = $vendorShippHandling[0] + 7;
+		$_datediff = "+".$_datediff." day";
+		$newdate = strtotime($_shippmentCreateDate);
+		$newdate = strtotime($_datediff, $newdate);
+		$newdate =  date('d/m/Y', $newdate);
+      
+	  	// Add the  track number & courier name Added By DileswaR on dated 06-11-2012 
+		
+		//$trackings=Mage::getResourceModel('sales/order_shipment_track_collection')->addAttributeToSelect('*')->addAttributeToFilter('parent_id',$_id);
+		//$allTrackingIds = $trackings->getData();						
+		//print_r($allTrackingIds);
+		//exit;
+		//		foreach($allTrackingIds as $_tracknumber)
+		//		{
+		//			$courierName = $_tracknumber['courier_name'];
+//
+//					$_tracknumber_ = $_tracknumber['number'];
+//
+//				}
+
+
+
+
+
+		
+	  ?>  
+      <?php //if($shipmentStatuses[$order->getUdropshipStatus()] != 'Accepted'){ ?>
+	<tr id="row-<?php echo $_id?>" class="trigger">
+		<td><a class="action" href="#" onclick="return false"><span></span></a></td>
+		<td> <?php echo $order->getIncrementId();?></td>
+		<td><?php echo $this->htmlEscape($order->getShippingName()); ?></td>
+		<td><?php echo number_format($order->getTotalQty()); ?></td>
+		<td><?php echo date('d/m/Y', strtotime($order->getCreatedAt())); ?></td>
+		
+        <td><?php echo $shipmentStatuses[$order->getUdropshipStatus()]; ?></td>
+        
+        
+		<td><?php echo $newdate; ?></td>
+		
+     	<td>
+		<?php 
+
+foreach ($orderDetailD->getTracksCollection() as $_track){
+		$_tracknumber = $_track->getNumber();
+		$courierName = $_track->getCourierName();
+		if($courierName == "Aramex"){ ?>
+		<a class="fancybox" href="#track" onClick="get_track_details(<?php echo $_tracknumber ?>)"><?php  echo $_tracknumber ?><br/>Track Here</a>
+		<?php } elseif($courierName == "Fedex"){ ?>
+		<a class="fancybox-auto"  href="#trackfedex" onClick="get_fedex_track_details(<?php echo $_tracknumber ?>)"><?php echo $_tracknumber ?><br/>Track Fedex Here</a>
+		<?php }}?>
+		</td>
+        
+		<td><?php echo $courierName; ?></td>
+		<p id="demo"></p>
+        
+        <script>
+        function cancelConfirm() {
+        if(confirm("Are You Sure You Want To Cancel The Order ?")) {
+        	document.getElementById("formconfirm").submit();
+        	} 
+        	return false;
+        }
+        </script>
+		<td><a href="<?php echo $this->getShipmetPrintUrl($order) ?>" onclick="this.target='_blank'" class="print" title="Print"><?php echo $this->__('View') ?></a></td>
+		<?php if($shipmentStatuses[$order->getUdropshipStatus()] == 'Processing' && $payment == "cashondelivery"){ ?>
+		<td><form id="formconfirm" method="post" onsubmit = "return cancelConfirm()" action="<?php echo $this->getUrl('feedback/vendor/cancelcodorder') ?>">  
+              <input type="hidden" name ="orderId" value="<?php echo $_id;?>" />
+		      <input width="100px" type="submit" style="filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#CE3D49',endColorstr='#019ad2',GradientType=0);background-color:#CE3D49; 	-moz-border-radius:6px; 	-webkit-border-radius:6px; 	border-radius:6px; 	border:1px ;display:inline-block;cursor:pointer;color:#ffffff; 	font-family:arial; 	font-size:15px;font-weight:bold; 	padding:2px 20px;text-decoration:none; " value="CANCEL" id="cancelbutton" name="cancelbutton" > 
+          </form> </td>
+      
+    <?php }else{  ?>
+		<td><input width="100px" type="submit" style="filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#CE3D49',endColorstr='#019ad2',GradientType=0);background-color:'#CE3D49'; 	-moz-border-radius:6px; 	-webkit-border-radius:6px; 	border-radius:6px; 	border:1px ;display:inline-block;cursor:pointer;color:#000000; 	font-family:arial; 	font-size:15px;font-weight:bold; 	padding:2px 20px;text-decoration:none; " value="CANNOT BE CANCELED" id="cancelbutton" name="cancelbutton"/></TD>
+	
+	<?php } ?>
+    </tr>
+    <?php //} ?>
+    <tr id="info-<?php echo $_id?>" class="collapsed" style="display:none;">
+            <td id="container-<?php echo $_id?>" colspan="9" class="expanded">
+                <span class="shipment-info-loader">Please wait, loading shipment information...</span>
+            </td>
+        </tr>
+
+<!--added for pop up of tracking details on dated 15-10-2014----START-->
+<div id="track" style="display:none">
+<div id="welcome_img" ><span class="popuphead">Tracking Of Shipment <?php echo $order->getIncrementId();?></span></div>
+<p class="clr"></p>
+<p align="center"><span>Please wait, loading tracking information...</span><img src= 'http://local.craftsvilla.com/skin/frontend/default/craftsvilla2012/images/ajax-loader.gif' width="200px" height="200px"></img> </p>
+</div>
+
+<div id="trackfedex" style="display:none">
+<!--<div id="welcome_img" ><span class="popuphead">Tracking of Shipment <?php echo $order->getIncrementId();?></span></div>
+<p class="clr"></p>
+<p align="center"><span>Please wait, loading tracking information.......</span><img src= 'http://local.craftsvilla.com/skin/frontend/default/craftsvilla2012/images/banner.gif' width="200px" height="200px"></img></p>
+->
+
+<!--added for pop up of tracking details on dated 15-10-2014----END-->
+     <?php $i++; endforeach;?>
+  </tbody>
+</table>
+
+</div>
+
+<script type="text/javascript">decorateTable('my-orders-table');</script> 
+<?php else: ?>
+<p><?php echo $this->__('You have placed no orders.'); ?></p>
+<?php endif ?>
+
+
+<script type="text/javascript">
+
+function get_track_details(tracknumber) {
+	
+var param = 'tracknumber='+tracknumber;
+//var quote = '<?php echo Mage::getBaseUrl().'shopcoupon/track/getTrackdetail';?>'	
+
+
+	window.scrollTo(0, 0);
+	jQuery.ajax({
+		url : '<?php echo Mage::getBaseUrl().'shopcoupon/track/getTrackdetail';?>',
+		cache : false,
+		data : param,
+		success : function(response_track) {
+		var myObject_shop = eval('(' + response_track + ')');
+		var html_value = myObject_shop.trackvalue;
+					jQuery('#track').html(html_value);
+					jQuery.fancybox({maxWidth:'700px', maxHeight:'500px',href:"#track", fitToView   : true, width: '90%', height: 1300, 'scrolling' : 'yes',});
+			window.scrollTo(0, 0);
+		return false;
+		}
+	})
+	}
+</script>
+<script>
+function get_fedex_track_details(trackfedex) {
+var param = 'trackfedex='+trackfedex; 
+//document.write(param); return false;
+//var a = window.location.hash;
+//document.write(a); return false;
+window.scrollTo(0, 0);
+	jQuery.ajax({
+		url : '<?php echo Mage::getBaseUrl().'shopcoupon/track/getFedexTrackdetail';?>',
+		type: "post",
+		cache : false,
+		data : param,
+		success : function(data) {
+		
+		jQuery('#trackfedex').html(data);		
+					jQuery.fancybox({maxWidth:'1700px', maxHeight:'500px',href:"#trackfedex", title : 'fedexdetails', fitToView   : true, width: '90%', height: 1300, 'scrolling' : 'yes',} );
+			window.scrollTo(0, 0);
+		return false;
+		}
+	})	
+		
+}
+</script>
+
+
+
+<script type="text/javascript">
+
+$$('#shipment-grid tbody tr.trigger').each(function (row) {
+    var a = row.down('a.action');
+    a.observe('click', expandRow.curry(false, row));
+});
+
+function expandRow(openFlag, row) {
+    var a = row.down('a.action');
+    var id = row.id.split('-')[1];
+    var info = $('info-'+id), container = $('container-'+id), img = a.down('span');
+    if (!info.isInfoLoaded) {
+		info.isInfoLoaded = true;
+        new Ajax.Request('<?php echo $_ajaxInfoUrl ?>'.replace('ID', id), {
+            onComplete: function(transport) {
+            	 if(transport.responseText != 0){
+					document.getElementById('container-'+id).innerHTML = transport.responseText;
+					$('submit-'+id).observe('click', function () {
+						jQuery("#feedback-form-"+id).ajaxForm(
+						{
+							beforeSubmit:  showRequest,
+							success : showResponse
+						}).submit();
+				    });
+				}
+            }
+            });
+    }
+    if (openFlag) info.show();
+    else info.toggle();
+    if (openFlag) {
+        info.removeClassName('collapsed');
+    } else if (info.hasClassName('collapsed')) {
+        info.removeClassName('collapsed');
+    } else {
+        info.addClassName('collapsed');
+    }
+    if (info.hasClassName('collapsed')) {
+        img.removeClassName('open');
+    } else {
+        img.addClassName('open');
+    }
+}
+function showResponse(responseText, statusText, xhr, $form)  { 
+	if(statusText == 'success'){
+		var mySplitResult = responseText.split("##%%%%%%%%%##");
+		document.getElementById('container-'+mySplitResult[0]).innerHTML = mySplitResult[1];
+		$('success-msg-'+mySplitResult[0]).show();
+		$('success-msg-'+mySplitResult[0]).innerHTML = "<span>Your Feedback has been saved.</span>";
+		$('submit-'+mySplitResult[0]).observe('click', function () {
+			jQuery("#feedback-form-"+mySplitResult[0]).ajaxForm(
+			{
+				beforeSubmit:  showRequest,
+				success : showResponse
+			}).submit();
+	    });
+	}
+}
+
+function showRequest(formData, jqForm, options) { 
+	var form = jqForm[0];
+	var shippmentId = form.shippment_id.value;
+	var formId = "feedback-form-"+shippmentId;
+
+	if(!form.received.value){
+		if (!checkRadio(formId,"received")){
+			alert('Please select whether you recevied your order or not.');
+			return false;
+		}
+	}
+	
+	if(!form.rating.value){
+		if (!checkRadio(formId,"rating")){
+			alert('Please rate product.');
+			return false;
+		}
+	}
+	if (form.feedback.value == '') {
+		alert('Please give some feedback.'); 
+		return false; 
+	}
+	$('submit-'+shippmentId).disabled = true;
+	$('submit-loader-'+shippmentId).show();
+	return true; 
+}
+
+function checkRadio (frmName, rbGroupName) {
+ var radios = document[frmName].elements[rbGroupName];
+ for (var i=0; i <radios.length; i++) {
+  if (radios[i].checked) {
+   return true;
+  }
+ }
+ return false;
+} 
+</script>
+
+

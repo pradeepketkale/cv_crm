@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+    <default>
+    </default>
+    <productdownloadreq_index_index>
+        <reference name="content">
+            <block type="productdownloadreq/productdownloadreq" name="productdownloadreq" template="productdownloadreq/productdownloadreq_vendor.phtml" />
+        </reference>
+    </productdownloadreq_index_index>
+</layout> 

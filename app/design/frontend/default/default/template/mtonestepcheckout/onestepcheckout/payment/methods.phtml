@@ -1,0 +1,62 @@
+<?php
+/******************************************************
+ * @package MT OneStepCheckOut module for Magento 1.4.x.x and Magento 1.5.x.x
+ * @version 1.5.2.1
+ * @author http://www.magentheme.com
+ * @copyright (C) 2011- MagenTheme.Com
+ * @license PHP files are GNU/GPL
+*******************************************************/
+?>
+<?php
+	//var_dump($this->getMethods());
+$creditlabel = 'payucheckout_shared';
+$codlabel = 'cashondelivery';
+$ebslabel = 'secureebs_standard';
+$getPostdetails = $this->getQuote()->getShippingAddress();
+$pincode = $getPostdetails->getPostcode();
+$countryId = 'IN';
+$paychecked = $creditlabel;
+foreach ($this->getMethods() as $_method){
+$_code = $_method->getCode();
+if(($_code == $codlabel) && ($this->codpincodecheck($pincode)) && ($countryId == 'IN')){
+$paychecked = $codlabel;
+break;
+}
+if($_code == $ebslabel){
+$paychecked = $ebslabel;
+}
+
+}
+
+?>
+<?php foreach ($this->getMethods() as $_method): $_code = $_method->getCode() ?>
+    <dt <?php if($_code == 'cashondelivery'){echo 'class="meth-cod-dd"';}?>>
+    <?php if( sizeof($this->getMethods()) > 1 ): ?>
+        <input id="p_method_<?php echo $_code ?>" value="<?php echo $_code ?>" type="radio" name="payment[method]" title="<?php echo $this->htmlEscape($_method->getTitle()) ?>" onclick="payment.switchMethod('<?php echo $_code ?>')"<?php if($paychecked==$_code): ?> checked="checked"<?php endif; ?> class="radio validate-one-required-by-name" />
+    <?php else: ?>
+        <span class="no-display"><input id="p_method_<?php echo $_code ?>" value="<?php echo $_code ?>" type="radio" name="payment[method]" checked="checked" class="radio" /></span>
+    <?php endif; ?>
+        <label for="p_method_<?php echo $_code ?>"><?php echo $_method->getTitle() ?> <?php echo $this->getMethodLabelAfterHtml($_method) ?></label>
+		<input type="hidden" id="p_method_<?php echo $_code ?>_custom" value="<?php echo $_code;?>" />
+    </dt>
+    <?php if ($html = $this->getPaymentMethodFormHtml($_method)): ?>
+    <dd>
+        <?php echo $html; ?>
+    </dd>
+    <?php endif; ?>
+<?php endforeach; ?>
+<script type="text/javascript">
+	var reloadReviewUrl = '<?php echo $this->getUrl('mtonestepcheckout/index/reloadReviewh') ?>';
+    //<![CDATA[
+        //($$('#checkout-payment-method-load dt input')).invoke('observe', 'click', function(event){shippingMethod.saveShippingMethod();payment.savePayment();reloadReview(reloadReviewUrl);});
+        ($$('#checkout-payment-method-load dt input')).invoke('observe', 'click', function(event){payment.savePayment();});
+    //]]>
+
+</script>
+<script type="text/javascript">
+//<![CDATA[
+<?php echo $this->getChildChildHtml('scripts'); ?>
+//]]>
+
+</script>
+

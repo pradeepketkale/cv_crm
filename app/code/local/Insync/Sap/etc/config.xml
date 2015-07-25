@@ -1,0 +1,146 @@
+<?xml version="1.0"?>
+<config>
+	<modules>
+		<Insync_Sap>
+			<version>0.7.0</version>
+		</Insync_Sap>
+	</modules>
+
+
+	<global>
+		<models>
+			<sap>
+				<class>Insync_Sap_Model</class>
+				<resourceModel>sap_mysql4</resourceModel>
+			</sap>
+			<sap_mysql4>
+				<class>Insync_Sap_Model_Mysql4</class>
+				<entities>
+					<sapuser>
+						<table>sap_sapuser</table>
+					</sapuser>
+				</entities>
+			</sap_mysql4>
+		</models>
+		
+		<resources>
+			<sap_setup>
+				<setup>
+					<module>Insync_Sap</module>
+				</setup>
+				<connection>
+					<use>core_setup</use>
+				</connection>
+			</sap_setup>
+			<sap_write>
+				<connection>
+					<use>core_write</use>
+				</connection>
+			</sap_write>
+			<sap_read>
+				<connection>
+					<use>core_read</use>
+				</connection>
+			</sap_read>
+		</resources>
+		
+		<sales>
+			<order>
+				<statuses>
+					<shipped translate="label">
+						<label>Shipped</label>
+					</shipped>
+				</statuses>
+				<states>
+					<shipped translate="label">
+						<label>Shipped</label>
+						<statuses>
+							<shipped default="1"/>
+							<fraud/>
+						</statuses>
+						<visible_on_front/>
+					</shipped>
+				</states>
+			</order>
+		</sales>
+	</global>
+	
+	
+	<frontend>
+		<!--<secure_url>
+			<sap>sap/</sap>
+		</secure_url>-->
+		
+		<routers>
+			<customer>
+				<args>
+					<modules>
+						<Insync_Sap before="Mage_Customer">Insync_Sap</Insync_Sap>
+					</modules>
+				</args>
+			</customer>
+			<checkout>
+				<args>
+					<modules>
+						<Insync_Sap before="Mage_Checkout">Insync_Sap</Insync_Sap>
+					</modules>
+				</args>
+			</checkout>
+			<sap>
+				<use>standard</use>
+				<args>
+					<module>Insync_Sap</module>
+					<frontName>sap</frontName>
+				</args>
+			</sap>
+		</routers>
+
+		<!--<translate>
+			<modules>
+				<Mage_Sap>
+					<files>
+						<default>Mage_Sap.csv</default>
+					</files>
+				</Mage_Sap>
+			</modules>
+		</translate>-->
+	</frontend>
+
+	
+	<adminhtml>
+		<!--<menu>
+			<sap translate="title" module="sap">
+				<title>SBO</title>
+				<sort_order>20</sort_order>
+				<children>
+					<config translate="title" module="sap">
+						<title>Configuration</title>
+						<action>sap/adminhtml_sap</action>
+						<sort_order>0</sort_order>
+					</config>
+				</children>
+			</sap>
+		</menu>-->
+		
+		<events>
+			<catalog_product_prepare_save> <!-- identifier of the event we want to catch -->
+				<observers>
+					<sap> <!-- identifier of the event handler -->
+						<type>singleton</type>
+						<class>Insync_Sap_Model_Observer</class> <!-- observers class alias -->
+						<method>changeProductSapSyncAction</method>  <!-- observer's method to be called -->
+					</sap>
+				</observers>
+			</catalog_product_prepare_save>
+			<adminhtml_customer_save_after>
+				<observers>
+					<sap>
+						<type>singleton</type>
+						<class>Insync_Sap_Model_Observer</class>
+						<method>changeCustomerSapSyncAction</method>
+					</sap>
+				</observers>
+			</adminhtml_customer_save_after>
+		</events>
+	</adminhtml>
+</config>

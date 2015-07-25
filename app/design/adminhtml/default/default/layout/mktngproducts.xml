@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+    <mktngproducts_adminhtml_mktngproducts_index>
+        <reference name="content">
+            <block type="mktngproducts/adminhtml_mktngproducts" name="mktngproducts" />
+        </reference>
+    </mktngproducts_adminhtml_mktngproducts_index>
+</layout>
+
+

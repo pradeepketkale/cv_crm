@@ -1,0 +1,204 @@
+<div class="header-container">
+    <div class="header">
+        <div class="algnCntr topMenu">
+            <div class="topMenuLeft fltLeft">
+                <ul>
+                    <li><a href="<?php echo $this->getUrl('about-us-craftsvilla') ?>">About Us</a></li>
+                   <!--<li><a href="<?php // echo $this->getUrl('contact-us-craftsvilla')   ?>">Contact Us</a></li>-->
+                    <!--<li><a href="http://craftsvilla.wordpress.com" target="_blank">Blog</a></li>-->
+                    <li><a href="<?php echo $this->getUrl('sell') ?>">Sell</a></li>
+                   <li><a href="<?php echo $this->getBaseUrl().'nights.html';?> " id="tpRaf" target="_blank">Night Offers</a></li>
+                </ul>
+            </div>
+            <div class="topMenuRht fltRight"> 
+                <form>
+                    <ul>
+                        <li><?php echo $this->getChildHtml('currency') ?></li>
+                        <li>
+                            <?php if (!Mage::getSingleton('customer/session')->isLoggedIn()): ?>
+                                <a href="<?php echo Mage::helper('customer')->getLoginUrl(); ?>"><?php echo $this->__('Sign In') ?></a>
+                                / <a href="<?php echo Mage::helper('customer')->getRegisterUrl(); ?>">Register</a>
+
+                                <a href="#" rel="facebook-connect"><img src="<?php echo $this->getSkinUrl('images/flogin.gif') ?>" width="65" height="22" /></a>
+                            </li>
+
+                        <?php else: ?>
+                            <li>
+                                <?php echo $this->getChildHtml('MyAccount') ?>
+                            </li>
+                            <li> / </li>
+                            <li>
+                                <a href="<?php echo Mage::helper('customer')->getLogoutUrl(); ?>"><?php echo $this->__('Logout') ?></a>
+                            </li>
+                        <?php endif; ?>
+                        
+                        <li class="cartbowl"> <a href="<?php echo $this->getUrl('checkout/cart'); ?>"> <?php echo $this->getChildHtml('topLinks') ?></a></li>
+                        
+                    </ul>
+                </form>
+            </div>
+        </div>
+        <div class="topBanner fltLeft">
+            <div class="bnrCntnt algnCntr">
+                <div class="fltLeft bnrLft">
+                    <div class="bnrTxt"><a href="<?php echo $this->getUrl('customer/account/create/') ?>">Sign Up & Get <span class="rp3">300</span></a>
+                        <p>*On minimum purchase of Rs 750</p>
+                    </div>
+                </div>
+                <div><a href="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB); ?>" title="<?php echo $this->getLogoAlt() ?>" class="logo"></a></div>
+                <div class="fltRight bnrrht">
+                    <div class="bnrTxt">
+                       
+                     
+                       <span class="airshipicon homeprite"><a href="<?php echo $this->getUrl('international-shipping-policy') ?>">Global Shipping</a></span>
+                        <!--<p class="validity">*Till 15th March 2012</p>-->
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="bdyShadow"> 
+            <div class="nav-container">
+                <div class="menuBg">
+                    <ul id="topnav">
+                        <li class="sale nav-1 level-top first">
+                            <!-- Romoved link for All Categories (By Suresh on 18-01-2012) -->
+                            <!--<a href="<?php //echo Mage::getBaseURL();  ?>catalog/seo_sitemap/category/">
+                                All Categories
+                            </a>-->
+                            <a href="javascript:void(0);">All Categories</a> 
+                            <?php
+                            $conn = Mage::getSingleton('core/resource')->getConnection('core_read');
+
+                            $sql = "SELECT name,url_path FROM catalog_category_flat_store_1 WHERE parent_id='2' and is_active='1'  and include_in_menu='0' and name not like '@%' order by name";
+
+                            $results_org = $conn->fetchAll($sql);
+                            $results = Mage::helper('Catalog')->fieldSort($results_org);
+                            $csslevel = "";
+
+                            if (count($results) > 15 && count($results) < 31) {
+                                $csslevel = "leveltwo";
+                            } elseif (count($results) >= 1 && count($results) < 16) {
+                                $csslevel = "levelone";
+                            } elseif (count($results) > 30 && count($results) < 46) {
+                                $csslevel = "levelthree";
+                            } elseif (count($results) > 45 && count($results) < 61) {
+                                $csslevel = "levelfour";
+                            } elseif (count($results) > 60 && count($results) < 76) {
+                                $csslevel = "levelfive";
+                            } else {
+                                $csslevel = "";
+                            }
+
+                            echo '<div class="sub" style="width: 358px; opacity: 0; display: none; ">
+							<div class="row ' . $csslevel . '" style="margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; ">';
+
+                            echo "<ul>";
+                            $ctr = 1;
+                            foreach ($results as $key => $val) {
+                                echo '<li class="sale nav"><a href="' . Mage::getBaseURL() . $results[$key]['url_path'] . '">' . $results[$key]['name'] . '</a></li>';
+                                if ($ctr % 15 == 0) {
+                                    echo "</ul><ul>";
+                                }
+                                $ctr++;
+                            }
+                            echo "</ul>";
+                            ?>
+
+                            </div></div>
+                        </li> <?php
+                            $sql = "SELECT name,url_path,entity_id FROM catalog_category_flat_store_1 WHERE parent_id='2' and is_active='1' and include_in_menu='1' order by position asc;";
+
+                            $results = $conn->fetchAll($sql);
+
+                            foreach ($results as $key => $val) {
+                                //Removed link for all top categories(By Suresh on 18-01-2012).
+                                //echo '<li class="sale nav "><a href="'.Mage::getBaseURL().$results[$key]['url_path'] . '">' . $results[$key]['name'] . '</a>';
+                                echo '<li class="sale nav "><a href="' . Mage::getBaseURL() . $results[$key]['url_path'] . '">' . $results[$key]['name'] . '</a>';
+                                $sql = "SELECT name,url_path,entity_id FROM catalog_category_flat_store_1 WHERE parent_id='" . $results[$key]['entity_id'] . "' and is_active='1' and include_in_menu='1'  and name not like '@%'  order by name";
+                                $results_ochild = $conn->fetchAll($sql);
+                                $results_child = Mage::helper('Catalog')->fieldSort($results_ochild);
+                                $csslevel = "";
+                                $dcss = "sub";
+                                if (count($results_child) > 10) {
+                                    $divm = round(count($results_child) / 6);
+                                } else {
+                                    $divm = 20;
+                                }
+                                if (count($results_child) > 0) {
+                                    if (count($results_child) > 10 && count($results_child) < 21) {
+                                        $csslevel = "leveltwo";
+                                        $dcss = "sub subtwo";
+                                    } elseif (count($results_child) >= 1 && count($results_child) < 11) {
+                                        $csslevel = "levelone";
+                                    } elseif (count($results_child) > 20 && count($results_child) < 31) {
+                                        $csslevel = "levelthree";
+										$dcss = "sub subthree";
+                                    } elseif (count($results_child) > 30 && count($results_child) < 41) {
+                                        $csslevel = "levelfour";
+										$dcss = "sub subfour";
+                                    } elseif (count($results_child) > 40 && count($results_child) < 51) {
+                                        $csslevel = "levelfive";
+										$dcss = "sub subfive";
+                                    } elseif (count($results_child) > 50 && count($results_child) < 2000) {
+                                        $csslevel = "levelsix";
+                                        $dcss = "sub subsix";
+                                    } else {
+                                        $csslevel = "";
+                                    }
+
+                                    echo ' <div class="' . $dcss . '" style="width: 358px; opacity: 0; display: none; ">
+							<div class="row ' . $csslevel . '" style="margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; "><ul>';
+
+                                    $ctr = 1;
+									$count_values = count($results_child);
+                                    foreach ($results_child as $key => $val) {
+                                        echo '<li><a href="' . Mage::getBaseURL() . $results_child [$key]['url_path'] . '"> ' . $results_child [$key]['name'] . '</a></li>';
+                                       if($count_values > 50)
+									   {
+										   if ($ctr % $divm == 0) {
+												echo "</ul><ul>";
+											}
+									   }
+									   else
+									   {
+											if ($ctr%10 == 0) {	
+												echo "</ul><ul>";
+											}
+									   }
+                                       $ctr++;
+                                    }
+                                    echo '</ul></div></div></li>';
+                                }
+                            }
+                            echo "</ul>";
+
+
+                            //echo $this->getChildHtml('topMenu'); 
+                            ?>
+
+                        <div class="search">
+                            <ul> 
+                                <li><?php echo $this->getChildHtml('topSearch') ?></li>
+                            </ul>
+                        </div>
+                </div>
+            </div>
+        </div>		
+    </div>
+</div>
+
+<?php 
+if(Mage::getSingleton('cms/page')->getIdentifier()!='home'):?> 
+<!-- AdElement Tag :     Dynamic Retargeting Tag - Craftsvilla.com    Description :   Place this tags on all pages of Craftsvilla.com  -->
+
+      <script type = "text/javascript">
+
+          var ae_parms_kv = {};
+
+          (function () {
+
+              var el_adv_id = "20f7372138cbeb6c012ec0bafd86fc95"; var oldonload = window.onload;window.onload = function(){__ele_loaded=true;var scr = document.createElement("script");var host = (("https:" == document.location.protocol) ? "https://d313lzv9559yp9.cloudfront.net" : "http://cache.adelement.com");scr.setAttribute("async", "true");scr.type = "text/javascript";scr.src = host + "/"+el_adv_id+".js";document.documentElement.firstChild.appendChild(scr);if(oldonload){oldonload()}};}());</script>
+
+<!--  End of AdElement Retargeting Tag  -->
+<? endif; ?>

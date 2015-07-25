@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<config>
+    <global>
+        <models>
+            <customer>
+                <rewrite>
+                    <customer_api>Craftsvilla_Customer_Model_Customer_Api</customer_api>
+                </rewrite>
+            </customer>
+        </models>
+    </global>
+</config>

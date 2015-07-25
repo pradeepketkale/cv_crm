@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+    <catalog_product_view>
+		<reference name="head">
+            <action method="addJs"><script>aw_previousnext/previousnext.js</script></action>
+			<!--<action method="addCss"><script>css/aw_previousnext.css</script></action>-->
+		</reference>
+        <reference name="content">
+			<block type="previousnext/previousnext" name="productssss" before="-">
+				<action method="setFromXml">
+					<from_xml>yes</from_xml>
+				</action>
+			</block>
+		</reference>
+    </catalog_product_view>
+</layout>

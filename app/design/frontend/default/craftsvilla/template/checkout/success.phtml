@@ -1,0 +1,224 @@
+<div class="page-title">
+    <h1><?php echo $this->__('Your order has been received') ?></h1>
+</div>
+<?php echo $this->getMessagesBlock()->getGroupedHtml() ?>
+<h2 class="sub-title"><?php echo $this->__('Thank you for your purchase!') ?></h2>
+
+<?php if ($this->getOrderId()): ?>
+    <?php if ($this->getCanViewOrder()) : ?>
+        <p><?php echo $this->__('Your order # is: %s.', sprintf('<a href="%s">%s</a>', $this->escapeHtml($this->getViewOrderUrl()), $this->escapeHtml($this->getOrderId()))) ?></p>
+    <?php else : ?>
+        <p><?php echo $this->__('Your order # is: %s.', $this->escapeHtml($this->getOrderId())) ?></p>
+    <?php endif; ?>
+    <p><?php echo $this->__('You will receive an order confirmation email with details of your order and a link to track its progress.') ?></p>
+    <?php if ($this->getCanViewOrder() && $this->getCanPrintOrder()) : ?>
+        <p>
+            <?php echo $this->__('Click <a href="%s" onclick="this.target=\'_blank\'">here to print</a> a copy of your order confirmation.', $this->getPrintUrl()) ?>
+            <?php echo $this->getChildHtml() ?>
+        </p>
+    <?php endif; ?>
+<?php endif; ?>
+
+<?php if ($this->getAgreementRefId()): ?>
+    <p><?php echo $this->__('Your billing agreement # is: %s.', sprintf('<a href="%s">%s</a>', $this->escapeHtml($this->getAgreementUrl()), $this->escapeHtml($this->getAgreementRefId()))) ?></p>
+<?php endif; ?>
+
+<?php if ($profiles = $this->getRecurringProfiles()): ?>
+    <p><?php echo $this->__('Your recurring payment profiles:'); ?></p>
+    <ul class="disc">
+        <?php foreach ($profiles as $profile): ?>
+            <?php $profileIdHtml = ($this->getCanViewProfiles() ? sprintf('<a href="%s">%s</a>', $this->escapeHtml($this->getProfileUrl($profile)), $this->escapeHtml($this->getObjectData($profile, 'reference_id'))) : $this->escapeHtml($this->getObjectData($profile, 'reference_id'))); ?>
+            <li><?php echo $this->__('Payment profile # %s: "%s".', $profileIdHtml, $this->escapeHtml($this->getObjectData($profile, 'schedule_description'))) ?></li>
+        <?php endforeach; ?>
+    </ul>
+<?php endif; ?>
+<button type="button" class="button btn-update" title="<?php echo $this->__('Continue Shopping') ?>" onclick="window.location='<?php echo $this->getUrl() ?>'"><?php echo $this->__('Continue Shopping') ?></button>
+<?php
+//Get Order Number & Order Total
+$order 	= Mage::getModel('sales/order')->loadByIncrementId(Mage::getSingleton('checkout/session')->getLastRealOrderId());
+
+/********** This is for cod change State new to processing ************/
+if($order->getPayment()->getMethod()=='checkmo' && $order->getState() == 'new'):
+	$order->setState(Mage_Sales_Model_Order::STATE_PROCESSING, true,'',false);
+	$order->save();
+endif;
+
+/**********************************************************************/
+
+/********** This is for sending mail after order complete ************/
+if($order->getPayment()->getMethod()=='secureebs_standard' && $order->getStatus() == 'processing'):
+    $sendMail=$order->sendNewOrderEmail();
+endif;
+/*********************************************************************/
+
+$city 	= $order->getBillingAddress()->getCity();
+foreach ($order->getAllItems() as $item) {
+	$product = Mage::getModel('catalog/product')->load($item->getProductId());
+	foreach($product->getCategoryIds() as $_categoryId){
+		$category 		 = Mage::getModel('catalog/category')->load($_categoryId);
+		$categoryName 	.= $category->getName().",";
+	}
+	$category 		= explode(",", $categoryName);
+	$count 			= count($category)-2;
+	$categoryType  .= $category[$count].",";
+	$category 		= '';
+}
+$amount = number_format($order->getGrandTotal(), 2);
+?>
+<!-- Google Code for Sale Conversion Page -->
+<?php if($_SERVER['SERVER_ADDR'] == "10.134.214.27" || $_SERVER['SERVER_ADDR'] == "10.134.226.28"){?> 
+<script type="text/javascript">
+        /* <![CDATA[ */
+        var google_conversion_id = 969666423;
+        var google_conversion_language = "ar";
+        var google_conversion_format = "2";
+        var google_conversion_color = "ffffff";
+        var google_conversion_label = "XWsNCKmB5QIQ996vzgM";
+        var google_conversion_value = 0;
+        if (100) {
+            google_conversion_value = 100;
+        }
+        /* ]]> */
+</script>
+<script type="text/javascript" src="http://www.googleadservices.com/pagead/conversion.js">
+</script>
+<noscript>
+<div style="display:inline;">
+    <img height="1" width="1" style="border-style:none;" alt="" src="http://www.googleadservices.com/pagead/conversion/969666423/?value=100&amp;label=XWsNCKmB5QIQ996vzgM&amp;guid=ON&amp;script=0"/>
+</div>
+</noscript>
+<!-- ----------------------------------------------------- -->
+
+<script type="text/javascript"> var _kmq = _kmq || []; function _kms(u){ setTimeout(function(){ var s = document.createElement('script'); var f = document.getElementsByTagName('script')[0]; s.type = 'text/javascript'; s.async = true; s.src = u; f.parentNode.insertBefore(s, f); }, 1); } _kms('//i.kissmetrics.com/i.js');_kms('//doug1izaerwt3.cloudfront.net/319a0179551de1a2e35f62f9f246b81c015f96ea.1.js');</script>
+
+<!-- Script for tyroo affiliates  -->
+<script src="http://affiliates.tyroodr.com/i_sale_third/251/LINE_ITEM_STRING/<?php echo $order->getIncrementId();?>/<?php echo $categoryType.$amount;?>,<?php echo $city;?>&sale_status=<?php echo $order->getStatus();?>"></script>
+<noscript><img src="http://affiliates.tyroodr.com/i_track_sale/251/LINE_ITEM_STRING/<?php echo $order->getIncrementId();?>/<?php echo $categoryType.$amount;?>,<?php echo $city;?>&sale_status=<?php echo $order->getStatus();?>"></noscript>
+<!-- ----------------------------- -->
+
+<!-- Script for conversion tag -->
+<script type="text/javascript">
+function _mt_ready(){
+   if (typeof(MyThings) != "undefined") {
+MyThings.Track({
+EventType: MyThings.Event.Conversion, 
+           Action: "9902",
+Products:[
+          <?php foreach ($order->getAllItems() as $item) {?>
+           {id: "<?php echo $item->getSku();?>",price:"<?php echo number_format($item->getPrice(),2);?>",qty:<?php echo round($item->getQtyOrdered());?>}, 
+          <?php }?>
+		 ],  
+TransactionReference: "[<?php echo $order->getIncrementId();?>]",
+TransactionAmount: "[<?php echo $amount;?>]"
+     });
+ }
+}
+var mtHost = (("https:" == document.location.protocol) ? "https" : "http") + "://rainbow-in.mythings.com";
+var mtAdvertiserToken = "1714-100-in";
+document.write(unescape("%3Cscript src='" + mtHost + "/c.aspx?atok="+mtAdvertiserToken+"' type='text/javascript'%3E%3C/script%3E"));
+</script>
+
+<script type="text/javascript">
+_kmq.push(['record', 'Completed Purchase', {
+'Purchase Amount' : '<?php echo $amount; ?>', 'Order Id' : '<?php echo $order->getIncrementId(); ?>'}]);
+	</script>
+
+
+<!-- AdElement Tag :     Craftsvilla Sale Conversion Tag Added by Amit Pitre on (12-03-2012) for tyroo campaign
+
+Description :   This tag tracks purchases  -->
+<?php 
+$tyrooProductId = array();
+$tyrooProductprice = array();
+$tyrooProductqty = array();
+foreach ($order->getAllItems() as $item) {
+	$tyrooProductId[] = $item->getId();
+	$tyrooProductprice[] = number_format($item->getPrice(),2);
+	$tyrooProductqty[] = round($item->getQtyOrdered());
+}
+$tyrooProductIdStr = implode("|",$tyrooProductId);
+$tyrooProductpriceStr = implode("|",$tyrooProductprice);
+$tyrooProductqtyStr = implode("|",$tyrooProductqty);
+?>
+
+<script type = "text/javascript">
+
+         var ae_conv_parms_kv =
+
+{productid:"<?php echo $tyrooProductIdStr; ?>",price:"<?php echo $tyrooProductpriceStr; ?>",quantity:"<?php echo $tyrooProductqtyStr; ?>",transactionid:"<?php echo $this->escapeHtml($this->getOrderId()); ?>",transactionval:"<?php echo $amount;?>"};
+
+         (function () {
+
+             var el_adv_id = "6b86d19b1f5b93ffb98b6dbbf0ba8793"; var
+
+oldonload = window.onload;window.onload =
+
+function(){__ele_loaded=true;var scr =
+
+document.createElement("script");var host = (("https:" ==
+
+document.location.protocol) ? "https://d313lzv9559yp9.cloudfront.net"
+
+: "http://cache.adelement.com");scr.setAttribute("async",
+
+"true");scr.type = "text/javascript";scr.src = host +
+
+"/"+el_adv_id+".js";document.documentElement.firstChild.appendChild(scr);if(oldonload){oldonload()}};}());</script>     
+
+<!--  End of AdElement Conversion Tag  -->
+<?php }?>
+<!-- ------------------------- -->
+
+<?php if($order->getAppliedRuleIds() == 276){?>
+<!-- Script for cash back sales pixel -->
+<img src='http://www.cashitback.com/cmpst/www/delivery/?MerchantId=A6A59C595E&TransactionValue=[<?php echo $amount;?>]&TransactionId=[<?php echo $order->getIncrementId();?>]&PaymentStatus=[<?php echo $order->getStatus();?>]&OrderId=[<?php echo $order->getIncrementId();?>]' border='0' />
+<!-- -------------------------------- -->
+<?php }?>
+<script language="javascript" src="http://www.everestjs.net/static/st.v2.js"></script>
+<script language="javascript">
+var ef_event_type="transaction";
+var ef_transaction_properties = "ev_Sale=1&ev_transid=<?php echo $order->getIncrementId();?>";
+/*
+ * Do not modify below this line
+ */
+var ef_segment = "";
+var ef_search_segment = "";
+var ef_userid="2927";
+var ef_pixel_host="pixel.everesttech.net";
+var ef_fb_is_app = 0;
+effp();
+</script>
+<noscript><img src='http://pixel.everesttech.net/2927/t?ev_Sale=1&ev_transid=<?php echo $order->getIncrementId();?>' width='1' height='1'/></noscript>
+<!--Code for vizury code(Dileswar)-->
+<?php 
+	$orderItem=$order->getAllItems();
+
+	if($orderItem)
+		{
+		$arr=array();
+		$arr1=array();
+		$arr2=array();
+		foreach($order->getAllItems() as $item)
+		{
+		$arr[]=$item->getProductId();
+		$arr1[]=round($item->getQtyOrdered());
+		$arr2[]=number_format($item->getPrice(),2);
+		}
+		$pid1=$arr[0];
+		$pid2=$arr[1];
+		$pid3=$arr[2];
+		$qty1=$arr1[0];
+		$qty2=$arr1[1];
+		$qty3=$arr1[2];
+		$price1=$arr2[0];
+		$price2=$arr2[1];
+		$price3=$arr2[2];
+		
+		}
+		$_order = Mage::getModel('sales/order')->loadByIncrementId($this->getOrderId());
+		$amount = $_order->getData('subtotal');
+		$total  = number_format($amount, 2);
+
+?>
+<iframe src="https://ssl.vizury.com/analyze/analyze.php?account_id=VIZVRM209&param=e500&orderid=<?php echo $order->getIncrementId();?>&orderprice=<?php echo $total;?>&pid1=<?php echo $pid1;?>&catid1=&quantity1=<?php echo $qty1;?>&price1=<?php echo $price1;?>&pid2=<?php echo $pid2;?>&catid2=&quantity2=<?php echo $qty2 ;?>&price2=<?php echo $price2;?>&pid3=<?php echo $pid3;?>&catid3=&quantity3=<?php echo $qty3 ;?>&price3=<?php echo $price3;?>&currency=<?php echo Mage::app()->getStore()->getCurrentCurrencyCode();?>&section=1&level=1" scrolling="no" width="1" height="1" marginheight="0" marginwidth="0" frameborder="0"></iframe>
+

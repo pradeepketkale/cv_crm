@@ -1,0 +1,66 @@
+<?xml version="1.0"?>
+
+<layout version="0.1.0">
+<!-- sales_order_shipment translate="label">
+        <label>Customer My Account Order Shipment View</label>
+        <update handle="customer_account"/>
+        <reference name="my.account.wrapper">
+            <block type="sales/order_info" as="info" name="sales.order.info"/>
+            <block type="sales/order_shipment" name="sales.order.shipment">
+                <block type="sales/order_shipment_items" name="shipment_items" template="feedback/order/shipment/items.phtml">
+                    <action method="addItemRender"><type>default</type><block>sales/order_item_renderer_default</block><template>sales/order/shipment/items/renderer/default.phtml</template></action>
+                    <block type="sales/order_comments" name="shipment_comments" template="sales/order/comments.phtml" />
+                </block>
+            </block>
+        </reference>
+        <reference name="sales.order.info">
+            <action method="addLink" translate="label" module="sales"><name>view</name><path>*/*/view</path><label>Order Information</label></action>
+            <action method="addLink" translate="label" module="sales"><name>invoice</name><path>*/*/invoice</path><label>Invoices</label></action>
+            <action method="addLink" translate="label" module="sales"><name>shipment</name><path></path><label>Shipments</label></action>
+            <action method="addLink" translate="label" module="sales"><name>creditmemo</name><path>*/*/creditmemo</path><label>Refunds</label></action>
+        </reference>
+        <block type="core/text_list" name="additional.product.info" />
+    </sales_order_shipment-->
+    
+     
+     
+
+     <feedback_vendor_feedbackinfo>
+      <reference name="content">
+        <block type="feedback/vendor_feedback_info" template="marketplace/feedback/vendor/feedback/info.phtml" name="info"/>
+      </reference>
+    </feedback_vendor_feedbackinfo>
+
+	<feedback_vendor_imageshow>
+      <reference name="content">
+        <block type="feedback/vendor_feedback_imageshow" template="marketplace/feedback/vendor/feedback/imageshow.phtml" name="imageshow"/>
+      </reference>
+    </feedback_vendor_imageshow>
+	
+	<feedback_vendor_pendinginfo>
+      <reference name="content">
+        <block type="feedback/vendor_feedback_pendinginfo" template="marketplace/feedback/vendor/feedback/pendinginfo.phtml" name="pendinginfo"/>
+      </reference>
+    </feedback_vendor_pendinginfo>
+    
+    
+    
+     <feedback_index_index>
+      <reference name="content">
+		<block type="feedback/vendor_feedbackinfo" template="marketplace/feedback/vendor/feedback.phtml" name="feedbackinfo" before="-" />
+		<!-- <block type="core/template" template="unirgy/microsite/home.phtml" name="vendorHome" /> -->
+      </reference>
+	<reference name="left">
+	 <block type="catalog/navigation" name="catalog.leftnav" before="-" template="catalog/navigation/left.phtml"/>
+		<!-- <block type="customer/account_navigation" name="customer_account_navigation" before="-" template="customer/account/navigation.phtml">
+			<action method="addLink" translate="label" module="customer"><name>profile</name><path>thoughtyard/profile/</path><label> > Profile</label></action>
+			<action method="addLink" translate="label" module="customer"><name>product</name><path>thoughtyard/products/</path><label> > Product</label></action>
+			<action method="addLink" translate="label" module="customer"><name>feedback</name><path>feedback/index/</path><label> > Feedback</label></action>
+			<action method="addLink" translate="label" module="customer"><name>policies</name><path>thoughtyard/policies/</path><label> > Shipping and Returns</label></action> -->
+		<block type="customer/account_navigation" name="customer_account_navigation" before="-" template="marketplace/thoughtyard/profile/navigation.phtml">
+		</block>
+	</reference>
+    </feedback_index_index>
+    
+  </layout>
+

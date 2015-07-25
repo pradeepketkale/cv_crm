@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Craftsvilla_Codshipments>
+            <active>true</active>
+            <codePool>local</codePool>
+        </Craftsvilla_Codshipments>
+    </modules>
+</config> 

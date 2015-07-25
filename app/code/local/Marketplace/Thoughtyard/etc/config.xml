@@ -1,0 +1,113 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Marketplace_Thoughtyard>
+            <version>1.0.1</version>
+        </Marketplace_Thoughtyard>
+    </modules>
+<global>
+        <models>
+            <thoughtyard>
+                <class>Marketplace_Thoughtyard_Model</class>
+                <resourceModel>thoughtyard_mysql4</resourceModel>
+            </thoughtyard>
+            <thoughtyard_mysql4>
+                <class>Marketplace_Thoughtyard_Model_Mysql4</class>
+                <!-- entities>
+                    <vendor1>
+                        <table>udropship_vendor</table>
+                    </vendor1>
+                    <vendor_bank>
+                        <table>udropship_bank_details</table>
+                    </vendor_bank>
+                </entities-->
+            </thoughtyard_mysql4>
+        </models>
+
+        <resources>
+            <thoughtyard_setup>
+                <setup>
+                    <module>Marketplace_Thoughtyard</module>
+                </setup>
+                <connection>
+                    <use>core_setup</use>
+                </connection>
+            </thoughtyard_setup>
+            <thoughtyard_write>
+                <connection>
+                    <use>core_write</use>
+                </connection>
+            </thoughtyard_write>
+            <thoughtyard_read>
+                <connection>
+                    <use>core_read</use>
+                </connection>
+            </thoughtyard_read>
+        </resources>
+
+        <blocks>
+            <thoughtyard>
+                <class>Marketplace_Thoughtyard_Block</class>
+            </thoughtyard>
+        </blocks>
+
+        <!--helpers>
+            <thoughtyard>
+                <class>Marketplace_Thoughtyard_Helper</class>
+            </thoughtyard>
+        </helpers-->
+       
+    </global>
+ <frontend>
+        <routers>
+            <thoughtyard>
+                <use>standard</use>
+                <args>
+                    <module>Marketplace_Thoughtyard</module>
+                    <frontName>thoughtyard</frontName>
+                </args>
+            </thoughtyard>
+        </routers>
+        <layout>
+            <updates>
+                <thoughtyard>
+                    <file>thoughtyard.xml</file>
+                </thoughtyard>
+            </updates>
+        </layout>
+        <translate>
+              <modules>
+                    <marketplace_thoughtyard>
+                         <files>
+                               <default>Marketplace_Thoughtyard.csv</default>
+                         </files>
+                    </marketplace_thoughtyard>
+              </modules>
+        </translate>
+    </frontend>
+    
+
+   
+
+    <!--admin>
+        <routers>
+            <thoughtyardadmin>
+                <use>admin</use>
+                <args>
+                    <module>Marketplace_Thoughtyard</module>
+                    <frontName>thoughtyardadmin</frontName>
+                </args>
+            </thoughtyardadmin>
+        </routers>
+    </admin>
+
+    <adminhtml>
+        <layout>
+            <updates>
+                <thoughtyardadmin>
+                    <file>thoughtyard.xml</file>
+                </thoughtyardadmin>
+            </updates>
+        </layout>
+    </adminhtml-->
+</config>

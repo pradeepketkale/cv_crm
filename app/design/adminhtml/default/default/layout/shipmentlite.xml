@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+    <shipmentlite_adminhtml_shipmentlite_index>
+        <reference name="content">
+            <block type="shipmentlite/adminhtml_shipmentlite" name="shipmentlite" />
+        </reference>
+    </shipmentlite_adminhtml_shipmentlite_index>
+</layout>

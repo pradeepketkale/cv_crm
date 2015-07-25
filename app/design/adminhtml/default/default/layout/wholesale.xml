@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+    <wholesale_adminhtml_wholesale_index>
+        <reference name="content">
+            <block type="wholesale/adminhtml_wholesale" name="wholesale" />
+        </reference>
+    </wholesale_adminhtml_wholesale_index>
+</layout>

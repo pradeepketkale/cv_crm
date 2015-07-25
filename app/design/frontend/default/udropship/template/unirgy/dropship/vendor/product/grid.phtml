@@ -1,0 +1,205 @@
+<?php
+$_hlp = Mage::helper('udropship');
+$vendorId = Mage::getSingleton('udropship/session')->getVendorId();
+?>
+
+<div class="box-head">
+  <h3>Stock</h3>
+</div>
+<form method="get">
+  <div class="fieldset mkpdash">
+    <h2 class="legend blue_legend_heading">
+      <div class="box-head bighead">
+        <div class="col3-set"><a class="action" href="javascript:void(0);" onclick="toggleSGFilterBox(this)"><span class="open"></span></a> Filter Products</div>
+      </div>
+    </h2>
+    <div class="generic-box col2-set slform">
+      <div class="col3-set">
+        <ul class="form-list floatl paddingright smallpadd">
+          <li>
+            <label for="filter-sku"><?php echo $_hlp->__('System SKU') ?></label>
+            <input id="filter-sku" name="filter_sku" title="<?php echo $_hlp->__('SKU') ?>" type="text" class="input-text" style="width:160px;" value="<?php echo $this->getRequest()->getParam('filter_sku') ?>" />
+          </li>
+          <!--<li>
+            <label for="filter-name"><?php //echo $_hlp->__('Product Name') ?></label>
+            <input id="filter-name" name="filter_name" title="<?php //echo $_hlp->__('Product Name') ?>" type="text" class="input-text" style="width:160px;" value="<?php //echo $this->getRequest()->getParam('filter_name') ?>" />
+          </li>-->
+          
+            <!--<li>
+            <label for="filter-stock_status"><?php //echo $_hlp->__('Stock Status') ?></label>
+            <select id="filter-stock_status" name="filter_stock_status" title="<?php //echo $_hlp->__('Stock Status') ?>"  style="width:160px;">
+              <?php //$_status = (string)$this->getRequest()->getParam('filter_stock_status') ?>
+              <option value="" <?php //echo $_status===''?'selected="selected"':'' ?>><?php //echo $_hlp->__('Any') ?></option>
+              <option value="1" <?php //echo $_status==='1'?'selected="selected"':'' ?>><?php //echo $_hlp->__('In Stock') ?></option>
+              <option value="0" <?php //echo $_status==='0'?'selected="selected"':'' ?>><?php //echo $_hlp->__('Out of Stock') ?></option>
+            </select>
+          </li>-->
+          
+        </ul>
+        
+        <!--
+        <div class="col-2">
+            <ul class="form-list">
+                <li>
+                    <label for="filter-vendor_sku"><?php //echo $_hlp->__('Vendor SKU') ?></label><br/>
+                    <input id="filter-vendor_sku" name="filter_vendor_sku" title="<?php //echo $_hlp->__('Vendor SKU') ?>" type="text" class="input-text" style="width:160px;" value="<?php //echo $this->getRequest()->getParam('filter_vendor_sku') ?>" />
+                </li>
+            </ul>
+        </div>
+        -->
+        
+        <ul class="form-list smallpadd">
+          <!--
+                <li>
+                    <label for="filter-vendor_cost-from"><?php echo $_hlp->__('Vendor Price') ?></label><br/>
+                    <input id="filter-vendor_cost-from" name="filter_vendor_cost_from" title="<?php echo $_hlp->__('From Vendor Price') ?>" type="text" class="input-text" style="width:80px;" value="<?php echo $this->getRequest()->getParam('filter_vendor_cost_from') ?>" /> -
+                    <input id="filter-vendor_cost-to" name="filter_vendor_cost_to" title="<?php echo $_hlp->__('To Vendor Price') ?>" type="text" class="input-text" style="width:80px;" value="<?php echo $this->getRequest()->getParam('filter_vendor_cost_to') ?>" />
+                </li>
+                -->
+                 <!--<li>
+            <label for="vendorsku"><?php //echo $_hlp->__('Vendor SKU') ?></label>
+            <input id="vendorsku" name="filter_vendor_sku" title="<?php //echo $_hlp->__('Vendor SKU') ?>" type="text" class="input-text" style="width:160px;" value="<?php //echo $this->getRequest()->getParam('filter_vendor_sku') ?>" />
+          </li>-->
+                
+        
+          <!--<li>
+            <label for="filter-stock_qty-from"><?php //echo $_hlp->__('Stock Qty') ?></label>
+            <input id="filter-stock_qty-from" name="filter_stock_qty_from" title="<?php //echo $_hlp->__('From Stock Qty') ?>" type="text" class="input-text" style="width:80px;" value="<?php //echo $this->getRequest()->getParam('filter_stock_qty_from') ?>" />
+            -
+            <input id="filter-stock_qty-to" name="filter_stock_qty_to" title="<?php //echo $_hlp->__('To Stock Qty') ?>" type="text" class="input-text" style="width:80px;" value="<?php //echo $this->getRequest()->getParam('filter_stock_qty_to') ?>" />
+          </li>-->
+        </ul>
+        <div class="clr"></div>
+        <input type="submit" value="search" style="display:none" />
+        <input type="hidden" name="limit" value="<?php echo $this->getRequest()->getParam('limit')?>"/>
+        <input type="hidden" name="p" value="<?php echo $this->getRequest()->getParam('p')?>"/>
+        <button class="form-button" name="submit_action" type="submit" id="filter-search" value="search"><span><?php echo $_hlp->__('Search') ?></span></button>
+      </div>
+    </div>
+  </div>
+</form>
+<form method="post" action="<?php echo $this->getUrl('udropship/vendor/productSave') ?>">
+  <fieldset>
+    <div class="a-right" style="margin:10px 0">
+      <button class="form-button" type="submit"><?php echo $this->__('Update Information On This Page') ?></button>
+    </div>
+    <?php echo $this->getChildHtml('toolbar') ?>
+    <table cellspacing="1" cellpadding="0" class="data-table table-gride vtop">
+      <col width="" />
+      <col width="" />
+      <!--<col width="100" />
+        <col width="80" />-->
+      <col width="100" />
+      <col width="70" />
+      <thead>
+        <tr>
+          <th>Image</th>
+          <th><?php echo $this->__('Name(SKU/Vendor SKU)')?></th>
+          <!--<th><?php //echo $this->__('Product Name')?></th>-->
+          <!--<th><?php //echo $this->__('Vendor SKU')?></th>
+                <th><?php echo $this->__('Vendor Price')?></th>-->
+          <th><?php echo $this->__('Stock Status')?></th>
+          <th><?php echo $this->__('Qty')?></th>
+          <th><?php echo $this->__('Action')?></th>
+          <!--<th><?php //echo $this->__('Pageviews')?></th>-->
+          <!--<th><?php //echo $this->__('View Product Link')?></th>-->
+        </tr>
+      </thead>
+      <tbody>
+        <?php foreach ($this->getProductCollection() as $_p): $_id = $_p->getEntityId(); 
+
+		//Commented below line on dated 13-01-2013 due to loadByattribute is not working..
+		
+		//$product = Mage::getModel('catalog/product')->loadByAttribute('sku',$_p->getSku());
+		//$product = Mage::getModel('catalog/product')->load($_id);
+		$product = Mage::helper('catalog/product')->loadnew($_id);
+		$readCon = Mage::getSingleton('core/resource')->getConnection('core_read');		
+		$getStatusquery  = "SELECT * FROM `cataloginventory_stock_item` WHERE `product_id` = '".$_id."'";
+		$resultQuery = $readCon->query($getStatusquery)->fetch(); //print_r($resultQuery); exit;
+		$qtyNew = $resultQuery['qty'];
+		$isinstockCv = $resultQuery['is_in_stock'];
+
+//echo '<pre>';print_r($product->getData());exit;
+		?>
+        <tr>
+        <?php $childId=$product->getId();
+                   $purl = 'catalog/product/view/id/'.$childId;?>
+
+          <!--<td><a href="<?php //echo Mage::getBaseUrl().$purl;?>" target="_blank"><img src="<?php //echo Mage::helper('catalog/image')->init($product, 'image')->resize(145);?>" /></a></td>-->
+          <td><img src="<?php echo Mage::helper('catalog/image')->init($product, 'image')->resize(166,166);?>" /></td>
+          <td style="width:60px">
+			
+					<input type="hidden" class="input-text" name="vp[<?php echo $_id ?>][sku]" value="<?php echo $_p->getSku() ?>" style="width:90px" />
+                 <?php
+				 $vsku = '';
+				 $vsku1 = $_hlp->getVendorskucv($_id);				
+                    if($vsku1)
+					$vsku = " / ".$vsku1;				 
+				  $namesku = $this->htmlEscape($_p->getName()).'<br>('.$this->htmlEscape($_p->getSku()).$vsku.')'; 
+				 echo $namesku;
+					
+						?>
+			
+			</td>
+          
+        <!--  <td><input type="text" class="input-text" name="vp[<?php //echo $_id ?>][vendor_sku]" value="<?php //echo $_p->getSku() ?>" style="width:90px"/></td>-->
+               <!--<td><input type="text" class="input-text" name="vp[<?php //echo $_id ?>][vendor_cost]" value="<?php //echo is_null($_p->getCost()) ? '' : $_p->getCost()*1 ?>" style="width:90px"/></td>-->
+          <td><?php if (!is_null($isinstockCv)): ?>
+            <select name="vp[<?php echo $_id ?>][stock_status]" style="width:80px">
+              <option value="1" <?php echo $isinstockCv?'selected="selected"':'' ?>><?php echo $this->__('In stock') ?></option>
+              <option value="0" <?php echo !$isinstockCv?'selected="selected"':'' ?>><?php echo $this->__('Out of stock') ?></option>
+              
+            </select>
+            <?php endif ?></td>
+           
+            <td><input type="text" class="input-text" name="vp[<?php echo $_id ?>][stock_qty]" value="<?php echo !is_null($_sq = $qtyNew) ? $_sq*1 : '' ?>" style="width:30px"/></td>
+            
+         <td> <input type="button" class="form-button" style="font-size:9px; height:25px" value="Edit" onClick="javascript:location.href = '<?php echo $this->getUrl('marketplace/vendor/editproduct/')."productid/".$_p->getId();?>';"></td>
+        
+          <!--<td> <input type="button" class="form-button" style="font-size:9px; height:25px" value="View on Site" onClick="javascript:location.href = '<?php //echo Mage::getBaseUrl().$purl;?>';" /></td></tr>-->
+        
+        <?php endforeach ?>
+      </tbody>
+    </table>
+    <?php echo $this->getChildHtml('toolbar') ?>
+    <div class="clr"></div>
+    <div class="a-right" style="margin:10px 0">
+      <button class="form-button" type="submit"><?php echo $this->__('Update Information On This Page') ?></button>
+    </div>
+  </fieldset>
+</form>
+<script type="text/javascript">
+
+function toggleSGFilterBox(elem)
+{
+    $(elem).select('span').invoke('toggleClassName', 'open');
+    $(elem).up(4).down('.col3-set',1).toggle();
+    $(elem).up(4).down('.buttons-set').toggle();
+}
+
+function reprintLabel(shipmentId, trackId) {
+    $('download_iframe').src = '<?php echo $_reprintUrl ?>'.replace('TRACKID', trackId);
+}
+
+function reprintLabelBatch(shipmentId, batchId) {
+    $('download_iframe').src = '<?php echo $_reprintBatchUrl ?>'.replace('BATCHID', batchId);
+}
+
+function deleteTrack(shipmentId, trackId) {
+    if (!confirm('<?php echo $_hlp->__('Proceed with tracking ID deletion?')?>')) {
+        return;
+    }
+    new Effect.Highlight($('old_tracking_id-'+trackId));
+    new Ajax.Updater($('container-'+shipmentId), '<?php echo $_ajaxPostUrl ?>'.replace('ID', shipmentId), {
+        method: 'post',
+        parameters: { delete_track:trackId },
+        onComplete: function (transport) { initShipmentForm(shipmentId).defer(); }
+    });
+}
+
+<!--$("a > button").live('click', function() { 
+  //  location.href = $(this).closest("a").attr("href");
+//});-->
+
+
+</script> 

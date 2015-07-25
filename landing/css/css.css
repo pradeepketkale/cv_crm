@@ -1,0 +1,42 @@
+body,html,ul,li,a,p,div,h1,h2,h3,h4,h5{margin:0;padding:0;list-style:none;}
+body{font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#777;}
+form{margin:0; padding:0}
+ul{margin:0; padding:0}
+.clr{ clear:both;}
+.fixwrap{width:981px; margin:0 auto;position:relative; overflow:hidden;}
+a.logo{display:block; background:url(../images/imgeliments.jpg) no-repeat 0 0; width:232px; height:131px; margin:0 auto 22px;}
+.floatl{float:left;}
+.floatr{float:right;}
+.content{overflow:hidden; padding:0 0 0px 41px; margin-bottom:50px;}
+.leftsec{width:365px;}
+.rightsec{ width:auto}
+h2.heading{color:#CE3D49; font-size:18px; border-bottom:#C5C5C5 1px dotted;}
+h2.paddtop{ padding-top:9px;}
+h2.headingblue{color:#196D99; font-size:20px; margin-bottom:24px;}
+ul.whyus{ margin-top:22px;}
+ul.whyus li{padding:11px 20px 15px 28px; background:url(../images/unique.jpg) no-repeat left; float:left; width:120px; border-width:0 1px 1px 0; border-color:#C5C5C5; border-style: dotted;}
+ul.whyus li.truck{ background:url(../images/truck.jpg) no-repeat 12px; padding-left:48px; border-right:0;}
+ul.whyus li + li + li{ border-bottom:0;}
+ul.whyus li.arow{ background:url(../images/arow.jpg) no-repeat left;}
+ul.whyus li.phone{padding-left:48px; background:url(../images/telephone.jpg) no-repeat 12px; border-right:0;}
+ul.whyus li h1{color:#196D99; font-size:15px;}
+ul.whyus li p{font-size:13px; color:#474747;}
+.punchline{font-size:16px; color:#353535; font-style:italic; font-weight:bold; font-family:"Times New Roman", Times, serif; clear:both; float:left; padding:0px 14px 0 0; width:397px}
+.punchline span{ font-size:14px; color:#196D99;}
+#footer{padding:8px 0; bottom:0; background:#CE3D49; width:100%; float:left;}
+p.copyright{ text-align:right; padding:3px 0; clear:both;}
+.logoes{padding:0; clear:both;}
+.logoes li{float:left;padding-right:50px;width:182px;font-weight:bold;font-size:11px; color:#FFF;}
+.logoes li + li + li + li{padding-right:0;}
+.logoes li img{ display:block; padding-bottom:5px;}
+.footimgae{background:url(../images/imgeliments.jpg) no-repeat -250px bottom; overflow:hidden; padding:58px 0 10px 331px; position:absolute; bottom:0; left:0;}
+.formFields{float:right; width:460px;}
+.formFields ul li{float:left; margin:0 20px 8px 0; list-style:none; width:210px}
+#right{margin-right:0}
+.formFields ul li label{display:block}
+.formFields ul li p{background:url(../images/inputbg.jpg) no-repeat;}
+.formFields ul li input{width:200px; padding:7px 5px; vertical-align:middle; border:none;font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#777; background:none;}
+.formFields ul li label span{ color:#FEC142;}
+#submit{background: url(../images/imgeliments.jpg) no-repeat -6px -140px;width: 113px;height: 34px;cursor: pointer;}
+.facebookconnect{margin-right:18px; position:relative; z-index:999; border-width:1px 0 0 0;}
+a.facebook{ display:block; margin-top:10px; width:168px;}

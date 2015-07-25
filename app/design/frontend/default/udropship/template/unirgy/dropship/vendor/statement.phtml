@@ -1,0 +1,336 @@
+<?php
+$hlp = Mage::helper('generalcheck');
+$mainconn = $hlp->getMaindbconnection();
+
+$_hlp = Mage::helper('udropship');
+    $_session = Mage::getSingleton('udropship/session');
+    if (Mage::helper('udropship')->isModuleActive('Unirgy_DropshipMicrosite')
+        && $_session->isLoggedIn()
+        && $_session->getVendor()->getShowProductsMenuItem() //echo "<pre>"; print_r($_session->getVendor());
+	&& $_session->getVendor()->getVendorId()
+	):
+
+
+?> 
+
+<div class="page-title">
+        <h1>Reports</h1>
+    </div>
+<?php echo $this->getMessagesBlock()->getGroupedHtml() ?>
+<form name="vendorstatement" action="<?php echo $this->getUrl('marketplace/vendor/createstatement');?>" method="post">
+<p><span class="required">Note:</span> These reports are valid only post May 15, 2012.</p><br/>
+<ul class="form-list">
+<li class="paddingright">
+<label>Orders From Date</label>                                     
+<input type="text" name="special_from_date" id="special_from_date" class="input-text" style="width:110px !important;" value="" />
+        <img src="<?php echo $this->getUrl();?>/skin/adminhtml/default/default/images/grid-cal.gif" alt="" class="v-middle" id="special_from_date_trig" title="Select Date" style="">
+        <script type="text/javascript">
+        //<![CDATA[
+            Calendar.setup({
+                inputField: "special_from_date",
+                ifFormat: "%m/%e/%y",
+                showsTime: false,
+                button: "special_from_date_trig",
+                align: "Bl",
+                singleClick : true
+            });
+        //]]>
+        </script>
+   
+</li>
+<li>
+<label>Orders To Date</label> 
+   <input
+        type="text" name="special_to_date" id="special_to_date" class="input-text" style="width:110px !important;" value="" />
+        <img src="<?php echo $this->getUrl();?>/skin/adminhtml/default/default/images/grid-cal.gif" alt="" class="v-middle" id="special_to_date_trig" title="Select Date" style="">
+        <script type="text/javascript">
+        //<![CDATA[
+            Calendar.setup({
+                inputField: "special_to_date",
+                ifFormat: "%m/%e/%y",
+                showsTime: false,
+                button: "special_to_date_trig",
+                align: "Bl",
+                singleClick : true
+            });
+        //]]>
+        </script>
+   
+</li>
+<li class="clr">
+ <input type="hidden" name="vendor_id" value="<?php echo $_session->getVendor()->getVendorId();?>"  />
+<input type="submit" value="Shipment Sale Report" class="form-button" /> <br /><br />
+</li>
+</ul>
+</form>
+
+<form name="vendorexportcsv" action="<?php echo $this->getUrl('marketplace/vendor/exportcsv');?>" method="post">
+    <ul class="form-list clr">
+    <li class="paddingright">
+    <label>Orders From Date</label>                                     
+    <input type="text" name="from_date" id="from_date" class="input-text" style="width:110px !important;" value="" />
+            <img src="<?php echo $this->getUrl();?>/skin/adminhtml/default/default/images/grid-cal.gif" alt="" class="v-middle" id="from_date_trig" title="Select Date" style="">
+            <script type="text/javascript">
+            //<![CDATA[
+                Calendar.setup({
+                    inputField: "from_date",
+                    ifFormat: "%m/%e/%y",
+                    showsTime: false,
+                    button: "from_date_trig",
+                    align: "Bl",
+                    singleClick : true
+                });
+            //]]>
+            </script>
+
+    </li>
+    <li>
+    <label>Orders To Date</label> 
+       <input
+            type="text" name="to_date" id="to_date" class="input-text" style="width:110px !important;" value="" />
+            <img src="<?php echo $this->getUrl();?>/skin/adminhtml/default/default/images/grid-cal.gif" alt="" class="v-middle" id="to_date_trig" title="Select Date" style="">
+            <script type="text/javascript">
+            //<![CDATA[
+                Calendar.setup({
+                    inputField: "to_date",
+                    ifFormat: "%m/%e/%y",
+                    showsTime: false,
+                    button: "to_date_trig",
+                    align: "Bl",
+                    singleClick : true
+                });
+            //]]>
+            </script>
+
+        </li>
+        
+        <input type="hidden" name="vendor_id" value="<?php echo $_session->getVendor()->getVendorId();?>"  />
+        <input type="hidden" name="commission" value="<?php echo $_session->getVendor()->getCommissionPercent();?>"  />
+        <input type="hidden" name="manage_shipping" value="<?php echo $_session->getVendor()->getManageShipping();?>"  />
+        <li class="clr">
+            <input type="submit" value="Itemised Sale Report" class="form-button" /> <br /><br />
+        </li>
+    
+    </ul><br /><br />
+ </form>
+ <div align="right" style="margin-top:-150px"><form name="invoicereport" action="<?php echo $this->getUrl('marketplace/vendor/downloadinvoice');?>" method="post">
+  
+ <input type="submit" value="Download Invoice" class="form-button" /> </li>
+ 				
+        <!-- <label for="selectmonth"><?php //echo $_hlp->__('Select Month') ?></label>-->
+ <select id="selectmonth" name="selectmonth" title="<?php echo $_hlp->__('Select Month') ?>" class="select" style="width:120px;">
+ <?php $_months = array();
+		$year = Mage::app()->getLocale()->date()->get(Zend_date::YEAR);
+		$monthNum = Mage::app()->getLocale()->date()->get(Zend_date::MONTH);
+        for ($i = 0; $i < 12; $i++) {
+			$_monthNum = ($monthNum+12 -$i) % 12;
+			if ($_monthNum == 0) $_monthNum = 12;
+			
+			if ($monthNum <= $i)
+			{
+				$_year = $year - 1;
+			}
+			else{
+				$_year = $year;
+			}
+           $_months[$i] = Mage::app()->getLocale()->date(mktime(null,null,null,$_monthNum))->get(Zend_date::MONTH_NAME).' '.$_year;
+		   ?>
+           
+           <option value="<?php echo $_months[$i];?>" name="selectmonth"><?php echo $_months[$i];?></option>
+           <?php
+		}?>
+                        
+                     </select>
+	</form>
+
+</div>
+ 
+<?php endif;?>
+
+
+<script type="text/javascript">
+//<![CDATA[
+enUS = {"m":{"wide":["January","February","March","April","May","June","July","August","September","October","November","December"],"abbr":["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]}}; // en_US locale reference
+Calendar._DN = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"]; // full day names
+Calendar._SDN = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"]; // short day names
+Calendar._FD = 0; // First day of the week. "0" means display Sunday first, "1" means display Monday first, etc.
+Calendar._MN = ["January","February","March","April","May","June","July","August","September","October","November","December"]; // full month names
+Calendar._SMN = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]; // short month names
+Calendar._am = "AM"; // am/pm
+Calendar._pm = "PM";
+
+// tooltips
+Calendar._TT = {};
+Calendar._TT["INFO"] = "About the calendar";
+
+Calendar._TT["ABOUT"] =
+"DHTML Date/Time Selector\n" +
+"(c) dynarch.com 2002-2005 / Author: Mihai Bazon\n" +
+"For latest version visit: http://www.dynarch.com/projects/calendar/\n" +
+"Distributed under GNU LGPL. See http://gnu.org/licenses/lgpl.html for details." +
+"\n\n" +
+"Date selection:\n" +
+"- Use the \xab, \xbb buttons to select year\n" +
+"- Use the " + String.fromCharCode(0x2039) + ", " + String.fromCharCode(0x203a) + " buttons to select month\n" +
+"- Hold mouse button on any of the above buttons for faster selection.";
+Calendar._TT["ABOUT_TIME"] = "\n\n" +
+"Time selection:\n" +
+"- Click on any of the time parts to increase it\n" +
+"- or Shift-click to decrease it\n" +
+"- or click and drag for faster selection.";
+
+Calendar._TT["PREV_YEAR"] = "Prev. year (hold for menu)";
+Calendar._TT["PREV_MONTH"] = "Prev. month (hold for menu)";
+Calendar._TT["GO_TODAY"] = "Go Today";
+Calendar._TT["NEXT_MONTH"] = "Next month (hold for menu)";
+Calendar._TT["NEXT_YEAR"] = "Next year (hold for menu)";
+Calendar._TT["SEL_DATE"] = "Select date";
+Calendar._TT["DRAG_TO_MOVE"] = "Drag to move";
+Calendar._TT["PART_TODAY"] = ' (' + "Today" + ')';
+
+// the following is to inform that "%s" is to be the first day of week
+Calendar._TT["DAY_FIRST"] = "Display %s first";
+
+// This may be locale-dependent. It specifies the week-end days, as an array
+// of comma-separated numbers. The numbers are from 0 to 6: 0 means Sunday, 1
+// means Monday, etc.
+Calendar._TT["WEEKEND"] = "0,6";
+
+Calendar._TT["CLOSE"] = "Close";
+Calendar._TT["TODAY"] = "Today";
+Calendar._TT["TIME_PART"] = "(Shift-)Click or drag to change value";
+
+// date formats
+Calendar._TT["DEF_DATE_FORMAT"] = "%b %e, %Y";
+Calendar._TT["TT_DATE_FORMAT"] = "%B %e, %Y";
+
+Calendar._TT["WK"] = "Week";
+Calendar._TT["TIME"] = "Time:";
+
+//]]>
+
+</script>
+
+<?php  
+$vendorId = $_session->getVendor()->getVendorId();
+
+$shipPayout = $hlp->getshipmentpayoutTable();
+$shipment = $hlp->getsalesFlatShipmentTable();
+$orderPayment = $hlp->getsalesFlatOrderPaymentTable();
+$uVendor = $hlp->getudropshipVendorTable();
+
+$unpShip = mysql_query("SELECT COUNT(*) AS `totalunpShip` FROM `".$shipPayout."` AS `payout` LEFT JOIN `".$shipment."` AS `shipment` ON payout.`shipment_id` = shipment.`increment_id` WHERE shipment.`udropship_vendor` = '".$vendorId."' AND payout.`shipmentpayout_status` = 0 ");
+
+	$resultUnpShip = mysql_fetch_array($unpShip);
+	$totalunpShip = $resultUnpShip['totalunpShip'];
+
+
+$unpCodShip = mysql_query("SELECT COUNT(*) AS `totalunpCodShip` FROM `".$shipPayout."` AS `payout` LEFT JOIN `".$shipment."` AS `shipment` ON  payout.`shipment_id` = shipment.`increment_id` LEFT JOIN `".$orderPayment."` AS `payMethod` ON shipment.`order_id` = `payMethod`.`parent_id` WHERE shipment.`udropship_vendor` = '".$vendorId."' AND payMethod.`method` = 'cashondelivery' AND payout.`shipmentpayout_status` = 0 ", $mainconn);
+
+	$resultUnpCodShip = mysql_fetch_array($unpCodShip);
+	$totalunpCodShip = $resultUnpCodShip['totalunpCodShip'];
+
+
+$unpPreShip = mysql_query("SELECT COUNT(*) AS `totalunpPreShip` FROM `".$shipPayout."` AS `payout` LEFT JOIN `".$shipment."` AS `shipment` ON  payout.`shipment_id` = shipment.`increment_id` LEFT JOIN `".$orderPayment."` AS `payMethod` ON shipment.`order_id` = payMethod.`parent_id` WHERE shipment.`udropship_vendor` = '".$vendorId."' AND shipment.`udropship_status` = 1 AND payout.`shipmentpayout_status` = 0 AND payMethod.`method` IN('secureebs_standard','payucheckout_shared')", $mainconn);
+
+	$resultUnpPreShip = mysql_fetch_array($unpPreShip);
+	$totalunpPreShip = $resultUnpPreShip['totalunpPreShip'];
+
+
+$unpDispShip = mysql_query("SELECT COUNT(*) AS `totalunpDispShip` FROM `".$shipPayout."` AS `payout` LEFT JOIN `".$shipment."` AS `shipment` ON payout.`shipment_id` = shipment.`increment_id` WHERE shipment.`udropship_vendor` = '".$vendorId."' AND shipment.`udropship_status` = 20 AND payout.`shipmentpayout_status` = 0", $mainconn);
+
+	$resultUnpDispShip = mysql_fetch_array($unpDispShip);
+	$totalunpDispShip = $resultUnpDispShip['totalunpDispShip'];
+
+
+$lastPayment = mysql_query("SELECT `shipmentpayout_update_time`, `payment_amount` FROM `".$shipPayout."` AS `payout` LEFT JOIN `".$shipment."` AS `shipment` ON payout.`shipment_id` = shipment.`increment_id` WHERE shipment.`udropship_vendor` = '".$vendorId."' AND payout.`shipmentpayout_status` = 1 ORDER BY payout.`shipmentpayout_update_time` DESC LIMIT 1", $mainconn);
+
+	$resultLastPayment = mysql_fetch_array($lastPayment);
+	$totalLastPayment = $resultLastPayment['payment_amount'];
+	$lastPaymentDate = $resultLastPayment['shipmentpayout_update_time'];
+
+$totalBalance = mysql_query("SELECT `closing_balance` FROM `".$uVendor."` WHERE `vendor_id` = '".$vendorId."'", $mainconn);
+
+	$resultTotalBalance = mysql_fetch_array($totalBalance);
+	$balance = $resultTotalBalance['closing_balance'];
+
+ mysql_close($mainconn);
+?>
+
+<style>
+.panel-inner123 {
+	float: left;
+	border: 1px solid #D9D9D9;
+	border-radius: 5px 5px 5px 5px;
+	margin: 0 10px 0 0;
+	position: relative;
+	width: 180px;
+	height: 80px;
+	min-height: 50px;
+}
+
+</style>
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+
+<div class="overview-wrap">
+<div class="panel-inner123">
+     <h3 class="panel-title">
+       <span class="panel-title-text has-tooltip fleft">Total Unpaid Shipments</span>
+         <span class="queicon spriteimg fleft quest"></span> 
+           </h3>
+              <div class="data-box"> <span class="data-loud"> <span><?php echo number_format($totalunpShip);?>
+         </span>       
+       </span>
+     </div>
+</div>
+<div class="panel-inner123">
+     <h3 class="panel-title">
+       <span class="panel-title-text has-tooltip fleft">Total Unpaid COD Shipments</span>
+         <span class="queicon spriteimg fleft quest"></span> 
+           </h3>
+              <div class="data-box"> <span class="data-loud"> <span><?php echo number_format($totalunpCodShip);?>
+         </span>       
+       </span>
+     </div>
+</div>
+<div class="panel-inner123">
+     <h3 class="panel-title">
+       <span class="panel-title-text has-tooltip fleft">Total Unpaid Prepaid Shipments </span>
+         <span class="queicon spriteimg fleft quest"></span> 
+           </h3>
+              <div class="data-box"> <span class="data-loud"> <span><?php echo number_format($totalunpPreShip);?>
+         </span>       
+       </span>
+     </div>
+</div>
+<div class="panel-inner123">
+     <h3 class="panel-title">
+       <span class="panel-title-text has-tooltip fleft">Total Unpaid Disputed Shipments </span>
+         <span class="queicon spriteimg fleft quest"></span> 
+           </h3>
+              <div class="data-box"> <span class="data-loud"> <span><?php echo number_format($totalunpDispShip);?>
+         </span>       
+       </span>
+     </div>
+</div>
+<div class="panel-inner123">
+     <h3 class="panel-title">
+       <span class="panel-title-text has-tooltip fleft"> Last Payment <br><br> On Date : <?php echo $lastPaymentDate; ?></span>
+         <span class="queicon spriteimg fleft quest"></span> 
+           </h3>
+              <div class="data-box"> <span class="data-loud"> <span>Rs. <?php echo number_format($totalLastPayment);?>
+         </span>       
+       </span>
+     </div>
+</div>
+<div class="panel-inner123">
+     <h3 class="panel-title">
+       <span class="panel-title-text has-tooltip fleft">Total Balance </span>
+         <span class="queicon spriteimg fleft quest"></span> 
+           </h3>
+              <div class="data-box"> <span class="data-loud"> <span>Rs. <?php echo number_format($balance);?>
+         </span>       
+       </span>
+     </div>
+</div>
+</div>

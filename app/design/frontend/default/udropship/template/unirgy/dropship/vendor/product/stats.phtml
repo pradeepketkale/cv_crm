@@ -1,0 +1,671 @@
+<!-------------------------------------------------------GRAPH START------------------------------------------------------>
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+
+<?php 
+$_session           = Mage::getSingleton('udropship/session');
+$currDate           = date("Y-m"); 
+$lastMonth          = date("Y-m",strtotime("-1 Months")); 
+$lastTwelveMonth    = date("Y-m",strtotime("-12 Months")); 
+
+require_once 'app/Mage.php';
+Mage::app();
+
+$hlp = Mage::helper('generalcheck');
+$mainconn = $hlp->getMaindbconnection();
+
+$productStatsCraftsvilla = $hlp->getproductStatsCraftsvillaTable();
+$salesFlatShipment = $hlp->getsalesFlatShipmentTable();
+$catalogProductCraftsvilla3  = $hlp->getcatalogProductCraftsvilla3Table();
+$salesFlatShipment = $hlp->getsalesFlatShipmentTable();
+$shipmentpayout = $hlp->getshipmentpayoutTable();
+$salesFlatOrderPayment = $hlp->getsalesFlatOrderPaymentTable();
+
+	if (Mage::helper('udropship')->isModuleActive('Unirgy_DropshipMicrosite')
+	    && $_session->isLoggedIn()
+	    && $_session->getVendor()->getShowProductsMenuItem()
+	    && $_session->getVendor()->getVendorId()
+	):
+$vendorId = $_session->getVendor()->getVendorId();//vendorId
+//$vendorId = 28;
+$query = mysql_query("SELECT COUNT(`entity_id`) as count, `created_at`, SUM(`base_total_value`) AS sumTotal, SUM(`base_shipping_amount`) AS sumShip FROM `".$salesFlatShipment."` WHERE `udropship_vendor` = '".$vendorId."' AND `created_at` > DATE_SUB(Now(),INTERVAL 6 MONTH) GROUP BY MONTH( `created_at` ) ORDER BY `created_at` ASC LIMIT 25", $mainconn);
+
+	$rows = array();
+	$table = array();
+	$table['cols'] = array(
+
+		    array('label' => 'month ', 'type' => 'string'),
+		    array('label' => 'shipment', 'type' => 'number')
+		    
+		);
+
+	$rows1 = array();
+	$table1 = array();
+	$table1['cols'] = array(
+
+		    array('label' => 'month ', 'type' => 'string'),
+		    array('label' => 'sales', 'type' => 'number')
+		   
+		);
+
+	$rows2 = array();
+	$table2 = array();
+	$table2['cols'] = array(
+
+		    array('label' => 'month ', 'type' => 'string'),
+		    array('label' => 'shipment', 'type' => 'number')
+		    
+		);
+
+
+while($r = mysql_fetch_array($query)) {
+	    $count = $r['count'];
+	    $baseTotalValue = $r['sumTotal'];
+	    $baseShipingAmount = $r['sumShip'];
+
+	    $total = $baseTotalValue + 	$baseShipingAmount;
+	    $temp = array();
+	   
+	    $temp[] = array('v' => (string) date('M-Y', strtotime($r['created_at']))); 
+	   
+	    $temp[] = array('v' => (int) $r['count']);
+	    $rows[] = array('c' => $temp);
+
+	    $ftotal = round($total/100000,2);
+
+	    $temp1 = array();
+	   
+	    $temp1[] = array('v' => (string) date('M-Y', strtotime($r['created_at']))); 
+	   
+	    
+	    $temp1[] = array('v' => (float) $ftotal); 
+	    $rows1[] = array('c' => $temp1);
+
+	$avgTotal = round(($total/$count),2);
+
+	    $temp2 = array();
+	   
+	    $temp2[] = array('v' => (string) date('M-Y', strtotime($r['created_at']))); 
+	   
+	    
+	    $temp2[] = array('v' =>  (float) $avgTotal); 
+	    $rows2[] = array('c' => $temp2);
+
+}
+
+$table['rows'] = $rows;
+$jsonTable = json_encode($table);
+
+$table1['rows'] = $rows1;
+$jsonTable1 = json_encode($table1);
+
+$table2['rows'] = $rows2;
+$jsonTable2 = json_encode($table2);
+//------------------------------------------------------------SALES START---------------------------------------------------------------
+
+date_default_timezone_set("Asia/Kolkata");
+
+
+	$start = date("Y-m-d 00:00:00");//'2011-07-26 00:00:00';      // todays value
+	$end = date("Y-m-d H:i:s");//'2014-07-26 00:00:00';
+
+$todaysValue = mysql_query("SELECT `created_at` , `base_total_value` FROM `".$salesFlatShipment."` WHERE `udropship_vendor` = '".$vendorId."' AND (
+`created_at` BETWEEN '".$start."' AND '".$end."')", $mainconn);
+
+$baseTotal = 0;
+
+	while($rowtoday = mysql_fetch_array($todaysValue))
+	{
+
+	$baseTotal += $rowtoday['base_total_value'];
+
+	}
+
+	$startYest = date("Y-m-d 00:00:00",strtotime(yesterday));    //1> yesterday value
+	$endYest = date("Y-m-d 23:59:59",strtotime(yesterday));
+
+$yesterdayValue = mysql_query("SELECT `created_at` , `base_total_value` FROM `".$salesFlatShipment."` WHERE `udropship_vendor` = '".$vendorId."' AND (`created_at` BETWEEN '".$startYest."' AND '".$endYest."')", $mainconn);
+
+$baseTotalYest = 0;
+
+	while($rowyest = mysql_fetch_array($yesterdayValue))
+	{
+
+	$baseTotalYest += $rowyest['base_total_value'];
+
+	}
+
+	$startLW = date("Y-m-d 00:00:00",strtotime('-8 days'));     //1> same day of last week
+	$endLW = date("Y-m-d 23:59:59", strtotime('-8 days'));
+
+$yesterdayValueWk = mysql_query("SELECT `created_at` , `base_total_value` FROM `".$salesFlatShipment."` WHERE `udropship_vendor` = '".$vendorId."' AND (`created_at` BETWEEN '".$startLW."' AND '".$endLW."')", $mainconn);
+
+$baseTotalYestWk = 0;
+
+	while($rowyestWk = mysql_fetch_array($yesterdayValueWk))
+	{
+
+	$baseTotalYestWk += $rowyestWk['base_total_value'];
+
+	}
+        $percentYest= round((($baseTotalYest - $baseTotalYestWk)/$baseTotalYestWk)*100,2) ;
+	$salesDiffYest= round(($baseTotalYest - $baseTotalYestWk),2) ;
+
+	$start7 = date("Y-m-d 00:00:00",strtotime('-7 days'));      //2> last 7 days
+	$end7 = date("Y-m-d H:i:s");
+
+$last7dayValue = mysql_query("SELECT `created_at` , `base_total_value` FROM `".$salesFlatShipment."` WHERE `udropship_vendor` = '".$vendorId."' AND (`created_at` BETWEEN '".$start7."' AND '".$end7."')", $mainconn);
+
+$baseTotalLast7 = 0;
+
+	while($rowLast7 = mysql_fetch_array($last7dayValue))
+	{
+
+	$baseTotalLast7 += $rowLast7['base_total_value'];
+
+	}
+
+	$startLW7 = date("Y-m-d 00:00:00",strtotime('-14 days'));   //2> same day of last week
+	$endLW7 = date("Y-m-d 23:59:59", strtotime('-7 days'));
+
+$last7dayValueWk = mysql_query("SELECT `created_at` , `base_total_value` FROM `".$salesFlatShipment."` WHERE `udropship_vendor` = '".$vendorId."' AND (`created_at` BETWEEN '".$startLW7."' AND '".$endLW7."')", $mainconn);
+
+$baseTotalLast7Wk = 0;
+
+	while($rowLast7Wk = mysql_fetch_array($last7dayValueWk))
+	{
+
+	$baseTotalLast7Wk += $rowLast7Wk['base_total_value'];
+
+	}
+	$percentLast7= round((($baseTotalLast7 - $baseTotalLast7Wk)/$baseTotalLast7Wk)*100,2) ;
+	$salesDiffLast7= round(($baseTotalLast7 - $baseTotalLast7Wk),2) ;
+
+	$startM = date("Y-m-d 23:59:59", strtotime('-1 month'));             //3> same Month
+	$endM = date("Y-m-d 00:00:00",strtotime('-1 second'));
+
+$monthValue = mysql_query("SELECT `created_at` , `base_total_value` FROM `".$salesFlatShipment."` WHERE `udropship_vendor` = '".$vendorId."' AND (`created_at` BETWEEN '".$startM."' AND '".$endM."')", $mainconn);
+
+$baseTotalMonth = 0;
+
+	while($rowMonth = mysql_fetch_array($monthValue))
+	{
+
+	$baseTotalMonth += $rowMonth['base_total_value'];
+
+	}
+
+	$startLM =  date("Y-m-d 00:00:00",strtotime('-2 month'));  //3>  last Month
+	$endLM = date("Y-m-d 23:59:59", strtotime('-1 month'));
+
+$lastMonthValue = mysql_query("SELECT `created_at` , `base_total_value` FROM `".$salesFlatShipment."` WHERE `udropship_vendor` = '".$vendorId."' AND (`created_at` BETWEEN '".$startLM."' AND '".$endLM."')", $mainconn);
+
+$baseTotalMonthLast = 0;
+
+	while($rowMonthLast = mysql_fetch_array($lastMonthValue))
+	{
+
+	$baseTotalMonthLast += $rowMonthLast['base_total_value'];
+
+	}
+	$percentMonth= round((($baseTotalMonth - $baseTotalMonthLast)/$baseTotalMonthLast)*100,2) ;
+	$salesDiffMonth= round(($baseTotalMonth - $baseTotalMonthLast),0) ;
+
+//-------------------------------------------------------------Total Disputed------------------------------------------------------
+
+$queryDispute = mysql_query("SELECT COUNT(`entity_id`) AS count FROM `".$salesFlatShipment."` WHERE `udropship_vendor` = '".$vendorId."' AND `udropship_status` = 20", $mainconn);
+
+$totalDispute = 0;
+	while($rowDispute = mysql_fetch_array($queryDispute))
+	{
+
+	$totalDispute += $rowDispute['count'];
+
+	}
+
+//echo $totalDispute;exit;
+
+//-------------------------------------------------------------Refund %------------------------------------------------------
+
+$queryRefund1 = mysql_query("SELECT COUNT(`entity_id`) AS countRefund1 FROM `".$salesFlatShipment."` WHERE `udropship_vendor` = '".$vendorId."'", $mainconn);
+
+	$rowRefund1 = mysql_fetch_array($queryRefund1);
+
+	$totalRefund1 = $rowRefund1['countRefund1'];
+
+$queryRefund2 = mysql_query("SELECT COUNT(`entity_id`) AS countRefund2 FROM `".$salesFlatShipment."` WHERE `udropship_vendor` = '".$vendorId."' AND `udropship_status` IN(12, 23, 18)", $mainconn);
+
+	$rowRefund2 = mysql_fetch_array($queryRefund2);
+
+	$totalRefund2 = $rowRefund2['countRefund2'];
+
+$percentRefund = round((($totalRefund2 / $totalRefund1) * 100),2);
+
+//echo $percentRefund;exit;
+
+//-------------------------------------------------------Total Product Live---------------------------------------
+
+$queryProduct = mysql_query("SELECT COUNT(`entity_id`) AS countProduct FROM `".$catalogProductCraftsvilla3."` WHERE `udropship_vendor` = '".$vendorId."'", $mainconn);
+
+	$rowProduct = mysql_fetch_array($queryProduct);
+	$liveProduct = $rowProduct['countProduct'];
+//echo $liveProduct;exit;
+
+
+// ------------------------------------------------------- PageViews--------------------------------------------
+
+$dispatchtime = mysql_query("SELECT AVG(DATEDIFF(shipment.`updated_at`,shipment.`created_at`)) AS `dispatch` FROM `".$salesFlatShipment."` AS `shipment` LEFT JOIN `".$salesFlatOrderPayment."` AS `payMethod` ON shipment.`order_id` = payMethod.`parent_id` WHERE shipment.`udropship_vendor` = '".$vendorId."' AND shipment.`udropship_status` = 1 AND payMethod.`method` IN('secureebs_standard','payucheckout_shared','paypal_standard','purchaseorder')", $mainconn);
+
+	$rowDispatch = mysql_fetch_array($dispatchtime);		//dispatch prepaid
+	$dispatchDays = $rowDispatch['dispatch'];
+
+
+$dispatchtimeCOD = mysql_query("SELECT AVG(DATEDIFF(shipment.`updated_at`,shipment.`created_at`)) AS `CODdispatch` FROM `".$salesFlatShipment."` AS `shipment` LEFT JOIN `".$salesFlatOrderPayment."` AS `payMethod` ON shipment.`order_id` = payMethod.`parent_id` WHERE shipment.`udropship_vendor` = '".$vendorId."' AND shipment.`udropship_status` = 7 AND payMethod.`method` = 'cashondelivery'", $mainconn);
+
+	$rowDispatchCOD = mysql_fetch_array($dispatchtimeCOD);		//dispatch COD
+	$dispatchDaysCOD = $rowDispatchCOD['CODdispatch'];
+
+$noOfShipments = mysql_query("SELECT COUNT(*) AS `numShipments` FROM `".$salesFlatShipment."` WHERE `udropship_vendor` = '".$vendorId."'  ", $mainconn);
+	$rowShipments = mysql_fetch_array($noOfShipments);
+	$numShipments = $rowShipments['numShipments'];	
+
+$refund = mysql_query("SELECT COUNT(*) AS `refund` FROM `".$salesFlatShipment."` WHERE `udropship_vendor` = '".$vendorId."' AND `udropship_status` IN(12,23) ", $mainconn);
+
+	$rowRefund = mysql_fetch_array($refund);			//refund
+	$totalRefund = $rowRefund['refund'];
+
+	$refundRatio = (($totalRefund/$numShipments)*100);
+
+$dispute = mysql_query("SELECT COUNT(*) AS `dispute` FROM `".$salesFlatShipment."` WHERE `udropship_vendor` = '".$vendorId."' AND `udropship_status` = 20", $mainconn);
+
+	$rowDispute = mysql_fetch_array($dispute);			//dispute
+	$totalDispute = $rowDispute['dispute'];	
+
+	$disputeRatio = (($totalDispute/$numShipments)*100);
+//echo $dispatchDays."--".$dispatchDaysCOD."--".$refundRatio."--".$disputeRatio;exit;
+
+$totalScore = Mage::getModel('udropship/vendor_stats')->getCVscore($dispatchDays, $dispatchDaysCOD, $refundRatio, $disputeRatio); 
+	$totalScoreResult = round(($totalScore[0]),1);
+	$dispatchDaysRate = round(($totalScore[1]),1);
+	$dispatchDaysCODRate = round(($totalScore[2]),1);
+	$refundRatioRate = round(($totalScore[3]),1);
+	$disputeRatioRate = round(($totalScore[4]),1);								 // total CV score
+//echo $totalScoreResult."___".$dispatchDaysRate."___".$dispatchDaysCODRate."___".$refundRatioRate."___".$disputeRatioRate;exit;
+
+	$finalDispatchDaysRate = $dispatchDaysRate * 20;
+	$finaldispatchDaysCODRate = $dispatchDaysCODRate * 20;
+	$finalrefundRatioRate = $refundRatioRate * 20;
+	$finaldisputeRatioRate = $disputeRatioRate * 20;
+	$finalTotal = $totalScoreResult*20;
+
+list($totalPageViews24, $totalPageViews30, $totalPageViews, $table) = Mage::getModel('udropship/vendor_stats')->getPageviewsStats($vendorId);								//pageviews
+
+    
+ mysql_close($mainconn);
+
+?>
+
+<!--<div class="stats-controls clear">
+ Stats for  
+  <select onchange="showpageviews();">
+    <option selected="selected" value="<?php echo $currDate;?>">This Month</option>
+    <option value="<?php echo $lastMonth;?>">Last Month</option>
+    <option value="<?php echo $lastTwelveMonth;?>">Last 12 Month</option>
+  </select>
+
+</div>-->
+
+<style>
+.panel-inner123 {
+	border: 1px solid #D9D9D9;border-radius: 5px 5px 5px 5px;float: left;margin: 0 10px 0 0;position: relative;width: 180px;
+	height: 80px;	min-height: 50px;
+}
+.panel-inner12345 {
+	float: left;margin: 0 10px 0 0;position: relative;width: 180px;height: 80px;min-height: 50px;
+}
+.panel-inner1234 {
+	float: left;margin: 0 10px 0 0;	position: relative;width: 400px;min-height: 50px;
+}
+.panel-innertable {
+	float: left;margin: 0 10px 0 0;	position: relative;width: 578px;min-height: 50px;
+}
+.data-tbl {
+	display: block;font-size: 18px;font-weight: bold;line-height: 28px;margin: 60px 15px 9px;
+}
+.data-tbl1 {
+	display: block;	font-size: 18px;font-weight: bold;line-height: 28px;margin: 4px 15px 4px;
+}
+.stars{
+	width: 86px; height: 16px;background: url(http://www.craftsvilla.com/skin/frontend/default/craftsvilla2012/img/feedback/stars.png);
+  position: absolute; top: 2px;  left: 310px;
+}
+#rating{
+  height: 16px;background: url(http://www.craftsvilla.com/skin/frontend/default/craftsvilla2012/img/feedback/stars_full.png);
+  }
+.stars1{
+  width: 86px; height: 16px;background: url(http://www.craftsvilla.com/skin/frontend/default/craftsvilla2012/img/feedback/stars.png);
+  position: absolute; top: 38px;left: 310px;
+}
+#rating1{
+  height: 16px; background: url(http://www.craftsvilla.com/skin/frontend/default/craftsvilla2012/img/feedback/stars_full.png);
+  }
+ .stars2{
+  width: 86px; height: 16px;background: url(http://www.craftsvilla.com/skin/frontend/default/craftsvilla2012/img/feedback/stars.png);
+  position: absolute; top: 74px; left: 310px;
+}
+#rating2{
+  height: 16px;background: url(http://www.craftsvilla.com/skin/frontend/default/craftsvilla2012/img/feedback/stars_full.png);
+  }
+.stars3{
+  width: 86px;height: 16px;background: url(http://www.craftsvilla.com/skin/frontend/default/craftsvilla2012/img/feedback/stars.png);
+  position: absolute; top: 110px; left: 310px;
+}
+#rating3{
+  height: 16px;background: url(http://www.craftsvilla.com/skin/frontend/default/craftsvilla2012/img/feedback/stars_full.png);
+  }
+.stars4{
+  width: 86px; height: 16px;background: url(http://www.craftsvilla.com/skin/frontend/default/craftsvilla2012/img/feedback/stars.png);
+  position: absolute;top: 146px;left: 310px;
+}
+#rating4{
+  height: 16px;background: url(http://www.craftsvilla.com/skin/frontend/default/craftsvilla2012/img/feedback/stars_full.png);
+  }
+.stars i{
+  display: none; position: absolute; top: 0;left: 0; height: 26px;width: 130px;cursor: pointer;
+}
+
+</style>
+					
+
+  <div class="overview-wrap">
+<font style="color: #38708D;"><h1>Your CV Quality Score Is : <font style="color:#000"><?php echo $totalScoreResult; ?> / 5</font></h1></font>
+	<div class="stars" >
+  		<div id="rating" style="width:<?php echo $finalTotal; ?>%"></div>
+	</div><br>
+<font style="color: #38708D;"><h2>Prepaid Dispatch Score : <font style="color:#000"><?php echo $dispatchDaysRate; ?> / 5</font></h2></font>
+	<div class="stars1" >
+  		<div id="rating1" style="width:<?php echo $finalDispatchDaysRate; ?>%"></div>
+ 	</div><br>
+<font style="color: #38708D;"><h2>COD Dispatch Score : <font style="color:#000"><?php echo $dispatchDaysCODRate; ?> / 5</font></h2></font>
+	<div class="stars2" >
+ 		 <div id="rating2" style="width:<?php echo $finaldispatchDaysCODRate; ?>%"></div>
+ 	</div><br>
+<font style="color: #38708D;"><h2>Refund Score : <font style="color:#000"><?php echo $refundRatioRate; ?> / 5</font></h2></font>
+	<div class="stars3" >
+ 		 <div id="rating3" style="width:<?php echo $finalrefundRatioRate; ?>%"></div>
+ 	</div><br>
+<font style="color: #38708D;"><h2>Dispute Score : <font style="color:#000"><?php echo $disputeRatioRate; ?> / 5</font></h2></font>
+	<div class="stars4" >
+ 		 <div id="rating4" style="width:<?php echo $finaldisputeRatioRate; ?>%"></div>
+ 	</div>
+<br><br>
+
+<!---
+<center><h2> Sales Trend </h2></center>
+    <div class="panel-inner page-view">
+      <h3 class="panel-title">
+      
+       <span class="panel-title-text has-tooltip fleft">Views</span>
+      <span class="queicon spriteimg fleft quest"></span> 
+       
+       </h3>
+      <div class="data-box"> <span class="data-loud"> <span id="totalviews"><?php echo Mage::getModel('udropship/vendor_stats')->getTotalpageviewsByVendor($_session->getVendor()->getVendorId());?></span>
+        <div class="data-box-detail">
+        
+          <div><span class="stat-nu"><?php echo Mage::getModel('udropship/vendor_stats')->getTotalpageviewsByStatType($_session->getVendor()->getVendorId(),'shop');?></span> <span class="plural">Shop views</span> </div>
+          <div class="two"><span class="stat-nu"><?php echo Mage::getModel('udropship/vendor_stats')->getTotalpageviewsByStatType($_session->getVendor()->getVendorId(),'profile');?></span> <span class="plural">Profile views</span> </div>
+          <div><span class="stat-nu"><?php echo Mage::getModel('udropship/vendor_stats')->getTotalpageviewsByStatType($_session->getVendor()->getVendorId(),'product');?></span> <span class="plural">Product views</span> </div>
+          <div class="two"><span class="stat-nu"><?php echo Mage::getModel('udropship/vendor_stats')->getTotalpageviewsByStatType($_session->getVendor()->getVendorId(),'recentsales');?></span> <span class="plural">Recent Sales views</span> </div>
+          
+        </div>
+        
+        </span>
+      </div>
+    </div>
+    <div class="panel-inner">
+      <h3 class="panel-title">
+      
+       <span class="panel-title-text has-tooltip fleft">Revenue Last 30 Days </span>
+      <span class="queicon spriteimg fleft quest"></span> 
+       
+       </h3>
+      <div class="data-box"> <span class="data-loud"> <span>Rs. <?php echo number_format(Mage::getModel('udropship/vendor_stats')->getRevenueByVendor($_session->getVendor()->getVendorId()),2); ?></span>
+        </span>
+      </div>
+    </div>
+    <div class="panel-inner">
+      <h3 class="panel-title">
+      
+       <span class="panel-title-text has-tooltip fleft">Orders</span>
+      <span class="queicon spriteimg fleft quest"></span> 
+       
+       </h3>
+        <div class="data-box"> <span class="data-loud"> <span><?php echo Mage::getModel('udropship/vendor_stats')->getTotalShipmentOrdersByVendor($_session->getVendor()->getVendorId()); ?></span>
+                
+                
+       <div class="data-box-detail">
+        
+          <div> <span class="plural">Average Order Value</span> <span class="stat-nu"><?php echo round(Mage::getModel('udropship/vendor_stats')->getRevenueByVendor($_session->getVendor()->getVendorId()) / Mage::getModel('udropship/vendor_stats')->getTotalShipmentOrdersByVendor($_session->getVendor()->getVendorId())); ?></span></div>
+         
+          
+        </div>
+        
+                
+                
+               
+        </span>
+      </div>
+
+    </div>
+
+
+----->
+
+
+<div class="panel-inner">
+     <h3 class="panel-title">
+       <span class="panel-title-text has-tooltip fleft">Sales Today so far</span>
+         <span class="queicon spriteimg fleft quest"></span> 
+           </h3>
+              <div class="data-box"> <span class="data-loud"> <span> Rs. <?php echo number_format($baseTotal);?>
+         </span>       
+       </span>
+     </div>
+</div>
+
+<div class="panel-inner">
+     <h3 class="panel-title">
+       <span class="panel-title-text has-tooltip fleft">Sales Yesterday</span>
+         <span class="queicon spriteimg fleft quest"></span> 
+           </h3>
+              <div class="data-box"> <span class="data-loud"> <span> Rs. <?php echo number_format($baseTotalYest);?>
+                </span> 
+<font size=2><br>
+ <?php if($percentYest<0){ echo "<font color='#ff0000'> -Rs. ".number_format($salesDiffYest * -1)."   ( ".($percentYest * -1)." %)</font>";}else {echo "<font color='#04B404'> +Rs. ".number_format($salesDiffYest)."   ( ".$percentYest." %)</font>";} ?>
+</font>
+		<div class="data-box-detail">    
+             <div><span class="plural">vs same Day Last Week</span> <span class="stat-nu"><br>Rs. <?php echo number_format($baseTotalYestWk);?>
+	    </span>
+	   </div>                  
+        </div>           
+       </span>
+     </div>
+</div>
+
+<div class="panel-inner">
+     <h3 class="panel-title">
+       <span class="panel-title-text has-tooltip fleft"> Sales Last 7 Days</span>
+         <span class="queicon spriteimg fleft quest"></span> 
+           </h3>
+              <div class="data-box"> <span class="data-loud"> <span> Rs. <?php echo number_format($baseTotalLast7);?>
+                </span> 
+<font size=2><br>
+ <?php if($percentLast7<0){ echo "<font color='#ff0000'> -Rs. ".number_format($salesDiffLast7 * -1)."   ( ".($percentLast7 * -1)." %)</font>";}else {echo "<font color='#04B404'> +Rs. ".number_format($salesDiffLast7)."   (".$percentLast7." %)</font>";} ?>
+</font>
+		<div class="data-box-detail">    
+              <div><span class="plural">vs previous 7 Days</span> <span class="stat-nu"><br>Rs. <?php echo number_format($baseTotalLast7Wk); ?>
+	    </span>
+	   </div>                  
+        </div>           
+       </span>
+     </div>
+</div>
+
+<div class="panel-inner">
+     <h3 class="panel-title">
+       <span class="panel-title-text has-tooltip fleft">Sales Last 30 Days</span>
+         <span class="queicon spriteimg fleft quest"></span> 
+           </h3>
+              <div class="data-box"> <span class="data-loud"> <span> Rs. <?php echo number_format($baseTotalMonth);?>
+                </span> 
+<font size=2><br>
+ <?php if($percentMonth<0){ echo "<font color='#ff0000'> -Rs. ".number_format($salesDiffMonth * -1)."   (".($percentMonth * -1)."%)</font>";}else {echo "<font color='#04B404'> +Rs. ".number_format($salesDiffMonth)."   (".$percentMonth."%)</font>";} ?>
+</font>
+		<div class="data-box-detail">    
+              <div><span class="plural">vs previous 30 Days</span> <span class="stat-nu"><br>Rs. <?php echo number_format($baseTotalMonthLast); ?>
+	    </span>
+	   </div>                  
+        </div>           
+       </span>
+     </div>
+</div>
+                
+<div class="panel-inner123">
+     <h3 class="panel-title">
+       <span class="panel-title-text has-tooltip fleft">Total Disputed Shipments</span>
+         <span class="queicon spriteimg fleft quest"></span> 
+           </h3>
+              <div class="data-box"> <span class="data-loud"> <span><?php echo number_format($totalDispute);?>
+         </span>       
+       </span>
+     </div>
+</div>
+
+<div class="panel-inner123">
+     <h3 class="panel-title">
+       <span class="panel-title-text has-tooltip fleft">Refund %</span>
+         <span class="queicon spriteimg fleft quest"></span> 
+           </h3>
+              <div class="data-box"> <span class="data-loud"> <span><?php echo $percentRefund;?>%
+         </span>       
+       </span>
+     </div>
+</div>
+
+<div class="panel-inner123">
+     <h3 class="panel-title">
+       <span class="panel-title-text has-tooltip fleft">Total No. of Product Live</span>
+         <span class="queicon spriteimg fleft quest"></span> 
+           </h3>
+              <div class="data-box"> <span class="data-loud"> <span><?php echo number_format($liveProduct);?>
+         </span>       
+       </span>
+     </div>
+</div>
+
+  </div>
+
+
+
+<?php endif;?>        
+
+
+<!---------------------------------------------------------------GRAPH SCRIPT------------------------------------------------>
+
+<script type="text/javascript">
+
+    google.load('visualization', '1', {'packages':['corechart']});
+
+   
+    google.setOnLoadCallback(drawChart);
+
+    function drawChart() {
+
+  
+      var data = new google.visualization.DataTable(<?=$jsonTable?>);
+      var options = {
+           title: 'Total Shipments Generated',
+           is3D: 'true',
+           width: 650,
+           height: 300,
+	   chartArea : { left:"8%"},
+	   animation:{  duration: 1000, easing: 'out'}
+        };
+
+      var data1= new google.visualization.DataTable(<?=$jsonTable1?>);
+      var options1 = {
+           title: 'Total Approx Sales Including All Shipments (Rs. Lakhs)',
+           is3D: 'true',
+           width: 650,
+           height: 300,
+	   align: 'center',
+	   chartArea : { left:"8%"},
+	   animation:{  duration: 1000, easing: 'out'}
+        };
+
+      var data2= new google.visualization.DataTable(<?=$jsonTable2?>);
+      var options2 = {
+           title: 'Average Shipment Value (Rs.)',
+           is3D: 'true',
+           width: 650,
+           height: 300,
+	   chartArea : { left:"8%"},
+	   animation:{  duration: 1000, easing: 'out'}
+        };
+      
+      var chart = new google.visualization.AreaChart(document.getElementById('chart_div'));
+
+      chart.draw(data, options);
+
+      var chart1 = new google.visualization.AreaChart(document.getElementById('chart_div1'));
+
+      chart1.draw(data1, options1);
+
+      var chart2 = new google.visualization.AreaChart(document.getElementById('chart_div2'));
+
+      chart2.draw(data2, options2);
+    
+    }
+	Array.prototype.reduce = undefined;
+
+    </script>	
+
+<div id="chart_div"></div>
+<div id="chart_div1"></div>
+<div id="chart_div2"></div>
+
+<div class="panel-inner12345">
+    
+	<div class="data-box"> <span class="data-loud"> <span>Total Pageviews :</span> </span>
+	</div>
+</div>
+
+<div class="panel-inner1234" >
+	<div class="data-box"><br>
+		<table border=1>
+		  <tr height="20px">
+		    <th width="140px"><b>Last 24 Hour</b></th><th width="140px"><b>Last 30 Days</b></th><th width="140px"><b>Total</b></th>
+		    </tr>
+		  <tr>
+	    <td><span class="data-tbl1"><?php echo $totalPageViews24; ?></span></td>
+	    <td><span class="data-tbl1"><?php echo $totalPageViews30; ?></span></td>
+	    <td><span class="data-tbl1"><?php echo $totalPageViews; ?></span></td>
+		  </tr>
+		</table>
+	</div>
+</div>
+<div class="panel-innertable">
+ 		<?php echo $table ; ?>
+</div>
+    
+            
+<script type="text/javascript">
+     function showpageviews()
+     {
+        alert('ok'); 
+     }
+    $(document).ready(function() {
+        $('span.quest').tinyTips('Shop views include your shop homepage, sections, sold items, and policies.<p class="spriteimg tooltip"></p>');
+    });
+    
+</script>
+

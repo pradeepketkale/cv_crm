@@ -1,0 +1,45 @@
+<title><?php echo str_replace("@","",$this->getTitle()) ?></title>
+<meta http-equiv="Content-Type" content="<?php echo $this->getContentType() ?>" />
+<meta name="description" content="<?php echo htmlspecialchars($this->getDescription()) ?>" />
+<meta name="keywords" content="<?php echo htmlspecialchars($this->getKeywords()) ?>" />
+<?php $pageTitle = Mage::getSingleton('cms/page')->getIdentifier(); ?>
+<meta name="robots" content="<?php if($pageTitle=='no-route') echo 'NOINDEX, NOFOLLOW'; else echo htmlspecialchars($this->getRobots()); ?>" />
+<meta name="msvalidate.01" content="4E5D359E6324750669BC46C6109DC035" />
+<meta name="google-site-verification" content="1qWRwJJsXk0TKS-YT5AOF1PCPzsnuhdaxex8cvW_Yv4" />
+<meta property="og:title" content="Largest Online Marketplace in India"/>
+<meta property="og:type" content="website"/>
+<meta property="og:url" content="http://www.craftsvilla.com"/>
+<meta property="og:image" content="http://www.craftsvilla.com/skin/frontend/default/default/images/logo_email.gif"/>
+<meta property="og:site_name" content="Craftsvilla.com"/>
+<meta property="fb:admins" content="kribha@craftsvilla.com"/>
+<meta property="og:description" content="Largest online marketplace for unique Indian products with more than 60,000 handmade and natural products. It is ETSY of India."/>
+<meta property="og:latitude" content="19.21028"/>
+<meta property="og:longitude" content="72.87341"/>
+<meta property="og:street-address" content="Row House No.2, Nirav Housing Complex, 90 feet Road, Thakur Complex, Kandivli (E)"/>
+<meta property="og:locality" content="Mumbai"/>
+<meta property="og:region" content="Maharashtra"/>
+<meta property="og:postal-code" content="400101"/>
+<meta property="og:country-name" content="India"/>
+<meta property="og:email" content="customercare@craftsvilla.com"/>
+<meta property="og:phone_number" content="+91-98926-76399"/>
+<link rel="icon" href="<?php echo $this->getFaviconFile(); ?>" type="image/x-icon" />
+<link rel="shortcut icon" href="<?php echo $this->getFaviconFile(); ?>" type="image/x-icon" />
+<!--[if lt IE 7]>
+<script type="text/javascript">
+//<![CDATA[
+    var BLANK_URL = '<?php echo $this->helper('core/js')->getJsUrl('blank.html') ?>';
+    var BLANK_IMG = '<?php echo $this->helper('core/js')->getJsUrl('spacer.gif') ?>';
+//]]>
+</script>
+<![endif]-->
+<script src="<?php echo $this->getSkinUrl('script/jquery-1.4.min.js'); ?>" type="text/javascript"></script>
+<script src="<?php echo $this->getSkinUrl('script/jquery.js'); ?>" type="text/javascript"></script>
+<style type="text/css">#nav, #search, .form-search button.button span, .product-image, button.button span, .opc .step-title .number{behavior:url(<?php echo $this->getSkinUrl('script/PIE.php'); ?>)}</style>
+<?php echo $this->getCssJsHtml() ?>
+<?php echo $this->getChildHtml() ?>
+<?php echo $this->helper('core/js')->getTranslatorScript() ?>
+<?php echo $this->getIncludes() ?>
+
+
+
+

@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns:typens="urn:{{var wsdl.name}}" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+    xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns="http://schemas.xmlsoap.org/wsdl/"
+    name="{{var wsdl.name}}" targetNamespace="urn:{{var wsdl.name}}">
+	<types>
+		<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="urn:Magento">
+			<import namespace="http://schemas.xmlsoap.org/soap/encoding/" schemaLocation="http://schemas.xmlsoap.org/soap/encoding/" />
+			<complexType name="coreStoreEntity">
+				<all>
+					<element name="store_id" type="xsd:string" />
+					<element name="code" type="xsd:string" />
+				</all>
+			</complexType>
+			<complexType name="coreStoreEntityArray">
+				<complexContent>
+					<restriction base="soapenc:Array">
+						<attribute ref="soapenc:arrayType" wsdl:arrayType="typens:coreStoreEntity[]" />
+					</restriction>
+				</complexContent>
+			</complexType>
+			<complexType name="coreWebsiteEntity">
+				<all>
+					<element name="website_id" type="xsd:string" />
+					<element name="code" type="xsd:string" />
+					<element name="name" type="xsd:string" />
+				</all>
+			</complexType>
+			<complexType name="coreWebsiteEntityArray">
+				<complexContent>
+					<restriction base="soapenc:Array">
+						<attribute ref="soapenc:arrayType" wsdl:arrayType="typens:coreWebsiteEntity[]" />
+					</restriction>
+				</complexContent>
+			</complexType>
+		</schema>
+	</types>
+	<message name="coreStoreInfoRequest">
+		<part name="sessionId" type="xsd:string" />
+	</message>
+	<message name="coreStoreInfoResponse">
+		<part name="stores" type="typens:coreStoreEntityArray" />
+	</message>
+	<message name="coreStoreListRequest">
+		<part name="sessionId" type="xsd:string" />
+	</message>
+	<message name="coreStoreListResponse">
+		<part name="stores" type="typens:coreStoreEntityArray" />
+	</message>
+	<message name="coreWebsiteAllRequest">
+		<part name="sessionId" type="xsd:string" />
+	</message>
+	<message name="coreWebsiteAllResponse">
+		<part name="stores" type="typens:coreWebsiteEntityArray" />
+	</message>
+	<portType name="{{var wsdl.handler}}PortType">
+		<operation name="coreStoreInfo">
+			<documentation>List of stores</documentation>
+			<input message="typens:coreStoreInfoRequest" />
+			<output message="typens:coreStoreInfoResponse" />
+		</operation>
+        
+		<operation name="coreStoreList">
+			<documentation>List of stores</documentation>
+			<input message="typens:coreStoreListRequest" />
+			<output message="typens:coreStoreListResponse" />
+		</operation>
+		<operation name="coreWebsiteAll">
+			<documentation>List of Website</documentation>
+			<input message="typens:coreWebsiteAllRequest" />
+			<output message="typens:coreWebsiteAllResponse" />
+		</operation>
+	</portType>
+	<binding name="{{var wsdl.handler}}Binding" type="typens:{{var wsdl.handler}}PortType">
+		<soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http" />
+		<operation name="coreStoreInfo">
+			<soap:operation soapAction="urn:{{var wsdl.handler}}Action" />
+			<input>
+				<soap:body namespace="urn:{{var wsdl.name}}" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+			</input>
+			<output>
+				<soap:body namespace="urn:{{var wsdl.name}}" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+			</output>
+		</operation>
+		<operation name="coreStoreList">
+			<soap:operation soapAction="urn:{{var wsdl.handler}}Action" />
+			<input>
+				<soap:body namespace="urn:{{var wsdl.name}}" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+			</input>
+			<output>
+				<soap:body namespace="urn:{{var wsdl.name}}" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+			</output>
+		</operation>
+		<operation name="coreWebsiteAll">
+			<soap:operation soapAction="urn:{{var wsdl.handler}}Action" />
+			<input>
+				<soap:body namespace="urn:{{var wsdl.name}}" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+			</input>
+			<output>
+				<soap:body namespace="urn:{{var wsdl.name}}" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+			</output>
+		</operation>
+	</binding>
+	<service name="{{var wsdl.name}}Service">
+		<port name="{{var wsdl.handler}}Port" binding="typens:{{var wsdl.handler}}Binding">
+			<soap:address location="{{var wsdl.url}}" />
+		</port>
+	</service>
+</definitions>

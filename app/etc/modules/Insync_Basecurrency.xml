@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>	<modules>		<Insync_Basecurrency>			<active>false</active>
+			<codePool>local</codePool>		</Insync_Basecurrency>	</modules></config>

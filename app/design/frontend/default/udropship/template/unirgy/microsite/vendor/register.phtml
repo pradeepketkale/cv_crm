@@ -1,0 +1,344 @@
+<?php 
+$_hlp = Mage::helper('umicrosite');
+$_session = Mage::getSingleton('udropship/session');
+$_carriers = Mage::getSingleton('umicrosite/source')->setPath('registration_carriers')->toOptionHash();
+$_data = $_session->getRegistrationFormData(true);
+$_r = new Varien_Object();
+if ($_data) {
+    foreach ($_data as $_k=>$_v) {
+        if (!is_array($_v)) {
+            $_r->setData($_k, htmlspecialchars($_v));
+        }
+    }
+}
+?>
+
+<?php echo $this->getMessagesBlock()->getGroupedHtml() ?>
+
+<form action="<?php echo $this->getUrl('umicrosite/vendor/registerPost')?>" method="post" id="registration-form" name="registration_form">
+<?php if (sizeof($_carriers)==1): ?>
+<input type="hidden" name="carrier_code" value="<?php echo key($_carriers) ?>" />
+<?php endif ?>
+<div class="generic-box filter">
+<div class="login-box">
+    <div class="col-1 registered-users">
+        <div class="content">
+        	<div class="box-head">
+            <h3><?php echo $this->__('Vendor Registration') ?></h3>
+            </div>
+            <table class="regform"><tbody><tr><td>
+                <ul class="form-list">
+                    <li>
+                        <label for="vendor_name"><?php echo $this->__('Shop Name') ?> <span class="required">*</span></label>
+                        <input name="vendor_name" value="<?php echo $_r->getVendorName()?>" title="<?php echo $this->__('Business Name') ?>" id="vendor_name" type="text" class="input-text required-entry" onchange="setShopname(this);" />
+                        <input name="shop_name" value="<?php echo $_r->getVendorName()?>" id="shop_name" type="hidden" />
+                    </li>
+                    <li>
+                        <label for="telephone"><?php echo $this->__('Phone Number') ?> <span class="required">*</span></label>
+                        <input name="telephone" value="<?php echo $_r->getTelephone()?>" title="<?php echo $this->__('Phone Number') ?>" id="telephone" type="text" class="input-text required-entry" />
+                    </li>
+                    <li>
+                        <label for="email"><?php echo $this->__('Email Address') ?> <span class="required">*</span></label>
+                        <input name="email" value="<?php echo $_r->getEmail()?>" title="<?php echo $this->__('Email Address') ?>" id="email" type="text" class="input-text required-entry validate-email" />
+                    </li>
+                    <li>
+                        <label for="alternate_email"><?php echo $this->__('Alternate Email Address') ?> <span class="required">*</span></label>
+                        <input name="alternate_email" value="<?php echo $_r->getAlternateEmail()?>" title="<?php echo $this->__('Alternate Email Address') ?>" id="alternate_email" type="text" class="input-text required-entry validate-email" />
+                    </li>
+                    <li>
+                        <label for="password"><?php echo $this->__('Password') ?> <span class="required">*</span></label>
+                        <input name="password" type="password" class="input-text required-entry validate-password" id="password" />
+                    </li>
+                    <li>
+                        <label for="password_confirm"><?php echo $this->__('Confirm Password') ?> <span class="required">*</span></label>
+                        <input name="password_confirm" type="password" class="input-text required-entry validate-cpassword" id="password_confirm" />
+                    </li>
+
+                    
+                    <li>
+                        <label for="shop_description"><?php echo $this->__('About Shop') ?> <span class="required">*</span></label>
+                        <textarea name="shop_description" id="shop_description" class="input-text required-entry"  title="<?php echo $this->__('About Shop') ?>"/><?php echo $_r->getComments()?></textarea>
+                    </li>
+                     <li>
+                        <label for="bank_ac_number"><?php echo $this->__('Bank Account Number') ?> <span class="required">*</span></label>
+                        <input name="bank_ac_number" value="<?php echo $_r->getVendorName()?>" title="<?php echo $this->__('Bank Account Number') ?>" id="bank_ac_number" type="text" class="input-text required-entry" />
+                    </li>
+                    <!-- <li>
+                        <label for="bank_micr_number"><?php echo $this->__('MICR Number of Bank') ?> <span class="required">*</span></label>
+                        <input name="bank_micr_number" value="<?php echo $_r->getVendorName()?>" title="<?php echo $this->__('MICR Number of Bank') ?>" id="bank_micr_number" type="text" class="input-text required-entry" />
+                    </li> -->
+                    <li>
+                        <label for="bank_branch_address"><?php echo $this->__('Bank Branch Address') ?> <span class="required">*</span></label>
+                        <textarea name="bank_branch_address" id="bank_branch_address"  title="<?php echo $this->__('Bank Branch Address') ?>" class="input-text required-entry" /><?php echo $_r->getComments()?></textarea>
+                    </li>
+                        
+		    <li>
+                        <label for="vat_tin_no"><?php echo $this->__('VAT / TIN') ?></label>
+                        <input name="vat_tin_no" value="<?php echo $_r->getVendorAttn()?>" title="<?php echo $this->__('VAT / TIN') ?>" id=vat_tin_no" type="text" class="input-text" />
+                    </li>
+
+
+
+
+                </ul>
+            </td><td>
+                <ul class="form-list">
+                    
+                      <li>
+                        <label for="company_name"><?php echo $this->__('Company Name') ?> <span class="required">*</span></label>
+                        <input name="company_name" value="<?php echo $_r->getCompanyName()?>" title="<?php echo $this->__('Company Name') ?>" id="company_name" type="text" class="input-text required-entry" />
+                    </li>
+
+                    <li>
+                        <label for="vendor_attn"><?php echo $this->__('Contact Person Name') ?> <span class="required">*</span></label>
+                        <input name="vendor_attn" value="<?php echo $_r->getVendorAttn()?>" title="<?php echo $this->__('Contact Person Name') ?>" id="vendor_attn" type="text" class="input-text required-entry" />
+                    </li>
+
+                    <li>
+                        <label for="street1"><?php echo $this->__('Street Address') ?> <span class="required">*</span></label>
+                        <input name="street1" value="<?php echo $_r->getStreet1()?>" title="<?php echo $this->__('Street Address') ?>" id="street1" type="text" class="input-text required-entry" />
+                    </li>
+
+                    <li><label>&nbsp;</label>
+                        <input name="street2" value="<?php echo $_r->getStreet2()?>" title="<?php echo $this->__('Street Address Line 2') ?>" id="street2" type="text" class="input-text " />
+                    </li>
+                    <li>
+                        <label for="city"><?php echo $this->__('City') ?> <span class="required">*</span></label>
+                        <input name="city" type="text" class="input-text required-entry" id="city" value="<?php echo $_r->getCity()?>" />
+                    </li>
+                    <li>
+                        <label for="zip"><?php echo $this->__('Zip/Postal Code') ?><span class="required">*</span></label>
+                        <input name="zip" type="text" class="input-text required-entry" id="zip" value="<?php echo $_r->getZip()?>" />
+                    </li>
+
+                    <li>
+                        <label for="country"><?php echo $this->__('Country') ?> <span class="required">*</span></label>
+                       <!-- <?php echo $this->getCountryHtmlSelect($_r->getCountryId()) ?> -->
+
+		<select name="country_id" id="country" class="validate-select select" title="Country" onchange="country_select()">
+			<option value="" > </option>
+			<option value="IN"  >India</option>
+			<option value="SG" >Singapore</option>
+			<option value="MY" >Malaysia</option>
+		</select>
+
+<script>
+	function country_select()
+	{
+		if(document.getElementById('country').value == 'SG')
+		{
+			//document.getElementById('pan_number').style.display = 'none';
+			document.getElementById('pan_number_label').style.display = 'none';
+			//document.getElementById('NRIC').style.display = '';
+			document.getElementById('NRIC_label').style.display = '';
+			document.getElementById('bank_ifsc_code_label').style.display = 'none';
+			//document.getElementById('bank_ifsc_code').style.display = 'none';
+			document.getElementById('foreign_bank_ifsc_code_label').style.display = '';
+			//document.getElementById('foreign_bank_ifsc_code').style.display = '';
+		}else 
+		{
+			//document.getElementById('pan_number').style.display = '';
+			document.getElementById('pan_number_label').style.display = '';
+			//document.getElementById('NRIC').style.display = 'none';
+			document.getElementById('NRIC_label').style.display = 'none';
+			document.getElementById('bank_ifsc_code_label').style.display = '';
+			//document.getElementById('bank_ifsc_code').style.display = '';
+			document.getElementById('foreign_bank_ifsc_code_label').style.display = 'none';
+			//document.getElementById('foreign_bank_ifsc_code').style.display = 'none';
+		}
+
+
+	}
+</script>
+
+                    </li>
+
+                    <li>
+                        <label for="region_id"><?php echo $this->__('State/Province') ?> <span class="required">*</span></label>
+                        <select id="region_id" name="region_id" title="<?php echo $this->__('State/Province') ?>" class="validate-select" style="display:none" defaultValue="<?php echo $_r->getRegionId()?>">
+                            <option value=""><?php echo $this->__('Please select region, state or province') ?></option>
+                        </select>
+                        <input type="text" id="region" name="region" value="<?php echo $_r->getRegion()?>"  title="<?php echo $this->__('State/Province') ?>" class="input-text" style="display:none" />
+                    </li>
+
+                    <li>
+                        <label for="bank_name" id="bank_name_label"><?php echo $this->__('Bank name') ?> <span class="required">*</span></label>
+                        <input name="bank_name" value="<?php echo $_r->getVendorAttn()?>" title="<?php echo $this->__('Bank name') ?>" id="bank_name" type="text" class="input-text required-entry" />
+                    </li>
+                    <li>
+                        <label for="check_pay_to"><?php echo $this->__('Cheque to be made in Name of') ?> <span class="required">*</span></label>
+                        <input name="check_pay_to" value="<?php echo $_r->getVendorAttn()?>" title="<?php echo $this->__('Cheque to be made in Name of') ?>" id="check_pay_to" type="text" class="input-text required-entry" />
+                    </li>
+
+
+
+		    <li>
+                        <label for="pan_number" id="pan_number_label"><?php echo $this->__('PAN No') ?> <span class="required">*</span></label>
+
+<label for="pan_number" id="NRIC_label" style="display:none"><?php echo $this->__('NRIC NO') ?> <span class="required">*</span></label>
+
+                        <input name="pan_number" value="<?php echo $_r->getVendorAttn()?>" title="<?php echo $this->__('pan_number') ?>" id="pan_number" type="text" class="input-text required-entry" />
+
+<!------------------------------------------------------------------------------------------------------------------------------->
+
+                      <!--  <input name="pan_number" value="<?php echo $_r->getVendorAttn()?>" title="<?php echo $this->__('NIRC_number') ?>" id="NRIC" type="text" class="input-text required-entry"  style="display:none"/>-->
+<!------------------------------------------------------------------------------------------------------------------------------->
+
+
+                    </li>
+
+                    <li>
+                        <label for="bank_ifsc_code" id="bank_ifsc_code_label" ><?php echo $this->__('IFSC code of Bank') ?> <span class="required">*</span></label>
+
+ <label for="bank_ifsc_code" id="foreign_bank_ifsc_code_label" style="display:none"><?php echo $this->__('Bank Code') ?> <span class="required">*</span></label>
+
+                        <input name="bank_ifsc_code" value="<?php echo $_r->getVendorAttn()?>" title="<?php echo $this->__('IFSC code of Bank') ?>" id="bank_ifsc_code" type="text" class="input-text required-entry" />
+<!------------------------------------------------------------------------------------------------------------------------------->
+                       
+                      <!--  <input name="bank_ifsc_code" value="<?php echo $_r->getVendorAttn()?>" title="<?php echo $this->__('Bank Code') ?>" id="foreign_bank_ifsc_code" type="text" class="input-text required-entry" style="display:none"/> -->
+<!------------------------------------------------------------------------------------------------------------------------------->                    
+</li>
+                   
+               
+                </ul>
+                
+            </td></tr>
+                    
+                <tr>
+                    <td colspan="2">
+                      <ul class="form-list">   
+                         <li>
+                            <label for="shop_url"><?php echo $this->__('Shop Url') ?> <span class="required">*</span></label>
+                            http://www.craftsvilla.com/<input name="url_key" title="<?php echo $this->__('Shop Url') ?>" id="url_key" type="text" class="input-text required-entry urlseller" onchange="validate();" /><input type="button" value="check availability" class="smallbtn form-button"/>
+                            <p class="smalltext marginzero "><span class="required">Eg:</span> If Shop Name is "Villa Craft", enter "villacraft" above. Your shop url will be http://www.craftsvilla.com/villacraft</p>
+                            <p class="smalltext marginzero"><span class="required">Note:</span> Spaces And Special characters are not allowed.</p>
+                        </li>
+                        <li>
+                            <label for="comments"><?php echo $this->__('How did you hear about us?') ?></label>
+                            <textarea name="comments" id="comments"  title="<?php echo $this->__('How did you hear about us?') ?>" class="input-text" /><?php echo $_r->getComments()?></textarea>
+                        </li>
+                        <li><span class="required"><?php echo $this->__('* Required Fields') ?></span></li>
+                      </ul> 
+
+                    </td>
+                 </tr>
+                
+                <tr>
+                    <td colspan="2">
+                        <p>
+                            <input type="checkbox" id="terms" name="agree" class="checkbox required-entry">I agree that I have read and understood the <a href="<?php echo Mage::getBaseUrl().'terms-and-conditions-craftsvilla/' ?>">Craftsvilla User Agreement</a> & <a href="<?php echo Mage::getBaseUrl().'privacy-policy-craftsvilla/' ?>">the Privacy Policy</a></input>
+                        </p>  
+                        <input type="hidden" name="status" id="status" value="A" />
+                        <input type="hidden" name="featured_seller" id="featured_seller" value="0" />
+                        <input type="hidden" name="auto_upload" id="auto_upload" value="0" />
+                        <input type="hidden" name="manage_shipping" id="manage_shipping" value="vmanage" />
+                        <input type="hidden" name="ship_handling_time" id="ship_handling_time" value="5 days" />
+                        <input type="hidden" name="item_return_in_days" id="item_return_in_days" value="48 hours" />
+                        <input type="hidden" name="refund_made_as" id="refund_made_as" value="voucher" />
+                        <input type="hidden" name="refund_cost_bearer" id="refund_cost_bearer" value="buyer" />
+                        <input type="hidden" name="return_policy_detail" id="return_policy_detail" value="" />
+                        <input type="hidden" name="company_type" id="company_type" value="individual" />
+                        <input type="hidden" name="carrier_code" id="carrier_code" value="tablerate" />
+                        <input type="hidden" name="new_order_notifications" id="new_order_notifications" value="1" />
+                        <input type="hidden" name="attach_packingslip" id="attach_packingslip" value="0" />
+                        <input type="hidden" name="hide_packingslip_amount" id="hide_packingslip_amount" value="-1" />
+                        <input type="hidden" name="attach_shippinglabel" id="attach_shippinglabel" value="0" />
+                        <input type="hidden" name="notify_lowstock" id="notify_lowstock" value="0" />
+                        <input type="hidden" name="notify_lowstock_qty" id="notify_lowstock_qty" value="0" />
+                        <input type="hidden" name="use_handling_fee" id="use_handling_fee" value="0" />
+                        <input type="hidden" name="handling_type" id="handling_type" value="F" />
+                        <input type="hidden" name="handling_action" id="handling_action" value="O" />
+                        <input type="hidden" name="initial_shipment_status" id="initial_shipment_status" value="999" />
+                        <input type="hidden" name="vendor_po_grid_sortby" id="vendor_po_grid_sortby" value="order_increment_id" />
+                        <input type="hidden" name="vendor_po_grid_sortdir" id="vendor_po_grid_sortdir" value="desc" />
+                        <input type="hidden" name="commission_percent" id="commission_percent" value="20" />
+                        <input type="hidden" name="transaction_fee" id="transaction_fee" value="0" />
+                        <input type="hidden" name="seller_priority" id="seller_priority" value="1" />
+						<!--<input type="hidden" name="vendoradmin_payment_methods[]" id="vendoradmin_payment_methods" value="cashondelivery" />-->	         			<input type="hidden" name="vendoradmin_payment_methods[]" id="vendoradmin_payment_methods" value="" />
+                        <input type="hidden" name="statement_tax_in_payout" id="statement_tax_in_payout" value="include" />
+                        <input type="hidden" name="statement_shipping_in_payout" id="statement_shipping_in_payout" value="include" />
+                        <input type="hidden" name="statement_subtotal_base" id="statement_subtotal_base" value="price" />
+                        <input type="hidden" name="statement_po_type[]" id="statement_po_type" value="shipment" />
+                        <input type="hidden" name="statement_po_status[]" id="statement_po_status" value="1" />
+                        <input type="hidden" name="statement_shipment_status" id="statement_shipment_status" value="1" />
+                        <input type="hidden" name="dimension_units" id="dimension_units" value="IN" />
+                        <input type="hidden" name="default_pkg_length" id="default_pkg_length" value="1" />
+                        <input type="hidden" name="default_pkg_width" id="default_pkg_width" value="1" />
+                        <input type="hidden" name="default_pkg_height" id="default_pkg_height" value="1" />
+                        <input type="hidden" name="pdf_page_size" id="pdf_page_size" value="612:792:" />
+                        <input type="hidden" name="pdf_page_width" id="pdf_page_width" value="8.5" />
+                        <input type="hidden" name="pdf_page_height" id="pdf_page_height" value="11" />
+                        <input type="hidden" name="pdf_label_rotate" id="pdf_label_rotate" value="0" />
+                        <input type="hidden" name="pdf_label_left" id="pdf_label_left" value=".5" />
+                        <input type="hidden" name="pdf_label_top" id="pdf_label_top" value=".5" />
+                        <input type="hidden" name="epl_doctab" id="epl_doctab" value="0" />
+                        <input type="hidden" name="show_products_menu_item" id="show_products_menu_item" value="1" />
+                        <input type="hidden" name="is_limit_categories" id="is_limit_categories" value="0" />
+                        
+                        <button class="form-button" type="submit" name="send"><span><?php echo $this->__('Register') ?></span></button>                        
+                    </td>
+                </tr>
+           </tbody></table>
+
+           
+            
+        </div>
+        
+        <div class="fieldset"><h2 class="legend">Note</h2>
+                      
+                        <ul class="arrowlist">
+                           <li>Your name will be publicly displayed on Craftsvilla. These fields are optional.</li>
+                           <li>Your confirmation will be sent to your email address.</li>
+                           <li><a href="<?php echo $this->getUrl('udropship/vendor')?>"><?php echo $this->__('Return to log in')?></a></li>
+                        </ul>
+                      
+            
+                    </div>
+        
+     
+           
+    </div>
+</div>
+</div>
+</form>
+
+<script type="text/javascript">
+    function validate(){ 
+        var iChars = "!@#$%^&*()+=-[]\\\';,./{}|\":<>?";
+        if(document.registration_form.url_key.value.match(/\s/g)){
+            alert('Sorry, you are not allowed to enter any spaces');
+            return false;
+        }
+        
+        for (var i = 0; i < document.registration_form.url_key.value.length; i++) {
+            if (iChars.indexOf(document.registration_form.url_key.value.charAt(i)) != -1) {
+                alert ("Your Shop url has special characters. \nThese are not allowed.\n Please remove them and try again.");
+                return false;
+            }
+        }
+        var reloadurl = '<?php echo $this->getUrl('umicrosite/vendor/checkshopurl') ?>';
+            new Ajax.Request(reloadurl, {
+            method: 'post',
+            parameters: "shop_url="+document.registration_form.url_key.value,
+            onComplete: function(transport) {
+                if(transport.responseText == 0){
+                    alert('This shop url is not available');
+                }
+                if(transport.responseText == 1){
+                    alert('This shop url is available');
+                }
+            }
+            });
+    }
+    
+    function setShopname(){ 
+        document.getElementById('shop_name').value= $('vendor_name').getValue();
+    }
+    Validation.addAllThese([
+        ['validate-urlkey', 'Please use only letters (a-z) or numbers (0-9) in this field, first character should be a letter.', function (v) {
+                return Validation.get('IsEmpty').test(v) ||  /^[a-z]+[a-z0-9]+$/.test(v)
+        }],
+    ]);
+    var dataForm = new VarienForm('registration-form', true);
+    new RegionUpdater('country', 'region', 'region_id', <?php echo $this->helper('directory')->getRegionJson() ?>);
+</script>

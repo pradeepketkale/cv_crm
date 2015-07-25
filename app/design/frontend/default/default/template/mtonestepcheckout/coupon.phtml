@@ -1,0 +1,173 @@
+<?php
+	/*
+		Modified by Harpeet Singh 
+		IKSULA 
+	*/
+?>
+<?php
+$hlp = Mage::helper('generalcheck');
+$ismobile = $hlp->ismobile();
+
+if(!$ismobile)
+{?> 
+
+<form id="discount-coupon-form" action="<?php //echo $this->getUrl('checkout/cart/couponPost') ?>#" onsubmit="return false;" method="post" autocomplete="off">
+    <div class="discount">
+        <strong>Coupon Code</strong>
+        <div class="discount-form">
+            <input type="hidden" name="remove" id="remove-coupone" value="0" />
+            <div class="input-box">
+                <input class="input-text" id="coupon_code-right" name="coupon_code" value="<?php echo $this->htmlEscape($this->getCouponCode()) ?>" />
+            </div>
+            <div class="buttons-set">
+				<?php if(strlen($this->getCouponCode())): ?>
+                 <button type="button" title="<?php echo $this->__('Cancel Coupon') ?>" class="button cancelcoupon" onclick="discountfunction(1)" value="<?php echo $this->__('Cancel Coupon') ?>"><?php echo $this->__('Cancel Coupon') ?></button>
+                <?php else: ?>
+				<button type="button" title="<?php echo $this->__('Cancel Coupon') ?>" class="button cancelcoupon displaynone" onclick="discountfunction(1); return false;" value="<?php echo $this->__('Cancel Coupon') ?>"><?php echo $this->__('Cancel Coupon') ?></button>
+                <button type="button" title="<?php echo $this->__('Apply Coupon') ?>" class="button applycoupon" onclick="discountfunction(0); return false;" value="<?php echo $this->__('Apply Coupon') ?>"><?php echo $this->__('Apply Coupon') ?></button>
+                <?php endif;?>
+            </div>
+        </div>
+    </div>
+</form>
+<script type="text/javascript">
+var $j = jQuery;
+//<![CDATA[
+//var discountForm = new VarienForm('discount-coupon-form');
+/* discountForm.submit = function (isRemove) {
+    if (isRemove) {
+        $('coupon_code-right').removeClassName('required-entry');
+        $('remove-coupone').value = "1";
+    } else {
+        $('coupon_code-right').addClassName('required-entry');
+        $('remove-coupone').value = "0";
+    }
+    return VarienForm.prototype.submit.bind(discountForm)();
+} */
+//]]>
+
+function discountfunction(isRemove) {
+		var coupon = jQuery('#coupon_code-right').val();
+		if(coupon){
+			jQuery('body').addClass('opacity');
+			jQuery.post('<?php echo $this->getUrl('mtonestepcheckout/index/coupon')?>', {coupon_code: coupon, remove:isRemove}, function(data){
+				if(data.error){
+					alert(data.error);
+					jQuery('body').removeClass('opacity');
+				} else{
+					reloadReview2(isRemove);
+				}
+			}, 'json');
+		}else{
+			alert('Please enter coupon code.');
+		}
+  }
+  
+ function reloadReview2(isRemove){
+		try
+		{
+			$j.post('<?php echo $this->getUrl('mtonestepcheckout/index/reloadReviewh') ?>', '', function(data){
+				if(data){
+					$j('.order-summary-container').html(data.newreview);
+					if(isRemove == 1){
+						$j('.cancelcoupon').hide();
+						$j('.applycoupon').show();
+					} else{
+						$j('.cancelcoupon').show();
+						$j('.applycoupon').hide();
+					}
+					jQuery('body').removeClass('opacity');
+				} else{
+					location.reload();
+				}
+			}, 'json')
+		}
+		catch(err)
+		{
+			location.reload();
+		}
+	} 
+
+</script>
+
+
+<?php }else {?>
+<form id="discount-coupon-form" action="<?php //echo $this->getUrl('checkout/cart/couponPost') ?>#" onsubmit="return false;" method="post" autocomplete="off">
+    <div class="discount"style="font-size:28px;">
+        <strong>Coupon Code</strong>
+        <div class="discount-form">
+            <input type="hidden" name="remove" id="remove-coupone" value="0" />
+            <div class="input-box" style="padding-top:2%;">
+                <input class="input-text" id="coupon_code-right" name="coupon_code" value="<?php echo $this->htmlEscape($this->getCouponCode()) ?>" style="height: 58px;width: 100% !important;font-size: 38px;paddind-top:15%;"/>
+            </div>
+            <div class="buttons-set">
+				<?php if(strlen($this->getCouponCode())): ?>
+                 <button type="button" title="<?php echo $this->__('Cancel Coupon') ?>" class="button cancelcoupon" onclick="discountfunction(1)" value="<?php echo $this->__('Cancel Coupon') ?>"><?php echo $this->__('Cancel Coupon') ?></button>
+                <?php else: ?>
+				<button type="button" title="<?php echo $this->__('Cancel Coupon') ?>" class="button cancelcoupon displaynone" onclick="discountfunction(1); return false;" style="width: 100%;font-size: 35px;background-color: #f24537;border: 4px solid #d02718;margin-top:6%;margin-right:22%;" value="<?php echo $this->__('Cancel Coupon') ?>"><?php echo $this->__('Cancel Coupon') ?></button>
+                <button type="button" title="<?php echo $this->__('Apply Coupon') ?>" class="button applycoupon" onclick="discountfunction(0); return false;" value="<?php echo $this->__('Apply Coupon') ?> " style="width: 100%;font-size: 35px;background: #f24537;border: 4px solid #d02718;margin-top:6%;margin-right:30%;"><?php echo $this->__('Apply Coupon') ?></button>
+                <?php endif;?>
+            </div>
+        </div>
+    </div>
+</form>
+<script type="text/javascript">
+var $j = jQuery;
+//<![CDATA[
+//var discountForm = new VarienForm('discount-coupon-form');
+/* discountForm.submit = function (isRemove) {
+    if (isRemove) {
+        $('coupon_code-right').removeClassName('required-entry');
+        $('remove-coupone').value = "1";
+    } else {
+        $('coupon_code-right').addClassName('required-entry');
+        $('remove-coupone').value = "0";
+    }
+    return VarienForm.prototype.submit.bind(discountForm)();
+} */
+//]]>
+
+function discountfunction(isRemove) {
+		var coupon = jQuery('#coupon_code-right').val();
+		if(coupon){
+			jQuery('body').addClass('opacity');
+			jQuery.post('<?php echo $this->getUrl('mtonestepcheckout/index/coupon')?>', {coupon_code: coupon, remove:isRemove}, function(data){
+				if(data.error){
+					alert(data.error);
+					jQuery('body').removeClass('opacity');
+				} else{
+					reloadReview2(isRemove);
+				}
+			}, 'json');
+		}else{
+			alert('Please enter coupon code.');
+		}
+  }
+  
+ function reloadReview2(isRemove){
+		try
+		{
+			$j.post('<?php echo $this->getUrl('mtonestepcheckout/index/reloadReviewh') ?>', '', function(data){
+				if(data){
+					$j('.order-summary-container').html(data.newreview);
+					if(isRemove == 1){
+						$j('.cancelcoupon').hide();
+						$j('.applycoupon').show();
+					} else{
+						$j('.cancelcoupon').show();
+						$j('.applycoupon').hide();
+					}
+					jQuery('body').removeClass('opacity');
+				} else{
+					location.reload();
+				}
+			}, 'json')
+		}
+		catch(err)
+		{
+			location.reload();
+		}
+	} 
+
+</script>
+<?php } ?>

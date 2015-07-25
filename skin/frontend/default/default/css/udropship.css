@@ -1,0 +1,155 @@
+/**
+ * Unirgy LLC
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.unirgy.com/LICENSE-M1.txt
+ *
+ * @category   Unirgy
+ * @package    Unirgy_Dropship
+ * @copyright  Copyright (c) 2008-2009 Unirgy LLC (http://www.unirgy.com)
+ * @license    http:///www.unirgy.com/LICENSE-M1.txt
+ */
+
+.header-top .active a {
+    font-weight:bold;
+    text-decoration:none;
+}
+
+.shipment-info-loader {
+    background:url(../images/opc-ajax-loader.gif) no-repeat left 50%;
+    padding-left:24px;
+    line-height:16px;
+}
+
+.data-table a.action {
+    display:block;
+    padding:4px;
+}
+
+.data-table a.action span {
+    display:block;
+    width:9px;
+    height:9px;
+    background:url(../images/bg_collapse.gif);
+    margin:auto;
+}
+
+.data-table a.action span.open {
+    background-position: bottom;
+}
+
+.shipment-items .col-1 {
+    float:left !important;
+}
+
+.shipment-items .col-2 {
+    float:right !important;
+}
+
+.shipment-items .form-list label {
+    float:left;
+    width:120px;
+    display:block;
+}
+
+.shipment-items .partial-qty {
+    width:60px;
+}
+.shipment-items .partial-qty input {
+    float:right;
+    width:30px;
+}
+
+.header-top {
+    padding:5px 0 0 0;
+}
+
+.quick-access {
+    margin-top:10px;
+}
+
+.tracking-numbers a.toggle span {
+    display:inline-block;
+    width:9px;
+    height:9px;
+    background:url(../images/bg_collapse.gif);
+    margin:auto;
+}
+
+.tracking-numbers a.reprint span {
+    display:inline-block;
+    width:16px;
+    height:16px;
+    background:url(../images/icon_printer.gif);
+    margin:auto;
+}
+
+.tracking-numbers a.delete span {
+    display:inline-block;
+    width:16px;
+    height:16px;
+    background:url(../images/btn_trash.gif);
+    margin:auto;
+}
+
+fieldset.generic-box legend {
+    display:block;
+    border:1px solid #f19900;
+    background:#F9F3E3;
+    padding:0 8px;
+    color:#E76200;
+    font-weight:bold;
+    font-size:1.1em;
+}
+
+fieldset.generic-box label {
+    display:block;
+    width:200px;
+    text-align:right;
+    padding-right:5px;
+}
+
+fieldset.generic-box .input-text {
+    width:300px;
+}
+
+fieldset.generic-box select {
+    width:306px;
+}
+
+fieldset.generic-box textarea {
+    width:300px;
+    height:70px;
+}
+
+fieldset.generic-box .note {
+    margin-left:10px;
+    font-size:10px;
+    line-height:12px;
+    color:#808080;
+}
+
+.udropship-vendor-login .button-set div,
+.udropship-vendor-password .button-set div,
+.umicrosite-vendor-register .button-set div {
+    float:left;
+}
+
+.umicrosite-vendor-register input.input-text {
+    width:250px;
+}
+
+.umicrosite-vendor-register textarea {
+    width:250px;
+    height:50px;
+}
+
+.umicrosite-vendor-register select {
+    width:255px;
+}
+
+#udropship-wysiwyg-editor .buttons-set { margin: 0px; text-align: left; border: none;}

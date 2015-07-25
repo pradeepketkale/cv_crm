@@ -1,0 +1,40 @@
+<?xml version="1.0"?>   
+<layout version="0.1.0">   
+   <searchresults_index_index>   
+       
+		   
+        <reference name="content">   
+            <block type="searchresults/index" name="searchresults_index" template="searchresults/index.phtml"/>   
+        </reference> 
+        
+        <reference name="head">
+  			<action method="addItem">
+    		<type>js</type><script>solr_search/solrsearch.1437649513.js?t=1437657763</script>
+  			</action>
+		</reference>
+		<!-- <reference name="head">
+  			<action method="addItem">
+    		<type>js</type><script>solr_search/jquery-1.3.2.debug.js</script>
+  			</action>
+		</reference> -->
+		<reference name="head">
+  			<action method="addItem">
+    		<type>js</type><script>solr_search/json.debug.js</script>
+  			</action>
+		</reference>
+		<reference name="head">
+  			<action method="addItem">
+    		<type>js</type><script>solr_search/json.htmTable.1437649693.js?t=1437657763</script>
+  			</action>
+		</reference>
+		<reference name="head">
+  			<action method="addItem"><type>js</type><script>solr_search/jquery.ui.widget.js</script></action>
+  			<action method="addItem"><type>js</type><script>solr_search/jquery.ui.mouse.js</script></action>
+  			<action method="addItem"><type>js</type><script>solr_search/jquery.ui.slider.js</script></action>
+		</reference>
+		<reference name="head">
+  			<action method="addCss"><stylesheet>css/jquery.ui.theme.css</stylesheet></action>
+		</reference>  
+    </searchresults_index_index>   
+</layout>   
+	

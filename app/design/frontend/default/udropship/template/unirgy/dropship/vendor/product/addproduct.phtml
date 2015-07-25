@@ -1,0 +1,865 @@
+<?php 
+/*function get_attributsets()
+{
+	$attributeSets = Mage::getModel('catalog/product_attribute_set_api')->items();
+        foreach($attributeSets as $_attributeSet){
+		$array .= "<option value='".$_attributeSet['set_id']."'>".$_attributeSet['name']."</option>";
+	}   
+	return $array;	
+}*/
+//print_r(Mage::getSingleton('udropship/session'));exit;
+$rootcatId= Mage::app()->getStore()->getRootCategoryId();
+
+//***below line has commented on dated 27-06-2013 By Dileswar & Manoj sir
+
+//$categories = Mage::getModel('catalog/category')->getCategoriesForMarketplace($rootcatId);
+$categories = Mage::getModel('catalog/category')->getCategories($rootcatId);
+
+function  get_categories($categories) {
+    foreach($categories as $category) {
+        if($category->getId() == 413 || $category->getId() == 418 || $category->getId() == 465 || $category->getId() == 424 || $category->getId() == 16 || $category->getId() == 984 || $category->getId() == 991):
+            continue;
+        endif;
+        $cat = Mage::getModel('catalog/category')->load($category->getId());
+        $count = $cat->getProductCount();
+        if($count == 0)
+            continue;
+        if($cat->getIsActive() == 0)
+            continue;
+        $pos = strstr($category->getName(),'@');
+        if($pos == true)
+            continue;
+        $array .= "<option value='".$category->getId()."#".$category->getName()."'>".$category->getName()."\n";
+        /*if($category->hasChildren()) {
+            $children = Mage::getModel('catalog/category')->getCategories($category->getId());
+             $array .=  get_categories($children);
+            }*/
+         $array .= '</option>';
+    }
+    return  $array;
+}
+
+$_session = Mage::getSingleton('udropship/session');
+if (Mage::helper('udropship')->isModuleActive('Unirgy_DropshipMicrosite')
+    && $_session->isLoggedIn()
+    && $_session->getVendor()->getShowProductsMenuItem()):
+?> 
+
+<style type="text/css">
+.col-left {
+    padding: 0 0 0 0;
+    width: 129px;
+}  
+* {
+	margin:0;
+	padding:0;
+	list-style:none;
+}
+.listanitem {
+	overflow:hidden;
+		padding:10px 0;
+}
+.listanitem.last {
+	border:0;
+}
+.listanitem li {
+	float:left;
+	font-family:Arial, Helvetica, sans-serif;
+	font-size:12px;
+	color:#444;
+	padding-right:8px;
+}
+.listaniteminputs li {
+	float:none;
+	padding-bottom:10px;
+        overflow:hidden;
+}
+.listaniteminputs li label {
+	float:left;
+	padding-right:10px;
+	width:100px;
+        font-weight: normal;
+}
+
+.listanitem li label {
+	display:block;
+}
+.listanitem li select {
+	width:180px;
+	font-family:Arial, Helvetica, sans-serif;
+}
+
+.listanitem li select,.listanitem li textarea,.listanitem li input{background:#fff;}
+
+.listaniteminputs li select,.listaniteminputs li textarea,.listaniteminputs li input{ width:231px;}
+
+
+.listaniteminputs li input, .listaniteminputs li textarea {
+	width:400px;
+	padding:3px;
+}
+.listanitem li .img {
+	border:1px solid #ccc;
+	width:80px;
+	height:80px;
+}
+.listfomrs {
+	padding:5px;
+	background:#f7f7f7;
+	border:1px solid #ccc;
+	margin:10px 0;
+}
+
+.productpic_thumbnew{
+    border: 1px solid #CCCCCC;
+    float: right;
+    margin: 0 0 0 15px;}
+.valignm { border-spacing: 3px;}
+.valignm tr td{ vertical-align: middle;}
+.valignm tr td input{ padding:3px;}
+</style>
+
+<div>
+	<div class="fright" style="margin-left:30px">
+          <div class="article articlelast videosection">
+          Need help in uploading ? Please see this tutorial video on uploading products. 
+          <a class="fancybox" target="_blank" href="http://www.youtube.com/watch?feature=player_embedded&v=0KhFFFy1-ns"><b>Click here to see the video.</b></a>
+        </div>
+     </div>
+
+    <?php echo $this->getMessagesBlock()->getGroupedHtml(); ?> 
+        <!--<table cellpadding="0" cellspacing="3" border="0" >
+        	<tr><td><a target="_blank" href="http://www.youtube.com/watch?v=0KhFFFy1-ns">Add Product Video</a></td></tr></table>-->
+        <div class="listfomrs" style="margin-left:30px">
+            <table cellpadding="0" cellspacing="3" border="0" class="valignm"> 
+                <tr>
+                    <td valign="middle">
+                        <ul class="listanitem">
+                            <li class="lablelist">
+                                <table cellpadding="0" cellspacing="3" border="0" class="valignm"> 
+                                    <tr>
+                                        <td valign="middle"><label>Enter Product SKU to Duplicate:</label></td>
+                                        <td valign="middle"><div class="floatl" style="padding-left:10px;"><input type="text" name="Duplicate" id="skuproduct" class="inputtext required-entry" /></div></td>
+                                    </tr>
+                                </table>
+                            </li>
+                        </ul>
+                    </td>
+                    <td valign="middle" width="101">
+                        <input type="button" value="duplicate" onclick="productsku();" class="form-button"/>    
+                    </td>
+                    <!--<td valign="middle"><input type="button" value="Duplicate From Last" onclick="productfromlast();" class="form-button"/>
+                    </td>-->
+                </tr>
+            </table>
+         </div>
+         <form name="productdata" id="productdata" action="<?php echo $this->getUrl('udropship/vendor/createproduct');?>" method="post" enctype="multipart/form-data" onsubmit = "return validate()">
+                <div class="listfomrs" style="margin-left:30px">
+			<!--<ul class="listanitem">
+				<li class="lablelist">Attribute Set</li>
+				<li> 
+					<select name="attributeset" id="attributeset" onchange="showproducttype();">
+							<?php //echo get_attributsets();?>
+					</select>
+				</li>
+			</ul>
+			<ul class="listanitem">
+				<li class="lablelist">Product Type</li>
+				<li> 
+					<select onchange="showAttributes();" name="producttype" id="producttype" class="">
+                                                        <option>Select Type...</option>
+							<option value="simple">Simple Product</option>
+							<option value="configurable">Configurable Product</option>
+					</select>
+				</li>
+			</ul>-->
+			<ul class="listanitem">
+				<li class="lablelist">Categories</li>
+                                    <li><!--<label>What is it?</label>--> <select onchange="showChild();" name="parentcategories" id="parentcategories" class="validate-select">
+                                            <option value="">Select Category...</option>
+						<?php echo get_categories($categories);?>
+						
+				</select>
+				</li>
+                                
+                                <li><div id="children"></div></li>
+                                <li><div id="secondchildren"></div></li>
+                                <input type="hidden" name="attributeset" id="attributeset">
+                                <input type="hidden" name="vendorid" id="vendorid" value="<?php echo $_session->getVendor()->getVendorId();?>">
+			</ul>
+		</div>
+		
+		<div class="listfomrs" style="margin-left:30px">
+			<ul class="listanitem last listaniteminputs">
+				<li class="lablelist"><label>Name</label> 
+                                    
+                                    <div class="floatl"><input type="text" name="productname" id="productname" class="inputtext required-entry" onblur="productpreviewstore(this);" /></div>
+				</li>
+				<li class="lablelist clr"><label>Description</label>
+                                    
+                                    <div class="floatl"><textarea name="description" id="description" class="required-entry" onblur="productpreviewstore(this);"></textarea>
+                                        <p class="smalltext"><span class="required">Note:</span> Please add Size/Dimensions/Weight of each product clearly in the description above to get better sales.<br /> In case of circular products mention the diameter.</p>
+                                        <p class="smalltext"><span class="required">Eg:</span> Size: Length-12 inches, Width- 8 inches, Height -10 inches. Weight: 100 grams.</p>
+                                    </div>
+				</li>
+				<li class="lablelist clr"><label>Short Description</label> 
+                                    <div class="floatl"><input
+                                            type="text" name="shortdesc" id="shortdesc" class="inputtext required-entry" onblur="productpreviewstore(this);" /></div>
+				</li>
+				<li class="lablelist clr"><label>Price</label> 
+                                    
+                                    <div class="floatl"><input
+					type="text" name="price" id="price" class="inputtext required-entry"  onblur="productpreviewstore(this);" /></div>
+				</li>
+				
+                                <li class="lablelist clr"><label>Price After Discount</label> 
+                                    
+                                    <div class="floatl"><input type="text" name="special_price" id="special_price"  onchange="productpreviewstore(this);" />
+                                        <p class="smalltext"><span class="required">Note:</span> Please enter net price after discounts if you are offering any discounts</p>
+                                    
+                                    </div>
+				</li>
+                                <li class="lablelist clr"><label>Discount Price From Date</label> 
+                                    
+                                    <div class="floatl"><input
+					type="text" name="special_from_date" id="special_from_date" class="input-text" style="width:110px !important;" />
+                                        <img src="<?php echo $this->getUrl();?>/skin/adminhtml/default/default/images/grid-cal.gif" alt="" class="v-middle" id="special_from_date_trig" title="Select Date" style="">
+                                        
+                                        <script type="text/javascript">
+                                        function validate() {
+                                        x = document.productdata
+                                        inputprice = x.price.value
+                                        inputpriceafterdsc = x.special_price.value
+                                        intershippingcost = x.intershippingcost.value
+                                        if(inputprice <= 10) {
+                                        alert('Please enter a number greater than 10 in Price field')
+              							return false;
+                                        }else if(inputpriceafterdsc == '' && intershippingcost <= 200 && intershippingcost != '') {
+                                        alert('Please enter value greater than 200 in International Shipping Cost field');
+                                        return false;
+                                        } 
+                                        else if(intershippingcost == '' && intershippingcost > 200) {
+                                        return true;
+                                        }else if(inputpriceafterdsc == '') {
+                                        return true;
+                                        }
+                                        else if(inputpriceafterdsc <= 10) {
+                                        alert('Please enter a number greater than 10 in Price After Discount field')
+                                        //x.special_price.value = ''
+                                        return false;
+                                        }
+                                        else if(intershippingcost <= 200) { 
+                                        alert('Please enter value greater than 200 in International Shipping Cost field');
+                                        return false;
+                                        }
+                                        else {
+                                        return true;
+                                        }
+                                        }
+                                        </script>
+                                        
+                                        <script type="text/javascript">
+                                        //<![CDATA[
+                                            Calendar.setup({
+                                                inputField: "special_from_date",
+                                                ifFormat: "%m/%e/%y",
+                                                showsTime: false,
+                                                button: "special_from_date_trig",
+                                                align: "Bl",
+                                                singleClick : true
+                                            });
+                                        //]]>
+                                        </script>
+                                    </div>
+				</li>
+                                <li class="lablelist clr"><label>Discount Price To Date</label> 
+                                    
+                                    <div class="floatl"><input
+					type="text" name="special_to_date" id="special_to_date" class="input-text" style="width:110px !important;" />
+                                        <img src="<?php echo $this->getUrl();?>/skin/adminhtml/default/default/images/grid-cal.gif" alt="" class="v-middle" id="special_to_date_trig" title="Select Date" style="">
+                                        <script type="text/javascript">
+                                        //<![CDATA[
+                                            Calendar.setup({
+                                                inputField: "special_to_date",
+                                                ifFormat: "%m/%e/%y",
+                                                showsTime: false,
+                                                button: "special_to_date_trig",
+                                                align: "Bl",
+                                                singleClick : true
+                                            });
+                                        //]]>
+                                        </script>
+                                    </div>
+				</li>
+                                <li class="lablelist clr"><label>Domestic Shipping Cost</label> 
+                                    
+                                    <div class="floatl"><input
+					type="text" name="shippingcost" id="shippingcost" class="validate-digits required-entry" onblur="productpreviewstore(this);" /></div>
+				</li>
+				<p class="smalltext"><span class="required"><u>Note </u>:- </span><font color="red">  From May 1st 2015 Craftsvilla will no longer do International Shipping for Sellers. Sellers will have to directly ship International Shipments to Customers. Please enter International Shipping Charges as per applicable to you. For any further queries please email places@craftsvilla.com</font></p>
+				
+				<li class="lablelist clr"><label>International Shipping Cost</label> 
+                                    
+                                    <div class="floatl"><input
+					type="text" name="intershippingcost" id="intershippingcost" class="validate-digits" onblur="productpreviewstore(this);" /></div>
+				</li>
+				
+				
+				
+				<li class="lablelist clr"><label>Inventory Qty</label> 
+                                    
+                                    <div class="floatl"><input
+					type="text" name="inventory" id="inventory" class="validate-digits required-entry" onblur="productpreviewstore(this);" /></div>
+				</li>
+<li>
+<label for="Dispatch Time">Dispatch Time</label><!-- //added by dileswar on date 20-06-2014-->
+                    <select style="width:120px;" class="select" title="Sort By" name="ship_handling_times" id="shipping-status">
+						<option value=""></option>                        
+						<option value="24 hours">24 hours</option>
+                        <option value="48 hours">48 hours</option>
+                        <option value="72 hours">72 hours</option>   
+						<option value="5 days">5 days</option>   
+						<option value="10 days">10 days</option>   
+                    </select>                    
+                </li>
+				
+                        </ul>
+			
+		</div>
+	
+    <!--//Commented on dated  29-06-2013   To remove child attributes-->
+    <!--//UnCommented on dated  01-07-2013   To remove child attributes-->
+                    <div class="listfomrs" style="margin-left:30px"> 
+                        <ul class="listanitem last listaniteminputs">
+                            <div id="showattributes"></div>
+                        </ul>        
+                </div style="margin-left:30px">
+                <p class="smalltext" style="margin-left:30px"><span class="required">Note :-</span> Please Upload The Photos in .jpeg or .jpg format only,Photo size should be less than 2 MB and the name of the photos should not have special characters such as eg :- ',",(,),- ,etc</p>
+		<div class="listfomrs" style="margin-left:30px">
+			<ul class="listanitem last">
+				<li class="lablelist">Photos</li>
+				<li>
+                                    <input type="file" name="productpic" id="productpic" />
+                                    <div id="productpic_thumb" class="productpic_thumbnew" style="display:none;">
+                                            <img id="productpic_image_thumb" src="" alt="" width="60" />
+                                    </div>
+				</li>
+                                <li class="lablelist">Default Image</li>
+				
+                        </ul>
+                        <ul class="listanitem last">
+                                <li class="lablelist">Photos</li>
+                                <li>
+					<input type="file" name="productpic2" id="productpic2"/>
+                                        <div id="productpic_thumb2" class="productpic_thumbnew" style="display:none;">
+                                            <img id="productpic_image_thumb2" src="" alt="" width="60" />
+                                        </div>
+				</li>
+				<li>
+                                    <input type="file" name="productpic3" id="productpic3"/>
+                                    <div id="productpic_thumb3" class="productpic_thumbnew" style="display:none;">
+                                            <img id="productpic_image_thumb3" src="" alt="" width="60" />
+                                    </div>
+				</li>
+				
+                                
+                        </ul>
+                        <ul class="listanitem last">
+                                <li class="lablelist">Photos</li>
+                                <li>
+					<input type="file" name="productpic4" id="productpic4"/>
+                                        <div id="productpic_thumb4" class="productpic_thumbnew" style="display:none;">
+                                            <img id="productpic_image_thumb4" src="" alt="" width="60" />
+                                        </div>
+				</li>
+                                <li>
+					<input type="file" name="productpic5" id="productpic5"/>
+                                        <div id="productpic_thumb5" class="productpic_thumbnew" style="display:none;">
+                                            <img id="productpic_image_thumb5" src="" alt="" width="60" />
+                                        </div>
+				</li>
+                        </ul>
+		</div>
+		<input type="submit" value="Submit" class="form-button" style="margin-left:30px"/>
+                <a rel="shadowbox[Mixed];width=930;height=530" href="<?php echo $this->getUrl('marketplace/vendor/productpreview');?>"><img src="<?php echo $this->getSkinUrl('images/preview.jpg')?>"/></a>
+	</form>
+</div>
+	
+<?php endif ?>
+<script language="javascript">
+    document.getElementById('showattributes').style.display = "none";
+    document.getElementById('children').style.display = "none";
+    document.getElementById('secondchildren').style.display = "none";
+    function showAttributes()
+    {
+        if(document.getElementById('producttype').value == 'simple'){
+            var reloadurl = '<?php echo $this->getUrl('marketplace/vendor/getUserDefineAttributes') ?>';
+            new Ajax.Request(reloadurl, {
+            method: 'post',
+            parameters: "attributesetid="+attributeId,
+            onComplete: function(transport) {
+            //Element.hide('loadingmask');
+            if(transport.responseText != ''){
+                   document.getElementById('showattributes').style.display = "block";
+                   document.getElementById('showattributes').innerHTML = transport.responseText;
+                }
+            }
+            });
+        }else if(document.getElementById('producttype').value == 'configurable'){
+            var reloadurl = '<?php echo $this->getUrl('marketplace/vendor/getIsConfigurableAttributes') ?>';
+            new Ajax.Request(reloadurl, {
+            method: 'post',
+            parameters: "attributesetid="+document.getElementById('attributeset').value,
+            onComplete: function(transport) {
+            //Element.hide('loadingmask');
+            if(transport.responseText != ''){
+                   document.getElementById('showattributes').style.display = "block";
+                   document.getElementById('showattributes').innerHTML = transport.responseText;
+                }
+            }
+            });
+        }
+        else{
+            document.getElementById('showattributes').style.display = "none";
+        }
+
+    }
+       
+    function showChild()
+    {
+       if(document.getElementById('parentcategories').value !=''){
+            var realVal = document.getElementById('parentcategories').value.split('#');
+            var reloadurl = '<?php echo $this->getUrl('marketplace/vendor/getChildCategories') ?>';
+            //Element.show('loadingmask');
+            new Ajax.Request(reloadurl, {
+            method: 'post',
+            parameters: "id="+realVal[0],
+            onComplete: function(transport) {
+            //Element.hide('loadingmask');
+            if(transport.responseText != ''){
+                   document.getElementById('children').style.display = "block";
+                   document.getElementById('children').innerHTML = "<select onchange='showSecondChild();' name='parentchildrencategories' id='parentchildrencategories' class='validate-select'><option value=''>Select Category...</option>"+transport.responseText+"</select>";
+                   document.getElementById('secondchildren').style.display = "none";
+                   document.getElementById('showattributes').style.display = "none";
+                }else{
+                    document.getElementById('children').style.display = "none";
+                    document.getElementById('secondchildren').style.display = "none";
+                    document.getElementById('showattributes').style.display = "none";
+                    
+                        var reloadurl = '<?php echo $this->getUrl('marketplace/vendor/getAttributeIdByName') ?>';
+                        new Ajax.Request(reloadurl, {
+                        method: 'post',
+                        parameters: "attributesetname="+realVal[1],
+                        onComplete: function(transport) {
+                        //Element.hide('loadingmask');
+                        if(transport.responseText != 0){
+                               var attributeId = transport.responseText;
+                               var reloadurl = '<?php echo $this->getUrl('marketplace/vendor/getUserDefineAttributes') ?>';
+                                new Ajax.Request(reloadurl, {
+                                method: 'post',
+                                parameters: "attributesetid="+attributeId,
+                                onComplete: function(transport) {
+                                //Element.hide('loadingmask');
+                                if(transport.responseText != ''){
+                                       document.getElementById('showattributes').style.display = "block";
+                                       document.getElementById('showattributes').innerHTML = transport.responseText;
+                                       document.getElementById('attributeset').value=attributeId;
+                                    }
+                                }
+                                });
+                            }
+                        }
+                        });
+                    
+                }
+            }
+            });
+       }else{
+            document.getElementById('children').style.display = "none";
+            document.getElementById('secondchildren').style.display = "none";
+       } 
+    }
+    
+    
+    function showSecondChild()
+    { 
+       if(document.getElementById('parentchildrencategories').value != ''){
+           var realVal = document.getElementById('parentchildrencategories').value.split('#');
+           var reloadurl = '<?php echo $this->getUrl('marketplace/vendor/getSecondChildCategories') ?>';
+            //Element.show('loadingmask');
+            new Ajax.Request(reloadurl, {
+            method: 'post',
+            parameters: "id="+realVal[0],
+            onComplete: function(transport) {
+            //Element.hide('loadingmask');
+            if(transport.responseText != ''){
+                    document.getElementById('secondchildren').style.display = "block";
+                    document.getElementById('secondchildren').innerHTML = "<select name='childrencat' id='childrencat' class='validate-select' onchange='showSecondChildAttributes();'><option value=''>Select Category...</option>"+transport.responseText+"</select>";
+                    }else{
+                            if(document.getElementById('parentchildrencategories').value != ''){
+                                var reloadurl = '<?php echo $this->getUrl('marketplace/vendor/getAttributeIdByName') ?>';
+                                new Ajax.Request(reloadurl, {
+                                method: 'post',
+                                parameters: "attributesetname="+realVal[1],
+                                onComplete: function(transport) {
+                                //Element.hide('loadingmask');
+                                if(transport.responseText != 0){
+                                       var attributeId = transport.responseText;
+                                       var reloadurl = '<?php echo $this->getUrl('marketplace/vendor/getUserDefineAttributes') ?>';
+                                        new Ajax.Request(reloadurl, {
+                                        method: 'post',
+                                        parameters: "attributesetid="+attributeId,
+                                        onComplete: function(transport) {
+                                        //Element.hide('loadingmask');
+                                        if(transport.responseText != ''){
+                                               document.getElementById('showattributes').style.display = "block";
+                                               document.getElementById('showattributes').innerHTML = transport.responseText;
+                                               document.getElementById('attributeset').value=attributeId;
+                                            }
+                                        }
+                                        });
+                                    }else{
+                                                document.getElementById('showattributes').style.display = "none";
+                                                document.getElementById('secondchildren').style.display = "none";
+                                            }
+                                }
+                                });
+                            }
+                    }
+                }
+            });
+        }else{
+            document.getElementById('children').style.display = "none";
+            document.getElementById('secondchildren').style.display = "none";
+       } 
+    }
+    
+    function showSecondChildAttributes()
+    { 
+        if(document.getElementById('childrencat').value != ''){
+            var realVal = document.getElementById('childrencat').value.split('#');
+            var reloadurl = '<?php echo $this->getUrl('marketplace/vendor/getAttributeIdByName') ?>';
+            new Ajax.Request(reloadurl, {
+            method: 'post',
+            parameters: "attributesetname="+realVal[1],
+            onComplete: function(transport) {
+            //Element.hide('loadingmask');
+            if(transport.responseText != 0){
+                   var attributeId = transport.responseText;
+                   var reloadurl = '<?php echo $this->getUrl('marketplace/vendor/getUserDefineAttributes') ?>';
+                    new Ajax.Request(reloadurl, {
+                    method: 'post',
+                    parameters: "attributesetid="+attributeId,
+                    onComplete: function(transport) {
+                    //Element.hide('loadingmask');
+                    if(transport.responseText != ''){
+                           document.getElementById('showattributes').style.display = "block";
+                           document.getElementById('showattributes').innerHTML = transport.responseText;
+                           document.getElementById('attributeset').value=attributeId;
+                        }
+                    }
+                    });
+                }
+            }
+            });
+       }
+    }
+    
+    function showproducttype(){
+        document.getElementById('producttype').innerHTML = "<option>Select Type...</option><option value='simple'>Simple Product</option><option value='configurable'>Configurable Product</option>";
+        document.getElementById('showattributes').style.display = "none";
+    }
+    
+    function productpreviewstore(){
+        if(document.getElementById('productname').value != '' || tinyMCE.get('description').getContent() != '' || document.getElementById('shortdesc').value != '' || document.getElementById('price').value != '' || document.getElementById('shippingcost').value != '' || document.getElementById('inventory').value != ''){ 
+            var reloadurl = '<?php echo $this->getUrl('marketplace/vendor/showproductpreview') ?>';
+            new Ajax.Request(reloadurl, {
+            method: 'post',
+			
+            parameters: { name: document.getElementById('productname').value,
+                    description: tinyMCE.get('description').getContent(),
+                    shortdesc: document.getElementById('shortdesc').value,
+                    price: document.getElementById('price').value,
+                    shippingcost: document.getElementById('shippingcost').value,
+                    inventory: document.getElementById('inventory').value
+                  },
+	  
+            onComplete: function(transport) {
+            }
+            });
+        }
+    }
+    
+    jQuery(document).ready(function(){ 
+                var thumb = jQuery('img#productpic_image_thumb');
+		        new AjaxUpload('productpic', { 
+    				action: '<?php echo Mage::getUrl('marketplace/vendor/showproductpreview', array('_secure'=>true)); ?>',
+    				name: 'productpic',
+                	onSubmit: function(file, extension) {
+    				// Added By Dileswar............
+					thumb.attr('src', '<?php echo $this->getSkinUrl('images/lazy_image_loader/loader.gif'); ?>');
+				//thumb.attr('src', '<?php //echo $loading_path ?>');
+				//alert("Reached here");
+    				
+					jQuery('#productpic_thumb').show();
+    			},
+    		onComplete: function(file, response) {
+                    if(response == '1')
+                    {	
+                            alert("Image format should be PNG, JPG, GIF");
+                    }
+                    if(response == '2')
+                    {	
+                            alert("Image Size should be less than 2MB");
+                    }
+					thumb.attr('src',response);
+                }    
+                });
+                
+                var thumb2 = jQuery('img#productpic_image_thumb2');	
+                new AjaxUpload('productpic2', { 
+    		action: '<?php echo Mage::getUrl('marketplace/vendor/showproductpreview', array('_secure'=>true)); ?>',
+    		name: 'productpic2',
+                onSubmit: function(file, extension) {
+				// Added By Dileswar............
+					//thumb.attr('src', '<?php //echo $this->getSkinUrl('images/lazy_image_loader/loader.gif'); ?>');	
+    			//thumb.attr('src', '<?php echo $loading_path ?>');
+    			jQuery('#productpic_thumb2').show();
+    		},
+    		onComplete: function(file, response) {
+                    if(response == '1')
+                    {	
+                            alert("Image format should be PNG, JPG, GIF");
+                    }
+                    if(response == '2')
+                    {	
+                            alert("Image Size should be less than 2MB");
+                    }
+                    thumb2.attr('src', response);
+                }    
+                });
+                
+                var thumb3 = jQuery('img#productpic_image_thumb3');	
+                new AjaxUpload('productpic3', { 
+    		action: '<?php echo Mage::getUrl('marketplace/vendor/showproductpreview', array('_secure'=>true)); ?>',
+    		name: 'productpic3',
+                onSubmit: function(file, extension) {
+				// Added By Dileswar............
+					//thumb.attr('src', '<?php //echo $this->getSkinUrl('images/lazy_image_loader/loader.gif'); ?>');	
+    			//thumb.attr('src', '<?php echo $loading_path ?>');
+    			jQuery('#productpic_thumb3').show();
+    		},
+    		onComplete: function(file, response) {
+                    if(response == '1')
+                    {	
+                            alert("Image format should be PNG, JPG, GIF");
+                    }
+                    if(response == '2')
+                    {	
+                            alert("Image Size should be less than 2MB");
+                    }
+                    thumb3.attr('src', response);
+                }    
+                });
+                
+                var thumb4 = jQuery('img#productpic_image_thumb4');	
+                new AjaxUpload('productpic4', { 
+    		action: '<?php echo Mage::getUrl('marketplace/vendor/showproductpreview', array('_secure'=>true)); ?>',
+    		name: 'productpic4',
+                onSubmit: function(file, extension) {
+				// Added By Dileswar............
+					//thumb.attr('src', '<?php //echo $this->getSkinUrl('images/lazy_image_loader/loader.gif'); ?>');
+	   			//thumb.attr('src', '<?php echo $loading_path ?>');
+    			jQuery('#productpic_thumb4').show();
+    		},
+    		onComplete: function(file, response) {
+                    if(response == '1')
+                    {	
+                            alert("Image format should be PNG, JPG, GIF");
+                    }
+                    if(response == '2')
+                    {	
+                            alert("Image Size should be less than 2MB");
+                    }
+                    thumb4.attr('src', response);
+                }    
+                });
+                
+                var thumb5 = jQuery('img#productpic_image_thumb5');	
+                new AjaxUpload('productpic5', { 
+    		action: '<?php echo Mage::getUrl('marketplace/vendor/showproductpreview', array('_secure'=>true)); ?>',
+    		name: 'productpic5',
+                onSubmit: function(file, extension) {
+					// Added By Dileswar............
+					//thumb.attr('src', '<?php //echo $this->getSkinUrl('images/lazy_image_loader/loader.gif'); ?>');
+    			//thumb.attr('src', '<?php echo $loading_path ?>');
+    			jQuery('#productpic_thumb5').show();
+    		},
+    		onComplete: function(file, response) {
+                    if(response == '1')
+                    {	
+                            alert("Image format should be PNG, JPG, GIF");
+                    }
+                    if(response == '2')
+                    {	
+                            alert("Image Size should be less than 2MB");
+                    }
+                    thumb5.attr('src', response);
+                }    
+                });
+                //var set = <?php //echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA)."tmp/catalog/product".Mage::getSingleton("udropship/session")->getProductPreviewImagePath();?>;
+                //jQuery('fileAttached').attr('value', jQuery('attachment').val())
+               
+        });
+       
+ function productsku(){
+     if(document.getElementById('skuproduct').value != ''){
+     var reloadurl = '<?php echo $this->getUrl('marketplace/vendor/showbysku') ?>';
+        new Ajax.Request(reloadurl, {
+            method: 'post',
+            parameters: { productsku: document.getElementById('skuproduct').value},
+            onComplete: function(transport) {
+                if(transport.responseText != ''){
+                    var response = transport.responseText;
+                    var reply = response.split('#');
+                    jQuery('#productname').val(reply[0]);
+                    tinyMCE.get('description').focus();
+                    tinyMCE.activeEditor.setContent(reply[1]);
+                    jQuery('#shortdesc').val(reply[2]);
+                    jQuery('#price').val(reply[3]);
+                    jQuery('#shippingcost').val(reply[4]);
+                }else{
+                    alert('This SKU is not availble');
+                }
+            }
+        });
+    }else{
+        alert('Please enter SKU');
+    }
+ }
+
+ function productfromlast(){
+     var vendorId  = <?php echo $_session->getVendor()->getId();?>;
+     var reloadurl = '<?php echo $this->getUrl('marketplace/vendor/showbylast') ?>';
+        new Ajax.Request(reloadurl, {
+            method: 'post',
+            parameters: { vendorid: vendorId},
+            onComplete: function(transport) { 
+                if(transport.responseText != ''){
+                    var response = transport.responseText;
+                    var reply = response.split('#');
+                    jQuery('#productname').val(reply[0]);
+                    tinyMCE.get('description').focus();
+                    tinyMCE.activeEditor.setContent(reply[1]);
+                    //jQuery('#description').val(reply[1]);
+                    jQuery('#shortdesc').val(reply[2]);
+                    jQuery('#price').val(reply[3]);
+                    jQuery('#shippingcost').val(reply[4]);
+                }
+                if(transport.responseText == 0){
+                    alert('Last product is not available');
+                }
+            }
+        });
+    
+ }
+
+    
+</script>
+<script type="text/javascript">
+  var myForm  = new VarienForm('productdata', true);
+</script>
+<script type="text/javascript">
+Shadowbox.init();
+function set(file){
+window.location.href="pdf/download.demo.php?file="+file+"&name="+file;
+}
+
+</script> 
+<script type="text/javascript">
+//<![CDATA[
+enUS = {"m":{"wide":["January","February","March","April","May","June","July","August","September","October","November","December"],"abbr":["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]}}; // en_US locale reference
+Calendar._DN = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"]; // full day names
+Calendar._SDN = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"]; // short day names
+Calendar._FD = 0; // First day of the week. "0" means display Sunday first, "1" means display Monday first, etc.
+Calendar._MN = ["January","February","March","April","May","June","July","August","September","October","November","December"]; // full month names
+Calendar._SMN = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]; // short month names
+Calendar._am = "AM"; // am/pm
+Calendar._pm = "PM";
+
+// tooltips
+Calendar._TT = {};
+Calendar._TT["INFO"] = "About the calendar";
+
+Calendar._TT["ABOUT"] =
+"DHTML Date/Time Selector\n" +
+"(c) dynarch.com 2002-2005 / Author: Mihai Bazon\n" +
+"For latest version visit: http://www.dynarch.com/projects/calendar/\n" +
+"Distributed under GNU LGPL. See http://gnu.org/licenses/lgpl.html for details." +
+"\n\n" +
+"Date selection:\n" +
+"- Use the \xab, \xbb buttons to select year\n" +
+"- Use the " + String.fromCharCode(0x2039) + ", " + String.fromCharCode(0x203a) + " buttons to select month\n" +
+"- Hold mouse button on any of the above buttons for faster selection.";
+Calendar._TT["ABOUT_TIME"] = "\n\n" +
+"Time selection:\n" +
+"- Click on any of the time parts to increase it\n" +
+"- or Shift-click to decrease it\n" +
+"- or click and drag for faster selection.";
+
+Calendar._TT["PREV_YEAR"] = "Prev. year (hold for menu)";
+Calendar._TT["PREV_MONTH"] = "Prev. month (hold for menu)";
+Calendar._TT["GO_TODAY"] = "Go Today";
+Calendar._TT["NEXT_MONTH"] = "Next month (hold for menu)";
+Calendar._TT["NEXT_YEAR"] = "Next year (hold for menu)";
+Calendar._TT["SEL_DATE"] = "Select date";
+Calendar._TT["DRAG_TO_MOVE"] = "Drag to move";
+Calendar._TT["PART_TODAY"] = ' (' + "Today" + ')';
+
+// the following is to inform that "%s" is to be the first day of week
+Calendar._TT["DAY_FIRST"] = "Display %s first";
+
+// This may be locale-dependent. It specifies the week-end days, as an array
+// of comma-separated numbers. The numbers are from 0 to 6: 0 means Sunday, 1
+// means Monday, etc.
+Calendar._TT["WEEKEND"] = "0,6";
+
+Calendar._TT["CLOSE"] = "Close";
+Calendar._TT["TODAY"] = "Today";
+Calendar._TT["TIME_PART"] = "(Shift-)Click or drag to change value";
+
+// date formats
+Calendar._TT["DEF_DATE_FORMAT"] = "%b %e, %Y";
+Calendar._TT["TT_DATE_FORMAT"] = "%B %e, %Y";
+
+Calendar._TT["WK"] = "Week";
+Calendar._TT["TIME"] = "Time:";
+
+CalendarDateObject._LOCAL_TIMZEONE_OFFSET_SECONDS = 19800;
+CalendarDateObject._SERVER_TIMZEONE_SECONDS = 1336999491;
+
+//]]>
+</script>
+
+<script language="javascript" type="text/javascript">
+//NB: the single quotes for the doctype param must be backslashed; wiki format is removing them.
+Event.observe(window, 'load', function() {
+    tinyMCE.init({
+        mode : "exact",
+        theme : "advanced",
+        strict_loading_mode : true, 
+        elements : "description",
+        theme_advanced_toolbar_location : "top",
+        theme_advanced_toolbar_align : "left",
+        theme_advanced_path_location : "bottom",
+        extended_valid_elements : "a[name|href|target|title|onclick],img[class|src|border=0|alt|title|hspace|vspace|width|height|align|onmouseover|onmouseout|name],hr[class|width|size|noshade],font[face|size|color|style],span[class|align|style]",
+        theme_advanced_resize_horizontal : "true",
+        theme_advanced_resizing : "true",
+        apply_source_formatting : "true",
+        convert_urls : "false",
+        force_br_newlines : "true",
+        doctype : '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">' 
+    });  
+});
+
+</script>

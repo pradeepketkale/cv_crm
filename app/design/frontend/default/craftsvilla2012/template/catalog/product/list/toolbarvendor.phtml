@@ -1,0 +1,87 @@
+<?php
+$hlp = Mage::helper('generalcheck');
+$ismobile = $hlp->ismobile();
+
+if(!$ismobile)
+{?> 
+
+<?php 
+$_helpm = $this->helper('umicrosite');
+$url = $_helpm->getVendorBaseUrl();
+//echo '<pre>';print_r($this->getAvailableOrders());exit;
+?>
+
+<?php if($this->getCollection()->getSize()): ?>
+<div class="toolbar">
+    <div class="pager">
+    <div class="topLine">
+
+        <div class="amount" style="margin-top:9px">
+            <?php if($this->getLastPageNum()>1): ?>
+                <?php echo $this->__('Items <span>%s</span> to <span>%s</span> of <span>%s</span> total', $this->getFirstNum(), $this->getLastNum(), $this->getTotalNum()) ?>
+            <?php else: ?>
+                <strong><?php echo $this->__('%s Item(s)', $this->getTotalNum()) ?></strong>
+            <?php endif; ?>
+        </div></div>
+                  <div class="sort-by">
+              
+              <?php //print_r($this->getCurrentDirection());exit;?>
+              <!--<label style="line-height:20px"><?php //echo $this->__('Sort by') ?></label>-->
+                <select onchange="setLocation(this.value)">
+                  <option value=""><?php echo $this->__('Sort By') ?></option>                 
+                  <option value="<?php echo $url."?dir=asc&order=price" ?>"<?php if($this->isOrderCurrent('price') && $this->getCurrentDirection() == 'asc'): ?> selected="selected"<?php endif; ?>><?php echo $this->__('Price Low To High') ?></option>
+                  <option value="<?php echo $url."?dir=desc&order=price"?>"<?php if($this->isOrderCurrent('price') && $this->getCurrentDirection() == 'desc'): ?> selected="selected"<?php endif; ?>> <?php echo $this->__('Price High To Low') ?></option>
+                   <option value="<?php echo $this->getOrderUrl('discount', 'asc')?>"<?php if($this->isOrderCurrent('discount') && $this->getCurrentDirection() == 'asc'): ?> selected="selected"<?php endif; ?>> <?php echo $this->__('Discount Low To High') ?></option>
+                      <option value="<?php echo $this->getOrderUrl('discount', 'desc')?>"<?php if($this->isOrderCurrent('discount') && $this->getCurrentDirection() == 'desc'): ?> selected="selected"<?php endif; ?>> <?php echo $this->__('Discount High To Low') ?></option>
+                      <!--<option value="<?php //echo $this->getOrderUrl('shippingtime', 'asc')?>"<?php //if($this->isOrderCurrent('shippingtime') && $this->getCurrentDirection() == 'asc'): ?> selected="selected"<?php //endif; ?>> <?php //echo $this->__('Fastest Shipping') ?></option>-->
+                  
+              
+           
+                </select>
+                </div>
+        <?php //echo $this->getPagerHtml() ?>
+        <!--<div class="sort-by">
+			<strong><?php //echo $this->__('SORT BY:') ?></strong>
+-->			<!--<ul id="sortby">
+				<li><a href="#">MOST RECENT</a></li>
+				<li><a href="#">LOWEST PRICE</a></li> 
+				<li><a href="#">HIGHEST PRICE</a></li>
+			</ul>
+            <label><?php //echo $this->__('Sort By') ?></label>-->
+
+          <!--  <ul id="sortby" onclick="setLocation(<?php //echo $url; ?>)">
+            <?php //foreach($this->getAvailableOrders() as $_key=>$_order): ?>
+                <?php //if (($_order != 'Position') && ($_order != 'Newest') && ($_order != 'Name')): // Remove "Position" from the sort option list ?>
+                    <li value="<?php //echo $url."?dir=asc&order=" . strtolower($_order) ?>"<?php //if($this->isOrderCurrent($_key)): ?> class="selected"<?php //endif; ?>>
+                        <a rel="nofollow" href="<?php //echo $url."?dir=asc&order=" . strtolower($_order) ?>"><?php //echo $this->__($_order) ?></a>
+                    </li>
+                <?php //endif;?>
+            <?php //endforeach; ?>
+            
+            </ul>
+
+            <?php //if($this->getCurrentDirection() == 'desc'): ?>
+                <a rel="nofollow" class="sort-direction" href="<?php //echo $url."?dir=asc&order=". strtolower($this->getCurrentOrder()) ?>" title="<?php //echo $this->__('Set Ascending Direction') ?>"><img src="<?php //echo $this->getSkinUrl('images/i_desc_arrow.gif') ?>" alt="<?php //echo $this->__('Set Ascending Direction') ?>" class="v-middle" /></a>
+            <?php //else: ?>
+                <a rel="nofollow" class="sort-direction" href="<?php //echo $url."?dir=desc&order=". strtolower($this->getCurrentOrder()) ?>" title="<?php //echo $this->__('Set Descending Direction') ?>"><img src="<?php //echo $this->getSkinUrl('images/i_asc_arrow.gif') ?>" alt="<?php //echo $this->__('Set Descending Direction') ?>" class="v-middle" /></a>
+            <?php //endif; ?>
+        <input id="checkbox" type="checkbox" class="checkbox" name ="checkbox" onclick="checkboxchecked()">
+		<label for="checkbox">Show Only Cod Products</label><?php //echo $this->getCurrentCod()?>
+        </div>-->
+       <!-- <div class="amount">
+            <?php /* if($this->getLastPageNum()>1): ?>
+                <?php echo $this->__('Items <span>%s</span> to <span>%s</span> of <span>%s</span> total', $this->getFirstNum(), $this->getLastNum(), $this->getTotalNum()) ?>
+            <?php else: ?>
+                <strong><?php echo $this->__('%s Item(s)', $this->getTotalNum()) ?></strong>
+            <?php endif; */?>
+			<strong><?php// echo $this->__('%s Items', $this->getTotalNum()) ?></strong>
+        </div> -->
+        <?php // echo $this->getPagerHtml() ?>
+    </div>
+	<?php echo $this->getPagerHtml() ?>
+</div>
+<?php endif ?>
+<?php }else{?>
+
+<?php echo $this->getPagerHtml() ?>
+<?php }?>

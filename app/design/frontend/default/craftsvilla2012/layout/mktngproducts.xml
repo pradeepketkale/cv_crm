@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+    <default>
+    </default>
+    <mktngproducts_index_index>
+        <reference name="content">
+            <block type="mktngproducts/mktngproducts" name="mktngproducts" template="mktngproducts/mktngproducts.phtml" />
+        </reference>
+    </mktngproducts_index_index>
+</layout> 
+

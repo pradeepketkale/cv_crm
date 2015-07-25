@@ -1,0 +1,179 @@
+<?php                        
+$cat_id = 16; // set desired category id
+$category = Mage::getModel('catalog/category')->load($cat_id);
+$_helper = $this->helper('catalog/output');
+/* START: Added by Suresh for display random products on 06-02-2012 */
+$products1 = $category->getProductCollection()->addCategoryFilter($category)->addAttributeToSelect('*')->addAttributeToFilter('status', 1)->addAttributeToFilter('visibility', array('2','3','4'))
+->joinField('inventory_in_stock', 'cataloginventory_stock_item', 'is_in_stock', 'product_id=entity_id','is_in_stock',array('qty'=>'0','eq' => "0"));
+$products1->getSelect()->order('rand()');
+$numProducts = 20;
+$products1->setPage(1, $numProducts);
+/* END: Added by Suresh for display random products on 06-02-2012 */
+?>
+
+<h1 id="hdngBg1">
+  <div class="fltLeft">New Arrivals</div>
+    <div class="viewall">
+      <p class="floatr"><a href="<?php echo Mage::getModel("catalog/category")->load(16)->getUrl() ?>">View All</a></p>
+    </div>
+</h1>  
+
+
+<!-- AddThis Button BEGIN -->
+<div class="addthis_toolbox addthis_default_style floatr" style="padding-bottom: 15px;position: absolute;right: 71px;top: 24px;">
+<a class="addthis_button_facebook_like" fb:like:layout="button_count"></a>
+<a class="addthis_button_tweet"></a>
+<a class="addthis_button_google_plusone" g:plusone:size="medium"></a>
+<!--<a class="addthis_counter addthis_pill_style"></a>-->
+</div>
+<script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid=ra-4f34adfd2fa3a766"></script>
+<!-- AddThis Button END -->
+
+<div class="clear"></div>
+
+
+<div class="products homeprice">
+  <ul class="bestseller_gride">
+    <?php 
+		$bcnt=0;	
+		foreach($products1 as $product): 
+			$bcnt++;?>
+    <li <?php if($i%3==0 or $i==$_collectionSize) ?> <?php if($bcnt==4 || $bcnt==8 || $bcnt==12 || $bcnt==16 || $bcnt==20  )  { ?> id="lstCld" <?php } ?>>
+      <?php //if($product->isSaleable()):  ?>
+      <div class="prCnr" >
+        
+        <a class="product-image" href="<?php echo $product->getProductUrl() ?>" title="<?php echo $this->htmlEscape($this->getImageLabel($product, 'small_image')) ?>"> <img src="<?php echo $this->helper('catalog/image')->init($product, 'small_image')->resize(200, 200); ?>" width="200" height="200"  alt="<?php echo $this->htmlEscape($this->getImageLabel($product, 'small_image')) ?>" title="<?php echo $this->htmlEscape($this->getImageLabel($product, 'small_image')) ?>" /> </a> 
+        
+		<h1><a href="<?php echo $product->getProductUrl() ?>" title="<?php echo $this->htmlEscape($product->getName()) ?>"><?php echo $this->htmlEscape($product->getName()) ?></a></h1>
+               <?php
+					$storeurl = ''; 
+                 	$vendorinfo= Mage::helper('udropship')->getVendor($product);
+					$storeurl = Mage::helper('umicrosite')->getVendorUrl($vendorinfo->getData('vendor_id'));
+				if($storeurl != '') {
+               ?>
+       <p class="vendorname">By: <a href="<?php if($storeurl) echo $storeurl; else echo '#';?>" title="<?php echo $vendorinfo->getVendorName();?>" target="_blank"><?php echo $vendorinfo->getVendorName();?></a></p>
+			
+		<?php 
+		}
+			echo $this->getPriceHtml($product, true) ?> 
+        
+		 
+        <!--		<?php /*if ($product->getSpecialPrice()==0):?>
+        <h3 id="home"><?php echo Mage::helper('core')->currency($product->price, true, false); ?></h3>
+        <?php else: ?>
+        <h3 id="home"><?php echo Mage::helper('core')->currency($product->SpecialPrice, true, false); ?></h3>
+        <h5><?php echo Mage::helper('core')->currency($product->price, true, false); ?></h5>
+        <?php endif; */?> -->
+        <div class="clear"></div>
+        
+        <?php /*?><div class="shrtDscrption">
+          <?php if ($product->getShortDescription()):?>
+          <?php echo $_helper->productAttribute($product, nl2br($product->getShortDescription()), 'short_description') ?>
+          <?php endif;?>
+        </div><?php */?>
+      </div>
+      
+      
+       
+      <?php endforeach; ?>
+      
+      
+      
+    </li>
+  </ul>
+</div>
+
+<!--Code Edit -->
+<div class="btmNews clear">
+  <div class="section clear featured-seller linksnew">
+    <div class="fleft">
+      <h2>Recent Blog Posts</h2>
+      <p class="more"><a href="http://blog.craftsvilla.com" target="_blank">See more</a></p>
+      <div class="clear">
+        <div class="article">
+          <div><?php echo $this->getLayout()->createBlock('wordpress/post_list_recent')->setTitle('')->setPostCount(1)->setTemplate('wordpress/post/recent.phtml')->toHtml(); ?></div>
+        </div>
+      </div>
+    </div>
+    <div class="fright">
+      <h2>Featured Seller</h2>
+      <p class="more"></p>
+      <div class="clear">
+        <div class="article articlelast"> 
+          <div class="image"><a href="http://www.craftsvilla.com/catalogsearch/result/?dir=desc&q=do+you+speak+green"><img src="<?php echo $this->getSkinUrl('images/speak_green.jpg')?>" width="160" height="160" alt="Speak Green" /></a></div>          
+          <h3><a href="http://www.craftsvilla.com/catalogsearch/result/?dir=desc&q=do+you+speak+green">Do U Speak Green</a></h3>
+          <p>"The inspiration to start this came from my personal passion for wild life and ayurvedic way of life. We are taking India back to organic way of living which existed even few decades back."</p>
+          <p class="article-more"><a title="video" href="http://www.youtube.com/embed/ZO9qhg6GqJw" rel="shadowbox[Mixed];width=560;height=315" class="vicon">View the interview</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  
+
+<!--Comment by craftsvilla-->
+	<?php /*?><ul>
+    	
+    	<li>
+            <h1 id="hdngBg1">
+                <div class="fltLeft"><a href="http://www.youtube.com/embed/ZO9qhg6GqJw" target="_blank">Videos</a></div>
+            </h1>
+            <div class="newsBg">
+               
+                <iframe width="243" height="148" src="http://www.youtube.com/embed/ZO9qhg6GqJw" frameborder="0" allowfullscreen></iframe>
+                
+                
+            </div>
+        </li>
+    	<li id="latNews">
+            <h1 id="hdngBg1">
+                <div class="fltLeft"><a href="http://www.facebook.com/craftsvilla/" target="_blank">Customers Love Us</a></div>
+            </h1>
+    <script type="text/javascript" charset="utf-8">jQuery(document).ready(function() {jQuery('ul#quotes').quote_rotator();});</script>
+            <div class="newsBg qut">
+				<ul id="quotes">
+                	<li>
+                        <blockquote><img src="<?php echo $this->getSkinUrl('images/img1.png')?>" width="15" height="9" alt="" class="forum floatl"/>I purchased bag from your website.... OMG it's just amazing & top of that I'm just in love with your thank you card & aromatic candles...<img src="<?php echo $this->getSkinUrl('images/img2.png')?>" width="15" height="9" alt="" class="forum2"/></blockquote>
+                        <cite><br/>- Parul Garg</cite>
+                    </li>
+                	<li>
+                        <blockquote><img src="<?php echo $this->getSkinUrl('images/img1.png')?>" width="15" height="9" alt="" class="forum floatl"/>My first big purchase from Craftsvilla.. :) My first experiment with COD too... Order # 100009139, perfect packaging. I was overwhelmed with the response time too<img src="<?php echo $this->getSkinUrl('images/img2.png')?>" width="15" height="9" alt="" class="forum2"/></blockquote>
+                        <cite><br/>- Rahul Basu</cite>
+                    </li>
+                	<li>
+                        <blockquote><img src="<?php echo $this->getSkinUrl('images/img1.png')?>" width="15" height="9" alt="" class="forum floatl"/>Received my order today :) the handwritten note and the free candles were a pleasant surprise!! thank you :) looking forward to a lot of amazing stuff and a lot of shopping :)<img src="<?php echo $this->getSkinUrl('images/img2.png')?>" width="15" height="9" alt="" class="forum2"/></blockquote>
+                        <cite><br/>- Khushboo Sharma</cite>
+                    </li>
+                </ul>
+            </div>
+        </li>
+    </ul><?php */?>
+    <!--Comment by craftsvilla-->
+    
+  
+</div>
+<h1 id="hdngBg1">
+  <div class="fltLeft">In The News</div>
+</h1>
+<ul class="logoes">
+  <li><a href="http://www.mid-day.com/lifestyle/2011/aug/200811-Pichwai-paintings-eco-friendly-items-online-mumbai.htm" target="_blank"><img src="<?php echo $this->getSkinUrl('images/midday.jpg')?>" width="54" height="60" alt="Mid Day" title="Mid Day" class="comma"/></a>Shop for eco-friendly items online</li>
+  <li><a href="http://www.thehindu.com/life-and-style/money-and-careers/article2906597.ece" target="_blank"><img src="<?php echo $this->getSkinUrl('images/the_hindu.jpg')?>" width="189" height="59" alt="The Hindu" title="The Hindu" class="comma"/></a>Enter Ecraft</li>
+  <li class="mintli"><a href="http://www.livemint.com/2011/10/06231246/Craftsvillacom-gets-earlysta.html" target="_blank"><img src="<?php echo $this->getSkinUrl('images/livemint.jpg')?>" width="162" height="60" alt="Live mint.com" title="Live mint.com" class="comma"/></a>Craftsvilla.com gets early-stage funding</li>
+  <li><a href="http://economictimes.indiatimes.com/et-now/daily/starting-up-craftsvilla--an-online-handicraft-portal-in-india/videoshow/8133009.cms" target="_blank"><img src="<?php echo $this->getSkinUrl('images/etnow.jpg')?>" width="162" height="60" alt="ET NOW" title="ET NOW" class="comma"/></a>Starting Up: Craftsvilla - An online handicraft portal in India</li>
+</ul>
+
+
+
+<script type="text/javascript" src="<?php echo $this->getSkinUrl('js/shadowbox.js')?>"></script>
+
+
+
+
+<script type="text/javascript">
+Shadowbox.init();
+function set(file){
+window.location.href="pdf/download.demo.php?file="+file+"&name="+file;
+}
+
+</script>
+<iframe src="http://www.vizury.com/analyze/analyze.php?account_id=VIZVRM209&param=e100&section=1&level=1" scrolling="no" width="1" height="1" marginheight="0" marginwidth="0" frameborder="0"></iframe>

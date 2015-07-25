@@ -1,0 +1,169 @@
+<!-- Include these scripts to import address books with CloudSponge -->
+<script type="text/javascript" src="https://api.cloudsponge.com/address_books.js"></script>
+<script type="text/javascript" charset="utf-8">
+var csPageOptions = {
+  domain_key:"HQYP26SB3Q8QKNH3XGUX", 
+  textarea_id:"invite_friends"
+};
+</script>
+
+<script type="text/javascript" language="javascript">
+
+    function emptytextbox() {
+        document.getElementById("invite_friends").value = "";
+    }
+ function share() {
+
+     var d = document,
+            f = 'http://www.facebook.com/share',
+            l = d.location,
+            e = encodeURIComponent,
+            p = '.php?src=bm&v=4&i=1259068656&u=' + e(l.href) +
+            '&t=' + e(d.title); 1;
+     try {
+         if (!/^(.*\.)?facebook\.[^.]*$/.test(l.host)) throw (0);
+         share_internal_bookmarklet(p)
+     } catch (z) {
+         a = function() {
+             if (!window.open(f + 'r' + p, 'sharer', 'toolbar=0,status=0,resizable=1,width=626,height=436'))
+                 location.href = f + p
+         };
+         if (/Firefox/.test(navigator.userAgent))
+             setTimeout(a, 0);
+         else { a() }
+     }
+     void (0)
+ }
+
+</script>
+<?php $login = Mage::helper('customer'); ?>
+<div id="right-colum">
+<div class="right-box-form">
+<?php $refer_base_url = Mage::getUrl(); ?>
+<a href="<?php $refer_base_url.'referfriend/index/invite/' ?>"><img src="<?php echo $this->getSkinUrl('images/refer_banner_big.jpg')?>" alt="Refer Friend" /> </a><br/>
+<br />
+<p class="toptext"><strong>For each friend you invite, Craftsvilla will credit your account with Rs500 after your friend's first purchase has shipped. There is no limit to the amount you can earn.</strong></p>
+<script language="javascript"><!--
+	    function emptyMailCheck()
+	    {
+		if(document.getElementById("invite_friends").value=="")
+		{
+			alert("Please enter email id.");
+			return false;
+		}
+			//var myString = invite_friends.count();
+			var mySplitResult = document.getElementById("invite_friends").value.split(",");
+			//alert(mySplitResult.length);
+			//return false;
+			if(mySplitResult.length >= 20)
+			{
+				alert("You can send only 20 Invites at a time.");
+				return false;
+			}
+		return true;
+	    }
+		
+		
+		function check_refer_code()
+	    {
+		if(document.getElementById("editlinked").value=="")
+		{
+			alert("Please enter refercode.");
+			return false;
+		}
+		return true;
+	    }
+            function rowOverEffect(object) {
+              if (object.className == 'moduleRow') object.className = 'moduleRowOver';
+            }
+            
+            function rowOutEffect(object) {
+              if (object.className == 'moduleRowOver') object.className = 'moduleRow';
+            }
+            //--></script> 
+			<script language="javascript">
+                     
+            function alertmesg()
+            {
+                alert("Please generate your link first.");
+                return false;
+            }
+            </script>
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+<div class="invitesection">
+  <div class="leftinvite borderarround fltLeft">
+    <h1 id="hdngBg1" class="getridbor">Add from Address Book:</h1>
+    <ul class="addbook" style="cursor:pointer;">
+      <li><a href="#" class="cs_import"><img src="<?php echo $this->getSkinUrl('images/invite/gmail.jpg')?>"  alt="Gmail" /></a></li>
+      <li><a href="#" class="cs_import"><img src="<?php echo $this->getSkinUrl('images/invite/yahoomail.jpg')?>"  alt="Yahoo" /></a></li>
+      <li><a href="#" class="cs_import"><img src="<?php echo $this->getSkinUrl('images/invite/aol.jpg')?>" alt="AOL" /></a></li>
+      <li class="lastone"><a href="#" class="cs_import"><img src="<?php echo $this->getSkinUrl('images/invite/redif.jpg')?>" alt="Outlook" /></a></li>
+    </ul>
+  </div>
+  <div class="inviteright borderarround fltRight">
+  <div><?php echo $this->getMessagesBlock()->getGroupedHtml(); ?> </div>
+    <h1 id="hdngBg1" class="getridbor">Step 1: Your Invite Link:</h1> <p class="req">* Generate Your Unique URL before Reffering Your Friends!.</p>
+    <form onSubmit="return check_refer_code();" name="edit_refer_code" method="POST" action="<?php echo $this->getUrl()."referfriend/link/generate"; ?>">
+      <p class="smalltext fltLeft"> <?php echo $this->getUrl('customer/account/create/')."refercode/"; ?></p>
+      <input type="hidden" value="2" name="refer_code_change">
+      <input type="text" value="<?php echo $this->get_refer_code()?>" id="editlinked" class="textfield" name="refer_code">
+      <input type="submit" onclick="javascript:document.edit_refer_code.submit()" name="submit" value="Generate" class="submitbtn" />
+    </form>
+    
+    <div class="clear"></div><br/><br/>
+        
+    <form name="send_invites" method="post" action="<?php echo  $this->getUrl('referfriend/index/send');?>" onSubmit="return emptyMailCheck();" " return refercheck();">
+      
+      <p class="aroowimg"></p>
+      
+      <h1 id="hdngBg1" class="getridbor">Step 2: Send Invites to:</h1><p class="req">* Send only 20 invites at a time.</p>
+      <p class="req">* Enter coma seperated Emails!.</p>
+      <?php 
+                if( $this->getRequest()->getParam('invite_friends') != ''){ 
+                    $emails = $this->getRequest()->getParam('invite_friends'); 
+                }
+                else {/*$emails = "Enter multiple email id's separated by comma.";*/}
+                ?>
+      <textarea class="textfield" <?php if ($this->get_refer_code() == '' ) { ?> disabled="disabled" style="background:#E0E0E0;opacity:0.3;
+filter:Alpha(opacity=70);" <?php } ?> id="invite_friends" name="invite_friends" ><?php echo $emails; ?></textarea>
+      <input type="hidden" value="1" name="invite_box">
+      <input type="submit" <?php if ($this->get_refer_code() == '' ) { ?>disabled="disabled" <?php } ?>name="Submit" value="Send now!" class="submitbtn" />
+    </form>
+    
+    <div class="clear"></div>
+    <h1 id="hdngBg1" class="or">OR</h1>  
+    <h1 id="hdngBg1" class="getridbor margintop">Share It On:</h1>
+    <ul class="scoielize links">
+      <li><fb:send href="<?php echo $this->getUrl('customer/account/create/').'refercode/'.$this->get_refer_code();?>"></fb:send></li>
+      <li><a href="https://twitter.com/share" class="twitter-share-button" data-url="<?php echo $this->getUrl('customer/account/create/').'refercode/'.$this->get_refer_code();?>" data-text="I love shopping on CraftsVilla, the largest online designer marketplace, and I bet you'll love it too Join me ! http://craftsvilla.com" data-via="UserName" data-lang="en">Tweet</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script></li>
+    </ul>
+  </div>
+  <div class="clear"></div>
+</div>
+
+<div class="clear whyinvite">
+  <h1 id="hdngBg1" class="getridbor"><a>Why do I invite:</a></h1>
+  <div class="faqP">
+    <ul class="listingcss">
+      <li>For every friend you invite who joins and buys 1st time with us, we credit Rs.500 vucher to your Craftsvilla account</li>
+      <li>Share the fun! as every time you invite new friends, your friend is gifted Rs.250 welcome voucher on behalf of you on signing up at craftsvilla.com </li>
+      <li>There is no limit on how much you can earn!</li>
+      <li>Rs.500 credit on each referral can be used on a minimum purchase of Rs.1000</li>
+     
+    </ul>
+  </div>
+</div>
+

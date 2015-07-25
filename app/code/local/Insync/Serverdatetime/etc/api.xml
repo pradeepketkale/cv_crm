@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <api>
+        <resources>
+            <serverdatetime_serverdatetime translate="title" module="serverdatetime">
+            	<title>Server Date Time Resource</title>
+            	<model>serverdatetime/serverdatetime_api</model>
+            	  <methods>
+                	<list translate="title" module="serverdatetime">
+                    	<title>Get Server Date Time</title>
+                    	<method>getServerDateTime</method>
+                   </list>
+            	 </methods>
+            </serverdatetime_serverdatetime>
+        </resources>
+		 <resources_alias>
+            <serverdatetime>serverdatetime_serverdatetime</serverdatetime>
+        </resources_alias>
+		<v2>
+        	<resources_function_prefix>
+                <serverdatetime>serverdatetimeServerdatetime</serverdatetime>
+            </resources_function_prefix>
+        </v2>
+    </api>
+</config>

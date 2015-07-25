@@ -1,0 +1,103 @@
+<div id="followlogin">
+	<div id="welcome_img" class="popuphead"><span class="popuoheading">Follow Shop</span></div>
+		<div id="bg_welcome" class="shortpop">
+			<ul class="followshop">
+				<li><h2 class="greyheading">Allready Member</h2><a href="#login" class="spriteimg bluesmallbtn fancybox">Login</a></li>
+				<li class="nobor"><h2 class="greyheading">New Customer </h2><a class="spriteimg bluesmallbtn fancybox" href="#signUpForm">Sign Up</a></li>
+			</ul>
+            <p class="clr"></p>
+			<p align="center" class="clr margintoptwenty"><span class="required">Note:</span> To follow this Shop You need to login or register.</p>            
+		</div>
+</div>
+
+<div id="followmessage0">
+    <p>You have successfully unfollowed this shop.</p>
+</div>
+
+<div id="followmessage1">
+   <p>You are now following this shop.</p>
+</div>
+<div id="followloading">
+   <img src="<?php echo $this->getSkinUrl('images/ajax-loader.gif') ?>"/>
+</div>
+
+<?php
+	$followVendorIfo = $this->getFollowVendor();
+        if($followVendorIfo->getData('vendor_id'))
+        {
+            $vendorId=$followVendorIfo->getData('vendor_id');
+        }
+        else{
+            $vendorId=$this->getRequest()->getParam('vendorid');
+        }
+        
+        
+	 $followCount = Mage::getModel('follow/follow')->getCollection()
+											->addFieldToFilter('vendor_id',$vendorId)
+											->addFieldToFilter('status',1)
+											->addExpressionFieldToSelect('total','count({{follow_id}})','follow_id');
+	$_followClass = 'spriteimg follow';
+	if(Mage::getSingleton('customer/session')->isLoggedIn()){
+		$_customerId = '';
+		$_followStatus = '';
+		$_followText = '';
+		$_followId = 0;
+		$_customerId = Mage::getSingleton('customer/session')->getCustomer()->getId();
+		$follow = Mage::getModel('follow/follow')->getCollection()
+											->addFieldToFilter('vendor_id',$vendorId)
+											->addFieldToFilter('customer_id',$_customerId)
+											->addFieldToFilter('status',1);
+		if($follow->count()){
+			$_followStatus = 0;
+			$_followText = 'UnFollow Shop';
+			$_followData = $follow->getData();
+			$_followId = $_followData[0]['follow_id'];
+			$_followClass = 'spriteimg follow unfollw';
+			
+		}
+		else{
+			$_followStatus = 1;
+			$_followText = 'Follow Shop';
+		}
+?>
+<div id="followdiv" class="margintoptwenty">
+<a onclick="followseller(<?php echo $_customerId; ?>,<?php echo $vendorId;?>,<?php echo $_followStatus; ?>,<?php echo $_followId; ?>);"  class= "<?php echo $_followClass; ?>" style="cursor:pointer;"><?php echo $_followText; ?></a>
+</div>
+<?php
+}else{
+?>
+<div class="margintoptwenty">
+	<a href="#followlogin" class="<?php echo $_followClass; ?> fancybox">Follow Shop</a>
+</div>
+<?php
+}
+if($followCount->count()){
+$_totalFollowData = $followCount->getData();
+ ?>
+<p class="smalltext followcount">Follower: <input type="text" id="followersCount" value="<?php echo $_totalFollowData[0]['total']?>" readonly="readonly"></p>
+<?php } ?>
+<script type="text/javascript">
+	function followseller(customer_id,vendor_id,status,follow_id){
+		var reloadurl = '<?php echo $this->getUrl("follow/index/savepost") ?>';
+		jQuery.fancybox({width:'430px', height:'22px',href:"#followloading"});
+		new Ajax.Request(reloadurl, {
+		  method: 'post',
+		  parameters: { customerId: customer_id,
+		          vendorId: vendor_id,
+		          status: status,
+				followId: follow_id
+		        },
+			  onComplete: function(transport) {
+				if(transport.responseText != ''){
+						var mySplitResult = transport.responseText.split("##%%%%%%%%%##");
+						jQuery.fancybox({width:'430px', height:'22px',href:"#followmessage"+mySplitResult[0]});
+						if(mySplitResult[0]==1)
+							document.getElementById('followersCount').value =parseFloat(document.getElementById('followersCount').value)+1;
+						else
+							document.getElementById('followersCount').value =parseFloat(document.getElementById('followersCount').value)-1;
+						document.getElementById('followdiv').innerHTML = mySplitResult[1];
+			  	}
+			}
+		  });
+	}
+</script>

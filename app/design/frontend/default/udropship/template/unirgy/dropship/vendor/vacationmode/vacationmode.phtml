@@ -1,0 +1,51 @@
+
+<?php
+    $_session = Mage::getSingleton('udropship/session');
+    if (Mage::helper('udropship')->isModuleActive('Unirgy_DropshipMicrosite')
+        && $_session->isLoggedIn()
+        && $_session->getVendor()->getShowProductsMenuItem()):
+		 //echo "<pre>"; print_r($_session->getVendor());
+?> 
+<div class="page-title">
+        <h1>Set Vacation Mode</h1>
+    </div>
+<?php echo $this->getMessagesBlock()->getGroupedHtml() ?>
+
+	<table cellspacing="1" cellpadding="0" class="data-table table-gride vtop">
+      
+      <tbody>
+           <?php 
+		   $sellerprty = Mage::getModel('udropship/vendor')->load($_session->getVendorId())->getData();
+		 // echo '<pre>'; print_r($sellerprty);exit;
+		   if($sellerprty['fax']=='vacation')
+		   {?>
+			   <form name="vacationmode" action="<?php echo $this->getUrl('marketplace/vendor/vacationmodeunsetblock');?>" method="post">
+			   <tr> <td> <input onclick="change()" type="submit" value="Unset Shop in Vacation Mode" id="myButton1" class="form-button"/></td></tr>
+               <td>If you click this, all your products will become in stock and will be visible on your shop. You can always set this vacation mode anytime.</td>           
+            </tr> 
+			   </form>
+		   <?php }
+		    else{ ?><form name="vacationmode" action="<?php echo $this->getUrl('marketplace/vendor/vacationmodesetblock');?>" method="post">
+                   <tr> <td> <input onclick="change1()" type="submit" value="Set Shop in Vacation Mode" id="myButton1" class="form-button"/></td></tr>
+                   <td>If you click this, all your products will become out of stock and will not be visible on your shop. Please do not click this unless you are going on vacation and can not fullfill order in that time. You can always unset this vacation mode anytime.</td>  </form> <?php }?>
+                
+            
+            
+	  </tbody>
+    </table>
+    <br /><br /><br /><br /><br /><br />
+<?php endif;?>
+<script language="javascript" type="text/javascript">
+function change1()
+{
+    document.getElementById("myButton1").value= "Unset Shop in Vacation Mode"; 
+	
+}
+function change()
+{
+    document.getElementById("myButton1").value= "Set Shop in Vacation Mode"; 
+	
+}
+
+
+</script>

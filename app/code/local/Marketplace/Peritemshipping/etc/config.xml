@@ -1,0 +1,62 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Marketplace_Peritemshipping>
+            <version>0.1.0</version>
+            <depends>
+                <Mage_Shipping />
+            </depends>
+        </Marketplace_Peritemshipping>
+    </modules>
+    <global>
+        <models>
+            <marketplace>
+                <class>Marketplace_Peritemshipping_Model</class>
+            </marketplace>
+        </models>
+        <resources>
+            <marketplace_setup>
+                <setup>
+                    <module>Marketplace_Peritemshipping</module>
+                </setup>
+                <connection>
+                    <use>directory_setup</use>
+                </connection>
+            </marketplace_setup>
+            <marketplace_read>
+                <connection>
+                    <use>local_read</use>
+                </connection>
+            </marketplace_read>
+        </resources>
+        <sales>
+            <shipping>
+                <carriers>
+                    <pis>
+                        <class>Marketplace_Peritemshipping_Model_Carrier_Pis</class>
+                    </pis>
+                </carriers>
+            </shipping>
+            <quote>
+                <item>
+                    <product_attributes>
+                           <shippingcost/>
+                    </product_attributes>
+                </item>
+            </quote>
+        </sales>
+    </global>
+    <default>
+        <carriers>
+            <pis>
+                <active>0</active>
+                <model>marketplace_peritemshipping_model_carrier_pis</model>
+                <name>Marketplace Per Item Shipping</name>
+                <title>Per item shipping</title>
+                <handling_fee>0</handling_fee>
+                <specificerrmsg>This shipping method is currently unavailable. If you would like to ship using this shipping method, please contact us.</specificerrmsg>
+		<gateway_url>http://www.aramex.com/track_xml.asp</gateway_url>
+            </pis>
+        </carriers>
+    </default>
+</config>

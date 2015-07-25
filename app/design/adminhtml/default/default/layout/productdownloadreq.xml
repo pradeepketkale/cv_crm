@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+    <productdownloadreq_adminhtml_productdownloadreq_index>
+        <reference name="content">
+            <block type="productdownloadreq/adminhtml_productdownloadreq" name="productdownloadreq" />
+        </reference>
+    </productdownloadreq_adminhtml_productdownloadreq_index>
+</layout>

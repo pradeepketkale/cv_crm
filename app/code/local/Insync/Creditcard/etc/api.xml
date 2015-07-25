@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <api>
+		<resources>
+            <creditcard_creditcard translate="title" module="creditcard">
+            	<title>Credit card types</title>
+            	<model>creditcard/creditcard_api</model>
+            	<methods>
+                	<list translate="title" module="creditcard">
+                    	<title>Get list of Credit card types</title>
+                    	<method>toOptionArray</method>
+                   	</list>
+            	 </methods>
+            </creditcard_creditcard>
+		</resources>
+		
+		<resources_alias>
+        	<creditcard_creditcard>creditcard_creditcard</creditcard_creditcard>
+        </resources_alias>
+		
+		<v2>
+        	<resources_function_prefix>
+                <creditcard_creditcard>creditcardCreditcard</creditcard_creditcard>
+            </resources_function_prefix>
+        </v2>
+    </api>
+</config>
+

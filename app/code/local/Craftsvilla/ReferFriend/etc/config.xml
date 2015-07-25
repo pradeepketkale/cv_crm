@@ -1,0 +1,119 @@
+<?xml version="1.0" ?>
+<config>
+  <modules>
+    <Craftsvilla_ReferFriend>
+      <version>0.1.0</version>
+    </Craftsvilla_ReferFriend>
+  </modules>
+  <global>
+  
+  	<template>
+        <email>
+            <referfriend_test_email_template module="referfriend">
+                <label>Refer Friend</label>
+                <file>refer_friend_mail_send.html</file>
+                <type>html</type>
+            </referfriend_test_email_template>
+
+			<referfriend_amit_email_template module="referfriend">
+                <label>Refer Friend Voucher</label>
+                <file>refer_voucher.html</file>
+                <type>html</type>
+            </referfriend_amit_email_template>
+        </email>
+    </template>
+    <blocks>
+      <referfriend>
+        <class>Craftsvilla_ReferFriend_Block</class>
+      </referfriend>
+    </blocks>
+    <models>
+      <referfriend>
+        <class>Craftsvilla_ReferFriend_Model</class>
+        <resourceModel>referfriend_mysql4</resourceModel>
+      </referfriend>
+      <referfriend_mysql4>
+        <class>Craftsvilla_ReferFriend_Model_Mysql4</class>
+        <entities>
+          <referral>
+            <table>referfriend_referral</table>
+          </referral>
+          <check>
+            <table>customer_referal_check</table>
+          </check>
+          <timestamp>
+            <table>customer_time_stamp</table>
+          </timestamp>
+		  <count>
+            <table>refer_amount_count</table>
+          </count>
+		  <varchar>
+		  	<table>customer_entity_varchar</table>
+		  </varchar>
+		  
+        </entities>
+      </referfriend_mysql4>
+    </models>
+    <helpers>
+            <referfriend>
+                <class>Craftsvilla_ReferFriend_Helper</class>
+            </referfriend>
+    </helpers>
+    <resources>
+      <mymod_write>
+        <connection>
+          <use>core_write</use>
+        </connection>
+      </mymod_write>
+      <mymod_read>
+        <connection>
+          <use>core_read</use>
+        </connection>
+      </mymod_read>
+    </resources>
+     <events>
+	<sales_order_save_commit_after>
+		<observers>
+			<mehul_order_success>
+				<class>Craftsvilla_ReferFriend_Model_Observer</class>
+				<method>hookToOrderSaveEvent</method>
+			</mehul_order_success>
+		</observers>
+	</sales_order_save_commit_after>
+
+	<customer_save_after>
+		<observers>
+			<cust_update>
+				<class>Craftsvilla_ReferFriend_Model_Observer</class>
+				<method>hookToCustomerSave</method>
+			</cust_update>
+		</observers>
+	</customer_save_after>
+   </events>
+  </global>
+  <frontend>
+    <routers>
+	  <referfriend>
+        <use>standard</use>
+        <args>
+          <module>Craftsvilla_ReferFriend</module>
+          <frontName>referfriend</frontName>
+        </args>
+      </referfriend>
+    </routers>
+    <layout>
+      <updates>
+        <referfriend>
+          <file>referfriend.xml</file>
+        </referfriend>
+      </updates>
+    </layout>
+  </frontend>
+      <default>
+		<ReferFriend>
+		<sendemail>
+		<template>refer_friend_mail_send</template>
+		</sendemail>
+		</ReferFriend>
+    </default>
+</config>

@@ -1,0 +1,10 @@
+<?php $_product = $this->getProduct() ?>
+
+<?php echo $this->getPriceHtml($_product) ?>
+<?php //if ($_product->isAvailable()): ?>
+    <!--<div class="availability in-stock"><?php echo $this->__('Availability:') ?> <span><?php echo $this->__('In stock') ?></span></div>-->
+<?php //else: ?>
+  <!--  <div class="availability out-of-stock"><?php echo $this->__('Availability:') ?> <span><?php echo $this->__('Out of stock') ?></span></div>-->
+<?php //endif; ?>
+<?php echo $this->getChildHtml('product_type_data_extra') ?>
+<div class="clear"></div>

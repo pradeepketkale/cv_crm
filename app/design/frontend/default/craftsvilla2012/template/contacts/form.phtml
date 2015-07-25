@@ -1,0 +1,71 @@
+<?php /*custom breadcrumbs*/
+$breadcrumbs = $this->getLayout()->getBlock('breadcrumbs');
+ 
+$breadcrumbs->addCrumb('home', array('label'=>Mage::helper('cms')->__('Home'), 'title'=>Mage::helper('cms')->__('Home Page'), 'link'=>Mage::getBaseUrl()));
+ 
+$breadcrumbs->addCrumb('cart', array('label'=>'Contact Us', 'title'=>'Contact Us'));
+ 
+echo $this->getLayout()->getBlock('breadcrumbs')->toHtml();
+?>
+
+<div class="dashboard">
+	<div class="topLine"></div>
+    <div class="dashboard_head">
+		<h1><?php echo Mage::helper('contacts')->__('Contact Us') ?></h1>
+		<div class="breadcrumbs_bottom"></div>
+	</div>
+<div id="messages_product_view"><?php echo $this->getMessagesBlock()->getGroupedHtml() ?></div>
+<?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('contact_us')->toHTML();?></div>
+<form action="<?php echo $this->getFormAction(); ?>" id="contactForm" method="post">
+	<ul class="form-list">
+		<li class="fields">
+			<div class="field">
+				<!-- <label for="name" class="required"><em>*</em><?php echo Mage::helper('contacts')->__('Name') ?></label> -->
+				<div class="input-box">
+					<input placeholder="Name *" name="name" id="name" title="<?php echo Mage::helper('contacts')->__('Name') ?>" value="<?php echo $this->htmlEscape($this->helper('contacts')->getUserName()) ?>" class="editInfoInput input-text required-entry" type="text" />
+				</div>
+			</div>
+			<div class="right-info dashboard-info" style="margin-right:4px;">
+				<!-- <label for="email" class="required"><em>*</em><?php echo Mage::helper('contacts')->__('Email') ?></label> -->
+				<div class="input-box">
+					<input placeholder="Email *" name="email" id="email" title="<?php echo Mage::helper('contacts')->__('Email') ?>" value="<?php echo $this->htmlEscape($this->helper('contacts')->getUserEmail()) ?>" class="editInfoInput input-text required-entry validate-email" type="text" />
+				</div>
+			</div>
+		</li>
+		<li>
+			<!-- <label for="telephone"><?php echo Mage::helper('contacts')->__('Telephone') ?></label> -->
+			<div class="left-info">
+				<input placeholder="Telephone" name="telephone" id="telephone" title="<?php echo Mage::helper('contacts')->__('Telephone') ?>" value="" class="editInfoInput input-text" type="text" />
+			</div>
+			<!--<div class="right-info dashboard-info" style="margin-right:4px;">
+				<div class="country_edit" style="margin:10px 0;">
+					<select name="mailto" id="country" value="">
+						<option value="">Subject</option>
+						<option value="">Always available</option>
+						<option value="">Corporate Sales</option>
+						<option value="">Marketing</option>
+						<option value="">To sell on Craftsvilla</option>
+						<option value="">Career with Craftsvilla</option>
+					</select>
+				</div>
+			</div>-->  <!-- http://www.magentocommerce.com/boards/viewthread/74568/ multiselect email -->
+		</li>
+		<li class="wide">
+			<!-- <label for="comment" class="required"><em>*</em><?php echo Mage::helper('contacts')->__('Comment') ?></label> -->
+			<div>
+				<textarea name="comment" id="comment" title="<?php echo Mage::helper('contacts')->__('Comment') ?>" class="contacts_text required-entry input-text" cols="10" rows="10"></textarea>
+			</div>
+		</li>
+	</ul>
+    <div class="buttons-set">
+        <p style="float:left;" class="required"><?php echo Mage::helper('contacts')->__('* Required Fields') ?></p>
+        <input type="text" name="hideit" id="hideit" value="" style="display:none !important;" />
+        <button type="submit" title="<?php echo Mage::helper('contacts')->__('Submit') ?>" class="continueMdm"><span><span><?php echo Mage::helper('contacts')->__('Submit') ?></span></span></button>
+    </div>
+</form>
+<script type="text/javascript">
+//<![CDATA[
+    var contactForm = new VarienForm('contactForm', true);
+//]]>
+</script>
+</div>

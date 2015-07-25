@@ -1,0 +1,234 @@
+
+<div class="bdyShadow">
+<div class="nav-container">
+<div class="menuBg">
+
+
+
+<ul>
+<li class="sale nav-1 level-top first">
+<h3>Discover</h3>
+<div style="width: 358px;" class="sub1">
+  <div style="margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; " class="row levelthree">
+    <ul>
+            <li class="sale nav"><a href="<?php echo $this->getUrl('discover-by-craft') ?>">Crafts of India</a></li>
+            <li class="sale nav"><a href="<?php echo $this->getUrl('discover-by-jewellery') ?>">Jewellery of India</a></li>
+            <!-- <li class="sale nav"><a href="<?php //echo $this->getUrl('discover-by-color') ?>">Color</a></li> -->
+            <li class="sale nav"><a href="<?php echo $this->getUrl('buy-bollywood-sarees-online') ?>">Bollywood Sarees</a></li>
+            <!--<li class="sale nav"><a href="<?php echo $this->getUrl('discover-by-taste.html') ?>">Taste</a></li>-->
+			<li class="sale nav"><a href="http://www.craftsvilla.com/maitricrafts">Terracotta Jewellery</a></li>            
+			<!--<li class="sale nav"><a href="http://www.craftsvilla.com/shopsearch?searchby=shop&q=Search All Shops">Shops</a></li>-->
+    </ul>
+  </div>
+</div>
+</li></ul>
+
+
+
+<ul id="topnav">
+<li class="sale nav-1 level-top first"> 
+  <!-- Romoved link for All Categories (By Suresh on 18-01-2012) --> 
+  <!--<a href="<?php //echo Mage::getBaseURL(); ?>catalog/seo_sitemap/category/">
+                                All Categories
+                            </a>-->
+  <h3>All Categories</h3>
+  <?php
+                           /*
+                           *Commented by suresh to display static category links.
+                           *On 21-05-2012.
+                           */
+                            /*$conn = Mage::getSingleton('core/resource')->getConnection('core_read');
+
+                            $sql = "SELECT name,url_path FROM catalog_category_flat_store_1 WHERE parent_id='2' and is_active='1' and name not like '@%' order by name";
+
+                            $results_org = $conn->fetchAll($sql);
+                            $results=Mage::helper('Catalog')->fieldSort($results_org);
+                            $csslevel = "";
+
+                            if (count($results) > 15 && count($results) < 31) {
+                                $csslevel = "leveltwo";
+                            } elseif (count($results) >= 1 && count($results) < 16) {
+                                $csslevel = "levelone";
+                            } elseif (count($results) > 30 && count($results) < 46) {
+                                $csslevel = "levelthree";
+                            } elseif (count($results) > 45 && count($results) < 61) {
+                                $csslevel = "levelfour";
+                            } elseif (count($results) > 60 && count($results) < 76) {
+                                $csslevel = "levelfive";
+                            } else {
+                                $csslevel = "";
+                            }
+
+                            echo '<div class="sub1" style="width: 358px;">
+							<div class="row ' . $csslevel . '" style="margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; ">';
+
+                            echo "<ul>";
+                            $ctr = 1;
+                            foreach ($results as $key => $val) {
+                                echo '<li class="sale nav"><a href="'.Mage::getBaseURL().$results[$key]['url_path'] . '">' . $results[$key]['name'] . '</a></li>';
+                                if ($ctr % 15 == 0) {
+                                    echo "</ul><ul>";
+                                }
+                                $ctr++;
+                            }
+                            echo "</ul>";*/
+  ?>
+<?php  
+echo '<div class="sub1" style="width: 358px;">
+							<div class="row" style="margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; ">'; 
+?>	
+<!-- Start Added by suresh on 21-05-2012 for static cateogory order -->						 
+  <ul>
+  	<li class="sale nav"><a href="http://www.craftsvilla.com/jewellery-jewelry.html">Jewellery</a></li>
+  	<li class="sale nav"><a href="http://www.craftsvilla.com/sarees-sari.html">Sarees</a></li>
+
+    <!--<li class="sale nav"><a href="http://www.craftsvilla.com/diwali.html">Diwali Gifts</a></li>-->
+    <li class="sale nav"><a href="http://www.craftsvilla.com/occasion-gifts.html">Holi Gifts</a></li>
+	<li class="sale nav"><a href="http://www.craftsvilla.com/clothing/lehnga.html">Bridal Lehenga</a></li>
+	<li class="sale nav"><a href="http://www.craftsvilla.com/clothing/salwar-suit.html">Salwar Suits</a></li>
+    <li class="sale nav"><a href="http://www.craftsvilla.com/clothing/blouse.html">Blouses</a></li>
+<li class="sale nav"><a href="http://www.craftsvilla.com/rakhi-gifts.html">Rakhi Gifts</a></li>
+    <li class="sale nav"><a href="http://www.craftsvilla.com/discounts-n-offers-craftsvilla.html">Guarantee Lowest price</a></li>
+
+	<li class="sale nav"><a href="http://www.craftsvilla.com/clothing.html">Clothing</a></li>   	
+	<li class="sale nav"><a href="http://www.craftsvilla.com/bags.html">Bags</a></li>  	
+   	<!--<li class="sale nav"><a href="http://www.craftsvilla.com/craftsvilla-hot-sellers.html">Hot Sellers</a></li>-->  	 
+    <!--<li class="sale nav"><a href="http://www.craftsvilla.com/discounts-n-offers-craftsvilla.html">Discounts &amp; Offers</a></li>    -->
+    <!--<li class="sale nav"><a href="http://www.craftsvilla.com/rakhi-gifts.html">Rakhi Gifts</a></li>-->
+    <!--<li class="sale nav"><a href="http://www.craftsvilla.com/diwali.html">Diwali Gifts</a></li>-->
+    <!--<li class="sale nav"><a href="http://www.craftsvilla.com/christmas-corporate-gifts.html">Christmas Gifts</a></li>-->
+    <!--<li class="sale nav"><a href="http://www.craftsvilla.com/valentine-gifts.html.html">Valentine Gifts</a></li>-->
+
+    <li class="sale nav"><a href="http://www.craftsvilla.com/shopcoupon"><img src="<?php echo $this->getSkinUrl('img/Heart_symbol_c00_10px.png')?>">Discounts & Coupons</a></li>               
+    <li class="sale nav"><a href="http://www.craftsvilla.com/wholesale.html">Wholesale</a></li>
+    <li class="sale nav"><a href="http://www.craftsvilla.com/home-decor-products.html">Home Decor</a></li>
+  	<li class="sale nav"><a href="http://www.craftsvilla.com/accessories.html">Accessories</a></li>
+  	<li class="sale nav"><a href="http://www.craftsvilla.com/home-furnishing.html">Home Furnishing</a></li>
+    <!--<li class="sale nav"><a href="http://www.craftsvilla.com/services.html">Services</a></li>-->    
+  	<li class="sale nav"><a href="http://www.craftsvilla.com/bath-beauty.html">Bath &amp; Beauty</a></li>
+  	<li class="sale nav"><a href="http://www.craftsvilla.com/food-health.html">Food &amp; Health</a></li>
+    <li class="sale nav"><a href="http://www.craftsvilla.com/i-like-ganesha.html">Ganesha Gifts</a></li>
+  	<li class="sale nav"><a href="http://www.craftsvilla.com/gifts-birthday-anniversary-wedding.html">Gifts</a></li>
+  	<li class="sale nav"><a href="http://www.craftsvilla.com/kids-baby-names-toy.html">Kids</a></li>
+  	<li class="sale nav"><a href="http://www.craftsvilla.com/books-india.html">Books</a></li>
+  	<li class="sale nav"><a href="http://www.craftsvilla.com/footwear-1.html">Footwear</a></li>
+  	<!--<li class="sale nav"><a href="http://www.craftsvilla.com/new-arrivals-new-product-launches.html">New Arrivals</a></li>-->
+  	<li class="sale nav"><a href="http://www.craftsvilla.com/marriage-n-love.html">Wedding</a></li>
+  	<li class="sale nav"><a href="http://www.craftsvilla.com/spiritual-books-pooja.html">Spiritual</a></li>
+  	<li class="sale nav"><a href="http://www.craftsvilla.com/supplies.html">Supplies</a></li>
+  	<li class="sale nav"><a href="http://www.craftsvilla.com/flowers.html">Flowers</a></li>
+  	<li class="sale nav"><a href="http://www.craftsvilla.com/musical-instruments.html">Musical Instruments</a></li>
+    
+  </ul>
+  
+<!-- End Added by suresh on 21-05-2012 for static cateogory order -->  
+                            
+
+</li></ul>
+<?php /*
+                            $sql = "SELECT name,url_path,entity_id FROM catalog_category_flat_store_1 WHERE parent_id='2' and is_active='1' and include_in_menu='1' order by position asc;";
+
+                            $results = $conn->fetchAll($sql);
+                           
+                            foreach ($results as $key => $val) {
+                            	//Removed link for all top categories(By Suresh on 18-01-2012).
+                                //echo '<li class="sale nav "><a href="'.Mage::getBaseURL().$results[$key]['url_path'] . '">' . $results[$key]['name'] . '</a>';
+                                //echo '<li class="sale nav "><a href="javascript:void(0);">' . $results[$key]['name'].'</a>';
+                                echo '<li class="sale nav "><h3>' . $results[$key]['name'].'</h3>';
+                                $sql = "SELECT name,url_path,entity_id FROM catalog_category_flat_store_1 WHERE parent_id='" . $results[$key]['entity_id'] . "' and is_active='1' and include_in_menu='1' order by name";
+                                $results_ochild = $conn->fetchAll($sql);
+                                $results_child=Mage::helper('Catalog')->fieldSort($results_ochild);
+                                $csslevel = "";
+                                if (count($results_child) > 0) {
+                                    if (count($results_child) > 20 && count($results_child) < 41) {
+                                        $csslevel = "leveltwo";
+                                    } elseif (count($results_child) >= 1 && count($results_child) < 21) {
+                                        $csslevel = "levelone";
+                                    } elseif (count($results_child) > 40 && count($results_child) < 61) {
+                                        $csslevel = "levelthree";
+                                    } elseif (count($results_child) > 60 && count($results_child) < 81) {
+                                        $csslevel = "levelfour";
+                                    } elseif (count($results_child) > 80 && count($results_child) < 101) {
+                                        $csslevel = "levelfive";
+                                    } else {
+                                        $csslevel = "";
+                                    }
+
+                                    echo ' <div class="sub1" style="width: 358px; ">
+							<div class="row ' . $csslevel . '" style="margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; "><ul>';
+
+                                    $ctr = 1;
+                                    foreach ($results_child as $key => $val) {
+
+                                        echo '<li><a href="' .Mage::getBaseURL(). $results_child [$key]['url_path'] . '"> ' . $results_child [$key]['name'] . '</a></li>';
+                                        if ($ctr % 20 == 0) {
+                                            echo "</ul><ul>";
+                                        }
+                                        $ctr++;
+                                    }
+                                    echo '</ul></div></div></li>';
+                                }
+                            }
+                            echo "</ul>";
+
+
+                            //echo $this->getChildHtml('topMenu'); 
+                         */   ?>
+
+<!--<h3 class="em"><span>Ways to Shop</span></h3>
+                    <ul class="side_icon_nav">
+                        <li>
+                            <a href="">
+                                <span class="icon_wrapper">
+                                    <span class="icon icon-marker"></span>
+                                </span>
+                                <strong>Region</strong>
+                                <span class="text">Shop by area</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="">
+                                <span class="icon_wrapper">
+                                    <span class="icon icon-side_dot"></span>
+                                </span>
+                                <strong>Colors</strong>
+                                <span class="text">Shop by colors</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="">
+                                <span class="icon_wrapper">
+                                    <span class="icon icon-plant"></span>
+                                </span>
+                                <strong>Treasury</strong>
+                                <span class="text">Curated lists</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="">
+                                <span class="icon_wrapper">
+                                    <span class="icon icon-bag"></span>
+                                </span>
+                                <strong>Shop Local</strong>
+                                <span class="text">Buy nearby</span>
+                            </a>
+                        </li>                                                    
+                    </ul>-->
+<h3 class="em"><span>&nbsp</span></h3>
+<!--<h3 class="em"><span>CraftsVilla Picks</span></h3>
+<div class="newsletter_block">
+  <p>Get our email daily with top picks and hot products.</p>
+  <a href="#signUpForm" class="btn icon-btn_138 red fancybox em modal_link"><span class="inner">Sign Up</span></a>
+  <p>See our other newsletters.</p>
+  <p><a href="http://www.surveymonkey.com/s/HWNHRDK" target="_blank" class="spriteimg feebback_icon">&nbsp;</a></p>
+  
+</div>-->
+
+<!--Added By Dileswar On dated 23-07-2013 for showing Left banner on Home page     Start-->
+<div class="banner_index_leftclmn" style="margin-left:-24px;">
+		<?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('banner_left')->toHtml(); ?>   
+	</div>
+<!--Added By Dileswar On dated 23-07-2013 for showing Left banner on Home page       End-->    
+</div>
+</div>
+</div>

@@ -1,0 +1,14 @@
+<?php
+$_vendor = Mage::helper('umicrosite')->getCurrentVendor();
+$_productListBlock = $this->getChild('product_list');
+$_productTooltBlock = $this->getChild('product_list_toolbar');
+$_productHighsoldBlock = $this->getChild('highsold');
+$storeCode = Mage::app()->getStore()->getCode();
+?>
+<h1 class="headingvendor homeprite">
+<?php echo $this->htmlEscape(Mage::helper('umicrosite')->getLandingPageTitle($_vendor)) ?>'s
+Product
+</h1>
+<div id="our-products">
+<?php echo $_productListBlock->toHtml() ?>
+</div>

@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+    <default>
+    </default>
+    <seocontent_index_index>
+        <reference name="content">
+            <block type="seocontent/seocontent" name="seocontent" template="seocontent/seocontent.phtml" />
+        </reference>
+    </seocontent_index_index>
+</layout> 

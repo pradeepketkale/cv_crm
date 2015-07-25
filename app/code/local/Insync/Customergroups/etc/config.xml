@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <modules>
+        <Insync_Customergroups>
+            <version>1.0</version>
+        </Insync_Customergroups>
+    </modules>
+    <global>
+        <models>
+            <customergroups>
+                <class>Insync_Customergroups_Model</class>
+            </customergroups>
+        </models>
+    </global>
+</config>

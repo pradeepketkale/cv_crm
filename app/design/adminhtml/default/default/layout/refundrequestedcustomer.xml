@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+    <refundrequestedcustomer_adminhtml_refundrequestedcustomer_index>
+        <reference name="content">
+            <block type="refundrequestedcustomer/adminhtml_refundrequestedcustomer" name="refundrequestedcustomer" />
+        </reference>
+    </refundrequestedcustomer_adminhtml_refundrequestedcustomer_index>
+</layout>
+
+

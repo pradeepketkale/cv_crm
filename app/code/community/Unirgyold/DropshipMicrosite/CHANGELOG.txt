@@ -1,0 +1,40 @@
+===== 1.4.3 =====
+  * Fixed htmlEscape() in templates for 1.3.x
+
+===== 1.4.2 =====
+  * Fixed logging out to 404 Page not found on some installations
+
+===== 1.4.1 =====
+  * Added Vendor landing page custom title
+
+===== 1.4.0 =====
+  * Changes for uDropship 1.9.1.0 (vendor autocomplete control)
+
+===== 1.3.5 =====
+  * Added product list block for vendor home page
+
+===== 1.3.4 =====
+  * Added configuration to hide product attributes when vendors edit products
+  * Added vendor configuration to show/hide PRODUCTS menu item in vendor interface
+  * Improved creation of vendor URLs in template
+
+===== 1.3.3 =====
+  * Fixed intermittent issue with single sign-on between vendor and admin interface
+
+===== 1.3.2 =====
+  * Fixed compatibility with CE 1.4.1.0 and EE 1.8.0.0 for product collections
+
+===== 1.3.1 =====
+  * Added configuration to change base store URL to vendor subdomain
+
+===== 1.3.0 =====
+  * Fixed compatibility with custom admin modules
+
+===== 1.2.1 =====
+  * Fixed intermittent admin staging website error message
+
+===== 1.2.0 =====
+  * Added Mage::helper('umicrosite')->getProductUrl($product)
+
+===== 1.1.1 =====
+  * Added a Staging Website for Vendors' New Products

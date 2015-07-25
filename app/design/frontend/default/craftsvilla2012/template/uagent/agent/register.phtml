@@ -1,0 +1,162 @@
+<?php 
+$_hlp = Mage::helper('uagent');
+$_session = Mage::getSingleton('uagent/session');
+$_data = $_session->getRegistrationFormData(true);
+$_r = new Varien_Object();
+if ($_data) {
+    foreach ($_data as $_k=>$_v) {
+        if (!is_array($_v)) {
+            $_r->setData($_k, htmlspecialchars($_v));
+        }
+    }
+}
+?>
+
+<?php echo $this->getMessagesBlock()->getGroupedHtml() ?>
+
+<form action="<?php echo $this->getUrl('uagent/register/registerPost')?>" method="post" id="registration-form" name="registration_form">
+<div class="generic-box filter">
+<div class="login-box">
+    <div class="col-1 registered-users">
+        <div class="content">
+        	<div class="box-head">
+            <h3><?php echo $this->__('Agent Registration') ?></h3>
+            </div>
+            <table class="regform"><tbody><tr><td>
+                <ul class="form-list">
+                    <li>
+                        <label for="agent_name"><?php echo $this->__('Agent Name') ?> <span class="required">*</span></label>
+                        <input name="agent_name" value="<?php echo $_r->getAgentName()?>" id="agent_name" type="text" class="input-text required-entry" />
+                    </li>
+                    <li>
+                        <label for="telephone"><?php echo $this->__('Phone Number') ?> <span class="required">*</span></label>
+                        <input name="telephone" value="<?php echo $_r->getTelephone()?>" title="<?php echo $this->__('Phone Number') ?>" id="telephone" type="text" class="input-text required-entry" />
+                    </li>
+                    <li>
+                        <label for="email"><?php echo $this->__('Email Address') ?> <span class="required">*</span></label>
+                        <input name="email" value="<?php echo $_r->getEmail()?>" title="<?php echo $this->__('Email Address') ?>" id="email" type="text" class="input-text required-entry validate-email" />
+                    </li>
+                    <li>
+                        <label for="password"><?php echo $this->__('Password') ?> <span class="required">*</span></label>
+                        <input name="password" type="password" class="input-text required-entry validate-password" id="password" />
+                    </li>
+                    <li>
+                        <label for="password_confirm"><?php echo $this->__('Confirm Password') ?> <span class="required">*</span></label>
+                        <input name="password_confirm" type="password" class="input-text required-entry validate-cpassword" id="password_confirm" />
+                    </li>
+                     <li>
+                        <label for="bank_account_number"><?php echo $this->__('Bank Account Number') ?> <span class="required">*</span></label>
+                        <input name="bank_account_number" value="<?php echo $_r->getBankAccountNumber() ?>" title="<?php echo $this->__('Bank Account Number') ?>" id="bank_account_number" type="text" class="input-text required-entry" />
+                    </li>
+                     <li>
+                        <label for="bank_micr_number"><?php echo $this->__('MICR Number of Bank') ?> <span class="required">*</span></label>
+                        <input name="bank_micr_number" value="<?php echo $_r->getVendorName()?>" title="<?php echo $this->__('MICR Number of Bank') ?>" id="bank_micr_number" type="text" class="input-text required-entry" />
+                    </li>
+                    <li>
+                        <label for="bank_branch_address"><?php echo $this->__('Bank Branch Address') ?> <span class="required">*</span></label>
+                        <textarea name="bank_branch_address" id="bank_branch_address"  title="<?php echo $this->__('Bank Branch Address') ?>" class="input-text required-entry" /><?php echo $_r->getComments()?></textarea>
+                    </li>
+                        
+
+                </ul>
+            </td><td>
+                <ul class="form-list">
+                    <li>
+                        <label for="agent_attn"><?php echo $this->__('Contact Person Name') ?> <span class="required">*</span></label>
+                        <input name="agent_attn" value="<?php echo $_r->getAgentAttn()?>" title="<?php echo $this->__('Contact Person Name') ?>" id="agent_attn" type="text" class="input-text required-entry" />
+                    </li>
+                    <li>
+                        <label for="street1"><?php echo $this->__('Street Address') ?> <span class="required">*</span></label>
+                        <input name="street1" value="<?php echo $_r->getStreet1()?>" title="<?php echo $this->__('Street Address') ?>" id="street1" type="text" class="input-text required-entry" />
+                    </li>
+                    <li><label>&nbsp;</label>
+                        <input name="street2" value="<?php echo $_r->getStreet2()?>" title="<?php echo $this->__('Street Address Line 2') ?>" id="street2" type="text" class="input-text " />
+                    </li>
+                    <li>
+                        <label for="city"><?php echo $this->__('City') ?> <span class="required">*</span></label>
+                        <input name="city" type="text" class="input-text required-entry" id="city" value="<?php echo $_r->getCity()?>" />
+                    </li>
+                    <li>
+                        <label for="zip"><?php echo $this->__('Zip/Postal Code') ?><span class="required">*</span></label>
+                        <input name="zip" type="text" class="input-text required-entry" id="zip" value="<?php echo $_r->getZip()?>" />
+                    </li>
+                    <li>
+                        <label for="region_id"><?php echo $this->__('State/Province') ?> <span class="required">*</span></label>
+                        <select id="region_id" name="region_id" title="<?php echo $this->__('State/Province') ?>" class="validate-select" style="display:none" defaultValue="<?php echo $_r->getRegionId()?>">
+                            <option value=""><?php echo $this->__('Please select region, state or province') ?></option>
+                        </select>
+                        <input type="text" id="region" name="region" value="<?php echo $_r->getRegion()?>"  title="<?php echo $this->__('State/Province') ?>" class="input-text" style="display:none" />
+                    </li>
+                    <li>
+                         <label for="country"><?php echo $this->__('Country') ?> <span class="required">*</span></label>
+						<?php $countries = Mage::getResourceModel('directory/country_collection')
+                                                            ->loadData()
+                                                            ->toOptionArray(false) ?>
+                        <?php if (count($countries) > 0): ?>
+                            <select name="country" id="country">
+                                <option value="">-- Please Select --</option>
+                                <?php foreach($countries as $country): ?>
+                                    <option value="<?php echo $country['value'] ?>">
+                                        <?php echo $country['label'] ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                        <?php endif; ?>
+						</li>
+                    <li>
+                        <label for="bank_name"><?php echo $this->__('Bank name') ?> <span class="required">*</span></label>
+                        <input name="bank_name" value="<?php echo $_r->getVendorAttn()?>" title="<?php echo $this->__('Bank name') ?>" id="bank_name" type="text" class="input-text required-entry" />
+                    </li>
+                    <li>
+                        <label for="check_pay_to"><?php echo $this->__('Cheque to be made in Name of') ?> <span class="required">*</span></label>
+                        <input name="check_pay_to" value="<?php echo $_r->getVendorAttn()?>" title="<?php echo $this->__('Cheque to be made in Name of') ?>" id="check_pay_to" type="text" class="input-text required-entry" />
+                    </li>
+                    <li>
+                        <label for="bank_ifsc_code"><?php echo $this->__('IFSC code of Bank') ?> <span class="required">*</span></label>
+                        <input name="bank_ifsc_code" value="<?php echo $_r->getVendorAttn()?>" title="<?php echo $this->__('IFSC code of Bank') ?>" id="bank_ifsc_code" type="text" class="input-text required-entry" />
+                    </li>
+                  </ul>
+                <input name="agent_commission" value="10"  id="agent_commission" type="hidden" />
+            </td></tr>
+                    
+                <tr>
+                    <td colspan="2">
+                      <ul class="form-list">   
+                        <li>
+                            <label for="comments"><?php echo $this->__('How did you hear about us?') ?></label>
+                            <textarea name="comments" id="comments"  title="<?php echo $this->__('How did you hear about us?') ?>" class="input-text" /><?php echo $_r->getComments()?></textarea>
+                        </li>
+                        <li><span class="required"><?php echo $this->__('* Required Fields') ?></span></li>
+                      </ul> 
+                    </td>
+                 </tr>
+                <tr>
+                    <td colspan="2">
+                        <p>
+                            <input type="checkbox" id="terms" name="agree" class="checkbox required-entry">I agree that I have read and understood the <a href="<?php echo Mage::getBaseUrl().'terms-and-conditions-craftsvilla/' ?>">Craftsvilla User Agreement</a> & <a href="<?php echo Mage::getBaseUrl().'privacy-policy-craftsvilla/' ?>">the Privacy Policy</a></input>
+                        </p>  
+                        <button class="form-button" type="submit" name="send"><span><?php echo $this->__('Register') ?></span></button>                        
+                    </td>
+                </tr>
+           </tbody></table>
+        </div>
+        <div class="fieldset"><h2 class="legend">Note</h2>
+                        <ul class="arrowlist">
+                           <li>Your name will be publicly displayed on Craftsvilla. These fields are optional.</li>
+                           <li>Your confirmation will be sent to your email address.</li>
+                           <li><a href="<?php echo $this->getUrl('uagent')?>"><?php echo $this->__('Return to log in')?></a></li>
+                        </ul>
+                    </div>
+    </div>
+</div>
+</div>
+</form>
+<script type="text/javascript">
+    Validation.addAllThese([
+        ['validate-urlkey', 'Please use only letters (a-z) or numbers (0-9) in this field, first character should be a letter.', function (v) {
+                return Validation.get('IsEmpty').test(v) ||  /^[a-z]+[a-z0-9]+$/.test(v)
+        }],
+    ]);
+    var dataForm = new VarienForm('registration-form', true);
+    new RegionUpdater('country', 'region', 'region_id', <?php echo $this->helper('directory')->getRegionJson() ?>);
+</script>

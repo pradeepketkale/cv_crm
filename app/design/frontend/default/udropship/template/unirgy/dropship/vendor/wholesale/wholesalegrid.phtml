@@ -1,0 +1,97 @@
+<?php
+$_hlp = Mage::helper('udropship');
+//$read = Mage::getSingleton('core/resource')->getConnection('core_read');
+/*$sql = "SELECT * FROM `wholesale`";
+$sql = $read->query("SELECT * FROM `wholesale`")->fetch();
+echo "<pre>";
+print_r($sql);
+*/
+?> 
+<div class="box-head">
+  <h3>Wholesale Details</h3>
+</div>
+<div style="max-height: 517px;overflow: scroll;width: 703px;">
+   <!-- <div class="a-right" style="margin:10px 0">
+      <button class="form-button" type="submit"><?php //echo $this->__('Update Information On This Page') ?></button>
+    </div>-->
+    
+    <table cellspacing="1" cellpadding="0" class="data-table table-gride vtop">
+   
+      <thead>
+        <tr>
+          <th><?php echo $this->__('Wholesale Id')?></th> 
+          <th>Image</th>
+          <!--<th><?php //echo $this->__('Product Id')?></th>-->
+          <th><?php echo $this->__('SKU')?></th>
+          <th><?php echo $this->__('Product Name')?></th>
+                <!--<th><?php //echo $this->__('Vendor Id')?></th>-->
+                <!--<th><?php //echo $this->__('Vendor Price')?></th>-->
+          <th><?php echo $this->__('Name Of Customer')?></th>
+          <th><?php echo $this->__('Qty')?></th>
+          <th><?php echo $this->__('Your Price')?></th>
+          <th><?php echo $this->__('Customisation')?></th>
+          <th><?php echo $this->__('Comments')?></th>
+          <th><?php echo $this->__('Created Date')?></th>
+          <th><?php echo $this->__('Expected Date')?></th>
+          <th>Vendor Quote And Delivery Date</th>
+          
+          
+        </tr>
+      </thead>
+      <tbody>
+      	<?php
+		$vendorId = Mage::getSingleton('udropship/session')->getVendorId();
+		$collection = Mage::getModel('wholesale/wholesale')->getCollection()
+						->addFieldToFilter('vendorid', $vendorId);
+		//echo "<pre>";
+		//print_r ($collection->getData());exit;
+		foreach ($collection as $collect) 
+		{
+			
+		//echo $collect->getWholesaleId();exit;
+		$_productCollection = Mage::getModel('catalog/product')->load($collect->getProductid());
+		/*echo "<pre>";
+		print_r ($_productCollection->getData());*/
+		?>	
+		<tr>
+          <td><?php echo $collect->getWholesaleId(); ?></td>
+          <td><img src="<?php echo Mage::helper('catalog/image')->init($_productCollection, 'image')->resize(145);?>" /> </td>
+          <!--<td><?php //echo $collect->getProductid();?></td>-->
+          <td><?php echo $collect->getSku();?></td>
+          <td><?php echo $collect->getProductname();?></td>
+          <!--<td><?php //echo $collect->getVendorid();?></td>-->
+          <td><?php echo $collect->getName();?></td>
+          <td><?php echo $collect->getQuantity();?></td>
+          <td><?php echo $collect->getOfferPrice();?></td>
+          <td><?php echo $collect->getCustom();?></td>
+          <td><?php echo $collect->getComments();?></td>
+          <td><?php echo $collect->getCreatedDate();?></td>
+          <td><?php echo $collect->getExpectedDate();?></td>
+          
+            
+          <td class="vendor_quote">
+          	  <form method="post" action="<?php echo $this->getUrl('udropship/vendor/wholesalesave') ?>">  
+              <textarea name="vendorquote"></textarea>
+              <span class="del_date">Delivery Date</span>
+              <select name="day" value="day" id="day"><option selected="selected">Day</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option><option>11</option><option>12</option><option>13</option><option>14</option><option>15</option><option>16</option><option>17</option><option>18</option><option>19</option><option>20</option><option>21</option><option>22</option><option>23</option><option>24</option><option>25</option><option>26</option><option>27</option><option>28</option><option>29</option><option>30</option><option>31</option></select>
+              <select name="month" value="month" id="month"><option selected="selected">Month</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option><option>11</option><option>12</option></select>
+              <select name="year" value="year" id="year"><option selected="selected">Year</option><option>2012</option><option>2013</option></select>
+              <input type="hidden" name ="wholesale" value="<?php echo $collect->getWholesaleId();?>" />
+              <input name="submit" type="submit" id="submit" value="save" class="bluebtnsmall" /> 
+          </form> 
+          </td>
+           
+        </tr> 
+		<?php
+        }
+		?>
+      </tbody>
+    </table>
+    
+    <div class="clr"></div>
+    <!--<div class="a-right" style="margin:10px 0">
+      <button class="form-button" type="submit"><?php //echo $this->__('Update Information On This Page') ?></button>
+    </div>-->
+  
+
+</div>

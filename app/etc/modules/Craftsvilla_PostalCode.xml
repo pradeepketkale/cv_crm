@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<config>
+	<modules>
+		<Craftsvilla_PostalCode>
+			<active>true</active>
+			<codePool>local</codePool>
+		</Craftsvilla_PostalCode>
+	</modules>
+</config>

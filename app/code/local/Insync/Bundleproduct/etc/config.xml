@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <modules>
+        <Insync_Bundleproduct>
+            <version>1.0</version>
+        </Insync_Bundleproduct>
+    </modules>
+    <global>
+        <models>
+            <bundleproduct>
+                <class>Insync_Bundleproduct_Model</class>
+            </bundleproduct>
+        </models>
+    </global>
+</config>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <modules>
+        <Craftsvilla_Checkout>
+            <version>0.1.0</version>
+        </Craftsvilla_Checkout>
+    </modules>
+    <global>
+    	<routers>
+            <checkout>
+                <rewrite>
+                  <cart>
+                          <from><![CDATA[#^/checkout/cart/$#]]></from>
+                          <to>/checkout/cart/</to>
+                  </cart>
+                </rewrite>
+	   		</checkout>
+        </routers>
+    </global>
+    
+    <frontend>
+		<routers>
+			<checkout>
+				<args>
+				    <modules>
+					    <Craftsvilla_Checkout before="Mage_Checkout">Craftsvilla_Checkout</Craftsvilla_Checkout>
+				    </modules>
+				</args>
+			</checkout>
+		</routers>
+	</frontend>
+</config>

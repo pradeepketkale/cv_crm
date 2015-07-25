@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Qian_Bxgy>
+            <active>false</active>
+            <codePool>local</codePool>
+        </Qian_Bxgy>
+    </modules>
+</config>
+

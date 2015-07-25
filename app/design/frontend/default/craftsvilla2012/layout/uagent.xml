@@ -1,0 +1,127 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+  <uagent_agent>
+		<reference name="head">
+            <action method="setTitle"><title>Craftsvilla Agent Place - Agent</title></action>
+			<!--<action method="removeItem"><type>skin_css</type><stylesheet>css/styles_v35.css</stylesheet></action>-->
+			<action method="removeItem"><type>skin_css</type><stylesheet>css/styles_v39.css</stylesheet></action>
+			
+			<!--<action method="addCss"><stylesheet>css/uagent.css</stylesheet></action>-->
+			<action method="addCss"><stylesheet>css/uagent_v1.css</stylesheet></action>
+		</reference>
+			<reference name="header">
+				<action method="setTemplate"><template>uagent/agent/header.phtml</template></action>
+			</reference>
+			<reference name="footer">
+				<action method="setTemplate"><template>uagent/agent/footer.phtml</template></action>
+			</reference>
+		 
+   </uagent_agent>
+
+    <uagent_index_login>
+		<update handle="uagent_agent" />		
+       <reference name="content">
+            <block type="uagent/agent_uagent" template="uagent/agent/agentlogin.phtml"></block>
+        </reference>
+	</uagent_index_login>
+	
+	<uagent_index_index>
+	<update handle="uagent_agent"/>
+		<reference name="head">
+            <action method="addItem"><type>js_css</type><name>calendar/calendar-win2k-1.css</name></action>
+            <action method="addItem"><type>js</type><name>calendar/calendar.js</name></action>
+            <action method="addItem"><type>js</type><name>calendar/lang/calendar-en.js</name></action>
+            <action method="addItem"><type>js</type><name>calendar/calendar-setup.js</name></action>
+        </reference>		
+        <reference name="content">
+        <block type="core/html_calendar" name="head.uagent.calendar" as="uagent.calendar" template="uagent/agent/calendar.phtml"></block>
+		    <block type="uagent/agent_uagent"  name ="dashboard" template="uagent/agent/dashboard.phtml" />
+			
+			<block type="uagent/agent_agentorder_pager" name="agentorder.grid.toolbar">
+                    <action method="checkCompat1"/>
+                </block>
+			<block type="uagent/agent_agentorder_grid" template="uagent/agent/agentorder/grid.phtml" name="agentorder.grid" as="orders"/>
+        </reference>
+    </uagent_index_index>
+	
+	<!--<uagent_index_login_ajax>
+		<block type="core/template" template="uagent/agent/agentlogin.phtml" name="login" output="toHtml" />
+	</uagent_index_login_ajax>-->
+	<uagent_index_agentorderinfo>
+        <block type="uagent/agent_agentorder_info" template="uagent/agent/agentorder/info.phtml" name="info"/>
+    </uagent_index_agentorderinfo>
+	
+	<uagent_index_preferences>
+        <update handle="uagent_agent" />
+        <reference name="content">
+            <block type="uagent/agent_uagent" template="uagent/agent/preferences.phtml" name="preferences" />
+        </reference>
+   </uagent_index_preferences>
+
+   <uagent_index_paidstatus>
+        <update handle="uagent_agent" />
+        <reference name="content">
+            <block type="uagent/agent_uagent" template="uagent/agent/paidstatus.phtml" name="paidstatus" />
+        </reference>
+   </uagent_index_paidstatus>
+
+	<uagent_register_register>
+        <update handle="uagent_agent" />
+        <reference name="content">
+            <block type="uagent/agent_uagent" template="uagent/agent/register.phtml" name="register" />
+        </reference>
+    </uagent_register_register>
+	<uagent_register_password>
+        <update handle="uagent_agent" />
+        <reference name="content">
+            <block type="uagent/agent_uagent" template="uagent/agent/password.phtml" name="password" />
+        </reference>
+    </uagent_register_password>
+	<!--<uagent_index_logout>
+        <update handle="uagent_agent" />
+        <reference name="content">
+            <block type="uagent/agent_uagent" template="uagent/agent/register.phtml" name="register" />
+        </reference>
+    </uagent_index_logout>-->
+	
+	<uagent_createorder_createorder>
+        <update handle="uagent_agent" />
+		<reference name="content">
+		<block type="core/html_calendar" name="head.uagent.calendar" as="uagent.calendar" template="uagent/agent/calendar.phtml"></block>
+               
+        </reference>
+		<reference name="content">
+            <block type="uagent/createorder_order" template="uagent/createorder/createorder.phtml" name="create" />
+        </reference>
+    </uagent_createorder_createorder>
+	<uagent_index_agentgeneratecoupon>
+     	<reference name="head">
+			<action method="addItem"><type>js_css</type><name>calendar/calendar-win2k-1.css</name></action>
+			<action method="addItem"><type>js</type><name>calendar/calendar.js</name></action>
+			<action method="addItem"><type>js</type><name>calendar/calendar-setup.js</name></action>
+			<action method="addJs"><script>prototype/window.js</script></action>
+       	</reference>
+	 
+	 <update handle="uagent_agent" />
+      
+	  <reference name="content">
+        <block type="core/template" template="uagent/agent/agentgeneratecoupon/agentgeneratecoupon.phtml" />
+      </reference>  
+    </uagent_index_agentgeneratecoupon>
+	
+	<uagent_index_createcatalog>
+     	<reference name="head">
+			<action method="addItem"><type>js_css</type><name>calendar/calendar-win2k-1.css</name></action>
+			<action method="addItem"><type>js</type><name>calendar/calendar.js</name></action>
+			<action method="addItem"><type>js</type><name>calendar/calendar-setup.js</name></action>
+			<action method="addJs"><script>prototype/window.js</script></action>
+       	</reference>
+	 
+	 <update handle="uagent_agent" />
+      
+	  <reference name="content">
+        <block type="core/template" template="uagent/agent/createcatalog/createcatalog.phtml" />
+      </reference>  
+    </uagent_index_createcatalog>
+	
+</layout> 

@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+    <default>
+    </default>
+    <follow_index_index>
+        <reference name="content">
+            <block type="follow/follow" name="follow" template="follow/follow.phtml" />
+        </reference>
+    </follow_index_index>
+    <follow_index_followshopproduct>
+        <reference name="content">
+            <block type="follow/follow" name="follow" template="follow/follow.phtml" />
+        </reference>
+    </follow_index_followshopproduct>
+</layout> 

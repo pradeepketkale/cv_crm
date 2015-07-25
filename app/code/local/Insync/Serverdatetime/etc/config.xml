@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <modules>
+        <Insync_Serverdatetime>
+            <version>1.0</version>
+        </Insync_Serverdatetime>
+    </modules>
+    <global>
+        <models>
+            <serverdatetime>
+                <class>Insync_Serverdatetime_Model</class>
+            </serverdatetime>
+        </models>
+    </global>
+</config>

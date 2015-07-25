@@ -1,0 +1,261 @@
+<?php
+/**
+ * Unirgy LLC
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.unirgy.com/LICENSE-M1.txt
+ *
+ * @category   Unirgy
+ * @package    Unirgy_Dropship
+ * @copyright  Copyright (c) 2008-2009 Unirgy LLC (http://www.unirgy.com)
+ * @license    http:///www.unirgy.com/LICENSE-M1.txt
+ */
+
+class Unirgy_Dropship_Model_Label_Batch extends Mage_Core_Model_Abstract
+{
+    protected function _construct()
+    {
+        $this->_init('udropship/label_batch');
+        parent::_construct();
+    }
+
+    public function getVendor()
+    {
+        if (!$this->hasData('vendor')) {
+            if (!$this->getVendorId()) {
+                Mage::throwException('No vendor specified');
+            }
+            $this->setData('vendor', Mage::getModel('udropship/vendor')->load($this->getVendorId()));
+        }
+        return $this->getData('vendor');
+    }
+
+    public function getVendorId()
+    {
+        if (!$this->hasData('vendor_id')) {
+            if (!$this->getVendor()) {
+                Mage::throwException('No vendor specified');
+            }
+            $this->setData('vendor_id', $this->getVendor()->getId());
+        }
+        return $this->getData('vendor_id');
+    }
+
+    public function processShipments($shipments, $trackData = array(), $flags = array())
+    {
+        if (!$this->getBatchId()) {
+            $this->setCreatedAt(now());
+            $this->setVendorId($this->getVendor()->getId());
+            $this->setLabelType($this->getVendor()->getLabelType());
+            $this->save();
+        }
+
+        $labelModels = array();
+
+        $success = 0;
+        $fromOrderId = null;
+        $toOrderId = null;
+
+        $transactionSave = true;#Mage::getModel('core/resource_transaction');
+#echo "<pre>";
+        foreach ($shipments as $shipment) {
+#print_r($shipment->debug); continue;
+            if ($shipment->getUdropshipStatus()==Unirgy_Dropship_Model_Source::SHIPMENT_STATUS_SHIPPED) {
+                $this->addError('Your part of the order is already shipped - %s order(s)');
+                continue;
+            }
+            $storeId = $shipment->getOrder()->getStoreId();
+            $pollTracking = Mage::getStoreConfig('udropship/customer/poll_tracking', $storeId);
+
+            try {
+                $method = explode('_', $shipment->getUdropshipMethod(), 2);
+                $carrierCode = !empty($method[0]) ? $method[0] : $this->getVendor()->getCarrierCode();
+
+                $packageCount = $carrierCode == 'fedex' && isset($trackData['package_count']) && is_numeric($trackData['package_count']) 
+                    ? $trackData['package_count']
+                    : 1;
+
+                if (empty($labelModels[$carrierCode])) {
+                    $labelModels[$carrierCode] = Mage::helper('udropship')->getLabelCarrierInstance($carrierCode)
+                        ->setBatch($this)
+                        ->setVendor($this->getVendor());
+                }
+                $labelModels[$carrierCode]->setUdropshipPackageCount($packageCount);
+                    
+                for ($pcIdx=1; $pcIdx<=$packageCount; $pcIdx++) {
+                    $track = Mage::getModel('sales/order_shipment_track')
+                        ->setBatchId($this->getBatchId());
+                    if (!empty($trackData)) {
+                        $track->addData($trackData);
+                    }
+                    $shipment->addTrack($track);
+                    
+                    $labelModels[$carrierCode]->setUdropshipPackageIdx($pcIdx);
+                    $labelModels[$carrierCode]->requestLabel($track);
+                    
+                    if ($shipment->getUdpo() && $shipment->getUdpo()->getUseLabelShippingAmount()) {
+                        $_orderRate = $shipment->getOrder()->getBaseToOrderRate() > 0 ? $shipment->getOrder()->getBaseToOrderRate() : 1;
+                        $_baseSa = $track->getFinalPrice();
+                        $_sa = Mage::app()->getStore()->roundPrice($_orderRate*$_baseSa);
+                        $shipment->setShippingAmount($_sa)->setBaseShippingAmount($_baseSa);
+                        $shipment->getResource()->saveAttribute($shipment, array('base_shipping_amount','shipping_amount'));
+                    }
+                    Mage::helper('udropship')->processTrackStatus($track, $transactionSave, !empty($flags['mark_shipped']));
+                    $success++;
+                }
+                $labelModels[$carrierCode]->unsUdropshipPackageIdx();
+                $labelModels[$carrierCode]->unsUdropshipPackageCount();
+                $labelModels[$carrierCode]->unsUdropshipMasterTrackingId();
+            } catch (Exception $e) {
+            	Mage::dispatchEvent('udropship_shipment_label_request_failed', array('shipment'=>$shipment, 'error'=>$e->getMessage()));
+                $this->addError($e->getMessage().' - %s order(s)');
+                continue;
+            }
+
+            $orderId = $shipment->getOrder() ? $shipment->getOrder()->getIncrementId() : $shipment->getOrderIncrementId();
+            if (is_null($fromOrderId)) {
+                $fromOrderId = $orderId;
+                $toOrderId = $orderId;
+            } else {
+                $fromOrderId = min($fromOrderId, $orderId);
+                $toOrderId = max($toOrderId, $orderId);
+            }
+        }
+#exit;
+        $this->setTitle('Orders IDs: '.$fromOrderId.' - '.$toOrderId);
+        $this->setShipmentCnt($this->getShipmentCnt()+$success);
+
+        if (!empty($track)) {
+            $this->setLastTrack($track);
+        }
+
+        if (!$this->getShipmentCnt()) {
+            $this->delete();
+        } else {
+            $this->save();
+        }
+
+        return $this;
+    }
+
+    public function renderShipments($shipments)
+    {
+        $tracks = array();
+        foreach ($shipments as $shipment) {
+            foreach ($shipment->getAllTracks() as $track) {
+                $tracks[] = $track;
+            }
+        }
+        $this->setTracks($tracks);
+        $this->setVendorId($this->getVendor()->getId());
+        $this->setLabelType($this->getVendor()->getLabelType());
+        return $this;
+    }
+
+    public function refundOrderLabels($orderIds)
+    {
+        $orders = Mage::getModel('sales/order')->getCollection()
+            ->addAttributeToFilter('entity_id', $orderIds);
+
+        $labelModel = Mage::helper('udropship')->getLabelCarrierInstance($this->getCarrierCode());
+
+        $success = 0;
+        $entityIds = array();
+        foreach ($orderIds as $orderId) {
+            $order = Mage::getModel('sales/order')->load($orderId);
+            $labelIds = array();
+            $shipmentNum = 0;
+            $shipments = $order->getShipmentsCollection();
+            if ($shipments->count()) {
+                foreach ($shipments as $shipment) {
+                    $tracks = $shipment->getTracksCollection();
+                    foreach ($tracks as $track) {
+                        try {
+                            $labelModel->refundLabel($track);
+                        } catch (Exception $e) {
+                            $this->addError($e->getMessage());
+                            continue;
+                        }
+                        $labelIds[] = $track->getNumber();
+                        $track->delete();
+                    }
+                    $shipmentNum++;
+                    $shipment->delete();
+                }
+                foreach ($order->getAllItems() as $item) {
+                    $item->setQtyShipped(0)->save();
+                }
+            }
+            if ($labelIds) {
+                $order->addStatusToHistory('processing', 'Removed shipments, refunded labels: '.join(', ', $labelIds));
+                $success++;
+            } elseif ($shipmentNum) {
+                $order->addStatusToHistory('processing', 'Removed shipments, no eligible labels were found');
+                $this->addError('No labels found in order - %s orders');
+            } else {
+                $this->addError('No shipments found in order - %s orders');
+            }
+            if ($order->getStatus()!='processing') {
+                $order->setStatus('processing')->setState('processing')->save();
+            }
+        }
+        $this->setSuccess($success);
+        return $this;
+    }
+
+    public function addError($e)
+    {
+        $errors = $this->getErrors();
+        if (!$errors) {
+            $errors = array();
+        }
+        if (empty($errors[$e])) {
+            $errors[$e] = 0;
+        }
+        $errors[$e]++;
+        $this->setErrors($errors);
+        return $this;
+    }
+
+    public function getErrorMessages($sep="\n")
+    {
+        if (!$this->getErrors()) {
+            return '';
+        }
+        $errors = '';
+        foreach ($this->getErrors() as $msg=>$cnt) {
+            $errors .= sprintf($msg, $cnt).$sep;
+        }
+        return $errors;
+    }
+
+    public function getFileName()
+    {
+        $labelModel = Mage::helper('udropship')->getLabelTypeInstance($this->getLabelType());
+        return $labelModel->getFullFileName('batch-'.$this->getBatchId());
+    }
+
+    public function getBatchTracks()
+    {
+        if ($this->hasTracks()) {
+            return $this->getTracks();
+        }
+        $tracks = Mage::getModel('sales/order_shipment_track')->getCollection()
+            ->addAttributeToSelect('*')
+            ->addAttributeToFilter('batch_id', $this->getBatchId())
+            ->addAttributeToSort('order_id')
+            ->addAttributeToSort('entity_id');
+
+        return $tracks;
+    }
+
+    public function prepareLabelsDownloadResponse()
+    {
+        $labelModel = Mage::helper('udropship')->getLabelTypeInstance($this->getLabelType());
+        $labelModel->setBatch($this)->printBatch();
+    }
+}

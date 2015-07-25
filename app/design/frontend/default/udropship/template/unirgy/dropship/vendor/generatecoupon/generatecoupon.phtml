@@ -1,0 +1,270 @@
+<?php
+    $_session = Mage::getSingleton('udropship/session');
+    if (Mage::helper('udropship')->isModuleActive('Unirgy_DropshipMicrosite')
+        && $_session->isLoggedIn()
+        && $_session->getVendor()->getShowProductsMenuItem()): //echo "<pre>"; print_r($_session->getVendor());
+?> 
+<div class="page-title">
+        <h1>Generate Coupon</h1>
+    </div>
+<?php echo $this->getMessagesBlock()->getGroupedHtml() ?>
+
+	<table cellspacing="1" cellpadding="0" class="data-table table-gride vtop">
+        <thead>
+            <tr>
+                <th><?php echo $this->__('Rule Name')?></th>
+                <th><?php echo $this->__('From Date')?></th>
+                <th><?php echo $this->__('To Date')?></th>
+                <th><?php echo $this->__('Click the button') ?></th>
+            </tr>
+        </thead>
+      <tbody>
+            <tr>
+                <form name="coupongenerate" action="<?php echo $this->getUrl('marketplace/vendor/generatecouponblock');?>" method="post">
+                    <td ><?php echo $this->__('<b>FLAT:-</b><input type="text" name = "percentage" id "percentage" class="input-text" style="width:20px !important;" value=""><b>% OFF Over All Products</b>');?></td>
+                    <td><input type="text" name="from_date" id="from_date" class="input-text" style="width:85px !important;" value="" />
+        	<img src="<?php echo $this->getUrl();?>/skin/adminhtml/default/default/images/grid-cal.gif" alt="" class="v-middle" id="from_date_trig" title="Select Date" style="">
+				<script type="text/javascript">
+                //<![CDATA[
+                    Calendar.setup({
+                        inputField: "from_date",
+                        ifFormat: "%m/%e/%y",
+                        showsTime: false,
+                        button: "from_date_trig",
+                        align: "Bl",
+                        singleClick : true
+                    });
+                //]]>
+                </script></td>
+                    <td><input type="text" name="to_date" id="to_date" class="input-text" style="width:85px !important;" value="" />
+        		<img src="<?php echo $this->getUrl();?>/skin/adminhtml/default/default/images/grid-cal.gif" alt="" class="v-middle" id="to_date_trig" title="Select Date" style="">
+				<script type="text/javascript">
+                //<![CDATA[
+                    Calendar.setup({
+                        inputField: "to_date",
+                        ifFormat: "%m/%e/%y",
+                        showsTime: false,
+                        button: "to_date_trig",
+                        align: "Bl",
+                        singleClick : true
+                    });
+                //]]>
+                </script></td>
+                    <td> 
+                    <input type="hidden" name="vendor_id" value="<?php echo $_session->getVendor()->getVendorId();?>"  />
+                    <input type="submit" value="Generate Coupon" class="form-button"/>
+                    
+                    </td>
+                </form>
+            </tr> 
+            
+            <!--2nd row for rule-->
+            <tr>
+                <form name="coupongenerate2" action="<?php echo $this->getUrl('marketplace/vendor/generatecouponfixedcart');?>" method="post">
+                    <td><?php echo $this->__('<b>Rs.</b><input type="text" name = "rupees" id "rupees" class="input-text" style="width:30px !important;" value="">/- <B>Off If Order is greater than Rs.</b><input type="text" name = "rupees1" id "rupees1" class="input-text" style="width:50px !important;" value="">');?></td>
+                    <td><input type="text" name="from_date1" id="from_date1" class="input-text" style="width:85px !important;" value="" />
+        	<img src="<?php echo $this->getUrl();?>/skin/adminhtml/default/default/images/grid-cal.gif" alt="" class="v-middle" id="from_date_trig1" title="Select Date" style="">
+				<script type="text/javascript">
+                //<![CDATA[
+                    Calendar.setup({
+                        inputField: "from_date1",
+                        ifFormat: "%m/%e/%y",
+                        showsTime: false,
+                        button: "from_date_trig1",
+                        align: "Bl",
+                        singleClick : true
+                    });
+                //]]>
+                </script></td>
+                    <td><input type="text" name="to_date1" id="to_date1" class="input-text" style="width:85px !important;" value="" />
+        		<img src="<?php echo $this->getUrl();?>/skin/adminhtml/default/default/images/grid-cal.gif" alt="" class="v-middle" id="to_date_trig1" title="Select Date" style="">
+				<script type="text/javascript">
+                //<![CDATA[
+                    Calendar.setup({
+                        inputField: "to_date1",
+                        ifFormat: "%m/%e/%y",
+                        showsTime: false,
+                        button: "to_date_trig1",
+                        align: "Bl",
+                        singleClick : true
+                    });
+                //]]>
+                </script></td>
+                    <td> 
+                    <input type="hidden" name="vendor_id" value="<?php echo $_session->getVendor()->getVendorId();?>"  />
+                    <input type="submit" value="Generate Coupon" class="form-button"/>
+                    
+                    </td>
+                </form>
+            </tr>
+            <!--3rd row for rule-->
+            <tr>
+                <form name="coupongenerate3" action="<?php echo $this->getUrl('marketplace/vendor/generatecouponpercentage');?>" method="post">
+                    <td><?php echo $this->__('<input type="text" name = "rupeepercent" id "rupeepercent" class="input-text" style="width:20px !important;" value=""><b>% Off If order is greater than rupees Rs.</b><input type="text" name = "rupeepercent1" id "rupeepercent1" class="input-text" style="width:40px !important;" value="">');?></td>
+                    <td><input type="text" name="from_date2" id="from_date2" class="input-text" style="width:85px !important;" value="" />
+        	<img src="<?php echo $this->getUrl();?>/skin/adminhtml/default/default/images/grid-cal.gif" alt="" class="v-middle" id="from_date_trig2" title="Select Date" style="">
+				<script type="text/javascript">
+                //<![CDATA[
+                    Calendar.setup({
+                        inputField: "from_date2",
+                        ifFormat: "%m/%e/%y",
+                        showsTime: false,
+                        button: "from_date_trig2",
+                        align: "Bl",
+                        singleClick : true
+                    });
+                //]]>
+                </script></td>
+                    <td><input type="text" name="to_date2" id="to_date2" class="input-text" style="width:85px !important;" value="" />
+        		<img src="<?php echo $this->getUrl();?>/skin/adminhtml/default/default/images/grid-cal.gif" alt="" class="v-middle" id="to_date_trig2" title="Select Date" style="">
+				<script type="text/javascript">
+                //<![CDATA[
+                    Calendar.setup({
+                        inputField: "to_date2",
+                        ifFormat: "%m/%e/%y",
+                        showsTime: false,
+                        button: "to_date_trig2",
+                        align: "Bl",
+                        singleClick : true
+                    });
+                //]]>
+                </script></td>
+                    <td> 
+                    <input type="hidden" name="vendor_id" value="<?php echo $_session->getVendor()->getVendorId();?>"  />
+                    <input type="submit" value="Generate Coupon" class="form-button"/>
+                    
+                    </td>
+                </form>
+            </tr>
+	  </tbody>
+    </table>
+    <br /><br /><br /><br /><br /><br />
+
+    <div class="box-head">
+  <h3>Details Of Your Coupon Created</h3>
+</div>
+<div class="a-left" style="margin:10px 0">
+
+<div style="max-height: 517px;overflow: scroll;width: 703px;">    
+    <table cellspacing="1" cellpadding="0" class="data-table table-gride vtop">
+     <thead>
+        <tr>
+          <th><?php echo $this->__('Name')?></th>
+          <th><?php echo $this->__('Coupon Code')?></th>
+          <th><?php echo $this->__('From Date')?></th>
+          <th><?php echo $this->__('End Date')?></th>
+          <th>Change Status</th>
+         </tr>
+      </thead>
+      <tbody>
+      	<?php
+		$vendorId = Mage::getSingleton('udropship/session')->getVendorId();
+		/*$collection = Mage::getModel('managemkt/managemkt')->getCollection()
+						->addFieldToFilter('vendorname', $vendorId)
+						->setOrder('managemkt_id','DESC');
+		*/
+		$rulesCollection = Mage::getModel('salesrule/rule')->getCollection()
+				->addFieldToFilter('vendorid', $vendorId)
+				->setOrder('rule_id','DESC');
+		//echo '<pre>';
+		//print_r($rulesCollection->getdata());exit;
+		foreach ($rulesCollection as $collect) 
+		{
+			if($collect->getVendorid()!= '')
+			{
+		?>	
+		<tr>
+          <td><?php echo $collect->getDescription();?></td>
+          <td><?php echo $collect->getCode();?></td>
+          <td><?php echo $collect->getFromDate();?></td>
+          <td><?php echo $collect->getToDate();?></td>
+          <?php if($collect->getIsActive() == '0') {?>
+          <td class="generatecoupon">
+              <input type="hidden" name ="generatecoupon" value="<?php echo $collect->getRuleId();?>" />
+              <input disabled="disabled" type="submit" id="inactive" value="DEACTIVATED" class="bluebtnsmall" /> 
+          </td>
+          <?php } else {?>
+          
+          <td class="generatecoupon">
+          	  <form method="post" action="<?php echo $this->getUrl('udropship/vendor/generatecoupon') ?>">  
+              <input type="hidden" name ="generatecoupon" value="<?php echo $collect->getRuleId();?>" />
+              <input name="inactive" type="submit" id="inactive" value="DeActivate" class="form-button" /> 
+          </form> 
+          </td><?php }
+		  }
+		  
+		  } ?>
+           
+        </tr> 
+      </tbody>
+    </table>
+    
+    <div class="clr"></div>
+    <!--<div class="a-right" style="margin:10px 0">
+      <button class="form-button" type="submit"><?php //echo $this->__('Update Information On This Page') ?></button>
+    </div>-->
+</div>
+
+<?php endif;?>
+<script type="text/javascript">
+//<![CDATA[
+enUS = {"m":{"wide":["January","February","March","April","May","June","July","August","September","October","November","December"],"abbr":["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]}}; // en_US locale reference
+Calendar._DN = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"]; // full day names
+Calendar._SDN = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"]; // short day names
+Calendar._FD = 0; // First day of the week. "0" means display Sunday first, "1" means display Monday first, etc.
+Calendar._MN = ["January","February","March","April","May","June","July","August","September","October","November","December"]; // full month names
+Calendar._SMN = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]; // short month names
+Calendar._am = "AM"; // am/pm
+Calendar._pm = "PM";
+
+// tooltips
+Calendar._TT = {};
+Calendar._TT["INFO"] = "About the calendar";
+
+Calendar._TT["ABOUT"] =
+"DHTML Date/Time Selector\n" +
+"(c) dynarch.com 2002-2005 / Author: Mihai Bazon\n" +
+"For latest version visit: http://www.dynarch.com/projects/calendar/\n" +
+"Distributed under GNU LGPL. See http://gnu.org/licenses/lgpl.html for details." +
+"\n\n" +
+"Date selection:\n" +
+"- Use the \xab, \xbb buttons to select year\n" +
+"- Use the " + String.fromCharCode(0x2039) + ", " + String.fromCharCode(0x203a) + " buttons to select month\n" +
+"- Hold mouse button on any of the above buttons for faster selection.";
+Calendar._TT["ABOUT_TIME"] = "\n\n" +
+"Time selection:\n" +
+"- Click on any of the time parts to increase it\n" +
+"- or Shift-click to decrease it\n" +
+"- or click and drag for faster selection.";
+
+Calendar._TT["PREV_YEAR"] = "Prev. year (hold for menu)";
+Calendar._TT["PREV_MONTH"] = "Prev. month (hold for menu)";
+Calendar._TT["GO_TODAY"] = "Go Today";
+Calendar._TT["NEXT_MONTH"] = "Next month (hold for menu)";
+Calendar._TT["NEXT_YEAR"] = "Next year (hold for menu)";
+Calendar._TT["SEL_DATE"] = "Select date";
+Calendar._TT["DRAG_TO_MOVE"] = "Drag to move";
+Calendar._TT["PART_TODAY"] = ' (' + "Today" + ')';
+
+// the following is to inform that "%s" is to be the first day of week
+Calendar._TT["DAY_FIRST"] = "Display %s first";
+
+// This may be locale-dependent. It specifies the week-end days, as an array
+// of comma-separated numbers. The numbers are from 0 to 6: 0 means Sunday, 1
+// means Monday, etc.
+Calendar._TT["WEEKEND"] = "0,6";
+
+Calendar._TT["CLOSE"] = "Close";
+Calendar._TT["TODAY"] = "Today";
+Calendar._TT["TIME_PART"] = "(Shift-)Click or drag to change value";
+
+// date formats
+Calendar._TT["DEF_DATE_FORMAT"] = "%b %e, %Y";
+Calendar._TT["TT_DATE_FORMAT"] = "%B %e, %Y";
+
+Calendar._TT["WK"] = "Week";
+Calendar._TT["TIME"] = "Time:";
+
+//]]>
+
+</script>

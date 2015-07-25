@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<config>
+      <modules>
+        <Craftsvilla_SearchResults>
+          <version>0.1.0</version>
+        </Craftsvilla_SearchResults>
+      </modules>
+	  <frontend>
+      <routers>
+        <searchresults>
+          <use>standard</use>
+         <args>
+           <module>Craftsvilla_SearchResults</module>
+           <frontName>searchresults</frontName>
+         </args>
+        </searchresults>
+      </routers>
+	  <layout>
+          <updates>
+              <searchresults>
+                  <file>searchresults.xml</file>
+              </searchresults>
+          </updates>
+      </layout>
+    </frontend>
+   <global>
+
+   
+   
+      <helpers>
+       <searchresults>
+           <class>Craftsvilla_SearchResults_Helper</class>
+       </searchresults>
+      </helpers>   
+
+	  <blocks><searchresults><class>Craftsvilla_SearchResults_Block</class></searchresults></blocks>
+   </global> 
+   
+
+</config> 

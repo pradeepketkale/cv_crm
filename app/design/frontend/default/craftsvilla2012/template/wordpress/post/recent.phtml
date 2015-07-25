@@ -1,0 +1,10 @@
+<div class="block block-blog block-recent-posts">
+	<?php if ($title = $this->getTitle()): ?>
+		<div class="block-title">
+			<strong><span><?php echo $this->__($title) ?></span></strong>
+		</div>
+	<?php endif; ?>
+	<div class="block-content">
+		<?php echo $this->getPostListHtml() ?>
+	</div>
+</div>

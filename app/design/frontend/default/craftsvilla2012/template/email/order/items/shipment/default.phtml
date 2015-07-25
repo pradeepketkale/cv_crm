@@ -1,0 +1,108 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2010 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<?php
+$_item = $this->getItem();
+$product = Mage::getModel('catalog/product')
+        ->setStoreId($_item->getOrder()->getStoreId())
+        ->load($_item->getProductId()); 
+ ?>
+<?php $_order = $this->getOrder() ?>
+<tr>
+	<td align="left" valign="top" style="font-size:11px; padding:3px 9px;" width="100"><img src="<?php echo Mage::helper('catalog/image')->init($product, 'small_image')->resize(100);?>" alt=""  border="0"/></td>
+    <td align="left" valign="top" style="font-size:11px; padding:3px 9px;">
+        <strong><?php echo $this->htmlEscape($_item->getName()) ?></strong>
+		<dl class="item-options item-optionsnew">
+        <?php $sku= $this->getSku($_item); ?>
+            <!--	//Commented below line on dated 13-01-2013 due to loadByattribute is not working..<>-->
+							<?php //$product = Mage::getModel('catalog/product')->loadByAttribute('sku',$sku);?>
+                            <?php $product = Mage::getModel('catalog/product')->load($_item->getProductID());?>
+
+            <?php $childId=$product->getId(); ?>
+            <?php $parentIds = Mage::getResourceSingleton('catalog/product_type_configurable')->getParentIdsByChild($childId); ?>
+            
+            <?php  if(isset($parentIds[0])) : ?>    
+                    <?php $last_key = key(array_slice($parentIds, -1, 1, TRUE)); ?>
+                    <?php $parentId=$parentIds[$last_key]; ?>    
+                    <?php $parentProduct = Mage::getModel('catalog/product')->load($parentId) ?>             
+                    <?php $configurableAttributeCollection=$parentProduct->getTypeInstance()->getConfigurableAttributes() ?> 
+                    <?php foreach($configurableAttributeCollection as $attribute):?> 
+                        <?php $attcode = $attribute->getProductAttribute()->getAttributeCode() ?> 
+                        <dt style="font-weight:bold"><?php echo $attribute->getProductAttribute()->getFrontend()->getLabel() ?></dt>
+                        <dd style="margin:0; padding-left:14px;"><?php echo Mage::getModel('catalog/product')->load($_item->getProductID())->getAttributeText($attcode) ?></dd>
+                    <?php endforeach; ?> 
+            <?php endif; ?>
+            </dl>
+        <?php if ($this->getItemOptions()): ?>
+        <dl style="margin:0; padding:0;">
+            <?php foreach ($this->getItemOptions() as $option): ?>
+            <dt><strong><em><?php echo $option['label'] ?></em></strong></dt>
+            <dd style="margin:0; padding:0 0 0 9px;"><?php echo $option['value'] ?></dd>
+            <?php endforeach; ?>
+        </dl>
+        <?php endif; ?>
+        <?php $addInfoBlock = $this->getProductAdditionalInformationBlock(); ?>
+        <?php if ($addInfoBlock) :?>
+            <?php echo $addInfoBlock->setItem($_item->getOrderItem())->toHtml(); ?>
+        <?php endif; ?>
+        <?php echo $this->htmlEscape($_item->getDescription()) ?>
+    </td>
+    <?php $orderAddId = $_item->getOrderItemId();
+    $read = Mage::getSingleton('core/resource')->getConnection('core_read');
+    $getAddData = "SELECT * FROM `sales_flat_order_item` WHERE `item_id` = '".$orderAddId."'";
+    $addDataquery = $read->query($getAddData)->fetchAll();
+	$getship123Data = "SELECT * FROM `sales_flat_shipment_item` WHERE `order_item_id` = '".$orderAddId."'";
+    $getship123Dataquery = $read->query($getship123Data)->fetch();
+	$getship123Dataquery['parent_id'];
+	
+
+    foreach($addDataquery as $_addDataquery){
+    	$addDataShipTable = $_addDataquery["additional_data"];
+	  }
+$getCommenttoUpdate = "Customer Message of Seller is : ".$addDataShipTable." For SKU: ". $getship123Dataquery['sku'];
+
+if($addDataShipTable){
+$shipment30052014 = Mage::getModel('sales/order_shipment')->load($getship123Dataquery['parent_id']);
+		
+	
+		$comment30052014 = Mage::getModel('sales/order_shipment_comment')
+					->setParentId($getship123Dataquery['parent_id'])
+                    ->setComment($getCommenttoUpdate)
+					->setCreatedAt(NOW())
+					->save();
+		$shipment30052014->addComment($comment30052014);
+}
+    ?>
+    <td align="left" valign="top" style="font-size:11px; padding:3px 9px;"><?php echo $this->htmlEscape($this->getSku($_item)) ?><br/>
+
+<?php if($addDataShipTable){ ?>
+<table cellpadding="0px" cellspacing="0px"><td style="border-style:solid;border-color:#4B7B9F;border-width:1px;border-height:1px;font-size:11px;padding:3px 9px"><font color="green">Message From Customer: </font><font color = "gray"><?php echo $addDataShipTable ?></font></td></table><?php } ?>
+
+</td>
+    <td align="center" valign="top" style="font-size:11px; padding:3px 9px;"><?php echo $qty = $_item->getQty()*1 ?></td>
+	<td align="center" valign="top" style="font-size:11px; padding:3px 9px;"><?php echo $_order->formatPriceTxt($_item->getPriceInclTax()) ?></td>
+	<td align="center" valign="top" style="font-size:11px; padding:3px 9px;"><?php echo $_order->formatPriceTxt($_item->getPriceInclTax()*($qty)) ?></td>
+</tr>

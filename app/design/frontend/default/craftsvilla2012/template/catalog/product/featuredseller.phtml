@@ -1,0 +1,172 @@
+<script type="text/javascript">
+    
+    function formatText(index, panel) {
+              return index + "";
+        }
+
+    jQuery(function () {
+
+        jQuery('#banner').anythingSlider({
+            easing: "easeInOutExpo",        // Anything other than "linear" or "swing" requires the easing plugin
+            autoPlay: true,                 // This turns off the entire FUNCTIONALY, not just if it starts running or not.
+            delay:3000,                    // How long between slide transitions in AutoPlay mode
+            startStopped: false,            // If autoPlay is on, this can force it to start stopped
+            animationTime: 500,             // How long the slide transition takes
+            hashTags: true,                 // Should links change the hashtag in the URL?
+            buildNavigation: true,          // If true, builds and list of anchor links to link to each slide
+                    pauseOnHover: true,             // If true, and autoPlay is enabled, the show will pause on hover
+                    startText: "Go",             // Start text
+                    stopText: "Stop",               // Stop text
+                    navigationFormatter: formatText       // Details at the top of the file on this use (advanced use)
+        });
+
+         jQuery('#featured').anythingSlider({
+            easing: "easeInOutExpo",        // Anything other than "linear" or "swing" requires the easing plugin
+            autoPlay: true,                 // This turns off the entire FUNCTIONALY, not just if it starts running or not.
+            delay:20000,                    // How long between slide transitions in AutoPlay mode
+            startStopped: false,            // If autoPlay is on, this can force it to start stopped
+            animationTime: 500,             // How long the slide transition takes
+            hashTags: true,                 // Should links change the hashtag in the URL?
+            buildNavigation: true,          // If true, builds and list of anchor links to link to each slide
+                    pauseOnHover: true,             // If true, and autoPlay is enabled, the show will pause on hover
+                    startText: "Go",             // Start text
+                    stopText: "Stop",               // Stop text
+                    navigationFormatter: formatText       // Details at the top of the file on this use (advanced use)
+        });
+
+
+
+        jQuery("#slide-jump").click(function(){
+            jQuery('.anythingSlider').anythingSlider(6);
+        });
+
+    });
+</script>
+
+
+<div class="fetured_seller">
+<h2>Featured Seller</h2>
+   
+<?php
+$datas=Mage::getModel('udropship/vendor')->getCollection()
+->addFilter('featured_seller',array('eq'=>'1'));//->setOrder('vendor_id', 'desc');
+//->setPageSize(1);
+$i=1;//$j=1; 
+      if($datas->count()<2):
+          echo "<div class='anythingSlider anythingSlidernew category-products' id='featured'>";
+      else:
+          echo"<div class='anythingSlider anythingSlider category-products' id='featured'>";
+      endif;
+
+    ?> 
+     <div class=wrapper>
+        <ul>
+<?php 
+foreach($datas as $data):
+$vendorIfo=json_decode($data->getCustomVarsCombined());
+/*if($vendorIfo->shop_logo!='')
+{
+    $vendorLogo = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA).$vendorIfo->shop_logo;
+    if(file_exists($vendorLogo))
+    {
+        $vendorLogo = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA).$vendorIfo->shop_logo;
+    }
+    else
+    {
+        $vendorLogo = $this->getSkinUrl().'images/noimage.jpg';
+    }
+}
+else{
+    $vendorLogo=$this->getSkinUrl().'images/noimage.jpg';    
+}*/
+$vendorLogo = $vendorIfo->shop_logo!='' ? $vendorIfo->shop_logo : 'vendor/noimage/noimage.jpg';
+$_helpm = $this->helper('umicrosite');
+$url= $_helpm->getVendorUrl($data->vendor_id);
+
+?>
+<li>
+<div class="btmNews clear">
+  <div class="section clear featured-seller linksnew">
+
+    <div class="fleft">
+    
+      <p class="more"></p>
+      <div class="clear">
+        <div class="article articlelast">
+          <div class="image"><a href="<?php echo substr($url, 0, -1); ?>"><img src="<?php echo $_helpm->getResizedUrl($vendorLogo,166); ?>" alt="" /></a></div>
+          <div class="block_content text">
+            <h3><a href="<?php echo substr($url, 0, -1); ?>"><?php echo $vendorIfo->shop_name; ?></a></h3>
+            <p><?php echo $data->getSellerDesc() ; ?></p>
+            <?php //rel="shadowbox[Mixed];width=560;height=315"; ?>
+            <p class="article-more"> <a title="read bio" href="<?php echo $url.'thoughtyard/profile/'; ?>" class="vicon">Read Bio</a> 
+              <!--new --> 
+              <a href="<?php echo substr($url, 0, -1); ?>" class="shop">Discover Shop</a> </p>
+          </div>
+        </div>
+      </div>
+    </div>
+ 
+    <!--new-->
+    
+    <div class="fright">
+      <div class="h2_filler"></div>
+      <div class="products homeprice vproducts">
+        <ul>
+            <?php 
+    $products=Mage::getResourceModel('catalog/product_collection')
+            ->addAttributeToFilter('udropship_vendor', $data->getId())
+            ->addAttributeToFilter('visibility', 4)
+            ->addAttributeToFilter('status', 1)
+            //->setOrder('updated_at', DESC)
+            ;//->setPage(0,2);
+    $products->getSelect()
+                   ->joinLeft('catalog_product_website','e.entity_id = catalog_product_website.product_id','website_id')
+                   ->where('catalog_product_website.website_id = 1');
+    $products->getSelect()->joinLeft(
+                  array('stock' => 'cataloginventory_stock_item'),
+                  "e.entity_id = stock.product_id",
+                  array('stock.is_in_stock')
+          )->where('stock.is_in_stock = 1')
+          ->order('updated_at DESC')->limit(2);
+
+    foreach($products as $product):
+     
+        $product=$product->load($product->getId());
+
+        /* if($i>2){
+			break;
+		}*/
+        if($i%2==0){
+                    $class="lstCld";
+                }
+                else{
+                    $class='';
+                }
+    ?>
+          <li id="<?php echo $class; ?>">
+              <div class="prCnr"> <a class="product-image" href="<?php echo $product->getProductUrl();?>" title="<?php echo $product->getName(); ?>"> <img src="<?php echo $this->helper('catalog/image')->init($product, 'small_image')->resize(166, 166); ?>" alt="<?php echo $product->getName(); ?>" title="<?php echo $product->getName(); ?>"></a>
+              <p class="shopbrief"><a href="<?php echo $product->getProductUrl();?>" title="<?php echo $product->getName();?>"><?php echo $product->getName();?></a></p>
+              <?php /*?><div class="shrtDscrption"><?php echo $data->getVendorName();?></div><?php */?>
+              <div class="products price-box"> <span class="regular-price" id="product-price-35"> <span class="price"><?php echo $this->getPriceHtml($product, true); ?></span> </span> </div>
+            </div>
+          </li>
+          <!--<li id="lstCld">
+            <div class="prCnr"> <a class="product-image" href="/index.php/terra-cotta-earthen-pots-2.html" title="Terra cotta earthen Pots"> <img src="/media/catalog/product/cache/1/small_image/200x200/9df78eab33525d08d6e5fb8d27136e95/images/catalog/product/placeholder/small_image.jpg" alt="Terra cotta earthen Pots" title="Terra cotta earthen Pots"></a>
+              <h1><a href="/index.php/terra-cotta-earthen-pots-2.html" title="Terra cotta earthen Pots">Terra cotta earthen Pots</a></h1>
+              <div class="shrtDscrption"> Amit </div>
+              <div class="products price-box"> <span class="regular-price" id="product-price-35"> <span class="price">Rs. 99</span> </span> </div>
+            </div>
+          </li>-->
+            
+<?php $i++; endforeach; ?>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>  
+</li>
+<?php endforeach; ?>   
+        </ul>
+    </div>
+</div>
+</div>

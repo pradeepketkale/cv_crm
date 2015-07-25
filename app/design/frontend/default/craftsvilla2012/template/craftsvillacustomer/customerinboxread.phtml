@@ -1,0 +1,142 @@
+<?php 
+if(Mage::getSingleton('customer/session')->isLoggedIn()):
+$values=$this->getRequest()->getParams();
+$msgid=$values['msgid'];
+$custId=$values['custid'];
+$vendorId=$values['vendid'];
+$subject=$values['sub'];
+
+$emailCommunications=Mage::getModel('craftsvillacustomer/emailcommunication')->getCollection()
+                    ->addFieldToFilter('message_id',$msgid);
+					?>
+<div class="convos-messages fleft">
+<?php
+$_helpm = $this->helper('umicrosite');
+$_custImgResize=$this->helper('craftsvillacustomer');
+$i = 0;
+foreach($emailCommunications as $emailCommunication):
+
+    $_customer=Mage::getModel('customer/customer')->load($emailCommunication->getCustomerId());
+    $_vendor=$this->helper('udropship')->getVendor($emailCommunication->getVendorId());
+	
+	// Below line added By dileswar on dated 22-07-2013----------------------------------------
+	
+if ($i == 0){
+				$_productid = $emailCommunication->getProductid();
+				$productModelId = Mage::getModel('catalog/product')->load($emailCommunication->getProductid());
+			//	$_productImagephoto = Mage::helper('catalog/image')->init($productModelId, 'image')->resize(100);
+				$_productImagephoto="<img src='".Mage::helper('catalog/image')->init($productModelId, 'image')->resize(154, 154)."' alt='' width='154' border='0' style='float:left; border:2px solid #ccc; margin:0 20px 20px;' />";
+			
+				$_productImagename = $productModelId->getName();
+				$_productUrl = $productModelId->getProductUrl();
+			
+				?><a href="<?php echo $productModelId->getProductUrl(); ?>"><img src="<?php echo Mage::helper('catalog/image')->init($productModelId, 'image')->resize(100);?>" /></a> <a href="<?php echo $productModelId->getProductUrl(); ?>"><?php echo $productModelId->getName(); ?></a><?php 
+			}
+			$i++;
+	if($emailCommunication->getType()==0){
+        $_name=$_customer->getFirstname();
+        $_time=date('M d Y H:i',strtotime($emailCommunication->getCreatedAt()));
+        $_subject=$emailCommunication->getSubject();
+       	
+		$_content = $emailCommunication->getContent();
+        if($_customer->getCustomerPhoto()!=''){
+            $_imageCustomer = $_customer->getCustomerPhoto();
+            $url=Mage::getBaseUrl('media');
+            $imageCustomerImg=split($url,$_imageCustomer);//trim($_imageCustomer,$url);
+            $_image=$_custImgResize->getResizedUrl($imageCustomerImg[1],40);
+        }
+        else{
+            $_image=$this->getSkinUrl('img/messages/default_avatar_40px.jpg');
+        }
+    }
+    else{
+        $_name=$_vendor->getVendorName();
+        $_time=date('M d Y H:i',strtotime($emailCommunication->getCreatedAt()));
+        $_subject=$emailCommunication->getSubject();
+        $_content=$emailCommunication->getContent();
+		
+        $url = $_helpm->getVendorUrl($emailCommunication->getVendorId());
+        $_imageVendor = $_vendor->getShopLogo()!='' ? $_vendor->getShopLogo() : 'vendor/noimage/noimage.jpg';
+        $_image=$_helpm->getResizedUrl($_imageVendor,40);
+    }
+?>
+
+    <div class="message-frame">
+        <div class="thumb"><a href="#"><img alt="" class="img-avatar" src="<?php echo $_image; ?>" /></a></div>
+            <div class="convo-message"><a class="menuitem submenuheader" href="#">
+                <p class="arowmessage spriteimg"></p>
+                <p class="username fleft"><?php echo $_name; ?></p>
+                <p class="time fright"><?php echo $_time; ?></p>
+                <div class="body-preview">
+                    <p class="hidetext"><?php echo substr($_content, 0,7).'...'; ?></p>
+                    <p class="no-display">Collapse</p>
+                </div></a>
+                <div class="submenu accodianheight clr">
+                    <div class="messageopen">
+                        <p><?php echo $_content; ?></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <?php endforeach; ?>    
+
+   <?php $readurl = Mage::getBaseUrl().'craftsvillacustomer/index/customerreply/'; 
+   $_vendor=$this->helper('udropship')->getVendor($vendorId);
+   $_customer=Mage::getModel('customer/customer')->load($custId);
+    if($_customer->getCustomerPhoto()!=''){
+            $_imageCustomer = $_customer->getCustomerPhoto();
+            $url=Mage::getBaseUrl('media');
+            $imageCustomerImg=split($url,$_imageCustomer);//trim($_imageCustomer,$url);
+            $_imageCust=$_custImgResize->getResizedUrl($imageCustomerImg[1],40);
+        }
+        else{
+            $_imageCust=$this->getSkinUrl('img/messages/default_avatar_40px.jpg');
+        }
+        
+   ?>    
+    <!--....Textarea Box Here....-->
+        <div class="message-frame">
+            <div class="thumb"> <a href="#"><img alt="" class="img-avatar" src="<?php echo $_imageCust; ?>" /></a></div>
+                <div class="convo-message switch"> 
+                    <p class="arowmessage spriteimg"></p>
+                    <p class="username fleft"><a href="#"><?php echo $_customer->getFirstname(); ?></a></p>
+<!--        /*Some columns Like url image ,product name added By dileswar On dated 22-07-2013  for showing in customer a/c page as well as on email*/    -->
+                <div class="messageopen clr">
+                    <form method="post" action="<?php echo $readurl; ?>" id="replysellermsg">
+                        <textarea name="reply_text" id="craft-textarea" placeholder="Message text" onkeyup="valid(this)" class="required-entry"><?php echo $content ?></textarea>
+                       <p><span class="required">*</span> Email Address and Website Address are not allowed</p>
+                        <input type="hidden" name="msgid" id="reqvalues1" value="<?php echo $msgid; ?>" />
+                        <input type="hidden" name="custid" id="reqvalues2" value="<?php echo $custId; ?>" />
+                        <input type="hidden" name="vendorid" id="reqvalues3" value="<?php echo $vendorId; ?>" />
+                        <input type="hidden" name="recepmail" id="reqvalues4" value="<?php echo $_vendor['email']; ?>" />
+                        <input type="hidden" name="recepname" id="reqvalues5" value="<?php echo $_vendor['vendor_name']; ?>" />
+                        <input type="hidden" name="subject" id="reqvalues6" value="<?php echo $subject; ?>" />
+                        <input type="hidden" name="sendname" id="reqvalues7" value="<?php echo $_customer->getFirstname(); ?>" />
+                        <input type="hidden" name="sendemail" id="reqvalues8" value="<?php echo $_customer->getEmail(); ?>" />
+                        <input type="hidden" name="productid" id="reqvalues9" value="<?php echo $_productid ; ?>" />
+                        <input type="hidden" name="imagephoto" id="reqvalues10" value="<?php echo $_productImagephoto ; ?>" />
+                        <input type="hidden" name="productname" id="reqvalues11" value="<?php echo $_productImagename ; ?>" />
+                        <input type="hidden" name="producturl" id="reqvalues12" value="<?php echo $_productUrl ; ?>" />
+                        <input type="submit" class="bluebtnsmall fright" value="Send" /><br />
+                    </form>
+                   </div>      
+            </div>
+        </div>
+   <?php //$j++ ;}
+   //endforeach; ?> 
+</div>
+<script type="text/javascript">
+ 
+function valid(f) {
+    /[@]/.test(f.value)?f.value = f.value.replace(/[@]/g,''):null;
+    return false;
+}
+
+var myForm  = new VarienForm('replysellermsg', true);
+
+
+</script>
+<?php else:
+    echo Mage::app()->getFrontController()->getResponse()->setRedirect(Mage::getUrl('customer/account'));
+endif;
+?>

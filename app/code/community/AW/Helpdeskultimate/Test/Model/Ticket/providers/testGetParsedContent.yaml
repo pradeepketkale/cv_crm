@@ -1,0 +1,8 @@
+-
+ - 1
+ - "{{var ticket.uid}} {{var ticket.title}} {{var ticket.customer_name}} {{var ticket.customer_email}} {{var department.name}}"
+ - uid1
+-
+ - 2
+ - "{{var ticket.uid}} {{var ticket.title}} {{var ticket.customer_name}} {{var ticket.customer_email}} {{var department.name}}"
+ - uid2

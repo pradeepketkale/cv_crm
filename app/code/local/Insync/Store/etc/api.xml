@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <api>
+        <resources>
+            <store_store translate="title" module="store">
+            	<title>Store Resource</title>
+            	<model>store/store_api</model>
+            	  <methods>
+                   <list translate="title" module="store">
+                    	<title>Retrieve Store Data</title>
+                    	<method>info</method>
+                   </list>
+            	 </methods>
+            </store_store>
+        </resources>
+		 <resources_alias>
+            <store>store_store</store>
+        </resources_alias>
+	<v2>
+            <resources_function_prefix>
+                <store>storeStore</store>
+            </resources_function_prefix>
+        </v2>
+    </api>
+</config>

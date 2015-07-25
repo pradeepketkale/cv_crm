@@ -1,0 +1,130 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Craftsvilla_Shipmentlite>
+            <version>0.1.0</version>
+        </Craftsvilla_Shipmentlite>
+    </modules>
+    <frontend>
+      <routers>
+            <shipmentlite>
+                <use>standard</use>
+                <args>
+                    <module>Craftsvilla_Shipmentlite</module>
+                    <frontName>shipmentlite</frontName>
+                </args>
+            </shipmentlite>
+        </routers>
+        <layout>
+            <updates>
+                <shipmentlite>
+                    <file>shipmentlite.xml</file>
+                </shipmentlite>
+            </updates>
+        </layout>
+    </frontend>
+    <admin>
+        <routers>
+			<shipmentlite>
+				<use>admin</use>
+				<args>
+					<module>Craftsvilla_Shipmentlite</module>
+					<frontName>shipmentlite</frontName>
+				</args>
+			</shipmentlite>
+        </routers>
+    </admin>
+    <adminhtml>
+		<menu>
+<sales>
+<children>
+			<shipmentlite module="shipmentlite">
+				<title>ShipmentLite</title>
+				<sort_order>25</sort_order>               
+				<!--<children>
+					<items module="shipmentlite">
+						<title>Manage Item</title>
+						<sort_order>0</sort_order> -->
+						<action>shipmentlite/adminhtml_shipmentlite</action>
+					<!--</items>
+				</children>-->
+			</shipmentlite>
+</children>
+</sales>
+		</menu>
+
+<acl>
+	<resources>
+		<all>
+			<title>Allow Everything</title>
+		</all>
+	<admin>
+		<children>
+			<sales>
+				<children>
+					<shipmentlite translate="title" module="shipmentlite">
+						<title>Shipmentlite Module</title>                
+					</shipmentlite>
+				</children>
+			</sales>
+		</children>
+	</admin>
+	</resources>
+</acl>
+
+
+		<layout>
+			<updates>
+				<shipmentlite>
+					<file>shipmentlite.xml</file>
+				</shipmentlite>
+			</updates>
+		</layout>
+    </adminhtml>   
+    <global>
+        <models>
+            <shipmentlite>
+                <class>Craftsvilla_Shipmentlite_Model</class>
+                <resourceModel>shipmentlite_mysql4</resourceModel>
+            </shipmentlite>
+            <shipmentlite_mysql4>
+                <class>Craftsvilla_Shipmentlite_Model_Mysql4</class>
+             <entities>
+                    <shipmentlite>
+                        <table>shipmentlite</table>
+                    </shipmentlite>
+                </entities>
+            </shipmentlite_mysql4>
+        </models>
+        <resources>
+            <shipmentlite_setup>
+                <setup>
+                    <module>Craftsvilla_Shipmentlite</module>
+                </setup>
+                <connection>
+                    <use>core_setup</use>
+                </connection>
+            </shipmentlite_setup>
+            <shipmentlite_write>
+                <connection>
+                    <use>core_write</use>
+                </connection>
+            </shipmentlite_write>
+            <shipmentlite_read>
+                <connection>
+                    <use>core_read</use>
+                </connection>
+            </shipmentlite_read>
+        </resources>
+        <blocks>
+            <shipmentlite>
+                <class>Craftsvilla_Shipmentlite_Block</class>
+            </shipmentlite>
+        </blocks>
+        <helpers>
+            <shipmentlite>
+                <class>Craftsvilla_Shipmentlite_Helper</class>
+            </shipmentlite>
+        </helpers>
+    </global>
+</config>

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <api>       
+		<resources>
+            <product_bundle translate="title" module="product">	
+            	<title>Bundle Product Create Resource</title>
+            	<model>product/bundle_api</model>
+            	<methods>
+                	<create translate="title" module="product">
+                    	<title>Create Bundle Product</title>
+                    	<method>create</method>
+                   	</create>	
+				 </methods> 
+            </product_bundle>
+			<product_configurable translate="title" module="product">
+            	<title>Configurable Product Create Resource</title>
+            	<model>product/configurable_api</model>
+            	<methods>
+                	<create translate="title" module="product">
+                    	<title>Create Configurable Product</title>
+                    	<method>create</method>
+                   	</create>
+				</methods>
+            </product_configurable>
+			<product_grouped translate="title" module="product">
+            	<title>Grouped Product Create Resource</title>
+            	<model>product/grouped_api</model>
+            	<methods>
+                	<create translate="title" module="product">
+                    	<title>Create Grouped Product</title>
+                    	<method>create</method>
+                   	</create>
+				</methods>
+            </product_grouped>			
+			<product_simple translate="title" module="product">				
+            	<title>Simple Product Create Resource</title>				
+            	<model>product/simple_api</model>				
+            	<methods>          		
+                	<create translate="title" module="product">               		
+                    	<title>Create Simple Product</title>						
+                    	<method>create</method>						
+                   	</create>					
+				</methods>				
+            </product_simple>			
+			<product_all translate="title" module="product">				
+            	<title>All Product Resource</title>				
+            	<model>product/all_api</model>			
+            	<methods>          		
+                	<list translate="title" module="product">               		
+                    	<title>Get list of All Products</title>					
+                    	<method>info</method>
+						<!--<title>Synchronize All Products with SBO</title>  					
+						<method>syncUpdate</method>	-->					
+                   	</list>
+					<sync translate="title" module="product"> 						
+						<title>Synchronize All Products with SBO</title>  					
+						<method>syncUpdate</method>						
+					</sync>
+            	 </methods>				 						   	
+            </product_all>	
+        </resources>
+		<resources_alias>			
+        	<product_bundle>product_bundle</product_bundle>		
+			<product_configurable>product_configurable</product_configurable>		
+			<product_grouped>product_grouped</product_grouped>		
+			<product_simple>product_simple</product_simple>		
+			<product_all>product_all</product_all>			
+        </resources_alias>		
+		<v2>
+        	<resources_function_prefix>      		
+                <product_bundle>productBundle</product_bundle>				
+				<product_configurable>productConfigurable</product_configurable>				
+				<product_grouped>productGrouped</product_grouped>				
+				<product_simple>productSimple</product_simple>				
+				<product_all>productAll</product_all>				
+            </resources_function_prefix>
+        </v2>		
+    </api>	
+</config>

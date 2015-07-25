@@ -1,0 +1,42 @@
+<?xml version="1.0"?>   
+<layout version="0.1.0">   
+   <searchresults_index_index>   
+        <reference name="root">   
+            <action method="setTemplate"><template>page/1column.phtml</template></action>   
+        </reference>
+		   
+        <reference name="content">   
+            <block type="searchresults/index" name="searchresults_index" template="searchresults/index.phtml"/>   
+        </reference> 
+        
+        <reference name="head">
+  			<action method="addItem">
+    		<type>js</type><script>solr_search/solrsearch.js</script>
+  			</action>
+		</reference>
+		<!-- <reference name="head">
+  			<action method="addItem">
+    		<type>js</type><script>solr_search/jquery-1.3.2.debug.js</script>
+  			</action>
+		</reference> -->
+		<reference name="head">
+  			<action method="addItem">
+    		<type>js</type><script>solr_search/json.debug.js</script>
+  			</action>
+		</reference>
+		<reference name="head">
+  			<action method="addItem">
+    		<type>js</type><script>solr_search/json.htmTable.js</script>
+  			</action>
+		</reference>
+		<reference name="head">
+  			<action method="addItem">
+    		<type>js</type><script>jquery_price_range/interface.js</script>
+  			</action>
+		</reference>
+		<reference name="head">
+  			<action method="addCss"><stylesheet>css/price_range.css</stylesheet></action>
+		</reference>  
+    </searchresults_index_index>   
+</layout>   
+	

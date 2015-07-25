@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+    <ebslink_adminhtml_ebslink_index>
+        <reference name="content">
+            <block type="ebslink/adminhtml_ebslink" name="ebslink" />
+        </reference>
+    </ebslink_adminhtml_ebslink_index>
+</layout>

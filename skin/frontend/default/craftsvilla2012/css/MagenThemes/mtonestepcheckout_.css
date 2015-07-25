@@ -1,0 +1,61 @@
+/******************************************************
+ * @package MT OneStepCheckOut module for Magento 1.4.x.x and Magento 1.5.x.x
+ * @version 1.5.2.1
+ * @author http://www.magentheme.com
+ * @copyright (C) 2011- MagenTheme.Com
+ * @license PHP files are GNU/GPL
+*******************************************************/
+
+.onestepcheckout-wrapper { border: 1px solid #B7A1A1; background:#ffffff; padding:20px; width:860px; overflow:hidden;}
+.onestepcheckout-wrapper .checkout-step-login {padding-bottom:20px;}
+.onestepcheckout-wrapper .tool-tip-login {background:none repeat scroll 0 0 black; height:100%; width:100%; left:0; top:0; position:fixed;z-index:999;}
+.onestepcheckout-wrapper .tool-tip-login-form {background:none repeat scroll 0 0 #ffffff;position:fixed;z-index:9999;border:2px solid #CCCCCC;}
+.onestepcheckout-wrapper .tool-tip-login-form .close-button a {background:url("../../images/mtonestepcheckout/btn-close.png") no-repeat scroll 100% 0 transparent;height:15px;display:block;margin:5px 5px 0 auto;width:15px;}
+.onestepcheckout-wrapper .tool-tip-login-form .close-button a:hover {background:url("../../images/mtonestepcheckout/btn-close.png") no-repeat scroll 100% -15px transparent;}
+.onestepcheckout-wrapper .tool-tip-login-form .login-form {padding:20px;}
+.onestepcheckout-wrapper .tool-tip-login-form .login-form button {float:right;}
+.onestepcheckout-wrapper .onestepcheckout-error-message {color:red;font-weight:bold;}
+.onestepcheckout-wrapper .onestepcheckout-header h3 {font-size:1.5em; text-transform:uppercase;}
+.onestepcheckout-wrapper .onestepcheckout-header .onestepcheckout-note {font-size:14px;}
+.onestepcheckout-wrapper ol {width:400px; padding:10px 0 0 29px;border-top:1px solid #D8D2C7;}
+.onestepcheckout-wrapper ol.first {float:left;}
+.onestepcheckout-wrapper ol.last {float:right;}
+.onestepcheckout-wrapper form#onestepcheckout-form {background:url('../../images/mtonestepcheckout/bg-center-form-onestepcheckout.gif') center top repeat-y;float:left;width:100%;}
+
+.onestepcheckout-wrapper .left{ width:50%; float:left; }
+
+.onestepcheckout-wrapper .right{ width:47%; float:left; padding:0 0 0 20px; }
+
+
+.onestepcheckout-wrapper .fields .field {float:left; width:175px;}
+.onestepcheckout-wrapper .fields input {width:165px !important;}
+.onestepcheckout-wrapper .wide .input-box {width:350px !important;}
+.onestepcheckout-wrapper .wide input {width:340px !important;}
+.onestepcheckout-wrapper .wide select {width:345px !important;}
+.onestepcheckout-wrapper .fields .field-postcode {width:105px !important;}
+.onestepcheckout-wrapper .fields .postcode {width:90px !important;}
+.onestepcheckout-wrapper .fields .field-region {width:155px !important;}
+.onestepcheckout-wrapper .fields .region {width:240px !important;}
+.onestepcheckout-wrapper .onestepcheckout-ajax-loader {background:url('../../images/mtonestepcheckout/ajax-loader.gif') no-repeat scroll center; width:280px;height:55px;}
+.onestepcheckout-wrapper .step-title {height:45px;width:100%;}
+.onestepcheckout-wrapper .content {padding-bottom:20px;}
+.onestepcheckout-wrapper .step-title span {float:left;width:24px;height:45px;margin-right:5px;}
+.onestepcheckout-wrapper .step-title .step-1 {background:url("../../images/mtonestepcheckout/1.gif") no-repeat scroll 100% 0 transparent;}
+.onestepcheckout-wrapper .step-title .step-2 {background:url("../../images/mtonestepcheckout/2.gif") no-repeat scroll 100% 0 transparent;}
+.onestepcheckout-wrapper .step-title .step-3 {background:url("../../images/mtonestepcheckout/3.gif") no-repeat scroll 100% 0 transparent;}
+.onestepcheckout-wrapper .step-title .step-4 {background:url("../../images/mtonestepcheckout/4.gif") no-repeat scroll 100% 0 transparent;}
+.onestepcheckout-wrapper .step-title .step-review {background:url("../../images/mtonestepcheckout/review.gif") no-repeat scroll 100% 0 transparent;}
+.onestepcheckout-wrapper textarea.giftmessage-area {width:395px !important;}
+/********** addition on magento 1.5.0.0 **********/
+.onestepcheckout-wrapper ol li.item textarea.giftmessage-area {width:304px !important;}
+.onestepcheckout-wrapper .gift-messages-form ol {padding:15px 0 0 0;}
+/*************************************************/
+.clear {clear:both;width:100%;margin: 0 0 5px 0;}
+.onestepcheckout-wrapper ul.newsletter {padding:0 0 0 20px;}
+.onestepcheckout-wrapper .coupon {padding:0 0 20px 0;margin:0 auto;width:325px;}
+.onestepcheckout-wrapper .coupon .title {color:#E26703;font-weight:bold;}
+.onestepcheckout-wrapper .coupon input.input-text {width:215px;}
+.onestepcheckout-wrapper .coupon a.check {background:url("../../images/mtonestepcheckout/btn-check.png") no-repeat scroll 100% 0 transparent;height:15px;display:block;width:15px;float:right;margin:3px 0 0;}
+.onestepcheckout-wrapper .coupon a.remove {background:url("../../images/mtonestepcheckout/btn-close.png") no-repeat scroll 100% 0 transparent;height:15px;display:block;width:15px;float:right;margin:3px 0 0;}
+.onestepcheckout-wrapper .coupon a.remove:hover {background:url("../../images/mtonestepcheckout/btn-close.png") no-repeat scroll 100% -15px transparent;}
+.onestepcheckout-wrapper #checkout-review-table-wrapper .cart-table {clear:left;padding-top:5px;text-align:right;}

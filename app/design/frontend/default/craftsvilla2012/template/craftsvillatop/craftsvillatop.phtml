@@ -1,0 +1,56 @@
+<?php
+$_columnCount = 5;
+$i=0; 
+$j=25; 
+?>
+<div class="banner_index_top" style="height:168px;">
+<a href="http://www.craftsvilla.com/craftsvillatop" target="_blank"><img src="http://assets1.craftsvilla.com/banner-craftsvilla/craftsvillatop-gosf.jpg" alt="Buy Unique Products At Lowest Price Online"/></a>
+</div>
+<div>
+<?php
+$read = Mage::getSingleton('core/resource')->getConnection('core_read');
+//$queryofgetSkus = "SELECT `sku`,`product_id` FROM `sales_flat_order_item` WHERE `created_at` > DATE_SUB(Now(),INTERVAL 100 DAY) GROUP BY `sku` DESC LIMIT 50";
+$queryofgetSkus = "SELECT `sku`,`product_id`, count(*) as count1 FROM `sales_flat_order_item` WHERE `created_at` > DATE_SUB(Now(),INTERVAL 1 DAY) GROUP BY `sku` ORDER BY count1 DESC LIMIT 100";
+$getSkusresult = $read->query($queryofgetSkus)->fetchAll();
+
+foreach($getSkusresult as $_getSkusresult)
+	{
+if ($i++%$_columnCount==0)
+	{ ?>
+		<ul class="products-grid first odd you_like" style ="float: right;">
+<?php	} 
+	$product = Mage::getModel('catalog/product')->load($_getSkusresult['product_id']);
+	$prodImage = Mage::helper('catalog/image')->init($product, 'image')->resize(166, 166);
+	?> 
+<li class="item<?php if(($i-1)%$_columnCount==0): ?> first<?php elseif($i%$_columnCount==0): ?> last<?php endif; ?>">
+  <div class="prCnr"><a class="product-image spriteimg" title="<?php echo $prodImage ?>" href="<?php echo $product->getProductUrl(); ?>"><img width="166" height="166" src="<?php echo $prodImage ?>" alt=""></a>
+	<p class="shopbrief"><a title="" href="<?php echo $product->getProductUrl(); ?>"><?php echo $product->getName()?></a></p>
+      <?php
+			//$qtyStock=$product->getInventoryInStock();
+			$storeurl = '';
+			$vendorinfo= Mage::helper('udropship')->getVendor($product);
+			$storeurl = Mage::helper('umicrosite')->getVendorUrl($vendorinfo->getData('vendor_id'));
+			$storeurl = substr($storeurl, 0, -1);
+			if($storeurl != '') {
+          ?>
+      <p class="vendorname">by <a target="_blank" href="<?php echo $storeurl?>"><?php echo $vendorinfo->getVendorName()?></a></p>
+<?php } if(!$product->getSpecialPrice()):?>
+        <div class="products price-box"> <span id="product-price-80805" class="regular-price"> <span class="price 123"><?php echo 'Rs. '.number_format($product->getPrice(),0);?></span> </span> </div>
+<?php else:?>
+        <div class="products price-box">
+        <p class="old-price"> <span class="price-label"></span> <span id="old-price-77268" class="price"><?php echo 'Rs. '.number_format($product->getPrice(),0);?></span> </p>
+        <p class="special-price"> <span class="price-label"></span> <span id="product-price-77268" class="price"><?php echo 'Rs. '.number_format($product->getSpecialPrice(),0);?></span> </p>
+    </div>
+<?php endif;?>
+      <div class="clear"></div>
+    </div>
+  </li>
+	
+<?php  if ($i%$_columnCount==0){ ?>
+</ul>
+<?php } ?>
+<?php } ?>
+</div>
+
+
+

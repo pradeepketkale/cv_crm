@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <modules>
+        <Craftsvilla_Mcheckout>
+            <version>0.1.0</version>
+        </Craftsvilla_Mcheckout>
+    </modules>
+
+    <frontend>
+        <routers>
+            <mcheckout>
+                <use>standard</use>
+                <args>
+                    <modules>
+                            <Craftsvilla_Mcheckout before="Mage_Checkout">Craftsvilla_Mcheckout</Craftsvilla_Mcheckout>
+                    </modules>
+                    <frontName>mcheckout</frontName>
+                </args>
+            </mcheckout>
+        </routers>
+        <layout>
+             <updates>
+                  <checkout>
+                        <file>mcheckout.xml</file>
+                  </checkout>
+             </updates>
+        </layout>
+
+    </frontend>
+
+    <global>
+        <routers>
+            <checkout>
+                <rewrite>
+                  <onepage>
+                          <from><![CDATA[#^/checkout/onepage/$#]]></from>
+                          <to>/mcheckout/onepage/</to>
+                  </onepage>
+                  <!--<index>
+                          <from><![CDATA[#^/checkout/index/$#]]></from>
+                          <to>/mcheckout/index/</to>
+                  </index>-->
+                </rewrite>
+	   </checkout>
+        </routers>
+        <blocks>
+            <mcheckout>
+                <class>Craftsvilla_Mcheckout_Block</class>
+            </mcheckout>
+        
+        </blocks>
+
+    </global>
+
+</config>

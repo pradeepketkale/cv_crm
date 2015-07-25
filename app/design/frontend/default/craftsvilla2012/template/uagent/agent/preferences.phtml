@@ -1,0 +1,104 @@
+<?php 
+$_hlp = Mage::helper('uagent');
+$_session = Mage::getSingleton('uagent/session');
+$agentuId = $_session->getId();
+$_data = $_session->getUpdateFormData(true);
+$agentData = Mage::getModel('uagent/uagent')->load($agentuId);
+?>
+
+<?php echo $this->getMessagesBlock()->getGroupedHtml() ?>
+
+<form action="<?php echo $this->getUrl('uagent/index/preferencesPost')?>" method="post" id="update-form" name="update_form">
+<div class="generic-box filter">
+<div class="login-box">
+    <div class="col-1 registered-users">
+        <div class="content">
+        	<div class="box-head">
+            <h3><?php echo $this->__('Agent Settings') ?></h3>
+            </div>
+            <table class="regform"><tbody><tr><td>
+                <ul class="form-list">
+                    <li>
+                        <label for="agent_name"><?php echo $this->__('Agent Name') ?> <span class="required">*</span></label>
+                        <input name="agent_name" value="<?php echo $agentData->getAgentName() ?>" id="agent_name" type="text" class="input-text required-entry" />
+                    </li>
+                    <li>
+                        <label for="telephone"><?php echo $this->__('Phone Number') ?> <span class="required">*</span></label>
+                        <input name="telephone" value="<?php echo $agentData->getTelephone()?>" title="<?php echo $this->__('Phone Number') ?>" id="telephone" type="text" class="input-text required-entry" />
+                    </li>
+                    <li>
+                        <label for="email"><?php echo $this->__('Email Address') ?> <span class="required">*</span></label>
+                        <input name="email" value="<?php echo $agentData->getEmail()?>" title="<?php echo $this->__('Email Address') ?>" id="email" type="text" class="input-text required-entry validate-email" />
+                    </li>
+                    <li>
+                        <label for="password"><?php echo $this->__('Password') ?> <span class="required">*</span></label>
+                        <input name="password" type="text" value="<?php echo $agentData->getPassword()?>" class="input-text required-entry validate-password" id="password" />
+
+                    </li>
+
+                     <li>
+                        <label for="bank_ac_number"><?php echo $this->__('Bank Account Number') ?> <span class="required">*</span></label>
+                        <input name="bank_ac_number" value="<?php echo $agentData->getBankAccountNumber()?>" title="<?php echo $this->__('Bank Account Number') ?>" id="bank_ac_number" type="text" class="input-text required-entry" />
+                    </li>
+                    
+                    <li>
+                        <label for="bank_name"><?php echo $this->__('Bank name') ?> <span class="required">*</span></label>
+                        <input name="bank_name" value="<?php echo $agentData->getBankName()?>" title="<?php echo $this->__('Bank name') ?>" id="bank_name" type="text" class="input-text required-entry" />
+                    </li>
+                    <li>
+                        <label for="check_pay_to"><?php echo $this->__('Cheque to be made in Name of') ?> <span class="required">*</span></label>
+                        <input name="check_pay_to" value="<?php echo $agentData->getCheckPayTo()?>" title="<?php echo $this->__('Cheque to be made in Name of') ?>" id="check_pay_to" type="text" class="input-text required-entry" />
+                    </li>
+                    <li>
+                        <label for="bank_ifsc_code"><?php echo $this->__('IFSC code of Bank') ?> <span class="required">*</span></label>
+                        <input name="bank_ifsc_code" value="<?php echo $agentData->getBankIfscCode()?>" title="<?php echo $this->__('IFSC code of Bank') ?>" id="bank_ifsc_code" type="text" class="input-text required-entry" />
+                    </li>
+                     
+                </ul>
+            </td><td>
+                <ul class="form-list">
+                    
+                    
+
+                    <li>
+                        <label for="agent_attn"><?php echo $this->__('Contact Person Name') ?> <span class="required">*</span></label>
+                        <input name="agent_attn" value="<?php echo $agentData->getAgentAttn()?>" title="<?php echo $this->__('Contact Person Name') ?>" id="agent_attn" type="text" class="input-text required-entry" />
+                    </li>
+
+                   <!-- <li>
+                        <label for="street1"><?php //echo $this->__('Street Address') ?> <span class="required">*</span></label>
+                        <input name="street1" value="<?php //echo $agentData->getStreet1()?>" title="<?php //echo $this->__('Street Address') ?>" id="street1" type="text" class="input-text required-entry" />
+                    </li>
+
+                    <li><label>&nbsp;</label>
+                        <input name="street2" value="<?php //echo $agentData->getStreet2()?>" title="<?php //echo $this->__('Street Address Line 2') ?>" id="street2" type="text" class="input-text " />
+                    </li>-->
+                    <li>
+                        <label for="city"><?php echo $this->__('City') ?> <span class="required">*</span></label>
+                        <input name="city" type="text" class="input-text required-entry" id="city" value="<?php echo $agentData->getCity()?>" />
+                    </li>
+                    <li>
+                        <label for="zip"><?php echo $this->__('Zip/Postal Code') ?><span class="required">*</span></label>
+                        <input name="zip" type="text" class="input-text required-entry" id="zip" value="<?php echo $agentData->getZip()?>" />
+                    </li>
+                   
+                  </ul>
+                
+            </td></tr>
+           </tbody></table>
+        </div>
+         <button class="form-button" type="submit"><span><?php echo $_hlp->__('Save All Settings') ?></span></button>
+	</div>
+</div>
+</div>
+</form>
+
+<script type="text/javascript">
+    Validation.addAllThese([
+        ['validate-urlkey', 'Please use only letters (a-z) or numbers (0-9) in this field, first character should be a letter.', function (v) {
+                return Validation.get('IsEmpty').test(v) ||  /^[a-z]+[a-z0-9]+$/.test(v)
+        }],
+    ]);
+    var dataForm = new VarienForm('update-form', true);
+
+</script>

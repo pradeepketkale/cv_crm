@@ -1,0 +1,194 @@
+<?php
+$_hlp = Mage::helper('uagent');
+$_session = Mage::getSingleton('uagent/session');
+$_agent = $_session->getAgent();
+$_highlight = $_session->getHighlight(true);
+$_agentorder = $this->getAgentorder();
+$_id = $_agentorder->getId();	
+$_masterId = $_agentorder->getId();
+
+$_agentorderPostUrl = $this->getUrl('uagent/index/agentorderPost', array('id'=>$_id));
+
+$order_items = $_agentorder->getAllItems();
+$_comments =  $_agentorder->getAllStatusHistory();
+$_statuses = $_hlp->getAgentOrderStatuses();
+$_statusId = $_agentorder->getAgentStatus();
+
+//$_order = $_shipment->getOrder();
+//$_udpo = $this->getUdpo($_shipment);
+$order = Mage::getModel('sales/order')->load($_agentorder->getId());
+$_address = $order->getShippingAddress() ? $order->getShippingAddress() : $order->getBillingAddress();
+?>
+<?php if ($this->getRequest()->isPost()): ?>
+    <span id="status-update-<?php echo $_masterId ?>" style="display:none"><?php echo $_hlp->__(isset($_statuses[$_statusId]) ? $_statuses[$_statusId] : 'Unknown') ?></span>
+    <?php if($this->getIsInUdpo()): ?>
+    <span id="udpo-status-update-<?php echo $_masterId ?>" style="display:none"><?php echo isset($_poStatuses[$_poStatusId]) ? $_poStatuses[$_poStatusId] : 'Unknown' ?></span>
+    <?php endif; ?>
+<?php endif ?>
+<?php if ($this->getDownloadUrl()): ?>
+    <span id="download-url-<?php echo $_masterId ?>" style="display:none"><?php echo $this->getDownloadUrl() ?></span>
+<?php endif ?>
+
+
+    <?php if($this->getIsInUdpo()): ?>
+    <div class="shipment-info-breadcrumb">
+        <span>Order # <?php echo $agentorder->getIncrementId() ?></span>
+        &gt;
+        <a href="javascript:void(0)" onclick="showUdpoInfo('<?php echo $_masterId ?>')">PO # <?php echo $_udpo->getIncrementId() ?></a>
+        &gt;
+        <span>Order # <?php echo sprintf('%s (%s)', $_agentorder->getIncrementId(), $_hlp->__(isset($_statuses[$_statusId]) ? $_statuses[$_statusId] : 'Unknown')) ?></span>
+    </div>
+    <?php endif; ?>
+    
+    <div class="oditems">
+   
+
+                <h4><?php echo $_hlp->__('Order Items') ?></h4>
+                <table cellspacing="0" class="data-table" id="order-items-<?php echo $_masterId ?>">
+                    <col />
+                    <col width="35%" />
+                    <col width="1" />
+                    
+                    
+                    
+                    
+                    <thead>
+						<tr>
+							<th>Image</th>
+							<th>Product Name</th>
+							<th>System/Vendor SKU</th>
+							<th>Qty</th>
+							<th>Rate</th>
+							<!--<th>Tax</th>-->
+							<th>Discount</th>
+							<th>Amount</th>
+						</tr>
+					</thead>
+					<tbody>
+					<?php foreach ($order_items as $_item):?>
+						<tr>
+							<?php 
+							$_item->getProductId();
+							$sku= $_item->getData('sku'); ?>
+							<?php $product = Mage::getModel('catalog/product')->load($_item->getProductId());?>
+							<?php //$product = Mage::getModel('catalog/product')->loadByAttribute('sku',$sku);?>
+							<?php $childId=$product->getId(); ?>
+							<?php $parentIds = Mage::getResourceSingleton('catalog/product_type_configurable')->getParentIdsByChild($childId); ?>
+							<td align="left" valign="top" style="font-size:11px; padding:3px 9px;" width="60"><img src="<?php echo Mage::helper('catalog/image')->init($product, 'image')->resize(145);?>" alt=""  border="0"/></td>
+							<td valign="top" width="150">
+								<div>
+									<?php echo $_item->getName(); ?>
+									<dl class="item-options item-optionsnew">
+										<?php  if(isset($parentIds[0])) : ?>
+										<?php $last_key = key(array_slice($parentIds, -1, 1, TRUE)); ?>
+										<?php $parentId=$parentIds[$last_key]; ?>
+												<?php $parentProduct = Mage::getModel('catalog/product')->load($parentId) ?>             
+												<?php $configurableAttributeCollection=$parentProduct->getTypeInstance()->getConfigurableAttributes() ?> 
+												<?php foreach($configurableAttributeCollection as $attribute):?> 
+												    <?php $attcode = $attribute->getProductAttribute()->getAttributeCode() ?> 
+												    <dt style="font-weight:bold"><?php echo $attribute->getProductAttribute()->getFrontend()->getLabel() ?></dt>
+												    <dd style="margin:0; padding-left:14px;"><?php echo Mage::getModel('catalog/product')->load($_item->getProductID())->getAttributeText($attcode) ?></dd>
+												<?php endforeach; ?> 
+										<?php endif; ?>
+										</dl>
+								</div>
+							</td>
+							<td valign="top">
+								<?php 
+									echo $_item->getSku();
+									if($product->getVendorsku())
+										echo  " / ".$product->getVendorsku();
+								?>
+							</td>
+							<td valign="top"><?php echo number_format($_item->getQtyOrdered(), 0); ?></td>
+							<td valign="top"><?php echo $_item->getOriginalPrice(); ?></td>
+							<!--<td valign="top"><?php echo $_item->getTaxAmount(); ?></td>-->
+							<td valign="top"><?php echo $_item->getDiscountAmount() ?></td>
+							<td valign="top"><?php echo $_item->getOriginalPrice()*number_format($_item->getQtyOrdered(), 0)-$_item->getDiscountAmount() ?></td>
+						</tr>
+						<?php if($_item->getGiftMessageId()): 
+								echo $_item->getGiftMessageId() ?>
+						<?php if (($_gId = $_item->getOrderItem()->getGiftMessageId()) && !empty($_giftMsg[$_gId])): ?>
+						                        <tr><td colspan="8">
+						                            <h4><a href="#" class="item-gift-message-trigger"><?php echo $_hlp->__('Show/Hide Gift Message for the item above') ?></a></h4>
+						                            <div class="item-gift-message-content" style="display:none">
+						                                <strong><?php echo $_hlp->__('From: %s', $this->htmlEscape($_giftMsg[$_gId]['sender'])) ?></strong><br/>
+						                                <strong><?php echo $_hlp->__('To: %s', $this->htmlEscape($_giftMsg[$_gId]['recipient'])) ?></strong><br/>
+						                                <p><?php echo nl2br($this->htmlEscape($_giftMsg[$_gId]['message'])) ?></p>
+						                            </div>
+						                        </td></tr>
+						<?php endif; endif;?>
+					<?php endforeach; ?>
+				    </tbody>
+                </table>
+
+    </div>
+    
+    <div class="col2-set shipment-items">
+        <div class="col-1">
+            <div class="content">
+                <div class="col2-set">
+                    <div class="col-1">
+                        <strong><?php echo $_hlp->__('Shipping Address')?></strong><br/>
+                        <?php echo $_address->getFormated(true) ?>
+                    </div>
+                    
+                </div>
+                <div class="clear"></div>
+                <br />
+
+    </ul>
+</form>
+   </div>
+</div>
+<form id="shipment-form-<?php echo $_masterId?>" method="post" action="<?php echo $_agentorderPostUrl ?>">
+        <div class="col-2">
+            <div class="formpatch">
+            <div class="content">
+                <?php echo $this->getMessagesBlock()->getGroupedHtml() ?>
+                <ul class="form-list">
+			        <li id="tracking_id-2-<?php echo $_masterId?>">
+                        <label for="change_status-<?php echo $_masterId?>"><?php echo $_hlp->__('Change Status') ?></label>
+                        <select id="change_status-<?php echo $_masterId?>" name="status" title="<?php echo $_hlp->__('Change Status') ?>" class="select"/>
+                       <?php 
+						 foreach ($_statuses as $_k=>$_v): 
+                        			if($_v == 'Pending' || $_v == 'Canceled' || $_v == 'Payment Collected' || $_v == 'Payment Deposited' || $_v == 'Payment Received'):
+                       	?>
+                            <option value="<?php echo $_k ?>"><?php echo $_v ?></option>
+                        <?php endif; ?>		
+                        <?php endforeach ?>
+                        </select>
+                    </li>
+
+                    <li>
+                        <label>&nbsp;</label>
+                        <button class="form-button" type="button" id="submit-<?php echo $_masterId ?>"><span><?php echo $_hlp->__('Submit') ?></span></button>
+                        <span class="shipment-info-loader" style="display:none" id="submit-loader-<?php echo $_masterId ?>"><?php echo $_hlp->__('Please wait, submitting...')?></span>
+                    </li>
+				  </ul>
+            </div>
+            </div>
+        </div>
+</form>
+        <div class="clear"></div>
+
+           <?php if (count($_comments)): ?>
+                <span class="clear"></span>
+                <h4 class="smallhead"><?php echo $_hlp->__('Comments history') ?></h4>
+                <table cellspacing="0" class="data-table" <?php if (!empty($_highlight['comment'])): ?>class="highlight"<?php endif ?>><tbody>
+                    <?php foreach ($_comments as $_c): 
+					?>
+                    <tr <?php if (!empty($_highlight['comment_'.$_c->getId()])): ?>class="highlight"<?php endif ?> >
+                        <td>
+                            <nobr><strong><?php echo Mage::helper('core')->formatDate($_c->getCreatedAt(), 'short', true) ?></strong></nobr><br/>
+                            <nobr><strong><?php echo $_c->getAgentStatus()?></strong></nobr><br>
+                            
+                        </td>
+                        <td><?php echo nl2br($this->htmlEscape($_c->getComment())) ?></td>
+                    </tr>
+                    <?php endforeach ?>
+                </tbody></table>
+                <?php endif  ?>
+        
+    </div>
+</form>

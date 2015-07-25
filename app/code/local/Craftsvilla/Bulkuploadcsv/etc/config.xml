@@ -1,0 +1,145 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Craftsvilla_Bulkuploadcsv>
+            <version>0.1.0</version>
+        </Craftsvilla_Bulkuploadcsv>
+    </modules>
+    <frontend>
+      <routers>
+            <bulkuploadcsv>
+                <use>standard</use>
+                <args>
+                    <module>Craftsvilla_Bulkuploadcsv</module>
+                    <frontName>bulkuploadcsv</frontName>
+                </args>
+            </bulkuploadcsv>
+        </routers>
+        <layout>
+            <updates>
+                <bulkuploadcsv>
+                    <file>bulkuploadcsv.xml</file>
+                </bulkuploadcsv>
+            </updates>
+        </layout>
+    </frontend>
+    <admin>
+        <routers>
+			<bulkuploadcsv>
+				<use>admin</use>
+				<args>
+					<module>Craftsvilla_Bulkuploadcsv</module>
+					<frontName>bulkuploadcsv</frontName>
+				</args>
+			</bulkuploadcsv>
+        </routers>
+    </admin>
+    <adminhtml>
+		<menu>
+		<catalog>
+		<children>
+			<bulkuploadcsv module="bulkuploadcsv">
+				<title>Bulkuploadcsv</title>
+				<sort_order>71</sort_order>               
+				<!--<children>
+					<items module="bulkuploadcsv">
+						<title>Manage Items</title>
+						<sort_order>0</sort_order>-->
+						<action>bulkuploadcsv/adminhtml_bulkuploadcsv</action>
+						
+					</bulkuploadcsv>
+			</children>
+			</catalog>
+		</menu>
+		<acl>
+			<resources>
+				<all>
+					<title>Allow Everything</title>
+				</all>
+				<admin>
+					<children>
+					    <catalog>
+		                  <children>
+						<!--<Craftsvilla_Bulkuploadcsv>
+							<title>Bulkuploadcsv Module</title>
+							<sort_order>10</sort_order>
+						</Craftsvilla_Bulkuploadcsv>
+-->					<bulkuploadcsv module="bulkuploadcsv">
+									<title>Bulkuploadcsv</title>
+									<sort_order>19</sort_order>
+								</bulkuploadcsv>
+							</children>	
+						</catalog>
+					</children>	
+				</admin>
+			</resources>
+		</acl>
+		<layout>
+			<updates>
+				<bulkuploadcsv>
+					<file>bulkuploadcsv.xml</file>
+				</bulkuploadcsv>
+			</updates>
+		</layout>
+    </adminhtml>   
+    <global>
+        <models>
+            <bulkuploadcsv>
+                <class>Craftsvilla_Bulkuploadcsv_Model</class>
+                <resourceModel>bulkuploadcsv_mysql4</resourceModel>
+            </bulkuploadcsv>
+            <bulkuploadcsv_mysql4>
+                <class>Craftsvilla_Bulkuploadcsv_Model_Mysql4</class>
+             <entities>
+                    <bulkuploadcsv>
+                        <table>bulkuploadcsv</table>
+                    </bulkuploadcsv>
+                </entities>
+            </bulkuploadcsv_mysql4>
+        </models>
+        <resources>
+            <bulkuploadcsv_setup>
+                <setup>
+                    <module>Craftsvilla_Bulkuploadcsv</module>
+                </setup>
+                <connection>
+                    <use>core_setup</use>
+                </connection>
+            </bulkuploadcsv_setup>
+            <bulkuploadcsv_write>
+                <connection>
+                    <use>core_write</use>
+                </connection>
+            </bulkuploadcsv_write>
+            <bulkuploadcsv_read>
+                <connection>
+                    <use>core_read</use>
+                </connection>
+            </bulkuploadcsv_read>
+        </resources>
+        <blocks>
+            <bulkuploadcsv>
+                <class>Craftsvilla_Bulkuploadcsv_Block</class>
+            </bulkuploadcsv>
+        </blocks>
+        <helpers>
+            <bulkuploadcsv>
+                <class>Craftsvilla_Bulkuploadcsv_Helper</class>
+            </bulkuploadcsv>
+        </helpers>
+		<template>
+     <email>
+		<bulkupload_email_template module="bulkuploadcsv">
+		          <label>Bulkupload CSV Email</label>
+		          <file>bulkupload_email_template.html</file>
+		          <type>html</type>
+		   </bulkupload_email_template>
+		   <bulkuploadrejection_email_template module="bulkuploadcsv">
+		          <label>BulkuploadRejection CSV Email</label>
+		          <file>bulkuploadrejection_email_template.html</file>
+		          <type>html</type>
+		   </bulkuploadrejection_email_template>
+		     </email>
+ </template>
+    </global>
+</config>

@@ -1,0 +1,97 @@
+<?php /*custom breadcrumbs*/
+$breadcrumbs = $this->getLayout()->getBlock('breadcrumbs');
+ 
+$breadcrumbs->addCrumb('home', array('label'=>Mage::helper('cms')->__('Home'), 'title'=>Mage::helper('cms')->__('Home Page'), 'link'=>Mage::getBaseUrl()));
+ 
+$breadcrumbs->addCrumb('cart', array('label'=>'Address Book', 'title'=>'Address Book'));
+ 
+echo $this->getLayout()->getBlock('breadcrumbs')->toHtml();
+?>
+<div class="dashboard">
+	<div class="topLine"></div>
+    <div class="dashboard_head">
+		<h1><?php echo $this->__('Address Book') ?></h1>
+		<div class="breadcrumbs_bottom"></div>
+    </div>
+</div>
+<?php echo $this->getMessagesBlock()->getGroupedHtml() ?>
+<div style="margin-top: -50px;"></div>
+<div class="fieldsetCntnr marginRt">
+    <div class="fieldset minHt">
+        <h2 class="legend">Default Billing Address</h2>
+        <ol>
+        <?php if($_pAddsses = Mage::getSingleton('customer/session')->getCustomer()->getDefaultBilling()): ?>
+            <li class="item">
+                <address>
+                    <?php echo $this->getAddressHtml(Mage::getSingleton('customer/session')->getCustomer()->getAddressById($_pAddsses)) ?>
+                </address>
+                <p><a class="links" href="<?php echo $this->getAddressEditUrl(Mage::getSingleton('customer/session')->getCustomer()->getAddressById($_pAddsses)) ?>"><?php echo $this->__('Change Billing Address') ?></a></p>
+           </li>
+        <?php else: ?>
+            <li class="item">
+                <h3><?php echo $this->__('Default Billing Address') ?></h3>
+                <?php echo $this->__('You have no default billing address in your address book.') ?>
+            </li>
+        <?php endif ?>
+
+        </ol>
+	</div>
+</div>
+<div class="fieldsetCntnr">
+    <div class="fieldset minHt">
+        <h2 class="legend">Default Shipping Address</h2>
+        <ol>
+		<?php if($_pAddsses = Mage::getSingleton('customer/session')->getCustomer()->getDefaultShipping()): ?>
+            <li class="item">
+                <address>
+                    <?php echo $this->getAddressHtml(Mage::getSingleton('customer/session')->getCustomer()->getAddressById($_pAddsses)) ?>
+                </address>
+                <p><a class="links" href="<?php echo $this->getAddressEditUrl(Mage::getSingleton('customer/session')->getCustomer()->getAddressById($_pAddsses)) ?>"><?php echo $this->__('Change Shipping Address') ?></a></p>
+            </li>
+        <?php else: ?>
+            <li class="item empty">
+                <h3><?php echo $this->__('Default Shipping Address') ?></h3>
+                <p><?php echo $this->__('You have no default shipping address in your address book.') ?></p>
+            </li>
+        <?php endif ?>
+        </ol>
+	</div>
+</div>
+<div class="fieldsetCntnr marginRt">
+    <div class="fieldset minHt">
+        <h2 class="legend">Additional Address Entries</h2>
+		<ol>
+        <?php if($_pAddsses = $this->getAdditionalAddresses()): ?>
+            <?php foreach($_pAddsses as $_address): ?>
+            <li class="item">
+                <address>
+                    <?php echo $this->getAddressHtml($_address) ?>
+                </address>
+                <p><a href="<?php echo $this->getUrl('customer/address/edit', array('id'=>$_address->getId())) ?>"><?php echo $this->__('Edit Address') ?></a> <span class="separator">|</span> <a href="#" class="link-remove" onclick="return deleteAddress('<?php echo $_address->getId() ?>');"><?php echo $this->__('Delete Address') ?></a></p>
+            </li>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <li class="item empty">
+                <p><?php echo $this->__('You have no additional address entries in your address book.') ?></p>
+            </li>
+        <?php endif ?>
+        </ol>
+        </div>
+</div>
+
+<div class="buttons-set">
+	<p class="stroke"></p>
+    <p class="back-link"><a href="<?php echo $this->escapeUrl($this->getBackUrl()) ?>"><small>&laquo; </small><?php echo $this->__('Back') ?></a></p>
+    <button type="button" title="<?php echo $this->__('Add New Address') ?>" class="spriteimg continueMdm" onclick="window.location='<?php echo $this->getAddAddressUrl() ?>';"><?php echo $this->__('Add New Address') ?></button>
+</div>
+
+<script type="text/javascript">
+//<![CDATA[
+    function deleteAddress(addressId) {
+        if(confirm('<?php echo $this->__('Are you sure you want to delete this address?') ?>')) {
+            window.location='<?php echo $this->getDeleteUrl() ?>id/'+addressId;
+        }
+        return false;
+    }
+//]]>
+</script>

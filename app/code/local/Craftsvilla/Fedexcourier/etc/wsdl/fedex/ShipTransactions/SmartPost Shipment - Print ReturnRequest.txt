@@ -1,0 +1,137 @@
+"<soapenv:Envelope xmlns:soapenv=""http://schemas.xmlsoap.org/soap/envelope/"" xmlns:v15=""http://fedex.com/ws/ship/v15"">
+   <soapenv:Header></soapenv:Header>
+   <soapenv:Body>
+      <v15:ProcessShipmentRequest>
+         <v15:WebAuthenticationDetail>
+            <v15:UserCredential>
+               <v15:Key>Input Your Information</v15:Key>
+               <v15:Password>Input Your Information</v15:Password>
+            </v15:UserCredential>
+         </v15:WebAuthenticationDetail>
+         <v15:ClientDetail>
+            <v15:AccountNumber>Input Your Information</v15:AccountNumber>
+            <v15:MeterNumber>Input Your Information</v15:MeterNumber>
+         </v15:ClientDetail>
+         <v15:TransactionDetail>
+            <v15:CustomerTransactionId>IMPB On Print Returns</v15:CustomerTransactionId>
+         </v15:TransactionDetail>
+         <v15:Version>
+            <v15:ServiceId>ship</v15:ServiceId>
+            <v15:Major>15</v15:Major>
+            <v15:Intermediate>0</v15:Intermediate>
+            <v15:Minor>0</v15:Minor>
+         </v15:Version>
+         <v15:RequestedShipment>
+            <v15:ShipTimestamp>2014-06-17T09:30:47-05:00</v15:ShipTimestamp>
+            <v15:DropoffType>REGULAR_PICKUP</v15:DropoffType>
+            <v15:ServiceType>SMART_POST</v15:ServiceType>
+            <v15:PackagingType>YOUR_PACKAGING</v15:PackagingType>
+            <v15:Shipper>
+                  <v15:Contact>
+                  <v15:PersonName>Input Your Information</v15:PersonName>
+                  <v15:CompanyName>Input Your Information</v15:CompanyName>
+                  <v15:PhoneNumber>Input Your Information</v15:PhoneNumber>
+               </v15:Contact>
+               <v15:Address>
+                  <v15:StreetLines>Input Your Information</v15:StreetLines>
+                  <v15:StreetLines>Input Your Information</v15:StreetLines>
+                  <v15:City>MEMPHIS</v15:City>
+                  <v15:StateOrProvinceCode>TN</v15:StateOrProvinceCode>
+                  <v15:PostalCode>10110</v15:PostalCode>
+                  <v15:CountryCode>US</v15:CountryCode>
+               </v15:Address>
+            </v15:Shipper>
+            <v15:Recipient>
+                   <v15:Contact>
+                  <v15:PersonName>Input Your Information</v15:PersonName>
+                  <v15:CompanyName>Input Your Information</v15:CompanyName>
+                  <v15:PhoneNumber>Input Your Information</v15:PhoneNumber>
+               </v15:Contact>
+               <v15:Address>
+                  <v15:StreetLines>Input Your Information</v15:StreetLines>
+                  <v15:City>Austin</v15:City>
+                  <v15:StateOrProvinceCode>AS</v15:StateOrProvinceCode>
+                  <v15:PostalCode>56950</v15:PostalCode>
+                  <v15:CountryCode>AS</v15:CountryCode>
+               </v15:Address>
+            </v15:Recipient>
+            <v15:ShippingChargesPayment>
+               <v15:PaymentType>SENDER</v15:PaymentType>
+               <v15:Payor>
+                  <v15:ResponsibleParty>
+                     <v15:AccountNumber>Input Your Information</v15:AccountNumber>
+                     <v15:Contact>
+                        <v15:PersonName>Input Your Information</v15:PersonName>
+                        <v15:CompanyName>Input Your Information</v15:CompanyName>
+                        <v15:PhoneNumber>Input Your Information</v15:PhoneNumber>
+                     </v15:Contact>
+                     <v15:Address>
+                        <v15:StreetLines>Input Your Information</v15:StreetLines>
+                        <v15:StreetLines>Input Your Information</v15:StreetLines>
+                        <v15:City>MEMPHIS</v15:City>
+                         <v15:PostalCode>10110</v15:PostalCode>
+                        <v15:CountryCode>NL</v15:CountryCode>
+                     </v15:Address>
+                  </v15:ResponsibleParty>
+               </v15:Payor>
+            </v15:ShippingChargesPayment>
+            <v15:SpecialServicesRequested>
+               <v15:SpecialServiceTypes>EMAIL_NOTIFICATION</v15:SpecialServiceTypes>
+               <v15:SpecialServiceTypes>RETURN_SHIPMENT</v15:SpecialServiceTypes>
+               <v15:EMailNotificationDetail>
+                  <v15:Recipients>
+                     <v15:EMailNotificationRecipientType>SHIPPER</v15:EMailNotificationRecipientType>
+                     <v15:EMailAddress>Input Your Information</v15:EMailAddress>
+                     <v15:Format>HTML</v15:Format>
+                     <v15:Localization>
+                        <v15:LanguageCode>es</v15:LanguageCode>
+                        <v15:LocaleCode>ES</v15:LocaleCode>
+                     </v15:Localization>
+                  </v15:Recipients>
+               </v15:EMailNotificationDetail>
+               <v15:ReturnShipmentDetail>
+                  <v15:ReturnType>PRINT_RETURN_LABEL</v15:ReturnType>
+                  <v15:Rma>
+                     <v15:Reason>SmartpostReturns</v15:Reason>
+                  </v15:Rma>
+               </v15:ReturnShipmentDetail>
+            </v15:SpecialServicesRequested>
+            <v15:SmartPostDetail>
+               <v15:ProcessingOptionsRequested>
+                  <v15:Options>GROUND_TRACKING_NUMBER_REQUESTED</v15:Options>
+               </v15:ProcessingOptionsRequested>
+               <v15:Indicia>PARCEL_RETURN</v15:Indicia>
+               <v15:AncillaryEndorsement>CARRIER_LEAVE_IF_NO_RESPONSE</v15:AncillaryEndorsement>
+               <v15:HubId>5531</v15:HubId>
+               <v15:CustomerManifestId>MANIFSETID</v15:CustomerManifestId>
+            </v15:SmartPostDetail>
+            <v15:LabelSpecification>
+               <v15:LabelFormatType>COMMON2D</v15:LabelFormatType>
+               <v15:ImageType>PNG</v15:ImageType>
+               <v15:LabelStockType>PAPER_7X4.75</v15:LabelStockType>
+               <v15:CustomerSpecifiedDetail>
+                  <v15:MaskedData>SECONDARY_BARCODE</v15:MaskedData>
+               </v15:CustomerSpecifiedDetail>
+            </v15:LabelSpecification>
+           <v15:RateRequestTypes>LIST</v15:RateRequestTypes>
+            <v15:PackageCount>1</v15:PackageCount>
+            <v15:RequestedPackageLineItems>
+               <v15:SequenceNumber>1</v15:SequenceNumber>
+               <v15:InsuredValue>
+                  <v15:Currency>USD</v15:Currency>
+                  <v15:Amount>0.00</v15:Amount>
+               </v15:InsuredValue>
+               <v15:Weight>
+                  <v15:Units>LB</v15:Units>
+                  <v15:Value>1.2</v15:Value>
+               </v15:Weight>
+               <v15:CustomerReferences>
+                  <v15:CustomerReferenceType>RMA_ASSOCIATION</v15:CustomerReferenceType>
+                  <v15:Value>Input Your Information</v15:Value>
+               </v15:CustomerReferences>
+            </v15:RequestedPackageLineItems>
+         </v15:RequestedShipment>
+      </v15:ProcessShipmentRequest>
+   </soapenv:Body>
+</soapenv:Envelope>
+"

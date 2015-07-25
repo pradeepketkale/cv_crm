@@ -1,0 +1,63 @@
+<!--@subject Craftsvilla.com: Customer {{var customerName}} Has Raised A Dispute For Shipment No: {{var shipmentId}}! @-->
+<style type="text/css">
+body, td {
+color:#2f2f2f;
+font:11px Arial, Helvetica, sans-serif;
+}
+</style>
+
+<div>
+  <table cellspacing="0" cellpadding="0" border="0" width="98%" style="margin-top:10px; margin-bottom:10px; background:#FFF;">
+    <tr>
+      <td align="center" valign="top"><!-- [ header starts here] -->
+        
+        <table cellspacing="0" cellpadding="0" border="0" width="800">
+          <tr>
+            <td valign="top" align="center"><a href="{{store url=''}}"><img src="{{skin url='images/logo_email.gif' _area='frontend'}}" alt="Craftsvilla"  style="margin-bottom:10px;" border="0"/></a></td>
+          </tr>
+        </table>
+        
+        <!-- [ middle starts here] -->
+        
+        <table cellspacing="0" cellpadding="0" border="0" width="800">
+          <tr>
+             <tr><td><img src="{{skin url='images/top_image.jpg' _area='frontend'}}" alt="" /></td></tr>         
+          <tr>
+            <td valign="top" style="font-size:13px; color:#444; padding:0 40px; line-height:18px; line-height:20px;">
+            
+            <p style="background:#7599AB;color:#FFFFFF;font-size:16px;margin:20px 0;padding:3px 10px;">Customer {{var customerName}} Has Raised A Dispute For Shipment No : {{var shipmentId}}</p>
+            <p style="font-size:18px;">Hi <span style="color:#CE3D49;">{{var vendorName}},</span></p>
+            <p>Customer has raised a dispute for the shipment. Please respond to this dispute within 3 days or else we will force to refund the customer. <font color="red">Please respond to the customer from your <a href="http://www.craftsvilla.com/marketplace/vendor/disputeraised/" target="_blank">vendor panel.</a></font><br>
+             You can find the dispute note below and associated images if any. If you think you have resolved this dispute, please request customer to close the dispute from customer's panel. You can also contact the customer directly using the customer contact details. For any further queries, please contact customercare@craftsvilla.com.</p>
+              <p>Below are the customer contact details:</p>
+              Customer Name: {{var customerName}}<br>
+              Customer Email: {{var customeremail}}<br>
+             Customer Telephone: {{var customertelephone}}<br>  <br> 
+                  
+            <p>{{var vendorNote}}</p>
+            <p>{{var imagecust}}</p>
+            <p>-----------------------------------------------------------------------------------------------------------------------</p>
+            <p>Below is the dispute history</p>
+            <p>{{var html}}</p>
+            <U>Below are Shipment details</U>
+
+            <p>{{var vendorItemHTML}}</p>
+            (If image is not displayed ,Please enable your display images )
+            
+            
+                      
+<div style="clear:both;"></div><br>
+<font color="red">Please respond to the customer from your <a href="http://www.craftsvilla.com/marketplace/vendor/disputeraised/" target="_blank">vendor panel.</a></font>
+ <p style="float:left; font-size:12px; width:59%;">&nbsp;</p>
+ <p style="float:left; font-size:12px; width:59%;">Happy Shopping!<br />
+  <strong>-Craftsvilla Family</strong>
+ </p>
+
+              
+              <!-- <p>Best regards,<br/>
+                <a href="{{store url=''}}">{{var store_name}}</a></p>--></td>
+          </tr>
+        </table></td>
+    </tr>
+  </table>
+</div>

@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<config>
+      <modules>
+        <Craftsvilla_ShopCoupon>
+          <version>0.1.0</version>
+        </Craftsvilla_ShopCoupon>
+      </modules>
+	  <frontend>
+      <routers>
+        <shopcoupon>
+          <use>standard</use>
+         <args>
+           <module>Craftsvilla_ShopCoupon</module>
+           <frontName>shopcoupon</frontName>
+         </args>
+        </shopcoupon>
+      </routers>
+	  <layout>
+          <updates>
+              <shopcoupon>
+                  <file>shopcoupon.xml</file>
+              </shopcoupon>
+          </updates>
+      </layout>
+    </frontend>
+   <global>
+
+   
+   
+      <helpers>
+       <shopcoupon>
+           <class>Craftsvilla_ShopCoupon_Helper</class>
+       </shopcoupon>
+      </helpers>   
+
+	  <blocks><shopcoupon><class>Craftsvilla_ShopCoupon_Block</class></shopcoupon></blocks>
+   </global> 
+   
+
+</config> 

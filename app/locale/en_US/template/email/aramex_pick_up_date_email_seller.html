@@ -1,0 +1,56 @@
+<!--@subject Details Regarding Your Pickup Request For COD Shipments With Pick up Reference {{var pickupId}} ! ! @-->
+<style type="text/css">
+body, td {
+color:#2f2f2f;
+font:11px Arial, Helvetica, sans-serif;
+}
+</style>
+
+<div>
+  <table cellspacing="0" cellpadding="0" border="0" width="98%" style="margin-top:10px; margin-bottom:10px; background:#FFF;">
+    <tr>
+      <td align="center" valign="top"><!-- [ header starts here] -->
+        
+        <table cellspacing="0" cellpadding="0" border="0" width="800">
+          <tr>
+            <td valign="top" align="center"><a href="{{store url=''}}"><img src="{{skin url='images/logo_email.gif' _area='frontend'}}" alt="Craftsvilla"  style="margin-bottom:10px;" border="0"/></a></td>
+          </tr>
+        </table>
+        
+        
+        
+        <table cellspacing="0" cellpadding="0" border="0" width="800">
+          <tr>
+             <tr><td><img src="{{skin url='images/top_image.jpg' _area='frontend'}}" alt="" /></td></tr>         
+          <tr>
+            <td valign="top" style="font-size:13px; color:#444; padding:0 40px; line-height:18px; line-height:20px;">
+           Dear {{var vendorName}},<br /><br />
+          <p> Thanks for accepting your COD  Shipments. Your pickup has been scheduled and pickup will done within 48 hours. Your pick up reference number is {{var pickupId}}. If your shipment is not picked up within 48 hours, please contact immediately our Logistics Provider with following contact details. Please give your pickup reference number which is {{var pickupId}} as reference number when talking to logistic provider.</p>
+            
+ <p><strong>Dispatch Pickup</strong></p>
+
+<p>Tracking queries:
+  <br />
+URL       :  www.fedex.com/in <br />
+Customer Service: 1800 419 4343 /1800 209 6161 <br />
+Email ID: india@fedex.com <br />
+</p>
+<p>-----------------------------------------------------------------------------------------------------------------------</p>
+            <div style="clear:both;"></div>
+
+ <p style="float:left; font-size:12px; width:59%;">&nbsp;</p>
+ <p style="float:left; font-size:12px; width:59%;">Happy Shopping!<br />
+  <strong>-Craftsvilla Family</strong>
+ </p>
+
+              
+              <!-- <p>Best regards,<br/>
+                <a href="{{store url=''}}">{{var store_name}}</a></p>--></td>
+          </tr>
+          <tr>
+            <td valign="top" style="font-size:13px; color:#444; padding:0 40px; line-height:18px; line-height:20px;">&nbsp;</td>
+          </tr>
+        </table></td>
+    </tr>
+  </table>
+</div>

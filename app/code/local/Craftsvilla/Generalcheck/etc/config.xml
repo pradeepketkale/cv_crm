@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<config>
+      <modules>
+        <Craftsvilla_Generalcheck>
+          <version>0.1.0</version>
+        </Craftsvilla_Generalcheck>
+      </modules>
+	  <frontend>
+      <routers>
+        <generalcheck>
+          <use>standard</use>
+         <args>
+           <module>Craftsvilla_Generalcheck</module>
+           <frontName>generalcheck</frontName>
+         </args>
+        </generalcheck>
+      </routers>
+	  <layout>
+          <updates>
+              <generalcheck>
+                  <file>generalcheck.xml</file>
+              </generalcheck>
+          </updates>
+      </layout>
+    </frontend>
+   <global>
+
+   
+   
+      <helpers>
+       <generalcheck>
+           <class>Craftsvilla_Generalcheck_Helper</class>
+       </generalcheck>
+      </helpers>   
+
+	  <blocks><generalcheck><class>Craftsvilla_Generalcheck_Block</class></generalcheck></blocks>
+   </global> 
+   
+
+</config> 

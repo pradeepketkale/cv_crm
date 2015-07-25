@@ -1,0 +1,133 @@
+<?php
+/**
+ * Unirgy LLC
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.unirgy.com/LICENSE-M1.txt
+ *
+ * @category   Unirgy
+ * @package    Unirgy_Dropship
+ * @copyright  Copyright (c) 2008-2009 Unirgy LLC (http://www.unirgy.com)
+ * @license    http:///www.unirgy.com/LICENSE-M1.txt
+ */
+?>
+<?php
+$_hlp = Mage::helper('udropship');
+$_shipments = Mage::helper('core')->decorateArray($_hlp->getVendorShipmentCollection(), '');
+$_vendor = Mage::getSingleton('udropship/session')->getVendor();
+?>
+
+<p style='color: red; font-size: 16px; text-align: center; '>Craftsvilla Seller FAQs</p><br>
+<p>
+<font color="#000">Dear Sellers of Craftsvilla,</font><br> 
+ We get lot of queries from Sellers most of which are very common. Below are some Most Frequently Asked Questions (FAQs) which may help you get more clarity on Selling on Craftsvilla.com:
+
+</p>
+<b><font size="3" color="#BE3626">When will I get my Payment?</font></b>
+<p>You will receive payments for your sales within 25 days of shipping the products. Please note we also do not get our commission on sale till you get payment as per RBI guidelines related to marketplace functioning. We therefore would like to give money faster to you since that helps us also.</p>
+
+<p>For COD orders the status gets changed to "Delivered" once it changes on the logistic website.<br>
+For Prepaid Orders, vendor has to change the status to "Shipped to Customer" by logging in to the vendor panel.</p>
+
+<p>For any finance related query send email to finance@craftsvilla.com . If you are a new seller, your first payment can take upto 30 days since we need that time to setup your account for electronic payments.</p>
+
+<b><font size="3" color="#BE3626">What is your Commission percentage?</font></b>
+<p>Our commission after June 1, 2015 is 20% + service tax (14%) which comes to effectively 22.8% of total sale value. Sale Value = Product cost + shipping cost.</p>
+
+<b><font size="3" color="#BE3626">I uploaded products but they are not live on my shop. Why?</font></b>
+<p>We review all the product uploads to make sure the photo quality is acceptable and the products are not illegal/offensive in nature. We take max 24 hours to do it so your products can take max 24 hours to appear in your shop on Craftsvilla.com</p>
+
+<b><font size="3" color="#BE3626">I have received an international order. How do I ship?</font></b>
+<p>For international orders, you have to ship the product directly to the customer just as you do in case of prepaid orders.</p>
+
+<b><font size="3" color="#BE3626">Do I need to invoice the customer?</font></b>
+<p>Yes, invoicing to customer and any taxation related to either domestic or international sale is strictly your responsibility. Craftsvilla.com is a platform like Ebay.com which provides selling related services and therefore charges service commission for the sale from you.</p>
+
+<b><font size="3" color="#BE3626"> How do I get more marketing support from Craftsvilla?</font></b>
+<p>Craftsvilla.com is a neutral platform and supports marketing of seller shops in a neutral manner. However, we promote sellers which update/add products more frequently, have great photo quality, have good dispatch history with minimum refunds and have good product price/quality. You can write to marketing@craftsvilla.com for more information.</p>
+
+
+<b><font size="3" color="#BE3626">Do you have any listing charges?</font></b>
+<p>Currently we do not have any item listing charges. You are free to upload as many products you want.</p>
+
+
+<b><font size="3" color="#BE3626">Do you provide support in uploading the products?</font></b>
+<p>Sorry, we do not have any agency / department which will upload products for you. However, for help you can write to our seller support department at places@craftsvilla.com</p>
+
+
+<b><font size="3" color="#BE3626">How do I login to my vendor panel?</font></b>
+<p>Please login to your vendor panel here with your email id and password: www.craftsvilla.com/marketplace/vendor</p>
+
+
+<b><font size="3" color="#BE3626"> How will I know if I received any order?</font></b>
+<p>We send you instant email and sms for any order received by you. Also the orders will be available in your vendor panel.</p>
+
+
+<b><font size="3" color="#BE3626">How do I update tracking details of the Prepaid shipment?</font></b>
+<p>Please login to your vendor panel and put tracking details by opening your shipment. Please make sure any search filters are not clicked if you do not see your shipment.</p>
+
+<b><font size="3" color="#BE3626">Do I need to sign any physical agreement?</font></b>
+<p>No, like Ebay.com we have an electronic agreement with you which you accept when you register your shop on Craftsvilla.com. These are listed here for your reference: <br>  Policy for Sellers: http://www.craftsvilla.com/policy-for-sellers/  <br> General Terms and Conditions: http://www.craftsvilla.com/terms-and-conditions-craftsvilla/</p>
+
+
+<b><font size="3" color="#BE3626">I have forgotten my vendor panel password. How do I reset it?</font></b>
+<p>Please send email to places@craftsvilla.com to reset your password.</p>
+
+<b><font size="3" color="#BE3626">How do we delete products wrongly uploaded?</font></b>
+<p>Sorry, you cannot delete the products but for removing them, login to vendor panel. Click on Manage products and mark the product "Out of stock" and inventory zero.</p>
+
+
+<b><font size="3" color="#BE3626">How is the payout calculated?</font></b>
+<p>Following is the calculation clarification :<br><br>
+
+Product cost : Rs.800<br>
+Shipping as mentioned by vendor : Rs.200<br>
+Total Value : Rs.1000<br>
+Commission is 22.8% of total value = Rs.1000 X 22.8% = Rs.228<br>
+COD Logistic charge = Rs.100 flat<br>
+
+For prepaid shipments vendor payout is Rs.1000-Rs.228 = Rs.772<br>
+For COD shipments Vendor payout is Rs.1000-Rs.228-Rs.100 =Rs.672</p>
+
+
+
+<b><font size="3" color="#BE3626">How do we Bulk Upload the products?</font></b>
+<p>Please note that Bulk Upload option is not available in Craftsvilla.<br>
+You will need to upload the products one by one through the tab "Add Products" on the left hand side of the vendor panel.</p>
+
+
+
+<b><font size="3" color="#BE3626">How do we change the bank account details for our store?</font></b>
+<p>Please email your bank details to Finance@craftsvilla.com 
+They charge Rs.100 for the same as the changes are done with our bank. Please note that changing bank details in only vendor panel is not sufficient.</p>
+
+
+<b><font size="3" color="#BE3626">What is the Return Policy on Craftsvilla ?</font></b>
+<p>Please see the craftsvilla return policy wherein the customer can return the product if they donot like the same by raising a dispute within 3 days. You will not be charged return charges or commission for the same.
+Check the link http://www.craftsvilla.com/shipping-artisans-designers/</p>
+
+<b><font size="3" color="#BE3626">What is SKU Code?</font></b>
+<p>Once you upload the products on your vendor panel www.craftsvilla.com/marketplace the
+SKU Code is automatically generated.</p>
+
+<b><font size="3" color="#BE3626">How do I change the pickup address for my store?</font></b>
+<p>Please write to places@craftsvilla.com with your new address and we will change it for you.</p>
+
+
+<p>Hope these answers to your general queries will help you. </p>
+
+<p>Thanks for your time. Enjoy Selling! </p>
+
+<p>Regards <br>
+Craftsvilla Places Team <br>
+Craftsvilla.com - The Marketplace to Discover India <p>
+
+
+<?php echo $this->getMessagesBlock()->getGroupedHtml(); ?>
+
+ <div class="clear"></div>
+<iframe id="download_iframe" name="download_iframe" style="display:none"></iframe>

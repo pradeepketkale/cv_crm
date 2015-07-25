@@ -1,0 +1,60 @@
+<?php
+/**
+ * Unirgy LLC
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.unirgy.com/LICENSE-M1.txt
+ *
+ * @category   Unirgy
+ * @package    Unirgy_Dropship
+ * @copyright  Copyright (c) 2008-2009 Unirgy LLC (http://www.unirgy.com)
+ * @license    http:///www.unirgy.com/LICENSE-M1.txt
+ */
+?>
+<?php
+$_hlp = Mage::helper('udropship');
+$_shipments = Mage::helper('core')->decorateArray($_hlp->getVendorShipmentCollection(), '');
+$_vendor = Mage::getSingleton('udropship/session')->getVendor();
+?>
+<b><font size="3" color="#BE3626">Craftsvilla 100% Buyer Protection Program Details:</font></b>
+<p>Craftsvilla.com has a friendly return and refund policy to ensure your online purchase is free of stress. We offer "100% Buyer Protection Program" for our valued customers. We do not release your payment to the seller till the products are received by you and you are happy with it. We are always with you, before your purchase and after your purchase. We are not perfect but we have ensured hard that our refund/return policies do not bring any ugly surprises to you post your purchase.</p>
+<strong><font size="3" color="#BE3626">What is Craftsvilla’s Return Policy ?</font></strong>
+<p>Our "100% Buyer Protection Program" allows for easy returns and refunds for:</p>
+1. Products which you received in "Damaged/Defective/Broken" condition.<br>
+2. Products not as per description/photo on the website.<br>
+3. Products which you may not like for quality, color and design related issues. <br>
+All the products must be returned in the original condition they were received in along with any bills and labels. Please follow the below given steps to register your dispute within 3 days of receipt of the product. Disputes registered after 3 days of delivery may not be entertained by sellers. Consumable products like food and beverages, bath and beauty products and bulky items like furniture/statues/paintings/temples (mandir) cannot be returned. </p><br>
+
+<strong><font size="3" color="#BE3626">How to raise dispute for an order?</font></strong>
+
+<p>You need to register your dispute in either of the two ways:</p>
+
+1. By sending email to customercare@craftsvilla.com with images of broken/defective/damaged products within 3 days of delivery. We need photos of the damaged/defective/different products received so that we can defend your dispute with relevant seller. Please mention your order number in the email.<br>
+2. Register dispute directly with seller by following below procedure for direct resolution which usually is faster.<br>
+<br>
+<p>To register dispute directly with seller, please follow below mentioned easy process:</p>
+1. Go to your customer account here at http://www.craftsvilla.com/customer/account and sign in when prompted. <br>
+2. Or Click the "My Account link" at the top of the site and sign in when prompted. <br>
+3. Click on the "Confirmed Orders" Tab on the left side and Select the Order you wish to return. <br>
+4. On the order detail page you will see "Raise Dispute with Seller" section.<br>
+5. Enter the details of your dispute and attach relevant images there.<br>
+6. Click "Raise Dispute to Seller" button once ready.<br>
+7. If you are not registered on Craftsvilla.com, you can register by clicking the "Register" link on the top of website and then file the dispute or you can send email to customercare@craftsvilla.com<br><br>
+After the seller reviews your return request, you will receive an e-mail with instructions on resolution or return of your item. Please allow the seller three days to respond to your return request and provide instructions on returning your item. We recommend using an online traceable courier service for returning your items.<br><br>
+<p><strong><font size="3" color="#BE3626">What to do if Seller is not responding to the dispute?</font></strong></p>
+Please allow 3 business days for your seller to address the issue and provide instructions for your return/ resolution. If the seller does not respond even after 3 business days, or if your issue is not addressed to your satisfaction, you can submit the dispute by sending email to customercare@craftsvilla.com and we will ensure you get timely resolution to your dispute.  <br><br>
+<p><strong><font size="3" color="#BE3626">Who pays for the delivery charges for returning of products?</font></strong></p>
+
+<p>When you're returning an item that was damaged/ defective or due to an error on the seller's part, you will be compensated for return courier charges. You will be paid flat Rs. 100 voucher which can be used to buy any of the Craftsvilla products for next 3 months. If the product has been picked from you by Craftsvilla arranged courier partner, the return delivery voucher will not be issued since no return cost was incurred by you. Please pack well when you are returning the product.</p>
+The amount you paid for the product plus any shipping will be directly refunded back to your bank account/credit card/debit card within 15 working days of refund. <br><br>
+<p><strong><font size="3" color="#BE3626">When will I be refunded?</font></strong></p>
+
+We can refund you when the seller notifies us of the receipt of the item back from you or the online tracking shows as delivered to the seller address. Remember that items have to be returned to sellers directly by you unless a return pickup has been authorized by Craftsvilla.com team. Once the seller notifies us of the receipt of the return item, we will credit the amount back to you within 15 working days (does not include Saturdays, Sundays and Bank Holidays).
+<?php echo $this->getMessagesBlock()->getGroupedHtml(); ?>
+
+ <div class="clear"></div>
+<iframe id="download_iframe" name="download_iframe" style="display:none"></iframe>

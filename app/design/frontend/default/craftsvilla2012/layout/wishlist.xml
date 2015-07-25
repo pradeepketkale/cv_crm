@@ -1,0 +1,194 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2010 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+
+-->
+<layout version="0.1.0">
+
+<!--
+Default layout, loads most of the pages
+-->
+
+    <default>
+
+        <!--<reference name="top.links">
+            <block type="wishlist/links" name="wishlist_link"/>
+            <action method="addLinkBlock"><blockName>wishlist_link</blockName></action>
+        </reference>-->
+
+        <!-- Mage_Wishlist -->
+        <!--<reference name="left">
+            <block type="wishlist/customer_sidebar" name="wishlist_sidebar" as="wishlist" after="tags_popular" template="wishlist/sidebar.phtml"/>
+        </reference>-->
+
+    </default>
+
+<!--
+Customer account pages, rendered for all tabs in dashboard
+-->
+
+    <customer_account>
+        <!-- Mage_Wishlist -->
+        
+        <reference name="customer_account_navigation">
+            <action method="addLink" translate="label" module="wishlist" ifconfig="wishlist/general/active"><name>wishlist</name><path>wishlist/</path><label>My Wishlist</label></action>
+        </reference>
+    </customer_account>
+
+<!--
+Customer account home dashboard layout
+-->
+
+    <customer_account_index>
+
+        <reference name="left">
+            <action method="unsetChild"><name>wishlist</name></action>
+        </reference>
+    </customer_account_index>
+
+<!--
+Wishlist pages
+-->
+
+    <wishlist_index_index translate="label">
+        <label>Customer My Account My Wishlist</label>
+        <!-- Mage_Wishlist -->
+        <update handle="customer_account"/>
+        <reference name="content">
+           <block type="wishlist/customer_wishlist" name="customer.wishlist" template="wishlist/view.phtml">
+                <block type="catalog/product_list_toolbar" name="product_list_toolbar" template="catalog/product/list/toolbar.phtml">
+                    <block type="page/html_pager" name="wishlist_toolbar_pager"/>
+                    <!--<action method="addPagerLimit"><mode>grid</mode><limit>3</limit></action>-->
+                </block>
+           </block>
+        </reference>
+        <reference name="left">
+            <action method="unsetChild"><name>wishlist_customer_sidebar</name></action>
+        </reference>
+    </wishlist_index_index>
+
+    <wishlist_index_share translate="label">
+        <label>Customer My Account Wishlist Sharing Form</label>
+        <!-- Mage_Wishlist -->
+        <update handle="customer_account"/>
+        <reference name="my.account.wrapper">
+            <block type="wishlist/customer_sharing" name="wishlist.sharing" template="wishlist/sharing.phtml"/>
+        </reference>
+        <reference name="left">
+            <action method="unsetChild"><name>wishlist_customer_sidebar</name></action>
+        </reference>
+    </wishlist_index_share>
+
+    <wishlist_publicshare_sharepublic>
+      <!--  <reference name = "head">
+            <action method="addItem"><type>skin_js</type><name>js/modernizr-transitions.js</name><params/></action>
+			<action method="addItem"><type>skin_js</type><name>js/jquery.masonry.min.js</name><params/></action>
+        </reference>-->
+        <reference name="content">
+            <block type="core/template" name="wishlist.sharing.public" template="wishlist/sharing_public.phtml"/>
+        </reference>
+    </wishlist_publicshare_sharepublic>
+    
+    <wishlist_publicshare_sharepublicproducts>
+     <!--   <reference name = "head">
+            <action method="addItem"><type>skin_js</type><name>js/modernizr-transitions.js</name><params/></action>
+			<action method="addItem"><type>skin_js</type><name>js/jquery.masonry.min.js</name><params/></action>
+        </reference>-->
+        <reference name="content">
+            <block type="core/template" name="wishlist.sharing.public.products" template="wishlist/sharing_public_products.phtml"/>
+        </reference>
+    </wishlist_publicshare_sharepublicproducts>
+    
+    <wishlist_publicshare_trend>
+        <!--<reference name = "head">
+             <action method="addItem"><type>skin_js</type><name>js/modernizr-transitions.js</name><params/></action>
+			<action method="addItem"><type>skin_js</type><name>js/jquery.masonry.min.js</name><params/></action>
+        </reference>-->
+        <reference name="content">
+            <block type="core/template" name="wishlist.most.trend" template="wishlist/most_trend.phtml"/>
+        </reference>
+    </wishlist_publicshare_trend>
+	
+    <wishlist_publicshare_recentwishlistproducts>
+        <!--<reference name = "head">
+            <action method="addItem"><type>skin_js</type><name>js/modernizr-transitions.js</name><params/></action>
+			<action method="addItem"><type>skin_js</type><name>js/jquery.masonry.min.js</name><params/></action>
+        </reference>-->
+        <reference name="content">
+            <block type="core/template" name="wishlist.most.added" template="wishlist/recent_added.phtml"/>
+        </reference>
+    </wishlist_publicshare_recentwishlistproducts>
+    
+    <wishlist_publicshare_notification>
+        <!--<reference name = "head">
+            <action method="addItem"><type>skin_js</type><name>js/modernizr-transitions.js</name><params/></action>
+			<action method="addItem"><type>skin_js</type><name>js/jquery.masonry.min.js</name><params/></action>
+        </reference>-->
+        <reference name="content">
+            <block type="core/template" name="wishlist.notification" template="wishlist/recent_added.phtml"/>
+        </reference>
+    </wishlist_publicshare_notification>
+    
+    <wishlist_publicshare_addnewprod>
+        <!--<reference name = "head">
+            <action method="addItem"><type>skin_js</type><name>js/modernizr-transitions.js</name><params/></action>
+			<action method="addItem"><type>skin_js</type><name>js/jquery.masonry.min.js</name><params/></action>
+        </reference>-->
+        <reference name="content">
+            <block type="core/template" name="wishlist.notification" template="wishlist/recent_added.phtml"/>
+        </reference>
+    </wishlist_publicshare_addnewprod>
+    
+     <wishlist_publicshare_wishthisprod>
+        <!--<reference name = "head">
+             <action method="addItem"><type>skin_js</type><name>js/modernizr-transitions.js</name><params/></action>
+			<action method="addItem"><type>skin_js</type><name>js/jquery.masonry.min.js</name><params/></action>
+        </reference>-->
+        <reference name="content">
+            <block type="catalog/product_view" name="wishlist.like" template="catalog/product/view.phtml"/>
+        </reference>
+    </wishlist_publicshare_wishthisprod>
+    
+    <wishlist_publicshare_shareoption translate="label">
+        <label>Customer My Account Wishlist Share Option</label>
+        <!-- Mage_Wishlist -->
+        <update handle="customer_account"/>
+        <reference name="my.account.wrapper">
+           
+        </reference>
+        <reference name="left">
+            <action method="unsetChild"><name>wishlist_customer_sidebar</name></action>
+        </reference>
+    </wishlist_publicshare_shareoption>
+    
+    <wishlist_shared_index translate="label">
+        <label>Customer Shared Wishlist View</label>
+        <!-- Mage_Wishlist -->
+        <reference name="content">
+            <block type="wishlist/share_wishlist" name="customer.wishlist" template="wishlist/shared.phtml"/>
+        </reference>
+    </wishlist_shared_index>
+</layout>

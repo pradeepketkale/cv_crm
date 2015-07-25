@@ -1,0 +1,21 @@
+<add>
+<doc>
+	<field name="partno">1</field>
+	<field name="name">Spark plug</field>
+	<field name="model">Boxster</field>
+	<field name="model">924</field>
+	<field name="year">1999</field>
+	<field name="year">2000</field>
+	<field name="price">25.00</field>
+	<field name="inStock">true</field>
+</doc>
+<doc>
+	<field name="partno">2</field>
+	<field name="name">Windshield</field>
+	<field name="model">911</field>
+	<field name="year">1991</field>
+	<field name="year">1999</field>
+	<field name="price">15.00</field>
+	<field name="inStock">false</field>
+</doc>
+</add>

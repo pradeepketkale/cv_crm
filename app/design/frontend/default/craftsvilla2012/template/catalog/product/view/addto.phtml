@@ -1,0 +1,34 @@
+<?php $_product = $this->getProduct(); ?>
+<?php $_wishlistSubmitUrl = $this->helper('wishlist')->getAddUrl($_product); ?>
+<?php //productAddToCartForm.submitLight(this, '<?php echo $_wishlistSubmitUrl '); alert(this);return false; ?>
+<?php //if(Mage::getSingleton('customer/session')->isLoggedIn()): ?>
+    <?php if ($this->helper('wishlist')->isAllow()) : ?>
+        <div id="wishthisproduct"><input type="button" value="" title="Add to Wishlist" id="imgwish" class="wishit_buttons"/> <!--<img src="<?php //echo $this->getSkinUrl('img/wish_it_button.png') ?>"  id="imgwish" />--></div>
+    <?php endif; ?>
+<?php //else: ?>
+    <!--<a href="#wishthis" class="fancybox"><input type="button" value="" title="Add to Wishlist" class="wishit_buttons" /></a>-->
+<?php //endif; ?>
+<!--<li><?php
+    //$_compareUrl = $this->helper('catalog/product_compare')->getAddUrl($_product);
+?>
+<?php //if($_compareUrl) : ?>
+    <!--<a href="<?php //echo $_compareUrl ?>"><?php //echo $this->__('Add to Compare') ?></a></li>-->
+<?php //endif; ?>
+<!--</li>-->
+<script type="text/javascript">
+    jQuery(document).ready(function() {
+    jQuery('#imgwish').click(function() {
+        jQuery('#imgwish').addClass('wishit_hide');
+       	var u = "<?php echo $_wishlistSubmitUrl ?>" ;
+		new Ajax.Request(u, {method:'post', parameters: {}, onSuccess: function(transport) {
+				if(transport.responseText == 'wished')
+                                    var locate = "<?php echo $_SERVER['HTTP_REFERER']; ?>";
+				window.location(locate);	
+			}
+		});	
+        
+       
+    });
+});
+
+</script>

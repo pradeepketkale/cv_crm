@@ -1,0 +1,65 @@
+<?php
+
+$hlp = Mage::helper('generalcheck');
+$ismobile = $hlp->ismobile();
+
+if(!$ismobile)
+
+{
+
+?>
+
+<div class="wrapper footer_wrapper">
+    <div> <?php echo $this->getChildHtml('footer_block') ?> </div>
+</div>
+<div class="modal" id="modal_register">
+    <h2><span class="icon icon-welcome_banner cufon">Welcome to CraftsVilla!</span></h2>
+    <form class="register">
+        <ul class="form_list">
+            <li>
+                <label for="fname" class="placeholder">First Name*</label>
+                <input type="text" id="fname" name="fname" />
+            </li>
+            <li>
+                <label for="lname" class="placeholder">Last Name*</label>
+                <input type="text" id="lname" name="lname" />
+            </li>
+            <li>
+                <label for="phone" class="placeholder">Mobile Number</label>
+                <input type="text" id="phone" name="phone" />
+            </li>
+            <li>
+                <label for="email" class="placeholder">Email Address*</label>
+                <input type="text" id="email" name="email" />
+            </li>
+            <li>
+                <label for="pass" class="placeholder">Password*</label>
+                <input type="password" id="pass" name="pass" />
+            </li>
+            <li>
+                <label for="pass2" class="placeholder">Re-Enter Password*</label>
+                <input type="text" id="pass2" name="pass2" />
+            </li>
+            <li>
+                <label for="birthdate" class="placeholder">Birthdate (00/00/0000)</label>
+                <input type="text" id="birthdate" name="birthdate" />
+            </li>
+            <li>
+                <p class="note">By clicking &lsquo;Register&rsquo;, you are<br />agreeing to the <a href="">terms & conditions.</a></p>
+            </li>
+            <li>
+                <button type="submit" class="btn blue icon-btn_236">
+                    <span class="inner">Register</span>
+                </button>
+            </li>
+        </ul>                                       
+    </form>
+    <div class="misc">
+        <p>Some Info. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+        <div class="icon-or_text hide_text">or</div>
+        <a href="" class="btn dark_blue icon-btn_236"><span class="inner">Register with Facebook</span></a>
+    </div>
+    <a href="" title="close" class="modalCloseImg"><span class="icon icon-close"></span></a>
+</div>
+
+<?php } else { }?>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <modules>
+        <Insync_Store>
+            <version>1.0</version>
+        </Insync_Store>
+    </modules>
+    <global>
+        <models>
+            <store>
+                <class>Insync_Store_Model</class>
+            </store>
+        </models>
+    </global>
+</config>

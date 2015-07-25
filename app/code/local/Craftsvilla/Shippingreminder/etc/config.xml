@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Craftsvilla_Shippingreminder>
+            <version>0.1.0</version>
+        </Craftsvilla_Shippingreminder>
+    </modules>  
+    <global>
+		<template>
+		    <email>
+		        <shippingreminder_email_template module="referfriend">
+		            <label>Shipping Reminder</label>
+		            <file>shipping_reminder_mail_send.html</file>
+		            <type>html</type>
+		        </shippingreminder_email_template>
+				<signupvoucher_reminder_email_template module="referfriend">
+		            <label>Sign Up Voucher Reminder</label>
+		            <file>signupvoucher_reminder_mail_send.html</file>
+		            <type>html</type>
+		        </signupvoucher_reminder_email_template>
+		   <shipmentoutofstock_email_template module="referfriend">
+		          <label>Shipment Out Of Stock Email</label>
+		          <file>shipmentoutofstock_email_template.html</file>
+		          <type>html</type>
+		   </shipmentoutofstock_email_template>
+		    </email>
+		</template>
+        <models>
+            <shippingreminder>
+                <class>Craftsvilla_Shippingreminder_Model</class>
+            </shippingreminder>
+        </models>
+        <helpers>
+            <shippingreminder>
+                <class>Craftsvilla_Shippingreminder_Helper</class>
+            </shippingreminder>
+        </helpers>
+		<events>
+			<udropship_order_save_after>
+				<observers>
+					<craftsvilla_shipping_save>
+						<class>Craftsvilla_Shippingreminder_Model_Observer</class>
+						<method>hookToShippmentSaveEvent</method>
+					</craftsvilla_shipping_save>
+				</observers>
+			</udropship_order_save_after>
+   </events>
+    </global>
+	<crontab>
+        <jobs>
+            <craftsvilla_shippingreminder>
+                <schedule><cron_expr>15 8 * * *</cron_expr></schedule>
+                <run><model>shippingreminder/cron::sendreminder</model></run>
+            </craftsvilla_shippingreminder>
+			<!--<craftsvilla_voucherreminder>
+				<schedule><cron_expr>0 23 * * *</cron_expr></schedule>
+				<run><model>shippingreminder/cron::sendcouponsreminder</model></run>
+			</craftsvilla_voucherreminder>-->
+        </jobs>
+    </crontab>
+</config>

@@ -1,0 +1,39 @@
+/*
+    anythingSlider v1.0    
+    By Chris Coyier: http://css-tricks.com
+    with major improvements by Doug Neiner: http://pixelgraphics.us/
+    based on work by Remy Sharp: http://jqueryfordesigners.com/
+*/
+.anythingSlider.featureditem{ padding-bottom:36px;}
+.anythingSlider                         { height: 242px;margin: 0 auto 0;padding-bottom: 6px;position: relative;width: 780px;}
+.anythingSlider .wrapper                {width: 780px; overflow: hidden; height:246px; margin:0; position: absolute; top: 0; left: 0;}
+.anythingSlider .wrapper ul             {width: 9999px; list-style: none; position: absolute; top: 0; left: 0;margin: 0;}
+.anythingSlider ul li                   {display:block;float: left; padding: 0; height:249px; width:780px; margin: 0; }
+.anythingSlider.anythingSlidernew .arrow{ display:none;}
+.anythingSlider .arrow                  {background:url(../images/slidarow.jpg) no-repeat 0 0; cursor:pointer; display:block; height:17px; position:absolute; text-indent:-9999px; top:65px; width:29px;}
+.fetured_seller .anythingSlider .forward,.fetured_seller .anythingSlider .back{top:-16px;}
+.fetured_seller .anythingSlider .forward {right:14px;}
+.fetured_seller .anythingSlider .back    {right:42px;}
+.fetured_seller .anythingSlider .section .old-price{float:right; padding:0;}
+.fetured_seller .anythingSlider .section .special-price{float:left; padding:0;}
+
+.anythingSlider .forward                 {background-position:-17px 0;right:43px; top:-25px;}
+.anythingSlider .back                    {background-position: 0px 0;right:74px; width:19px; top:-25px;}
+#thumbNav                                {position: relative; top: 323px; text-align: center; display:none;}
+#thumbNav a                              {color: black; font: 11px/18px; Georgia, Serif; display: inline-block; padding: 2px 8px; height: 18px; margin: 0 5px 0 0;text-align: center; -moz-border-radius-bottomleft: 5px; -moz-border-radius-bottomright: 5px; -webkit-border-bottom-right-radius: 5px; -webkit-border-bottom-left-radius: 5px; }
+#thumbNav a:hover                       { background-image: none; }
+#thumbNav a.cur                         { background: #e0a213; }
+
+#start-stop                             { background: green; color: white; padding: 2px 5px; width: 40px; text-align: center; position: absolute; right: 45px; top: 323px; -moz-border-radius-bottomleft: 5px; -moz-border-radius-bottomright: 5px; -webkit-border-bottom-right-radius: 5px; -webkit-border-bottom-left-radius: 5px; display:none;}
+#start-stop.playing                     { background-color: red; }
+#start-stop:hover                       { background-image: none; }
+
+/*Prevents*/
+
+.anythingSlider .wrapper ul ul{position: static; margin: 0; background: none; overflow: visible; width: auto; border: 0; }
+.anythingSlider .wrapper ul ul li{height: auto;}
+.seemorebtn{font-size: 12px;position: absolute;right: 102px;top: -26px;}
+.fetured_seller{ padding-top:28px;}
+
+.products.homeprice #banner li{ width:auto; margin:0;}
+#banner.anythingSlider .wrapper{ height:93px; overflow:hidden; width:772px;}

@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+    <default>
+    </default>
+    <activeshipment_index_index>
+        <reference name="content">
+            <block type="activeshipment/activeshipment" name="activeshipment" template="activeshipment/activeshipment.phtml" />
+        </reference>
+    </activeshipment_index_index>
+</layout> 

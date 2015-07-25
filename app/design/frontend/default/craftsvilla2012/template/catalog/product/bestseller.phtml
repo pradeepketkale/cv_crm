@@ -1,0 +1,145 @@
+<div class="products homeprice">
+	<!--<div class="banner_index_top">-->
+    <div class="banner_index_top" style="height:168px">
+		<?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('banner_home')->toHtml(); ?>   
+	</div>
+    <ul class="bestseller_gride">
+	    <?php echo $this->getLayout()->createBlock('catalog/product')->setTemplate('catalog/product/newarrivals.phtml')->toHtml(); ?>
+	</ul>
+</div>
+<div class="topLine"></div>
+<br/>
+<!--added on dated 03-09-2014 for show google ads on bottom --start-->
+<div class="google_add" style="width:728px;height:90px;margin:0px 24px 20px;">
+
+		<?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('google_ad_cft')->toHtml(); ?>   
+
+	</div>
+
+<!--added on dated 03-09-2014 for show google ads on bottom --end-->
+<?php
+$storeId = (int) $this->getStoreId();
+$_currencyCode = Mage::app()->getStore()->getCurrentCurrencyCode();
+$cacheId = "featuredseller-$_currencyCode-store-$storeId";
+// $cacheId = "featuredseller-$storeId";
+if ($cacheContent = Mage::app()->loadCache($cacheId)) {
+	$_featuredSellerHtml = unserialize($cacheContent);
+}
+else{
+	try {
+		$_featuredSellerHtml = $this->getLayout()->createBlock('catalog/product')->setTemplate('catalog/product/featuredseller.phtml')->toHtml();
+		$cacheContent = serialize($_featuredSellerHtml);
+		$tags = array(
+		    Mage_Catalog_Model_Product::CACHE_TAG . '_' . 'featuredseller'
+		);
+		$lifetime = 86400;
+		Mage::app()->saveCache($cacheContent, $cacheId, $tags, $lifetime);
+	} catch (Exception $e) {
+		Mage::logException($e);
+	}
+}
+echo $_featuredSellerHtml;
+?>
+
+
+<div class="btmNews clear">
+    <div class="section clear featured-seller linksnew">
+      <div class="fleft">
+        <h2>Recent Blog Posts</h2>
+        <p class="more"><a href="http://blog.craftsvilla.com" target="_blank" class="spriteimg">See more</a></p>
+        <div class="clear">
+          <div class="article">
+            <div>
+				<?php //echo $this->getLayout()->createBlock('wordpress/post_list_recent')->setTitle('')->setPostCount(1)->setTemplate('wordpress/post/recent.phtml')->toHtml();?>
+				<div class="block block-blog block-recent-posts">
+					<div class="block-content">
+			
+								<div class="blogset"><img width="160" class="forum floatl" alt="" src="<?php echo $this->getSkinUrl('img/rings_blog.jpg')?>">
+						
+						<div class="block_content"> 
+                        <span class="item mHide"><h3><a target="_blank" title="Craftsvilla Pick for this Weekend" href="http://blog.craftsvilla.com/rings-mood-occasion/">Rings for Every Mood & Every Occasion</a></h3></span>
+                            <p>Have you thought why do you prefer wearing certain colors, cloths or Ornaments for that matter? Than may I have you kind attention its all about you Mood!! Our choice of color, type of cloths, shoes etc. all depends upon your mood and your mood depends on many aspects.
+</p></div>
+						<p class="article-more"><a target="_blank" title="Craftsvilla Pick for this Weekend" href="http://blog.craftsvilla.com/rings-mood-occasion/">Read the post</a></p></div>
+				</div>
+			</div>
+			</div>
+          </div>
+        </div>
+      </div>
+      <div class="fright">
+        <h2>Featured Videos</h2>
+        <p class="more"></p>
+        <div class="clear">
+          <div class="article articlelast videosection">
+          
+          <a class="fancybox" href="#videos"><img src="<?php echo $this->getSkinUrl('img/videos_v4.jpg')?>" border="0" /></a>
+          
+          <div id="videos"><iframe width="480" height="360" src="//www.youtube.com/embed/h5UlJIWyUuk" frameborder="0" allowfullscreen></iframe></div>
+                           
+                           
+           </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+   
+  
+<div id="wishthis">
+  <div id="welcome_img" class="popuphead"><span class="popuoheading">Add to Wishlist</span></div>
+  <div id="bg_welcome" class="shortpop">
+    <ul class="followshop">
+      <li>
+        <h2 class="greyheading">Allready Member</h2>
+        <a href="#login" class="spriteimg bluesmallbtn fancybox">Login</a></li>
+      <li class="nobor">
+        <h2 class="greyheading">New Customer </h2>
+        <a class="spriteimg bluesmallbtn fancybox" href="#signUpForm">Sign Up</a></li>
+    </ul>
+    <p class="clr"></p>
+    <p align="center" class="clr margintoptwenty"><span class="required">Note:</span> To Wish this product You need to login or register.</p>
+  </div>
+</div>
+
+<?php /* For Recent Sales At Home Page*/ 
+
+$storeId = (int) $this->getStoreId();
+//$cacheId = "recentsales-$storeId";
+/*if ($cacheContent = Mage::app()->loadCache($cacheId)) {
+	$_recentSalesHtml = unserialize($cacheContent);
+}
+else{
+	try {
+		$_recentSalesHtml = $this->getLayout()->createBlock('catalog/product')->setTemplate('catalog/product/recentsales.phtml')->toHtml();
+		$cacheContent = serialize($_recentSalesHtml);
+		$tags = array(
+		    Mage_Catalog_Model_Product::CACHE_TAG . '_' . 'recentsales'
+		);
+		$lifetime = 86400;
+		Mage::app()->saveCache($cacheContent, $cacheId, $tags, $lifetime);
+	} catch (Exception $e) {
+		// Exception = no caching
+		Mage::logException($e);
+	}
+}
+echo $_recentSalesHtml;*/
+?>
+
+<?php
+        Mage::getSingleton('customer/session')->setBeforeAuthUrl($this->getRequest()->getRequestUri());  //save requested URL for later redirection
+            ?>
+ 
+ <script type="text/javascript">
+            function wishitval(val,ival) {
+                jQuery('#'+ival).addClass('wishit_hide');
+                var u = "<?php echo Mage::getBaseUrl().'wishlist/index/add/product/';?>"+val;
+                        new Ajax.Request(u, {method:'post', parameters: {}, onSuccess: function(transport) {
+                                        if(transport.responseText == 'wished')
+                                            var locate = "<?php echo $_SERVER['HTTP_REFERER']; ?>";
+                                        window.location(locate);	
+                                }
+                        });	
+                }
+
+</script>    

@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Craftsvilla_Shipmentpayout>
+            <active>true</active>
+            <codePool>local</codePool>
+        </Craftsvilla_Shipmentpayout>
+    </modules>
+</config> 

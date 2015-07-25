@@ -1,0 +1,88 @@
+<?php 
+if(Mage::getSingleton("udropship/session")->getProductImagePath() !='' && Mage::getSingleton("udropship/session")->getProductImagePath() == Mage::getSingleton("udropship/session")->getProductPreviewImagePath()):
+    $str = "catalog/product";
+else:
+    $str = "tmp/catalog/product";
+endif;
+
+if(Mage::getSingleton("udropship/session")->getProductSecImagePath() !='' && Mage::getSingleton("udropship/session")->getProductSecImagePath() == Mage::getSingleton("udropship/session")->getProductPreviewSecImagePath()):
+    $str1 = "catalog/product";
+else:
+    $str1 = "tmp/catalog/product";
+endif;
+
+if(Mage::getSingleton("udropship/session")->getProductThiImagePath() !='' && Mage::getSingleton("udropship/session")->getProductThiImagePath() == Mage::getSingleton("udropship/session")->getProductPreviewThiImagePath()):
+    $str2 = "catalog/product";
+else:
+    $str2 = "tmp/catalog/product";
+endif;
+
+if(Mage::getSingleton("udropship/session")->getProductFourImagePath() !='' && Mage::getSingleton("udropship/session")->getProductFourImagePath() == Mage::getSingleton("udropship/session")->getProductPreviewFourImagePath()):
+    $str3 = "catalog/product";
+else:
+    $str3 = "tmp/catalog/product";
+endif;
+
+if(Mage::getSingleton("udropship/session")->getProductFifImagePath() !='' && Mage::getSingleton("udropship/session")->getProductFifImagePath() == Mage::getSingleton("udropship/session")->getProductPreviewFifImagePath()):
+    $str4 = "catalog/product";
+else:
+    $str4 = "tmp/catalog/product";
+endif;
+?>
+<div class="detailCotainer">
+
+    <div class="product-view">
+        <div class="product-img-box">
+        <p id="imgone" class="product-image product-image-zoom display"><img width="470" src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA).$str.Mage::getSingleton("udropship/session")->getProductPreviewImagePath();?>" /></p> 
+        <p id="imgtwo" class="product-image product-image-zoom displaynone"><img width="470" src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA).$str1.Mage::getSingleton("udropship/session")->getProductPreviewSecImagePath();?>" /></p> 
+        <p id="imgthree" class="product-image product-image-zoom displaynone"><img width="470" src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA).$str2.Mage::getSingleton("udropship/session")->getProductPreviewThiImagePath();?>" /></p> 
+        <p id="imgfour" class="product-image product-image-zoom displaynone"><img width="470" src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA).$str3.Mage::getSingleton("udropship/session")->getProductPreviewFourImagePath();?>" /></p> 
+        <p id="imgfive" class="product-image product-image-zoom displaynone"><img width="470" src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA).$str4.Mage::getSingleton("udropship/session")->getProductPreviewFifImagePath();?>" /></p> 
+        
+        <div class="product-img-more">
+                    <ul>
+                        <?php if(Mage::getSingleton("udropship/session")->getProductPreviewImagePath() != ''):?>
+                            <li onclick="menu(0);"><img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA).$str.Mage::getSingleton("udropship/session")->getProductPreviewImagePath();?>" width="80px" /></li>
+                        <?php endif;?>
+                        <?php if(Mage::getSingleton("udropship/session")->getProductPreviewSecImagePath() != ''):?>
+                            <li onclick="menu(1);"><img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA).$str1.Mage::getSingleton("udropship/session")->getProductPreviewSecImagePath();?>" width="80px" /></li>
+                        <?php endif;?>
+                        <?php if(Mage::getSingleton("udropship/session")->getProductPreviewThiImagePath() != ''):?>
+                            <li onclick="menu(2);"><img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA).$str2.Mage::getSingleton("udropship/session")->getProductPreviewThiImagePath();?>" width="80px" /></li>
+                        <?php endif;?>
+                        <?php if(Mage::getSingleton("udropship/session")->getProductPreviewFourImagePath() != ''):?>
+                            <li onclick="menu(3);"><img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA).$str3.Mage::getSingleton("udropship/session")->getProductPreviewFourImagePath();?>" width="80px" /></li>
+                        <?php endif;?>
+                        <?php if(Mage::getSingleton("udropship/session")->getProductPreviewFifImagePath() != ''):?>
+                            <li onclick="menu(4);"><img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA).$str4.Mage::getSingleton("udropship/session")->getProductPreviewFifImagePath();?>" width="80px" /></li>
+                        <?php endif;?>
+                    </ul>
+        </div>
+        </div>
+        
+    </div>
+
+    <div class="details">
+        <h1><?php echo Mage::getSingleton("udropship/session")->getProductPreviewProductName(); ?></h1>
+        
+        <div class="breadcrumbs_bottom"></div>
+
+        <p class="sort_description"><?php echo Mage::getSingleton("udropship/session")->getProductPreviewProductShortDesc();?></p>
+
+        <p class="sort_description"><strong class="description">Description:</strong><?php echo Mage::getSingleton("udropship/session")->getProductPreviewProductDesc(); ?> </p>
+        
+        
+        
+            <div class="costsection">
+            <p class="price_section"><lable><strong>Price:</strong></lable>Rs.<?php echo Mage::getSingleton("udropship/session")->getProductPreviewProductPrice(); ?> </p>       
+            <p class="shipprice"><lable><strong>Shipping Cost:</strong></lable>Rs.<?php echo Mage::getSingleton("udropship/session")->getProductPreviewProductShippingCost(); ?></p>       
+            <p class="sort_description"><lable><strong>Quantity:</strong></lable><?php echo Mage::getSingleton("udropship/session")->getProductPreviewProductInventory(); ?></p>
+            </div>
+        
+      
+       
+       
+    </div>
+    <div class="clear"></div>
+
+</div>

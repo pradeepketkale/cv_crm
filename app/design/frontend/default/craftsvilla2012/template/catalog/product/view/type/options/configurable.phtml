@@ -1,0 +1,30 @@
+<?php
+$_product    = $this->getProduct();
+$_attributes = Mage::helper('core')->decorateArray($this->getAllowAttributes());
+?>
+<?php if ($_product->isSaleable() && count($_attributes)):?>
+    <dl>
+    <?php foreach($_attributes as $_attribute): ?>
+        <div class="confpro"><dt><span><?php echo $_attribute->getLabel() ?></span></dt>
+			<dd <?php if ($_attribute->decoratedIsLast){?> class="last"<?php }?>>
+				<div class="input-box">
+					<?php $id = $_attribute->getAttributeId() ?>
+					<div class="sel-size">
+						<select name="attribute<?php echo $id; ?>" id="attribute<?php echo $id; ?>" class="required-entry super-attribute-select">
+							<option><?php echo $this->__('Choose an Option...') ?></option>
+						</select>
+					</div>
+					<script type="text/javascript">
+						/* jQuery(document).ready(function(){
+							jQuery('#attribute<?php echo $id; ?>').selectBox();
+						}); */
+					</script>
+				</div>
+			</dd>
+		</div>
+    <?php endforeach; ?>
+    </dl>
+    <script type="text/javascript">
+        var spConfig = new Product.Config(<?php echo $this->getJsonConfig() ?>);
+    </script>
+<?php endif;?>

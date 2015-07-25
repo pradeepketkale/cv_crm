@@ -1,0 +1,19 @@
+<?php
+$_vendor = Mage::helper('umicrosite')->getCurrentVendor();
+/******** Code added by Mandar for vendor profile Stats on 4-05-2012 ********/
+//Mage::getModel('udropship/vendor_stats')->setStats($_vendor->getVendorId(),'profile');
+$_helpm = $this->helper('umicrosite');
+$url= $_helpm->getVendorUrl($_vendor->getVendorId());
+?>
+<h1 class="headingvendor homeprite">
+About <?php echo $_vendor->getShopName()!=''?$_vendor->getShopName():"US"?>
+</h1>
+<span class="clr"></span>
+<div class="floatl">
+<div class="aboutShop">
+	<h2 class="venheadings">ABOUT</h2><br />
+	<p><?php echo $this->htmlEscape($_vendor->getShopDescription()); ?></p>
+</div>
+</div>
+
+

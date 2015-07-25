@@ -1,0 +1,251 @@
+<?php echo $this->getMessagesBlock()->getGroupedHtml() ?>
+<?php $_orders = $this->getOrders(); 
+	  $shipmentStatuses = Mage::getSingleton('udropship/source')->setPath('shipment_statuses')->toOptionHash();
+?>
+
+<div class="pageTtl2">
+  <h1><?php echo $this->__('My Orders') ?></h1>
+</div>
+
+<!--HTML Code-->
+<!-- 
+<div class="pager">
+  <p class="amount"> Items 1 to 10 of 32 total </p>
+  <div class="limiter">
+    <label>Show</label>
+    <select>
+      <option selected="selected">10</option>
+      <option>20</option>
+      <option>50</option>
+      <option>100</option>
+    </select>
+    per page </div>
+</div>
+<table cellspacing="1" class="table-border" width="100%">
+  <thead>
+    <tr>
+      <th></th>
+      <th>shipment item</th>
+      <th>Name</th>
+      <th>SKU</th>
+      <th>QTY</th>
+      <th>Date</th>
+      <th>Status</th>
+      <th>Estimated Time</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><a href="#" class="action"><span class="open"></span></a></td>
+      <td># 100012192</td>
+      <td>Amit</td>
+      <td>#123</td>
+      <td>6</td>
+      <td>10/02/2012</td>
+      <td>Pending</td>
+      <td>48 hrs</td>
+      <td><a href="#" class="print" title="Print">Print</a></td>
+    </tr>
+    <tr class="collapsed" >
+      <td class="expanded" colspan="9" id="container-3842"><form action="">
+          <div class="col2-set shipment-items">
+            <div class="col-1">
+              <div>
+                <div class="col2-set">
+                  <div class="col-1"> <strong>Shipping Address</strong><br>
+                    aewsas asasd<br>
+                    1233<br>
+                    121321<br>
+                    mumbail,  Maharashtra, 400001<br>
+                    India<br>
+                    T: 123456 <br>
+                    F: 123456 </div>
+                  <div class="col-2"> </div>
+                </div>
+                <div class="clear"></div>
+                <br>
+                <div style="float:right">
+                  <label for="partial_availability-3842">Partial Availability: </label>
+                  <select name="partial_availability" type="checkbox">
+                    <option value="">* Select action</option>
+                    <option value="inform">Inform retailer</option>
+                    <option value="ship">Ship partial</option>
+                  </select>
+                </div>
+                <h4>Order Items</h4>
+                <table cellspacing="0" id="order-items-3842" class="table-border" width="100%">
+                  <thead>
+                    <tr>
+                      <th>Product Name</th>
+                      <th>SKU</th>
+                      <th class="a-center"><span class="nobr">Qty</span></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr id="order-item-row-10315" class="border">
+                      <td><h4 class="product-name">8eae637736b9d9572</h4></td>
+                      <td>8eae637736b9d9572</td>
+                      <td class="a-center">1</td>
+                    </tr>
+                      <tr id="order-item-row-10315" class="border">
+                      <td><h4 class="product-name">8eae637736b9d9572</h4></td>
+                      <td>8eae637736b9d9572</td>
+                      <td class="a-center">1</td>
+                    </tr>
+                      <tr id="order-item-row-10315" class="border">
+                      <td><h4 class="product-name">8eae637736b9d9572</h4></td>
+                      <td>8eae637736b9d9572</td>
+                      <td class="a-center">1</td>
+                    </tr>
+                      <tr id="order-item-row-10315" class="border">
+                      <td><h4 class="product-name">8eae637736b9d9572</h4></td>
+                      <td>8eae637736b9d9572</td>
+                      <td class="a-center">1</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              
+            </div>
+            <div class="col-2">
+              <div class="formpatch">
+                <div>
+                  <ul class="form-list">
+                    <li>
+                      <label> Have You Recived your order?</label>
+                      <ul class="feedback-headernew">
+                        <li class="positive">
+                          <label for="received">Yes</label>
+                          <input id="received" name="received" type="radio" />
+                        </li>
+                        <li class="neutral">
+                          <label for="notreceived">No</label>
+                          <input id="notreceived" name="notreceived" type="radio" />
+                        </li>
+                      </ul>
+                    </li>
+                    <li>
+                      <label>How do you rate this product?</label>
+                      <ul class="feedback-headernew">
+                        <li class="positive"><span class="icon"></span>
+                          <label>Positive: 336</label>
+                          <input type="radio"  />
+                        </li>
+                        <li class="neutral"><span class="icon"></span>
+                          <label>Neutral: 0</label>
+                          <input type="radio"  />
+                        </li>
+                        <li class="negative"><span class="icon"></span>
+                          <label>Negative: 0</label>
+                          <input type="radio"  />
+                        </li>
+                      </ul>
+                    </li>
+                    <li>
+                      <label for="tracking_id-3842">Nick Name</label>
+                      <input type="text" style="width:250px;" class="input-text" title="Add Tracking ID" value="" name="tracking_id" id="tracking_id-3842">
+                    </li>
+                    <li>
+                      <label for="comment-3842">Upload Image</label>
+                      <input type="file" name="upload image" />
+                    </li>
+                    <li>
+                      <label for="change_status-3842">Feedback</label>
+                      <textarea></textarea>
+                    </li>
+                    <li>
+                      <label for="change_status-3842">How can we help you</label>
+                      <textarea></textarea>
+                    </li>
+                    <li>
+                      <label>&nbsp;</label>
+                      <button id="submit-3842" type="button" class="form-button"><span>Submit</span></button>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="clear"></div>
+            
+            
+            <h4 class="smallhead">Feedback History</h4>
+            
+            <ul class="feedbackhistory">
+                <li class="positive"> <span class="date">10/2/2012 4:00PM</span>
+                  <p>It 's Best Product i have seen in this category :)</p>
+                </li>
+                <li class="neutral"> <span class="date">10/2/2012 4:00PM</span>
+                  <p>It 's normal Product i have seen in this category :)</p>
+                </li>
+                <li class="negative"> <span class="date">10/2/2012 4:00PM</span>
+                  <p>It 's worst Product i have seen in this category :)</p>
+                </li>
+              </ul>
+            
+            
+          </div>
+        </form></td>
+    </tr>
+    
+     <tr>
+      <td><a href="#" class="action"><span></span></a></td>
+      <td># 100012192</td>
+      <td>Amit</td>
+      <td>#123</td>
+      <td>6</td>
+      <td>10/02/2012</td>
+      <td>Pending</td>
+      <td>48 hrs</td>
+      <td><a href="#" class="print" title="Print">Print</a></td>
+    </tr>
+    
+  </tbody>
+</table>
+HTML Code End 
+-->
+
+<?php echo $this->getPagerHtml(); ?>
+<?php if($_orders->getSize()): ?>
+<table class="table-border" id="my-orders-table" width="100%">
+  <col width="1" />
+  <col width="1" />
+  <col />
+  <col width="1" />
+  <col width="1" />
+  <col width="1" />
+  <thead>
+    <tr>
+      <th><?php echo $this->__('Order #') ?></th>
+      <th><?php echo $this->__('Date') ?></th>
+      <th><?php echo $this->__('Ship To') ?></th>
+      <th><span class="nobr"><?php echo $this->__('Order Total') ?></span></th>
+      <th><span class="nobr"><?php echo $this->__('Order Status') ?></span></th>
+      <th>&nbsp;</th>
+      <th width="78">&nbsp;</th>
+    </tr>
+  </thead>
+  <tbody>
+    <?php $_odd = ''; ?>
+    <?php foreach ($_orders as $_order): ?>
+    <tr>
+      <td><?php echo $_order->getIncrementId() ?></td>
+      <td><span class="nobr"><?php echo $this->formatDate($_order->getCreatedAt()) ?></span></td>
+      <td><?php echo $_order->getShippingAddress() ? $this->htmlEscape($_order->getShippingName()) : '&nbsp;' ?></td>
+      <td><?php echo $_order->getTotalValue(); ?></td>
+      <td><em><?php echo $shipmentStatuses[$_order->getUdropshipStatus()] ?></em></td>
+      <td class="a-center"><span class="nobr"> <a href="<?php echo $this->getShipmetUrl($_order) ?>"><?php echo $this->__('View Order') ?></a> </span></td>
+      <td>
+         <span class="nobr">
+            <a href="<?php echo $this->getShipmetPrintUrl($_order) ?>" onclick="this.target='_blank'"><?php echo $this->__('Print Invoice') ?></a>
+         </span>
+      </td>
+    </tr>
+    <?php endforeach; ?>
+  </tbody>
+</table>
+<script type="text/javascript">decorateTable('my-orders-table');</script> 
+<?php echo $this->getPagerHtml(); ?>
+<?php else: ?>
+<p><?php echo $this->__('You have placed no orders.'); ?></p>
+<?php endif ?>

@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Craftsvilla_Refundrequestedcustomer>
+            <active>true</active>
+            <codePool>local</codePool>
+        </Craftsvilla_Refundrequestedcustomer>
+    </modules>
+</config> 

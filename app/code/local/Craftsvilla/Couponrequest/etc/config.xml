@@ -1,0 +1,136 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Craftsvilla_Couponrequest>
+            <version>0.1.0</version>
+        </Craftsvilla_Couponrequest>
+    </modules>
+    <frontend>
+        <routers>
+            <couponrequest>
+                <use>standard</use>
+                <args>
+                    <module>Craftsvilla_Couponrequest</module>
+                    <frontName>couponrequest</frontName>
+                </args>
+            </couponrequest>
+        </routers>
+        <layout>
+            <updates>
+                <couponrequest>
+                    <file>couponrequest.xml</file>
+                </couponrequest>
+            </updates>
+        </layout>
+    </frontend>
+    <admin>
+        <routers>
+			<couponrequest>
+				<use>admin</use>
+				<args>
+					<module>Craftsvilla_Couponrequest</module>
+					<frontName>couponrequest</frontName>
+				</args>
+			</couponrequest>
+        </routers>
+    </admin>
+    <adminhtml>
+		<menu>
+			<sales>
+				<children>
+					<couponrequest module="couponrequest">
+						<title>Couponrequest</title>
+						<sort_order>71</sort_order>               
+						<action>couponrequest/adminhtml_couponrequest</action>
+					</couponrequest>
+				</children>
+			</sales>
+		</menu>
+		<acl>
+			<resources>
+					<all>
+						<title>Allow Everything</title>
+					</all>
+				<admin>
+					<children>
+						<sales>
+							<children>
+								<couponrequest translate="title" module="couponrequest">
+									<title>Couponrequest Module</title>
+									<sort_order>10</sort_order>
+								</couponrequest>
+							</children>
+						</sales>
+					</children>
+				</admin>
+			</resources>
+		</acl>
+		<layout>
+			<updates>
+				<couponrequest>
+					<file>couponrequest.xml</file>
+				</couponrequest>
+			</updates>
+		</layout>
+    </adminhtml>   
+    <global>
+        <models>
+            <couponrequest>
+                <class>Craftsvilla_Couponrequest_Model</class>
+                <resourceModel>couponrequest_mysql4</resourceModel>
+            </couponrequest>
+            <couponrequest_mysql4>
+                <class>Craftsvilla_Couponrequest_Model_Mysql4</class>
+                <entities>
+                    <couponrequest>
+                        <table>couponrequest</table>
+                    </couponrequest>
+                </entities>
+            </couponrequest_mysql4>
+        </models>
+        <resources>
+            <couponrequest_setup>
+                <setup>
+                    <module>Craftsvilla_Couponrequest</module>
+                </setup>
+                <connection>
+                    <use>core_setup</use>
+                </connection>
+            </couponrequest_setup>
+            <couponrequest_write>
+                <connection>
+                    <use>core_write</use>
+                </connection>
+            </couponrequest_write>
+            <couponrequest_read>
+                <connection>
+                    <use>core_read</use>
+                </connection>
+            </couponrequest_read>
+        </resources>
+        <blocks>
+            <couponrequest>
+                <class>Craftsvilla_Couponrequest_Block</class>
+            </couponrequest>
+        </blocks>
+        <block type="couponrequest/adminhtml_grid" name="couponrequest" />
+        
+        <helpers>
+            <couponrequest>
+                <class>Craftsvilla_Couponrequest_Helper</class>
+            </couponrequest>
+        </helpers>
+        <template>
+        <email>
+        <coupon_code_for_approved module="couponrequest">
+		       <label>coupon_code_for_approved</label>
+		       <file>coupon_code_for_approved.html</file>
+		       <type>html</type>
+	   </coupon_code_for_approved>
+
+
+
+	    </email>
+        </template>
+    </global>
+</config>

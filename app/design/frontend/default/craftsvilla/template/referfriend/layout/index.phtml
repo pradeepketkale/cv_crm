@@ -1,0 +1,136 @@
+<script type="text/javascript" src="http://www.plaxo.com/css/m/js/util.js"></script>
+<script type="text/javascript" src="http://www.plaxo.com/css/m/js/basic.js"></script>
+<script type="text/javascript" src="http://www.plaxo.com/css/m/js/abc_launcher.js"></script>
+<script type="text/javascript" language="javascript">
+
+	function emptytextbox() 
+	{
+		document.getElementById("invite_friends").value = "";
+	}
+	function share() 
+	{
+		var d = document,
+		f = 'http://www.facebook.com/share',
+		l = d.location,
+		e = encodeURIComponent,
+		p = '.php?src=bm&v=4&i=1259068656&u=' + e(l.href) +
+		'&t=' + e(d.title); 1;
+		try 
+		{
+			if (!/^(.*\.)?facebook\.[^.]*$/.test(l.host)) throw (0);
+			share_internal_bookmarklet(p)
+		} catch (z) 
+		{
+			a = function() 
+			{
+				if (!window.open(f + 'r' + p, 'sharer', 'toolbar=0,status=0,resizable=1,width=626,height=436'))
+				location.href = f + p
+			};
+			if (/Firefox/.test(navigator.userAgent))
+			setTimeout(a, 0);
+			else { a() }
+		}
+	void (0)
+	}
+</script>
+<?php $login = Mage::helper('customer'); ?>
+<div class="content"> 
+    <table width="904" cellspacing="0" cellpadding="0" border="0" style="padding-bottom: 45px; height: 249px;">
+        <tbody>
+        <tr>
+            <td width="397" valign="top" align="left"><p class="invite_friends">&nbsp;</p></td>
+            <td width="201" valign="top" align="left"><p class="share_fun">&nbsp;</p></td>
+            <td width="306" valign="top" align="left"><p class="double_chance">&nbsp;</p></td>
+        </tr>
+        </tbody>
+    </table>
+	<div style="margin-top: -9px;" class="left_body">
+    <?php echo $this->getMessagesBlock()->getGroupedHtml(); ?>
+    <table width="904" cellspacing="0" cellpadding="0" border="0" style="margin-bottom: 20px;">
+	    <tbody>
+    		<tr>
+    		<?php if (!$this->helper('customer')->isLoggedIn() ): ?>
+            <td width="418" valign="top" align="left">
+                <div id="box5" class="box">
+                    <h1>Sign in and Start Earning</h1>
+                    <form method="post" action="<?php echo $login->getLoginPostUrl() ?>" name="login">
+                    <div>
+                        <ul class="form-list">
+                            <li>
+                                <label for="email" class="required"><em>*</em><?php echo $this->__('Email Address') ?></label>
+                                <div class="input-box">
+                                    <input type="text" name="login[username]" value="<?php echo $this->htmlEscape($this->getUsername()) ?>" id="email" class="input_textbox required-entry validate-email" title="<?php echo $this->__('Email Address') ?>" />
+                                </div>
+                            </li>
+                            <li>
+                                <label for="pass" class="required"><em>*</em><?php echo $this->__('Password') ?></label>
+                                <div class="input-box">
+                                    <input type="password" name="login[password]" class="input_textbox required-entry validate-password" id="pass" title="<?php echo $this->__('Password') ?>" />
+                                    <button type="submit" class="signup_btn" title="<?php echo $this->__('Login') ?>" name="send" id="send2"><span><span><?php echo $this->__('Login') ?></span></span></button>
+                                </div>
+                                <a href="<?php echo $this->getForgotPasswordUrl() ?>" class="f-left">
+                                <?php echo $this->__('Forgot Your Password?') ?></a><br />
+                            </li>
+                        </ul>
+                    </div>
+                </form>
+            </div>
+            <!-- start Plaxo -->
+			<script language="javascript"><!--
+            function rowOverEffect(object) {
+            if (object.className == 'moduleRow') object.className = 'moduleRowOver';
+            }
+            
+            function rowOutEffect(object) {
+            if (object.className == 'moduleRowOver') object.className = 'moduleRow';
+            }
+            //--></script>
+            <script language="javascript" src="js/refer_code.js" type="text/javascript"></script>
+            <script language="javascript" >
+            function emptytextbox() {
+            document.getElementById("invite_friends").value = "";
+            }
+            
+            function alertmesg()
+            {
+            alert("Please generate your link first.");
+            return false;
+            }
+            </script>
+            <!-- End Plaxo -->
+            </td>
+    		<?php else: ?>
+    		<td width="236" valign="top" align="left">
+            <form name="send_invites" method="post" action="<?php echo  $this->getUrl('referfriend/index/send');?>">
+    		<div class="box">
+			<h1>Send invites to:</h1> 
+                <p>
+                <?php if( $this->getRequest()->getParam('invite_friends') != ''){ $emails = $this->getRequest()->getParam('invite_friends'); }
+                else {$emails = "Enter multiple email id's separated by comma.";}?>
+                <textarea class="textfield" id="invite_friends" name="invite_friends" ><?php echo $emails; ?></textarea>
+                <input type="hidden" value="1" name="invite_box">
+                </p>
+    			<input type="submit" style="color: rgb(255, 255, 255); margin-left: 75px;" class="submit_btn" value="Send Invites" name="Submit">
+			</div>
+			</form>
+            </td>
+    		<td width="279" valign="top" align="left">
+            <form onsubmit="return check_refer_code();" method="POST" action="<?php echo $this->getUrl()."referfriend/link/generate"; ?>" name="update_refer_code">
+			<div id="box2" class="box">
+			<p>
+    		<?php if(!$this->check_refercode_generated()): ?>
+			<input type="text" maxlength="10" style="width: 58px; vertical-align: middle;" size="8" value="DN6P569SWS" id="linked" class="textfield" name="refer_code">.dny
+			<input type="hidden" value="2" name="refer_code_change">
+			<input type="submit" style="color: rgb(255, 255, 255); margin-left: 115px;" class="submit_btn" value="Generate link" name="Submit2">
+    		<?php else:			 	
+    			echo $this->getUrl('customer/account/create/')."refercode/".$this->get_refer_code().'';
+    		endif ?>
+			</p>
+    		</div>
+    		</form>
+    		<?php endif ?>
+    		</tr>
+    	</tbody>
+    </table>
+  </div>
+</div>

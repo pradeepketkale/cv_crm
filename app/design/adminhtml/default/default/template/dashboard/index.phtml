@@ -1,0 +1,540 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     default_default
+ * @copyright   Copyright (c) 2010 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<?php require_once(Mage::getBaseDir('lib').'/GA/gapiclass.php');
+
+//$con = mysql_connect("localhost","root","admin123");
+//mysql_select_db("doejofinal", $con); 
+
+$hlp = Mage::helper('generalcheck');
+$mainconn = $hlp->getMaindbconnection();
+
+
+define('ga_email','tech@craftsvilla.com');
+define('ga_password','vk@ft2671');
+define('ga_profile_id','40430632');?>
+
+<?php if (is_array($this->getChild('diagrams')->getTabsIds())) : ?>
+<script type="text/javascript">
+//<![CDATA[
+function changeDiagramsPeriod(periodObj) {
+    periodParam = periodObj.value ? 'period/' + periodObj.value + '/' : '';
+<?php foreach ($this->getChild('diagrams')->getTabsIds() as $tabId): ?>
+    ajaxBlockParam = 'block/tab_<?php echo $tabId ?>/';
+    ajaxBlockUrl = '<?php echo $this->getUrl('*/*/ajaxBlock', array('_current' => true, 'block' => '', 'period' => '')) ?>' + ajaxBlockParam + periodParam;
+    new Ajax.Request(ajaxBlockUrl, {
+        parameters: {isAjax: 'true', form_key: FORM_KEY},
+        onSuccess: function(transport) {
+            tabContentElementId = '<?php echo $this->getChild('diagrams')->getId() ?>_<?php echo $tabId ?>_content';
+            try {
+                if (transport.responseText.isJSON()) {
+                    var response = transport.responseText.evalJSON()
+                    if (response.error) {
+                        alert(response.message);
+                    }
+                    if(response.ajaxExpired && response.ajaxRedirect) {
+                        setLocation(response.ajaxRedirect);
+                    }
+                } else {
+                    $(tabContentElementId).update(transport.responseText);
+                }
+            }
+            catch (e) {
+                $(tabContentElementId).update(transport.responseText);
+            }
+        }
+    });
+<?php endforeach; ?>
+    ajaxBlockUrl = '<?php echo $this->getUrl('*/*/ajaxBlock', array('_current' => true, 'block' => 'totals', 'period' => '')) ?>' + periodParam;
+    new Ajax.Request(ajaxBlockUrl, {
+        parameters: {isAjax: 'true', form_key: FORM_KEY},
+        onSuccess: function(transport) {
+            tabContentElementId = 'dashboard_diagram_totals';
+            try {
+                if (transport.responseText.isJSON()) {
+                    var response = transport.responseText.evalJSON()
+                    if (response.error) {
+                        alert(response.message);
+                    }
+                    if(response.ajaxExpired && response.ajaxRedirect) {
+                        setLocation(response.ajaxRedirect);
+                    }
+                } else {
+                    $(tabContentElementId).replace(transport.responseText);
+                }
+            }
+            catch (e) {
+                $(tabContentElementId).replace(transport.responseText);
+            }
+        }
+    });
+}
+
+function toggleCal(id) {
+    $('dashboard_'+id+'_cal_div').toggle();
+    $('dashboard_'+id+'_range_div').toggle();
+}
+//]]>
+</script>
+<?php endif; ?>
+<div class="content-header">
+    <table cellspacing="0">
+        <tr>
+            <td><h3 class="head-dashboard"><?php echo $this->__('Dashboard') ?></h3></td>
+        </tr>
+    </table>
+</div>
+<div class="dashboard-container">
+    <?php echo $this->getChildHtml('store_switcher') ?>
+    <table cellspacing="25" width="100%">
+        <tr>
+        <td>
+
+
+	<!-- // Commented By Dileswar On dated 02-04-2013 For Stopping Xml Connect searc results-->
+               <!-- <div class="entry-edit">
+                    <div class="entry-edit-head"><h4><?php echo $this->__('Last 5 Search Terms') ?></h4></div>
+                    <fieldset class="np"><?php //echo $this->getChildHtml('lastSearches'); ?></fieldset>
+                </div>
+                <div class="entry-edit">
+                    <div class="entry-edit-head"><h4><?php echo $this->__('Top 5 Search Terms') ?></h4></div>
+                    <fieldset class="np"><?php //echo $this->getChildHtml('topSearches'); ?></fieldset>
+                </div>-->
+
+<div class="entry-edit">
+     <div class="entry-edit-head">
+         <h4><?php echo $this->__('Traffic Analytics') ?></h4></div>
+         <?php
+$flagTraffic = false;
+if($flagTraffic){
+try {
+//--------------------------------------------------------Google chart------------------------------------------------------
+    $ga = new gapi(ga_email,ga_password);
+    $ga1 = clone $ga;
+    $ga2 = clone $ga;
+    $gamob = clone $ga;
+    $gamob1 = clone $ga;
+    $gamob2 = clone $ga;
+
+    $curr_date = date("Y-m-d", time());
+    $curr_date2 = date("Y-M-d", time());
+   
+    $new_date = strtotime('-30 days', strtotime($curr_date));
+    $new_date1= date("Y-m-d", $new_date);
+
+    $new_date02 = strtotime('-60 days', strtotime($curr_date));
+    $new_date022= date("Y-m-d", $new_date02);
+
+    $new_date03 = strtotime('-90 days', strtotime($curr_date));
+    $new_date033= date("Y-m-d", $new_date03);
+
+    $new_date2= date("Y-M-d", $new_date);
+
+    $filter = 'mobileDeviceInfo != (not set) && mobileDeviceInfo != (not provided)';
+
+    $report = $ga->requestReportData(ga_profile_id, array('year', 'month', 'day'), array('visits'), 'month', null, $new_date1, $curr_date);
+    $lastvisits30 = $ga->getVisits();
+
+    $reportmob = $gamob->requestReportData(ga_profile_id,array('browser'),array('pageviews','visits'),'-visits',$filter, $new_date1, $curr_date);
+    $lastvisitsMob30 = $gamob->getVisits();
+
+    $mob30Total = round((($lastvisitsMob30/$lastvisits30)*100),1);
+
+    $report1 = $ga1->requestReportData(ga_profile_id, array('year', 'month', 'day'), array('visits'), 'month', null, $new_date022, $new_date1);
+    $lastvisits60 = $ga1->getVisits();
+
+    $reportmob1 = $gamob1->requestReportData(ga_profile_id,array('browser'),array('pageviews','visits'),'-visits',$filter, $new_date022, $new_date1);
+    $lastvisitsMob60 = $gamob1->getVisits();
+
+    $mob60Total = round((($lastvisitsMob60/$lastvisits60)*100),1);
+
+    $report2 = $ga2->requestReportData(ga_profile_id, array('year', 'month', 'day'), array('visits'), 'month', null, $new_date033, $new_date022);
+    $lastvisits90 = $ga2->getVisits();
+
+    $reportmob2 = $gamob2->requestReportData(ga_profile_id,array('browser'),array('pageviews','visits'),'-visits',$filter, $new_date033, $new_date022);
+    $lastvisitsMob90 = $gamob2->getVisits();
+
+    $mob90Total = round((($lastvisitsMob90/$lastvisits90)*100),1);
+
+    $table['cols'] = array(
+
+    array('label' => 'Day ', 'type' => 'string'),
+    array('label' => 'Visits', 'type' => 'number')
+    
+);
+
+} catch (Exception $e) { 
+    print 'Error: ' . $e->getMessage();
+
+    echo '<p>If you have not yet set your Google Analytics account information in the settings panel, you will see an error here.</p>';
+}
+
+	foreach ($ga->getResults() as $result) { 
+
+	    $date = explode(' ', $result);
+
+	    $visits = ($result->getVisits());
+
+	    $sort = implode("-", $date);
+
+	    $newDate = date('d-M-Y', strtotime($sort));
+	    $temp = array();
+	   
+	    $temp[] = array('v' => (string) $newDate); 
+	   
+	    $temp[] = array('v' => (float) $visits);
+	    $rows[] = array('c' => $temp);
+
+	}
+$table['rows'] = $rows;
+$jsonTable = json_encode($table);
+}
+//-------------------------------------------------------- Table ------------------------------------------------------
+
+$salesflatorder = $hlp->getsalesFlatOrderTable();
+$catProductEntity = $hlp->getcatalogProductEntityTable();
+$salesFlatOrderPayment = $hlp->getsalesFlatOrderPaymentTable();
+$customerEntity = $hlp->getcustomerEntityTable();
+$salesFlatOrderItem = $hlp->getsalesFlatOrderItemTable();
+$salesFlatOrderAddress = $hlp->getsalesFlatOrderAddressTable();
+$catProductCraftsvilla3 = $hlp->getcatalogProductCraftsvilla3Table();
+
+$last30day = mysql_query("SELECT COUNT(*) as `numorder`, SUM(`base_subtotal`) as `base_sum` , SUM(`shipping_amount`) as `ship_sum` FROM `".$salesflatorder."` WHERE  (`created_at` BETWEEN '".$new_date1."' AND '".$curr_date."')", $mainconn);
+
+		$rows30 = mysql_fetch_array($last30day);
+		$sum30 = $rows30['base_sum']+$rows30['ship_sum'];                   //for 30 days
+		$gmv30 = round(($sum30/10000000),2);
+		$aov30 = round($sum30/$rows30['numorder'],0);
+		$conversion30 = round((($rows30['numorder']/$lastvisits30)*100),2);
+
+
+$last60day = mysql_query("SELECT COUNT(*) as `numorder`, SUM(`base_subtotal`) as `base_sum` , SUM(`shipping_amount`) as `ship_sum` FROM `".$salesflatorder."` WHERE  (`created_at` BETWEEN '".$new_date022."' AND '".$new_date1."')", $mainconn);
+
+		$rows60 = mysql_fetch_array($last60day);
+		$sum60 = $rows60['base_sum']+$rows60['ship_sum'];                   //for 30-60 days
+		$gmv60 = round(($sum60/10000000),2);
+		$aov60 = round($sum60/$rows60['numorder'],0);
+		$conversion60 = round((($rows60['numorder']/$lastvisits60)*100),2);
+
+
+$last90day = mysql_query("SELECT COUNT(*) as `numorder`, SUM(`base_subtotal`) as `base_sum` , SUM(`shipping_amount`) as `ship_sum` FROM `".$salesflatorder."` WHERE  (`created_at` BETWEEN '".$new_date033."' AND '".$new_date022."')", $mainconn);
+
+		$rows90 = mysql_fetch_array($last90day);
+		$sum90 = $rows90['base_sum']+$rows90['ship_sum'];                   //for 60-90 days
+		$gmv90 = round(($sum90/10000000),2);
+		$aov90 = round($sum90/$rows90['numorder'],0);
+		$conversion90 = round((($rows90['numorder']/$lastvisits90)*100),2);
+
+//----------------------------------------------------------product Upload---------------------------------------
+
+$productUpload30 = mysql_query("SELECT COUNT(*) as `numproduct` FROM `".$catProductEntity."` WHERE (`created_at` BETWEEN '".$new_date1."' AND '".$curr_date."')", $mainconn);
+
+		$productrows30 = mysql_fetch_array($productUpload30);                   //for 30 days
+		$totalProduct30 = $productrows30['numproduct'];
+
+$productUpload60 = mysql_query("SELECT COUNT(*) as `numproduct` FROM `".$catProductEntity."` WHERE  (`created_at` BETWEEN '".$new_date022."' AND '".$new_date1."')", $mainconn);
+
+		$productrows60 = mysql_fetch_array($productUpload60);                  //for 30-60 days
+		$totalProduct60 = $productrows60['numproduct'];
+
+$productUpload90 = mysql_query("SELECT COUNT(*) as `numproduct` FROM `".$catProductEntity."` WHERE (`created_at` BETWEEN '".$new_date033."' AND '".$new_date022."')", $mainconn);
+
+		$productrows90 = mysql_fetch_array($productUpload90);                  //for 60-90 days
+		$totalProduct90 = $productrows90['numproduct'];
+
+// ----------------------------------------------------Per Visits Value-------------------------------------
+
+$pervisit30 = round(($sum30/$lastvisits30),2);
+$pervisit60 = round(($sum60/$lastvisits60),2);
+$pervisit90 = round(($sum90/$lastvisits90),2);
+
+//-----------------------------------------------------COD GMV----------------------------------------------
+
+$codGmv30 = mysql_query("SELECT SUM(s.base_subtotal) as `base_sum` , SUM(s.shipping_amount) as `ship_sum` FROM `".$salesflatorder."` as s LEFT JOIN `".$salesFlatOrderPayment."` as p ON s.entity_id = p.parent_id WHERE (s.created_at BETWEEN '".$new_date1."' AND '".$curr_date."') AND p.method = 'cashondelivery'", $mainconn);
+
+		$codrows30 = mysql_fetch_array($codGmv30);
+		$gmvsum30 = $codrows30['base_sum']+$codrows30['ship_sum'];     // for 30 days
+		$percentCodGmv30 = round((($gmvsum30/$sum30)*100),2);
+
+$codGmv60 = mysql_query("SELECT SUM(s.base_subtotal) as `base_sum` , SUM(s.shipping_amount) as `ship_sum` FROM `".$salesflatorder."` as s LEFT JOIN `".$salesFlatOrderPayment."` as p ON s.entity_id = p.parent_id WHERE (s.created_at BETWEEN '".$new_date022."' AND '".$new_date1."') AND p.method = 'cashondelivery'", $mainconn);
+
+		$codrows60 = mysql_fetch_array($codGmv60);
+		$gmvsum60 = $codrows60['base_sum']+$codrows60['ship_sum'];     // for 60 days
+		$percentCodGmv60 = round((($gmvsum60/$sum60)*100),2);
+
+
+$codGmv90 = mysql_query("SELECT SUM(s.base_subtotal) as `base_sum` , SUM(s.shipping_amount) as `ship_sum` FROM `$salesflatorder` as s LEFT JOIN `".$salesFlatOrderPayment."` as p ON s.entity_id = p.parent_id WHERE (s.created_at BETWEEN '".$new_date033."' AND '".$new_date022."') AND p.method = 'cashondelivery'", $mainconn);
+
+		$codrows90 = mysql_fetch_array($codGmv90);
+		$gmvsum90 = $codrows90['base_sum']+$codrows90['ship_sum'];     // for 90 days
+		$percentCodGmv90 = round((($gmvsum90/$sum90)*100),2);
+
+//-------------------------------------------------total registered customer-----------------------------------------
+
+$totlacust30 = mysql_query("SELECT COUNT(*) AS `totalCust` FROM `".$customerEntity."` WHERE (`created_at` BETWEEN '".$new_date1."' AND '".$curr_date."')", $mainconn);
+
+		$rowsCust30 = mysql_fetch_array($totlacust30);                 // for 30 days
+		$resultCust30 = $rowsCust30['totalCust'];
+
+
+$totlacust60 = mysql_query("SELECT COUNT(*) AS `totalCust` FROM `".$customerEntity."` WHERE (`created_at` BETWEEN '".$new_date022."' AND '".$new_date1."')", $mainconn);
+
+		$rowsCust60 = mysql_fetch_array($totlacust60);                 // for 60 days
+		$resultCust60 = $rowsCust60['totalCust'];
+
+
+$totlacust90 = mysql_query("SELECT COUNT(*) AS `totalCust` FROM `".$customerEntity."` WHERE (`created_at` BETWEEN '".$new_date033."' AND '".$new_date022."')", $mainconn);
+
+		$rowsCust90 = mysql_fetch_array($totlacust90);                 // for 90 days
+		$resultCust90 = $rowsCust90['totalCust'];
+
+// ------------------------------------------------total product sold----------------------------------------------------
+
+$productSold30 = mysql_query("SELECT COUNT(*) AS `productSold` FROM `".$salesFlatOrderItem."` WHERE (`created_at` BETWEEN '".$new_date1."' AND '".$curr_date."')", $mainconn);
+
+		$rowsProductSold30 = mysql_fetch_array($productSold30);       // for 30 days
+		$totalSoldProduct30 = $rowsProductSold30['productSold'];
+
+
+$productSold60 = mysql_query("SELECT COUNT(*) AS `productSold` FROM `".$salesFlatOrderItem."` WHERE (`created_at` BETWEEN '".$new_date022."' AND '".$new_date1."')", $mainconn);
+
+		$rowsProductSold60 = mysql_fetch_array($productSold60);       // for 60 days
+		$totalSoldProduct60 = $rowsProductSold60['productSold'];
+
+
+$productSold90 = mysql_query("SELECT COUNT(*) AS `productSold` FROM `".$salesFlatOrderItem."` WHERE (`created_at` BETWEEN '".$new_date033."' AND '".$new_date022."')", $mainconn);
+
+		$rowsProductSold90 = mysql_fetch_array($productSold90);       // for 90 days
+		$totalSoldProduct90 = $rowsProductSold90['productSold'];
+
+//--------------------------------------------------------Product per Order------------------------------------
+
+$productPerOrder30 = round(($totalSoldProduct30/$rows30['numorder']),2);
+$_productPerOrder30 = ($totalSoldProduct30/$rows30['numorder']);
+$productPerOrder60 = round(($totalSoldProduct60/$rows60['numorder']),2);
+$_productPerOrder60 = ($totalSoldProduct60/$rows60['numorder']);
+$productPerOrder90 = round(($totalSoldProduct90/$rows90['numorder']),2);
+$_productPerOrder90 = ($totalSoldProduct90/$rows90['numorder']);
+
+//--------------------------------------------------------Prouct ASP(Rs)---------------------------------------
+
+$productASP30 = number_format(($sum30/$totalSoldProduct30));
+$productASP60 = number_format(($sum60/$totalSoldProduct60));
+$productASP90 = number_format(($sum90/$totalSoldProduct90));
+
+//--------------------------------------------------------pie chart--------------------------------------------
+
+$categoryClothing = mysql_query("SELECT COUNT( * ) AS `countClothing` FROM `".$salesFlatOrderItem."` AS o LEFT JOIN `".$catProductCraftsvilla3."` AS s ON o.product_id = s.entity_id WHERE s.category_id2 = 4 AND (o.created_at BETWEEN '".$new_date1."' AND '".$curr_date."')", $mainconn);
+
+		$rowsClothing = mysql_fetch_array($categoryClothing);
+		$totalClothing = $rowsClothing['countClothing']; 
+
+$categorySaree = mysql_query("SELECT COUNT( * ) AS `countSaree` FROM `".$salesFlatOrderItem."` AS o LEFT JOIN `".$catProductCraftsvilla3."` AS s ON o.product_id = s.entity_id WHERE s.category_id2 = 74 AND (o.created_at BETWEEN '".$new_date1."' AND '".$curr_date."')", $mainconn);
+
+		$rowsSaree = mysql_fetch_array($categorySaree);
+		$totalSaree = $rowsSaree['countSaree']; 
+
+$categoryJewellery = mysql_query("SELECT COUNT( * ) AS `countJewellery` FROM `".$salesFlatOrderItem."` AS o LEFT JOIN `".$catProductCraftsvilla3."` AS s ON o.product_id = s.entity_id WHERE s.category_id2 = 6 AND (o.created_at BETWEEN '".$new_date1."' AND '".$curr_date."')", $mainconn);
+
+		$rowsJewellery = mysql_fetch_array($categoryJewellery);
+		$totalJewellery = $rowsJewellery['countJewellery']; 
+
+$categoryDecor = mysql_query("SELECT COUNT( * ) AS `countDecor` FROM `".$salesFlatOrderItem."` AS o LEFT JOIN `".$catProductCraftsvilla3."` AS s ON o.product_id = s.entity_id WHERE s.category_id2 = 5 AND (o.created_at BETWEEN '".$new_date1."' AND '".$curr_date."')", $mainconn);
+
+		$rowsDecor = mysql_fetch_array($categoryDecor);
+		$totalDecor = $rowsDecor['countDecor']; 
+
+$subCategoryTotal = $totalClothing + $totalSaree + $totalJewellery + $totalDecor;
+$categoryOthers = ($rows30['numorder'] - $subCategoryTotal);
+
+//-------------------------------------------------------International GMV----------------------------------------
+
+$intGMV30 = mysql_query("SELECT SUM(s.base_subtotal) as `base_sum` , SUM(s.shipping_amount) as `ship_sum` FROM `".$salesflatorder."` as s LEFT JOIN `".$salesFlatOrderAddress."` AS `ad` ON ad.parent_id = s.entity_id  WHERE (s.created_at BETWEEN '".$new_date1."' AND '".$curr_date."') AND ad.country_id != 'IN' AND ad.address_type = 'shipping'", $mainconn); 
+ 
+		$resultIntGMV30 = mysql_fetch_array($intGMV30);
+		$totalIntGMV30 = $resultIntGMV30['base_sum'] + $resultIntGMV30['ship_sum'];  // for 30 Days
+		$finalIntGMV30 = round((($totalIntGMV30/$sum30)*100),2);
+
+$intGMV60 = mysql_query("SELECT SUM(s.base_subtotal) as `base_sum` , SUM(s.shipping_amount) as `ship_sum` FROM `".$salesflatorder."` as s LEFT JOIN `".$salesFlatOrderAddress."` AS `ad` ON ad.parent_id = s.entity_id  WHERE (s.created_at BETWEEN '".$new_date022."' AND '".$new_date1."') AND ad.country_id != 'IN' AND ad.address_type = 'shipping'", $mainconn); 
+ 
+		$resultIntGMV60 = mysql_fetch_array($intGMV60);
+		$totalIntGMV60 = $resultIntGMV60['base_sum'] + $resultIntGMV60['ship_sum'];  // for 60 Days
+		$finalIntGMV60 = round((($totalIntGMV60/$sum60)*100),2);
+
+$intGMV90 = mysql_query("SELECT SUM(s.base_subtotal) as `base_sum` , SUM(s.shipping_amount) as `ship_sum` FROM `".$salesflatorder."` as s LEFT JOIN `".$salesFlatOrderAddress."` AS `ad` ON ad.parent_id = s.entity_id  WHERE (s.created_at BETWEEN '".$new_date033."' AND '".$new_date022."') AND ad.country_id != 'IN' AND ad.address_type = 'shipping'", $mainconn); 
+ 
+		$resultIntGMV90 = mysql_fetch_array($intGMV90);
+		$totalIntGMV90 = $resultIntGMV90['base_sum'] + $resultIntGMV90['ship_sum'];  // for 90 Days
+		$finalIntGMV90 = round((($totalIntGMV90/$sum90)*100),2);
+
+ mysql_close($mainconn);
+?>
+
+<script type='text/javascript' src='https://www.google.com/jsapi'></script>
+
+<script type='text/javascript'>
+    google.load('visualization', '1', {'packages':['corechart']});
+    google.setOnLoadCallback(drawChart);
+    function drawChart() {
+        var data = new google.visualization.DataTable(<?=$jsonTable?>);
+
+        var chart = new google.visualization.AreaChart(document.getElementById('analytics'));
+         chart.draw(data, {
+		      
+		      width: 530, height: 300, title:'Total Visits FROM  <?php echo $new_date2.'  TO  '.$curr_date2; ?>',
+                      colors:['#058dc7','#e6f4fa'],
+                      areaOpacity: 0.1,
+                      hAxis: {textPosition: 'out', showTextEvery: 2, slantedText: true, textStyle: { color: '#058dc7', fontSize: 10 } },
+                      pointSize: 5,
+		      //chartArea : { left:"8%", },
+	  	      animation:{  duration: 1000, easing: 'out'},
+		      'chartArea': {left:"10%",'width': '90%', 'height': '50%'},
+                      //'legend': {'position': 'bottom'}
+                      legend: 'none',
+                      // chartArea:{left:50,top:20,width:"650",height:"500"}, //(slantedTextAngle:45)
+    });
+}
+Array.prototype.reduce = undefined;
+</script>
+
+
+<script type="text/javascript">
+      google.load("visualization", "1", {packages:["corechart"]});
+      google.setOnLoadCallback(drawChart);
+      function drawChart() {
+			var data = google.visualization.arrayToDataTable([
+			  ['Category', 'Sold'],
+			  ['Clothing', <?=$totalClothing?>],
+			  ['Sarees', <?=$totalSaree?>],
+			  ['Jewellery', <?=$totalJewellery?>],
+			  ['Home Decor', <?=$totalDecor?>],
+			  ['Others', <?=$categoryOthers?>] 
+
+			 /* ['Category', 'Sold'],
+			  ['Clothing', 5],
+			  ['Sarees', 7],
+			  ['Jewellery', 2],
+			  ['Home Decor', 9],
+			  ['Others', 12]*/
+			]);
+
+			var options = {
+			  title: 'Category Mix',
+			  is3D: false,width: 600, height: 520,
+			  'chartArea': {left:"10%",'width': '90%', 'height': '50%', top:"4%"},
+			};
+
+        var chart = new google.visualization.PieChart(document.getElementById('piechart_3d'));
+        chart.draw(data, options);
+      }
+    </script>
+
+
+        <div id="analytics" style="width: 100%; height: 200px;"></div>
+     </div>
+<br><br><br><br><br><br>
+
+                <div class="entry-edit">
+                    <div class="entry-edit-head"><h4><?php echo $this->__('General Analytics') ?></h4></div>
+<table border=0>
+
+<tr bgcolor= "#e6f4fa" align="center">
+<th  width="160px"></th><th  width="120px">Last 30 Days</th><th  width="120px">Last 30-60 Days</th><th  width="120px">Last 60-90 Days</th>
+</tr>
+<tr bgcolor= "#e6f4fa">
+<td><b>GMV (Rs. cr)</b></td><td><?php echo $gmv30; ?></td><td><?php echo $gmv60; ?></td><td><?php echo $gmv90; ?></td>
+</tr>
+<tr bgcolor= "#e6f4fa">
+<td><b>GMV Growth(%)</b></td><td><?php echo round(((($sum30-$sum60)/$sum60)*100),2); ?></td><td><?php echo round(((($sum60-$sum90)/$sum90)*100),2); ?></td><td></td>
+</tr>
+<tr bgcolor= "#e6f4fa">
+<td><b>International GMV (%)</b></td><td><?php echo $finalIntGMV30; ?></td><td><?php echo $finalIntGMV60; ?></td><td><?php echo $finalIntGMV90; ?></td>
+</tr>
+<tr bgcolor= "#e6f4fa">
+<td><b>AOV</b></td><td><?php echo $aov30; ?></td><td><?php echo $aov60; ?></td><td><?php echo $aov90; ?></td>
+</tr>
+<tr bgcolor= "#e6f4fa">
+<td><b>Conversion (%)</b></td><td><?php echo $conversion30; ?></td><td><?php echo $conversion60; ?></td><td><?php echo $conversion90; ?></td>
+</tr>
+<?php if($flagTraffic){ ?>
+<tr bgcolor= "#e6f4fa">
+<td><b>Traffic (Visits in million)</b></td><td><?php echo round(($ga->getVisits()/1000000),2); ?></td><td><?php echo round(($ga1->getVisits()/1000000),2); ?></td><td><?php echo round(($ga2->getVisits()/1000000),2); ?></td>
+</tr><?php } ?>
+<tr bgcolor= "#e6f4fa">
+<td><b>Mobile Traffic (%)</b></td><td><?php echo $mob30Total; ?></td><td><?php echo $mob60Total; ?></td><td><?php echo $mob90Total; ?></td>
+</tr>
+<tr bgcolor= "#e6f4fa">
+<td><b>Products Live</b></td><td><?php echo $totalProduct30;?></td><td><?php echo $totalProduct60;?></td><td><?php echo $totalProduct90;?> </td>
+</tr>
+<tr bgcolor= "#e6f4fa">
+<td><b>Per-visit Value (Rs)</b></td><td><?php echo $pervisit30; ?></td><td><?php echo $pervisit60; ?></td><td><?php echo $pervisit90; ?></td>
+</tr>
+<tr bgcolor= "#e6f4fa">
+<td><b>COD GMV (%)</b></td><td><?php echo $percentCodGmv30; ?></td><td><?php echo $percentCodGmv60; ?></td><td><?php echo $percentCodGmv90; ?></td>
+</tr>
+
+<tr bgcolor= "#e6f4fa">
+<td><b>Total Registered Customers</b></td><td><?php echo $resultCust30; ?></td><td><?php echo $resultCust60; ?></td><td><?php echo $resultCust90; ?></td>
+</tr>
+<tr bgcolor= "#e6f4fa">
+<td><b>Total Orders</b></td><td><?php echo $rows30['numorder']; ?></td><td><?php echo $rows60['numorder'];  ?></td><td><?php echo $rows90['numorder']; ?></td>
+</tr>
+<tr bgcolor= "#e6f4fa">
+<td><b>Total Products Sold</b></td><td><?php echo $totalSoldProduct30; ?></td><td><?php echo $totalSoldProduct60;  ?></td><td><?php echo $totalSoldProduct90;  ?></td>
+</tr>
+<tr bgcolor= "#e6f4fa">
+<td><b>Products per Order</b></td><td><?php echo $productPerOrder30; ?></td><td><?php echo $productPerOrder60;  ?></td><td><?php echo $productPerOrder90;  ?></td>
+</tr>
+<tr bgcolor= "#e6f4fa">
+<td><b>Product ASP (Rs)</b></td><td><?php echo $productASP30; ?></td><td><?php echo $productASP60;  ?></td><td><?php echo $productASP90;  ?></td>
+</tr>
+
+</table>
+                </div>
+</div>
+            </td>
+
+            <td>
+                <div class="entry-edit" style="border:1px solid #ccc; overflow:hidden;">
+                    <?php echo $this->getChildHtml('diagrams') ?>
+                    <?php if (is_array($this->getChild('diagrams')->getTabsIds())) : ?>
+                        <div id="diagram_tab_content"></div>
+                    <?php endif; ?>
+                    <div style="margin:20px;">
+                        <?php echo $this->getChildHtml('totals') ?>
+                    </div>
+                   <!-- <div style="margin:20px;">
+                        <?php //echo $this->getChildHtml('grids') ?>
+                        <div id="grid_tab_content"></div>
+                    </div> -->
+                <div id="piechart_3d" style="width: 100%; height: 330px; margin:20px; overflow:hidden;"></div>
+
+
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>

@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+    <mktvendors_adminhtml_mktvendors_index>
+        <reference name="content">
+            <block type="mktvendors/adminhtml_mktvendors" name="mktvendors" />
+        </reference>
+    </mktvendors_adminhtml_mktvendors_index>
+</layout>

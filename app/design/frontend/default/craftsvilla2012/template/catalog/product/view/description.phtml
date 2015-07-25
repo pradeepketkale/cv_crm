@@ -1,0 +1,24 @@
+<?php $_helpv = $this->helper('udropship');?>
+<?php $vendorIfo = $_helpv->getVendor($this->getProduct());?>
+<?php $skuProduct = $this->getProduct()->getSku();?>
+<?php $shopdesc = $vendorIfo->getShopDescription();?> 
+<?php $_description = $this->getProduct()->getDescription(); ?>
+
+<?php 
+$cats = $this->getProduct()->getCategoryIds();
+$catid2 = array();
+foreach ($cats as $category_id){
+	
+    $_cat = Mage::getModel('catalog/category')->load($category_id) ;
+    $catid2[] = $_cat->getName();
+}
+$catTitle = $catid2[1];
+?>
+
+<?php $productdescext = '<br><br>'.$shopdesc.'<br><br>SKU: '.$skuProduct.'<br><br>Online Shopping for '.$catTitle.' by '.$vendorIfo->getData('vendor_name').' on Craftsvilla.com';?>
+
+<?php if ($_description): ?>
+   <?php //echo $this->__('Details') ?>   
+  <div class="detailsnew">
+        <?php echo $this->helper('catalog/output')->productAttribute($this->getProduct(), $_description.$productdescext, 'description') ?></div>
+<?php endif; ?>

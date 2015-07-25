@@ -1,0 +1,27 @@
+tables:
+ helpdeskultimate/status:
+  - status_id: 10
+    store_id: 0
+    label: "status1"
+    ordering: 1
+    status_type: "custom"
+  - status_id: 11
+    store_id: 0
+    label: "status2"
+    ordering: 2
+    status_type: "custom"
+  - status_id: 12
+    store_id: 0
+    label: "status3"
+    ordering: 3
+    status_type: "custom"
+  - status_id: 13
+    store_id: 3
+    label: "french"
+    ordering: 1
+    status_type: "custom"
+  - status_id: 14
+    store_id: 2
+    label: "german"
+    ordering: 1
+    status_type: "custom"

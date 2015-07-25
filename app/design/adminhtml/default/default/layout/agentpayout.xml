@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+    <agentpayout_adminhtml_agentpayout_index>
+        <reference name="content">
+            <block type="agentpayout/adminhtml_agentpayout" name="agentpayout" />
+        </reference>
+    </agentpayout_adminhtml_agentpayout_index>
+</layout>

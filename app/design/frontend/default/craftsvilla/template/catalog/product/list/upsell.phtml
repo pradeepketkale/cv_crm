@@ -1,0 +1,23 @@
+<?php if(count($this->getItemCollection()->getItems())): ?>
+    <h3><?php echo $this->__('You may also be interested in the following product(s)') ?></h3>
+    <table class="products-grid" id="upsell-product-table" cellpadding="0" cellspacing="0">
+    <?php // $this->setColumnCount(5); // uncomment this line if you want to have another number of columns. also can be changed in layout ?>
+    <?php $this->resetItemsIterator() ?>
+    <?php for($_i=0;$_i<$this->getRowCount();$_i++): ?>
+        <tr>
+        <?php for($_j=0;$_j<$this->getColumnCount();$_j++): ?>
+            <?php if($_link=$this->getIterableItem()): ?>
+            <td class="detailImgSm">
+                <a href="<?php echo $_link->getProductUrl() ?>" title="<?php echo $this->htmlEscape($_link->getName()) ?>"><img src="<?php echo $this->helper('catalog/image')->init($_link, 'small_image')->resize(125) ?>" width="125" height="125" alt="<?php echo $this->htmlEscape($_link->getName()) ?>" /></a>
+                <p class="upSell"><a href="<?php echo $_link->getProductUrl() ?>" title="<?php echo $this->htmlEscape($_link->getName()) ?>"><?php echo $this->htmlEscape($_link->getName()) ?></a></p>
+                <?php echo $this->getPriceHtml($_link, true, '-upsell') ?>
+            </td>
+            <?php else: ?>
+            <td class="empty">&nbsp;</td>
+            <?php endif; ?>
+        <?php endfor; ?>
+        </tr>
+    <?php endfor; ?>
+    </table>
+    <script type="text/javascript">decorateTable('upsell-product-table')</script>
+<?php endif ?>

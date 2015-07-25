@@ -1,0 +1,175 @@
+<?php echo $this->getPagerHtml();?>
+<?php /*custom breadcrumbs*/
+$breadcrumbs = $this->getLayout()->getBlock('breadcrumbs');
+ 
+if($breadcrumbs)
+{
+	$breadcrumbs->addCrumb('home', array('label'=>Mage::helper('cms')->__('Home'), 'title'=>Mage::helper('cms')->__('Home Page'), 'link'=>Mage::getBaseUrl()));
+ 
+	$breadcrumbs->addCrumb('cart', array('label'=>'My Wishlist', 'title'=>'My Wishlist'));
+ 
+	echo $this->getLayout()->getBlock('breadcrumbs')->toHtml();	
+}
+?>
+
+<div class="dashboard">
+  <div class="topLine"></div>
+  <div class="my-wishlist">
+    <div class="dashboard_head">
+      <?php if ($this->helper('wishlist')->isRssAllow() && $this->hasWishlistItems()): ?>
+      <a href="<?php echo $this->helper('wishlist')->getRssUrl(); ?>" class="link-rss"><?php echo $this->__('RSS Feed') ?></a>
+      <?php endif; ?>
+      <h1 class="fleft"><?php echo $this->__('My Wishlist') ?></h1>
+      <p class="fleft wishlist_note"> (By Default Your Wishlist is Public. See Benefits of Keeping Your Wishboard Public. <a href="#benefits" class="fancybox">Click here</a>) </p>
+      <?php $_customer=Mage::getSingleton('customer/session')->getCustomer();
+            $url=Mage::getBaseUrl().'wishlist/publicshare/shareoption';
+        ?>
+      <div class="fright">
+        <input type="radio" name="custshare"  value="0" id="cutomer_share" onclick="custshareopt(this.value)" />
+        Public
+        <input type="radio" name="custshare" value="1" id="cutomer_share" onclick="custshareopt(this.value)"  />
+        Private </div>
+      <span class="clr"></span>
+      <div class="breadcrumbs_bottom"></div>
+    </div>
+    <?php echo $this->getMessagesBlock()->getGroupedHtml() ?>
+    <?php if ($this->hasWishlistItems()): ?>
+    <form id="wishlist-view-form" action="<?php echo $this->getUrl('*/*/update') ?>" method="post">
+      <fieldset>
+        <?php echo $this->getBlockHtml('formkey')?>
+        <table class="table-border" id="wishlist-table" width="100%">
+          <thead>
+            <tr>
+              <th width="186"><?php echo $this->__('Product') ?></th>
+              <th><?php echo $this->__('Comment') ?></th>
+              <th class="a-center"><span class="nobr"><?php echo $this->__('Added On') ?></span></th>
+              <th>Remove</th>
+            </tr>
+          </thead>
+          <tbody>
+            <?php foreach ($this->getWishlistItems() as $item): ?>
+            <?php
+                        $product = $item->getProduct();
+                        $isVisibleProduct = $product->isVisibleInSiteVisibility();
+                    ?>
+            <tr>
+              <td><ul class="products-grid">
+                  <li class="item"><a class="product-image spriteimg" href="<?php echo $this->getProductUrl($item) ?>" title="<?php echo $this->htmlEscape($product->getName()) ?>"><img src="<?php echo $this->helper('catalog/image')->init($product, 'small_image')->resize(166,166); ?>" width="166" height="166" alt="<?php echo $this->htmlEscape($product->getName()) ?>" /></a>
+                    <p class="shopbrief"><a href="<?php echo $this->getProductUrl($item) ?>"><?php echo $this->htmlEscape($product->getName()) ?></a></p>
+                    <?php echo $this->getPriceHtml($product) ?> <?php echo $this->getDetailsHtml($item) ?> </li>
+                </ul>
+                <div class="action_wishlist">
+                  <?php if ($item->canHaveQty() && $isVisibleProduct): ?>
+                  <input type="text" class="input-text qty fleft" name="qty[<?php echo $item->getId() ?>]" value="<?php echo $this->getAddToCartQty($item) * 1 ?>" />
+                  <?php endif; ?>
+                  <?php if ($product->isSaleable()): ?>
+                  <?php if ($isVisibleProduct): ?>
+                  <button type="button" title="<?php echo $this->__('Add to Cart') ?>" onclick="addWItemToCart(<?php echo $item->getId(); ?>)" class="smBtn"><span><span><?php echo $this->__('Add to Cart') ?></span></span></button>
+                  <?php endif ?>
+                  <?php else: ?>
+                  <p class="availability out-of-stock"><span><?php echo $this->__('Out of stock') ?></span></p>
+                  <?php endif; ?>
+                  <?php /*?> <?php if ($isVisibleProduct): ?>
+                            <p class="fleft editwishlist"><a href="<?php echo $this->getItemConfigureUrl($item) ?>"><?php echo $this->__('Edit') ?></a></p>
+                            <?php endif ?><?php */?>
+                </div></td>
+              <td><textarea name="description[<?php echo $item->getWishlistItemId() ?>]" rows="3" cols="5" onfocus="focusComment(this)" onblur="focusComment(this)" title="<?php echo $this->__('Comment') ?>"><?php echo $this->getCommentValue($item); ?></textarea></td>
+              <td><span class="nobr"><?php echo $this->getFormatedDate($item->getAddedAt()) ?></span></td>
+              <td><a href="<?php echo $this->getItemRemoveUrl($item) ?>" title="<?php echo $this->__('Remove Item') ?>" onclick="return confirmRemoveWishlistItem();" class="btn-remove btn-remove2"><?php echo $this->__('Remove item')?></a></td>
+            </tr>
+            <?php endforeach ?>
+          </tbody>
+        </table>
+        <script type="text/javascript">decorateTable('wishlist-table')</script>
+        <div class="buttons-set buttons-set2">
+          <button type="submit" onclick="this.name='save_and_share'" title="<?php echo $this->__('Share Wishlist') ?>" class="button"><?php echo $this->__('Share Wishlist') ?></button>
+          <?php if($this->isSaleable()):?>
+          <button type="button" title="<?php echo $this->__('Add All to Cart') ?>" onclick="addAllWItemsToCart()" class="button"><?php echo $this->__('Add All to Cart') ?></button>
+          <?php endif;?>
+          <button type="submit" title="<?php echo $this->__('Update Wishlist') ?>" onclick="this.name='do'" class="button"><?php echo $this->__('Update Wishlist') ?></button>
+        </div>
+      </fieldset>
+    </form>
+    <?php else: ?>
+    <p><?php echo $this->__('You have no items in your wishlist.') ?></p>
+    <?php endif ?>
+    <script type="text/javascript">
+    //<![CDATA[
+    function confirmRemoveWishlistItem() {
+        return confirm('<?php echo $this->__('Are you sure you want to remove this product from your wishlist?') ?>');
+    }
+
+    function focusComment(obj) {
+        if( obj.value == '<?php echo $this->helper('wishlist')->defaultCommentString() ?>' ) {
+            obj.value = '';
+        } else if( obj.value == '' ) {
+            obj.value = '<?php echo $this->helper('wishlist')->defaultCommentString() ?>';
+        }
+    }
+
+    function addWItemToCart(itemId) {
+        var url = '<?php echo $this->getItemAddToCartUrl('%item%') ?>';
+        url = url.gsub('%item%', itemId);
+        var form = $('wishlist-view-form');
+        if (form) {
+            var input = form['qty[' + itemId + ']'];
+            if (input) {
+                var separator = (url.indexOf('?') >= 0) ? '&' : '?';
+                url += separator + input.name + '=' + encodeURIComponent(input.value);
+            }
+        }
+        setLocation(url);
+    }
+
+    function addAllWItemsToCart() {
+        var url = '<?php echo $this->getUrl('*/*/allcart') ?>';
+        var separator = (url.indexOf('?') >= 0) ? '&' : '?';
+        $$('#wishlist-view-form .qty').each(
+            function (input, index) {
+                url += separator + input.name + '=' + encodeURIComponent(input.value);
+                separator = '&';
+            }
+        );
+        setLocation(url);
+    }
+    
+     function custshareopt(val) {
+         var u = "<?php echo $url ?>";
+         var custId = "<?php echo $_customer->getId() ?>";
+            new Ajax.Request(u, {method:'post', parameters: {custshare : val, custid :custId}, onSuccess: function(transport) {
+                            if(transport.responseText == '0'){
+                                jQuery.fancybox({href:"#public"});
+							}
+							else{
+								jQuery.fancybox({href:"#private"});
+							}
+                                var locate = "<?php echo $_SERVER['HTTP_REFERER']; ?>";
+                            window.location(locate);	
+                    }
+            });	
+
+     }
+    //]]>
+    </script> 
+  </div>
+  <div class="buttons-set">
+    <p class="stroke"></p>
+    <p class="back-link"><a href="<?php echo $this->escapeUrl($this->getBackUrl()) ?>"><small>&laquo; </small><?php echo $this->__('Back') ?></a></p>
+  </div>
+</div>
+<div id="benefits">
+  <div class="popuphead" id="welcome_img"><span class="popuoheading">WishBoards Benefits</span></div>
+  <ul class="listinfstyle listinfstyle_new paddingtop_lightbox">
+    <li>You can see other's WishBoards</li>
+    <li>You can see What's Trending on Craftsvilla</li>
+    <li>You can win rewards for best Wishboards. Rewards will be announced by Craftsvilla regularly.</li>
+    <li>You can freely share your WishBoard with your friends and family</li>
+    <li>Your contact information is never shared even if the Wishboard is Public</li>
+  </ul>
+</div>
+<div id="private">
+  <p>Your Wishlist is Now Private. You can always share your wishlist with your friends.</p>
+</div>
+<div id="public">
+  <p>Your Wishlist is Now Public. Your wishlist will be visible to everyone.</p>
+</div>

@@ -1,0 +1,62 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2010 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<?php 
+$order = $this->getOrder();
+$orderIdd = $order['entity_id'];
+$_order = Mage::getModel('sales/order')->load($orderIdd);
+?>
+<table cellspacing="0" cellpadding="0" border="0" width="100%" style="border:1px solid #EAEAEA;">
+<table cellspacing="0" cellpadding="0" border="0" width="100%" style="border:1px solid #EAEAEA;">
+    <thead>
+        <tr>
+        	<th align="left" bgcolor="#EAEAEA" style="font-size:13px; padding:3px 9px"><?php echo $this->__('Image') ?></th>
+            <th align="left" bgcolor="#EAEAEA" style="font-size:13px; padding:3px 9px"><?php //echo $this->__('Item') ?></th>
+            <th align="left" bgcolor="#EAEAEA" style="font-size:13px; padding:3px 9px"><?php echo $this->__('Sku') ?></th>
+            <th align="left" bgcolor="#EAEAEA" style="font-size:13px; padding:3px 9px"><?php echo $this->__('Qty') ?></th>
+            <th align="right" bgcolor="#EAEAEA" style="font-size:13px; padding:3px 9px"><?php echo $this->__('Subtotal') ?></th>
+        </tr>
+    </thead>
+
+    <?php $i=0; foreach ($_order->getAllItems() as $_item): ?>
+    <?php if($_item->getParentItem()) continue; else $i++; ?>
+    <tbody <?php //echo $i%2 ? ' bgcolor="#F6F6F6"' : '' ?>>
+    <?php $_productCollection = Mage::getModel('catalog/product')->load($_item->getProductId());?>	
+		<td><img src="<?php echo Mage::helper('catalog/image')->init($_productCollection, 'image')->resize(100);?>" /> 
+        <?php echo $this->getItemHtml($_item) ?></td>
+    </tbody>
+    <?php endforeach; ?>
+    
+	</table>
+    
+    <table align="right" style="padding:3px 9px">
+		<tbody>
+        <tr align="right"><td align="left"><b>Discount Amount</b></td><td> :</td><td align="left"><?php  echo Mage::app()->getLocale()->currency($_order->getOrderCurrencyCode())->getSymbol();?> <?php  echo number_format($_order->getDiscountAmount(),2); ?> </td></tr>
+        <tr align="right"><td align="left"><b>Shipping Amount</b> </td> <td>:</td><td align="left"><?php  echo Mage::app()->getLocale()->currency($_order->getOrderCurrencyCode())->getSymbol();?> <?php  echo number_format($_order->getShippingAmount(),2); ?></td></tr>
+        <tr align="right"><td align="left"><b>Grand total</b> </td> <td>: </td><td align="left"><?php  echo Mage::app()->getLocale()->currency($_order->getOrderCurrencyCode())->getSymbol();?> <?php  echo number_format($_order->getGrandTotal(),2); ?></td> </tr>
+		</tbody> 
+    </table>
+</table>

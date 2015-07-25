@@ -1,0 +1,6 @@
+uid1:
+  statuses: Open,Closed,Waiting for customer,admin
+uid2:
+  statuses: Open,Closed,Waiting for customer,admin,german
+uid3:
+  statuses: Open,Closed,Waiting for customer,admin,french

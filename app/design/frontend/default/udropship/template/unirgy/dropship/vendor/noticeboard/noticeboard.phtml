@@ -1,0 +1,195 @@
+
+<?php
+    $_session = Mage::getSingleton('udropship/session');
+    if (Mage::helper('udropship')->isModuleActive('Unirgy_DropshipMicrosite')
+        && $_session->isLoggedIn()
+        && $_session->getVendor()->getShowProductsMenuItem()): //echo "<pre>"; print_r($_session->getVendor());
+?> 
+<div class="page-title">
+        <h1>NoticeBoard</h1>
+    </div>
+    
+<div class="fieldset mkpdash" style="padding:10px 10px 11px 7px">
+    <p><strong>As a seller you can post on noticeboard any feedback, website issues or bugs or useful information which you can share with other sellers.
+    Your post will appear on noticeboard within 48 hours after approval by Craftsvilla Team.</strong><br /></p>
+<?php echo $this->getMessagesBlock()->getGroupedHtml() ?>
+
+	<table cellspacing="1" cellpadding="0" class="data-table table-gride vtop" style="border-spacing:0px">
+        <thead>
+         
+            <tr>
+            <form name="contentgenerate1" action="<?php echo $this->getUrl('marketplace/vendor/generatecontent1');?>" method="post" enctype="multipart/form-data">
+               
+                <td width="650px"><input type="text" name = "sellercontent" id "sellercontent" class="input-text" style="width:350px !important;" placeholder="Enter Your Post Content" value=""></td><td><input type="file" name="import_image" class="input-file required-entry"/>Attach Images Only</td>
+                <td align="center"> <input type="submit" value="Post" class="form-button" style="margin-top:5px"/></td>
+                </form>
+            </tr>
+             
+        </thead>
+    </table>
+      </div>         
+        
+    <br />
+   <div class="box-head">
+  <h3>Seller Notice Board</h3>
+</div>
+<!--<div class="a-left" style="margin:10px 0">-->
+
+<!--<div style="max-height: 517px;overflow: scroll;width: 703px; background-color:#FF0;">  -->
+<?php $vendorId = Mage::getSingleton('udropship/session')->getVendorId();
+		
+		$noticeCollection = Mage::getModel('noticeboard/noticeboard')->getCollection()
+		                   ->addFieldToFilter('status',array('eq' => 1))
+							->setOrder('noticeid','DESC');
+						$noticeCollection->getSelect()->limit(20);
+							//echo $noticeCollection->getSelect()->__toString();exit;
+		//echo '<pre>';
+		//print_r($noticeCollection->getdata());exit;
+		foreach ($noticeCollection as $_noticeCollection) 
+		{
+			
+			if($_noticeCollection->getVendor()!= '')
+			{
+			$filename = $_noticeCollection['image'];
+				$filepath = Mage::getBaseUrl('media'). 'noticeboardimages'.'/';
+		$filenamepath = $filepath.$filename; 
+
+			?>
+<table><tr><td><img border="0" alt="" src="<?php echo $this->getUrl();?>/skin/frontend/default/udropship/images/th.jpg" width="15px" height="15px"></td><td><div  style="color:grey; width:auto"><i><font size="1px">Posted On: <?php echo date("d-F-Y",strtotime($_noticeCollection->getCreated()));  echo ', By : ' ; $v = Mage::getModel('udropship/vendor')->load($_noticeCollection->getVendor());echo $v['vendor_name'];if(!$v['vendor_name'])echo 'Admin';?></font></i></div></td></tr></table><font size="1" style="width:300%">------------------------------------------------------------------------------------------------------------------------------------------------------------</font> 
+		 <div style="background-color: 	#E0E0E0; width:650px;border-top-left-radius:10px;
+	border-top-right-radius:10px;
+	border-bottom-right-radius:10px;
+	border-bottom-left-radius:10px;"> <div style="color:black; margin: 0;   padding: 2px; border: 0;   outline: 0;width:350px">
+						<table><tr><td width="15px">
+							<p style="margin-top:10px; margin-left:5px; width:450px" ><font size="1px"><?php echo $_noticeCollection->getContent();?></font></td><td>
+                            <!--<?php //if($filename) {?><a href="<?php //echo $filenamepath; ?>" target="_blank"><img src="<?php //echo $filenamepath;?>" width="100" height="auto" style="border:1px solid #000000;margin-left: 80px;margin-top:15px"/></a> <?php //}?></p></td></tr></table></div>-->
+                               <?php if($filename) { ?> <div style="width:100; height:auto; border:1px solid #000000;margin-left: 80px;margin-top:15px"> <?php echo $filename; }?></div></p></td></tr></table></div>
+                           
+						</div><br />
+						
+	        
+		
+	
+   
+   
+   <?php }
+		} ?>
+       
+   <!-- <table cellspacing="1" cellpadding="0" class="data-table table-gride vtop">
+     <thead>
+        <tr>
+          <th><?php //echo $this->__('NoticeID')?></th>
+          <th><?php //echo $this->__('Posted On')?></th>
+          <th><?php //echo $this->__('Content')?></th>
+          <th><?php //echo $this->__('Image')?></th>
+         <!-- <th><?php //echo $this->__('Status')?></th>-->
+         <!-- <th><?php //echo $this->__('Posted By')?></th>   
+         </tr>
+      </thead>
+      <tbody>-->
+      	<?php
+		/*$vendorId = Mage::getSingleton('udropship/session')->getVendorId();
+		
+		$noticeCollection = Mage::getModel('noticeboard/noticeboard')->getCollection()
+		                   ->addFieldToFilter('status',array('eq' => 1))
+							->setOrder('noticeid','DESC');
+							//echo $noticeCollection->getSelect()->__toString();exit;
+		//echo '<pre>';
+		//print_r($noticeCollection->getdata());exit;
+		foreach ($noticeCollection as $_noticeCollection) 
+		{
+			
+			if($_noticeCollection->getVendor()!= '')
+			{
+			$filename = $_noticeCollection['image'];
+				$filepath = Mage::getBaseUrl('media'). 'noticeimages'.'/';
+		$filenamepath = $filepath.$filename;*/
+		?>	
+		<!--<tr>-->
+        <?php //echo $_noticeCollection->getImage();exit;?>
+        <!--  <td width="40px"><?php //echo $_noticeCollection->getNoticeid();?></td>
+          <td width="60px"><?php //echo $_noticeCollection->getCreated();?></td>
+          <td width="100px"><?php //echo $_noticeCollection->getContent();?></td>-->
+          <!--<td align="left" valign="top" style="font-size:11px; padding:3px 9px;" width="60"><?php //echo $_noticeCollection->getImage();?></td>-->
+          
+          <!--<td align="left" valign="top" style="font-size:11px; padding:3px 9px;" width="60"><?php //if($filename) {?><a href="<?php //echo $filenamepath; ?>" target="_blank"><img src="<?php //echo $filenamepath;?>" width="75" height="75"/></a> <?php //}?></td>-->
+         
+         <!-- <td><?php //if($_noticeCollection->getStatus()==1){ echo 'Approved';} else { echo 'Not Approved';}?></td>-->
+          <!--<td><?php //$v = Mage::getModel('udropship/vendor')->load($_noticeCollection->getVendor());
+		 // echo $v['vendor_name'];?></td>-->
+         <?php /*}
+		  }*/
+		  
+		  ?>
+           
+       <!-- </tr> 
+      </tbody>
+    </table>-->
+
+ 
+</div>
+
+<?php endif;?>
+
+<script type="text/javascript">
+//<![CDATA[
+enUS = {"m":{"wide":["January","February","March","April","May","June","July","August","September","October","November","December"],"abbr":["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]}}; // en_US locale reference
+Calendar._DN = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"]; // full day names
+Calendar._SDN = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"]; // short day names
+Calendar._FD = 0; // First day of the week. "0" means display Sunday first, "1" means display Monday first, etc.
+Calendar._MN = ["January","February","March","April","May","June","July","August","September","October","November","December"]; // full month names
+Calendar._SMN = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]; // short month names
+Calendar._am = "AM"; // am/pm
+Calendar._pm = "PM";
+
+// tooltips
+Calendar._TT = {};
+Calendar._TT["INFO"] = "About the calendar";
+
+Calendar._TT["ABOUT"] =
+"DHTML Date/Time Selector\n" +
+"(c) dynarch.com 2002-2005 / Author: Mihai Bazon\n" +
+"For latest version visit: http://www.dynarch.com/projects/calendar/\n" +
+"Distributed under GNU LGPL. See http://gnu.org/licenses/lgpl.html for details." +
+"\n\n" +
+"Date selection:\n" +
+"- Use the \xab, \xbb buttons to select year\n" +
+"- Use the " + String.fromCharCode(0x2039) + ", " + String.fromCharCode(0x203a) + " buttons to select month\n" +
+"- Hold mouse button on any of the above buttons for faster selection.";
+Calendar._TT["ABOUT_TIME"] = "\n\n" +
+"Time selection:\n" +
+"- Click on any of the time parts to increase it\n" +
+"- or Shift-click to decrease it\n" +
+"- or click and drag for faster selection.";
+
+Calendar._TT["PREV_YEAR"] = "Prev. year (hold for menu)";
+Calendar._TT["PREV_MONTH"] = "Prev. month (hold for menu)";
+Calendar._TT["GO_TODAY"] = "Go Today";
+Calendar._TT["NEXT_MONTH"] = "Next month (hold for menu)";
+Calendar._TT["NEXT_YEAR"] = "Next year (hold for menu)";
+Calendar._TT["SEL_DATE"] = "Select date";
+Calendar._TT["DRAG_TO_MOVE"] = "Drag to move";
+Calendar._TT["PART_TODAY"] = ' (' + "Today" + ')';
+
+// the following is to inform that "%s" is to be the first day of week
+Calendar._TT["DAY_FIRST"] = "Display %s first";
+
+// This may be locale-dependent. It specifies the week-end days, as an array
+// of comma-separated numbers. The numbers are from 0 to 6: 0 means Sunday, 1
+// means Monday, etc.
+Calendar._TT["WEEKEND"] = "0,6";
+
+Calendar._TT["CLOSE"] = "Close";
+Calendar._TT["TODAY"] = "Today";
+Calendar._TT["TIME_PART"] = "(Shift-)Click or drag to change value";
+
+// date formats
+Calendar._TT["DEF_DATE_FORMAT"] = "%b %e, %Y";
+Calendar._TT["TT_DATE_FORMAT"] = "%B %e, %Y";
+
+Calendar._TT["WK"] = "Week";
+Calendar._TT["TIME"] = "Time:";
+
+//]]>
+
+</script>

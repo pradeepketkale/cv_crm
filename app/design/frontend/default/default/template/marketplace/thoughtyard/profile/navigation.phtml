@@ -1,0 +1,37 @@
+<?php
+$_helpm = $this->helper('umicrosite');
+$vendorIfo = $_helpm->getCurrentVendor(); 
+$storeurl = $_helpm->getVendorUrl($vendorIfo->getData('vendor_id'));
+//$level = Mage::getStoreConfig('udropship/microsite/subdomain_level');
+/*$level = Mage::getStoreConfig('udropship/microsite/subdomain_level');
+$url = parse_url(Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB));
+$hostArr = explode('.', trim($url['host'], '.'));
+$l = sizeof($hostArr);
+if ($l-$level>=0) {
+    $hostArr[$l-$level] = $vendorIfo->getUrlKey();
+} else {
+    array_unshift($hostArr, $vendorIfo->getUrlKey());
+}
+$baseUrl = $url['scheme'].'://'.join('.', $hostArr).(isset($url['path']) ? $url['path'] : '/');*/
+$vendorLogo = $vendorIfo->getShopLogo()!='' ? Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA).$vendorIfo->getShopLogo() : $this->getSkinUrl('images/noimage.jpg');
+?>
+
+<div class="sellerlogosection">
+    
+  <a href="#"><img src="<?php echo $vendorLogo; ?>" alt="" border="0" width="186"/></a>
+   
+  <ul class="sellerlinks">
+   <li><a class="selectedpor" href="<?php echo $storeurl; ?>thoughtyard/profile/">Profile</a></li>
+<li><a class="selectedprod" href="<?php echo $storeurl; ?>">Product</a></li>
+<!--<li><a href="<?php //echo $baseUrl; ?>feedback/index/">Feedback: 84, 100% pos.</a></li>-->
+
+<li class="last"><a class="selectedship" href="<?php echo $storeurl; ?>thoughtyard/policies/">Shipping and Returns</a></li>  
+<li class="last"><a class="selectedrecentsales" href="<?php echo $storeurl; ?>index.php/thoughtyard/recentsales/">Recent Sales</a></li>
+
+  </ul>
+<!--  <h1 class="botbor">Shop</h1>
+<div class="clmns">
+<strong>Lass Naturals:</strong><br />
+Lorem Ipsum is simply </div>-->
+ 
+</div>

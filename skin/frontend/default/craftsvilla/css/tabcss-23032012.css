@@ -1,0 +1,37 @@
+/*UI tabs*/
+#tabs{ padding:20px 0;}
+.ui-tabs-panel{background-color: #f3f3f3;border: 2px solid #FFFFFF;box-shadow: 1px 1px 4px rgba(100, 68, 46, 0.3); padding:15px; margin:0; clear:both; position:relative; z-index:999; overflow:hidden;}
+.ui-tabs-nav {
+	float: left;
+	position:relative;
+	z-index:1; margin-left:20px; top:6px;
+}
+.ui-tabs-nav-item.selected{border: 0 none;position: relative;top: 4px;}
+.ui-tabs-nav-item.selected a{ cursor:default;}
+.ui-tabs-nav-item.selected a:hover{ background:#F3F3F3;}
+.ui-tabs-nav-item {
+	/*resets*/margin: 0; padding: 0; border: 0; outline: 0; line-height: 1.3; text-decoration: none; font-size: 100%; list-style: none;
+	float: left;
+	border-right: none;border:1px solid #ccc;
+}
+.ui-tabs-nav-item a {
+	 background-color: #F3F3F3;
+    color: #444;
+    display: block;
+    font-weight: bold;
+    padding: 8px 10px; cursor:pointer;}
+.ui-tabs-nav-item a:hover,.ui-tabs-selected a, .ui-tabs-selected a:hover {background:#ebebeb;}
+.ui-tabs-selected {
+	position:relative;
+	top:-3px;b3
+	ox-shadow: 1px 1px 4px rgba(100, 68, 46, 0.3);}
+
+.ui-tabs-hide{
+	display: none;/* for accessible hiding: position: absolute; left: -99999999px*/;}
+ul.talsnew{margin-left:18px; position:relative; z-index:555;}
+#fragment-1,#fragment-2{ position:relative; z-index:0;}
+
+
+
+
+

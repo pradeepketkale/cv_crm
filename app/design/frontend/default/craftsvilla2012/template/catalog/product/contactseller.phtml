@@ -1,0 +1,155 @@
+<?php 
+$_product = $this->getProduct();
+$_helpv = $this->helper('udropship');
+$_helpm = $this->helper('umicrosite');
+$vendorIfo = $_helpv->getVendor($_product);
+
+$messageId=$this->helper('craftsvillacustomer')->getMessageId();
+$url = Mage::getBaseUrl().'craftsvillacustomer/index/sendemailcommunication'; 
+$_custImgResize=$this->helper('craftsvillacustomer');
+$_customer=Mage::getSingleton('customer/session')->getCustomer();
+$customerId=$_customer->getId();
+$customerName=$_customer->getFirstname();
+$customerEmail=$_customer->getEmail();
+$recepientEmail=$vendorIfo->getData('email');
+$recepientName=$vendorIfo['vendor_name'];
+
+//Below Line added By Dileswar for image  On dated 22-07-2013------------------------------------------
+
+$_productImagephoto="<img src='".Mage::helper('catalog/image')->init($_product, 'image')->resize(154, 154)."' alt='' width='154' border='0' style='float:left; border:2px solid #ccc; margin:0 20px 20px;' />";
+if($_customer->getCustomerPhoto()!=''){
+    $_imageCustomer = $_customer->getCustomerPhoto();
+    $imgurl=Mage::getBaseUrl('media');
+    $imageCustomerImg=split($imgurl,$_imageCustomer);//trim($_imageCustomer,$url);
+    $_image=$_custImgResize->getResizedUrl($imageCustomerImg[1],75);
+}
+else{
+    $_image=$this->getSkinUrl('img/messages/default_avatar_75px.png');
+}
+
+?>    
+
+<!--Seller Contact pop up-->
+    <div id="contact_seller">
+    
+    <div id="welcome_img"><span class="popuoheading">Welcome to <?php echo $vendorIfo['vendor_name']; ?></span></div>
+    <div id="bg_welcome"> 
+    
+   
+    <form id="sellercontact" method="post" name="sellercontact" enctype="multipart/form-data">
+      <div id="craft-thumb" class="fleft"><img width="75" height="75" src="<?php echo $_image; ?>" /></div>
+      <div id="craft-message" class="fleft">
+<?php if($customer = Mage::getSingleton('customer/session')->isLoggedIn()) { ?>		
+        <p><input type="text" name="newcustemail" id="craft-subjectemail" placeholder="Enter email " value="<?php echo $customerEmail ?>" class="required-entry" /></p>
+        <?php } else{ ?>
+                <p><input type="text" name="newcustemail" id="craft-subjectemail" placeholder="Enter email " value="<?php echo $customerEmail ?>" class="required-entry" /></p>
+                <?php }?>
+        <p><input type="text" name="subject" id="craft-subject" class="subreadonly" value="<?php echo 'Product Inquiry: '.$_product->getName(); ?>" readonly /></p>
+        <p><textarea rows="11" name="message_text" id="craft-textarea" placeholder="Message text" onkeyup="valid(this)" class="required-entry"></textarea></p>
+        <p><span class="required">*</span> You can contact seller directly to enquire about product details like color, material, sizes, expected delivery date, wholesale prices, discounts etc</p>
+        
+        <div id="craft-upload-frame"><input type="file" name="imgfile" id="craft-upload-shim" /><a href="#">Attach image</a></div>
+        <div class="positionrelative" id="imgshow" style="display:none">
+            <p class="up_cust"><img id="show_img" height="75" width="75" src="" /></p>
+        </div>
+<!--/*Some columns Like url image ,product name added By dileswar On dated 22-07-2013  for showing in customer a/c page as well as on email*/    -->
+        <input type="hidden" name="custid" id="reqvalues1" value="<?php echo $customerId; ?>" />
+        <input type="hidden" name="recmail" id="reqvalues2" value="<?php echo $recepientEmail; ?>" />
+        <input type="hidden" name="recname" id="reqvalues3" value="<?php echo $recepientName; ?>" />
+        <input type="hidden" name="msgid" id="reqvalues4" value="<?php echo $messageId; ?>" />
+        <input type="hidden" name="vendorid" id="reqvalues5" value="<?php echo $vendorIfo['vendor_id']; ?>" />
+        <input type="hidden" name="sendname" id="reqvalues6" value="<?php echo $customerName ?>" />
+        <input type="hidden" name="sendemail" id="reqvalues7" value="<?php echo $customerEmail ?>" />
+        <input type="hidden" name="productid" id="reqvalues8" value="<?php echo $_product->getId() ?>" />
+        <input type="hidden" name="imagephoto" id="reqvalues10" value="<?php echo $_productImagephoto ; ?>" />
+        <input type="hidden" name="productname" id="reqvalues11" value="<?php echo $_product->getName().' (SKU: '.$_product->getSku().')' ; ?>" />
+        <input type="hidden" name="producturl" id="reqvalues12" value="<?php echo $_product->getProductUrl(); ?>" />
+        
+      </div>
+      <span class="button-large" id="craft-send"><span>
+        <input type="submit" id="submit_val" value="Send" class="spriteimg floatr clr continueMdm" />
+        </span></span>
+    </form>
+ </div>
+
+ </div>
+<!--Seller Contact pop up Info-->
+ 
+<div id="successmessage">
+    <p>Your message has been sent</p>
+</div>
+
+<div id="notsuccessmessage" style="display:none">
+    <p>Image size should be less than 2MB</p>
+</div>
+
+<div id="filetypeext" style="display:none">
+    <p>It is not valid file type</p>
+</div>
+
+<script type="text/javascript">
+    
+   jQuery(document).ready(function() {
+       
+       
+       var thumb = jQuery('img#show_img');	
+                new AjaxUpload('craft-upload-shim', { 
+    		action: '<?php echo Mage::getBaseUrl().'craftsvillacustomer/index/previewimage/'; ?>',
+    		name: 'imgfile',
+                onSubmit: function(file, extension) {
+    			jQuery('#imgshow').show();
+    		},
+    		onComplete: function(file, response) {
+                    if(response == 'image size!')
+                    {	
+                           jQuery.fancybox({width:'430px', height:'22px',href:"#notsuccessmessage"});
+                    }
+                    if(response == 'filetype')
+                    {	
+                           jQuery.fancybox({width:'430px', height:'22px',href:"#filetypeext"});
+                    }
+                    
+                    thumb.attr('src', response);
+                }    
+                });
+       
+       
+      
+    var options = { 
+        success:       showResponse
+    };
+    
+   jQuery('#sellercontact').submit(function() { 
+        
+	if(jQuery('#craft-subjectemail').val()==''){
+            alert("Please Enter your Email");
+            return false;
+        }
+
+        if(jQuery('#craft-textarea').val()==''){
+            alert("Message text cannot be left blank");
+            return false;
+        }
+        jQuery('#submit_val').fadeOut("slow");
+        jQuery("#sellercontact").ajaxSubmit({url: '<?php echo $url; ?>', type: 'post',success:showResponse})
+        return false; 
+   });
+    
+});
+    
+function valid(f) {
+    /[@]/.test(f.value)?f.value = f.value.replace(/[@]/g,''):null;
+    return false;
+}
+
+function showResponse(responseText){ 
+	if(responseText == 'message sent!'){
+		jQuery.fancybox({width:'430px', height:'22px',href:"#successmessage"});
+                jQuery('#craft-textarea').val('');
+                jQuery('#submit_val').show();
+                jQuery('#imgshow').hide();
+                
+	}
+}
+
+</script>

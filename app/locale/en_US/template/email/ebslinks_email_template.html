@@ -1,0 +1,63 @@
+<!--@subject Payment Link for Your Pending Order on Craftsvilla.com! @-->
+
+<div style="width:725px;color:#444444;font-size:13px;line-height:18px;font-family:Arial, Helvetica, sans-serif;margin:0 auto;"> 
+  <!--Header HTML-->
+  <div style="height:130px;">
+    <p style="float:right;"><a href="http://www.craftsvilla.com/" style="color:#0192b5;font-size:14px;font-style:italic;font-weight:bold;text-decoration:none;">Start Shopping <img src="{{skin url='images/arrow_icon.jpg' _area='frontend'}}" alt="" border="0" style="vertical-align:middle; margin-left:5px;"/></a></p>
+    <div style="clear:both;"><a href="http://www.craftsvilla.com/"><img src="{{skin url='images/logo_email.gif' _area='frontend'}}" alt="CraftsVilla" border="0" style="float:left;"/></a>
+      <div style="float: left; margin:26px 0 0 22px;"><img src="{{skin url='images/img_bg_new_email.jpg' _area='frontend'}}" alt="" border="0"/> </div>
+    </div>
+    <img src="{{skin url='images/top_image_new.jpg' _area='frontend'}}" alt="" border="0" style="padding-top:12px;"/> </div>
+  <!--Header HTML End--> 
+  <!--Content Start -->
+  <div style="padding:20px; clear:both;">
+    <p style="font-size:16px;margin-top:0;">Dear <span style="color:#CE3D49;">{{var custfirstname}},</span></p>
+    <p>This is with regards to your order no.<span style="color:#013B58;font-family: times New Roman;font-size: 18px;">{{var orderno}}</span> on Craftsvilla.com for  for total amount of <span style="color:#013B58;font-family: times New Roman;font-size: 18px;"><strong>{{var grandtotal}}</strong></span></p>
+    <p>We regret to inform you that your Credit card/Net banking/Debit card payment has failed to clear the payment gateway.</p>
+	<p>Please find a secured payment link below where you can re-enter your Credit/Debit card/Netbanking details and try payment for this order again:</p>
+	
+    <div>
+    <table cellspacing="0" cellpadding="0" border="0" width="100%">
+	<tr>
+   	<td align="center" valign="top" style="padding:20px 0 px 0">
+    <table bgcolor="#E1E1E1"  cellspacing="0" cellpadding="10" border="1" width="100%">
+    <tr><td>
+    =============================================================================<br>
+    <p><b>Click This Link to Pay:</b></p>
+    <p><a href="{{var ebslinkurl}}" target="_blank">{{var ebslinkurl}}</a></p>
+    =============================================================================
+    </td></tr></table>
+<p><b>Below are Details of Your Order :</b></p>
+
+     <p>{{layout handle="sales_email_order_items_ebslink" order=$order}}</p>
+ <p>If you have any concern or queries, please click the button below to let us know your concern and we will try our best to revert back to you.</p>
+    <p> {{var action}}</p>
+    <p>Please update us with the transaction reference no. once you have made the payments; so that we can process your order for delivery at the earliest.</p>
+	Thank you for shopping with us.</div>
+	<p>Regards</p>
+	<p>-- Customer Happiness Team</p>
+	<p><a href="http://craftsvilla.com/" target="_blank">Craftsvilla.com</a> - The Marketplace to Discover India</p>
+	<p><a href="http://www.facebook.com/craftsvilla" target="_blank">Facebook</a><a href="http://www.twitter.com/craftsvilla" target="_blank">Twitter</a><a href="http://blog.craftsvilla.com/" target="_blank">Blog</a> <a href="http://www.linkedin.com/company/craftsvilla" target="_blank"> Linkedin</a>  <u>Skype ID</u>: craftsvilla</p>
+    </div>
+  	
+  <!--Content End --> 
+  
+  <!--Footer HTML-->
+  <div style="height:215px;"> <img src="{{skin url='images/top_image_new.jpg' _area='frontend'}}" alt="" border="0" style="padding-top:12px;"/>
+    <div style="background:#ebebeb;color:#343232;font-style:italic;overflow:hidden;padding:9px 6px 15px;">
+      <div style="padding:0 10px 5px;overflow:hidden;">
+        <p style="font-size:12px;font-style:normal;float:left;margin:4px 0 0 0;"><a href="http://www.craftsvilla.com/about-us-craftsvilla/" style="text-decoration:none;color:#000000;">About</a> | <a href="http://www.craftsvilla.com/contact-us-craftsvilla/" style="text-decoration:none;color:#000000;">Contact Us</a> | <a href="http://www.craftsvilla.com/shipping-artisans-designers/" style="text-decoration:none;color:#000000;">Shipping &amp; Return Policy</a> | <a href="http://www.craftsvilla.com/terms-and-conditions-craftsvilla/" style="text-decoration:none;color:#000000;">Terms Privacy</a></p>
+        <p style="float:right;margin:0;"><a href="https://www.facebook.com/craftsvilla"><img src="{{skin url='images/ficon.jpg' _area='frontend'}}" alt="Facebook" border="0" style="margin-right:5px;" /></a><a href="https://twitter.com/#!/craftsvilla"><img src="{{skin url='images/ticon.jpg' _area='frontend'}}" alt="twitter" border="0" /></a></p>
+      </div>
+      <div style="clear:both;"></div>
+      <p style="border-width:1px 0; border-style:solid; border-color:#dddcdc; padding:1px;margin:0;"></p>
+      <div style="padding:0 10px;">
+        <p>You received this email because you are registered on Craftsvilla.com. We respect your privacy. Please view our privacy policy. If you believe this has been sent to you in error, please contact at <a href="mailto:customercare@craftsvilla.com" style="color:#444;">customercare@craftsvilla.com</a>.</p>
+        <p style="color:#656565;margin:0;">Craftsvilla.com<br>
+          Row House No. 2, Nirav Housing Complex, Thakur Complex<br>
+          Kandivli (E), Mumbai, India 400101</p>
+      </div>
+    </div>
+    <img src="{{skin url='images/top_image_new.jpg' _area='frontend'}}" alt="" border="0"/> </div>
+  <!--Footer HTML END--> 
+</div>

@@ -1,0 +1,77 @@
+<?php 
+$_session = Mage::getSingleton('uagent/session');
+$_agent = $_session->getAgent();
+$_hlp = Mage::helper('uagent');
+$agentComm = Mage::getModel('uagent/uagent')->load($_agent->getId()); 
+$closingBalance = $agentComm->getClosingBalance();
+$_dashboardUrl = $this->getUrl('uagent/index/index');
+$_active = $this->getActivePage();
+?>
+    <div class="header_wrapper">
+    
+   <div class="header">
+		<div class="inner">
+			<div class="top">
+            </div>
+
+            <div class="bottom"><a href="<?php echo $this->getUrl('') ?>"> <h1 id="logo" class="homeprite"><?php //echo $this->getLogoAlt() ?></h1></a>
+            <div class="search_block"><div class="floatr">
+    
+    <div class="utility-nav">
+        <?php if ($_session->isLoggedIn()): ?>
+        <strong class="welcome_seller"><?php echo $this->htmlEscape($this->__('Welcome %s', $_session->getAgent()->getAgentName())) ?>!</strong> | 
+       <a href="<?php echo $this->getUrl('uagent/index/logout')?>" title="Sign Out"><?php echo $this->__('Sign out')?></a> | <a href="<?php echo $this->getUrl('') ?>">Web Store</a>
+<br/><br/><br/>
+<button style="float:center" class="form-button" name="AgentCommission" type="submit" id="closingbalance" value=""><span><?php echo $_hlp->__('Payout Balance: Rs. '.$closingBalance) ?></span></button>
+        <?php else: ?>
+         <?php echo $this->__('') ?>
+        <?php endif ?>
+    </div>
+                
+    <!--<p class="bnrTxt bnrrht"><a href="<?php echo $this->getUrl('') ?>">GO TO WEB STORE<br></a></p>-->
+    </div></div>            
+            </div>
+            </div></div></div>
+    <div class="clear"></div>
+   <div class="main-container">
+                    <div class="main">
+                        <div class="col-main">
+                            <div class="bdyShadow2">
+                                <div class="bodyWpr">
+                                    <div class="innerTwo">
+   <div class="col-left sidebar"><div class="about_nav">
+        <ul>
+            <li class="first <?php if ($_active=='dashboard'): ?>active<?php endif ?>"><a href="<?php echo $_dashboardUrl?>"><?php echo $this->__('Dashboard')?></a></li>
+            <?php if ($_session->isLoggedIn()): ?>
+                    <li <?php if ($_active=='preferences'): ?>class="active"<?php endif ?>><a href="<?php echo $this->getUrl('uagent/index/preferences')?>"><?php echo $this->__('Settings')?></a></li>
+			<?php endif ?>
+                   <?php if ($_session->isLoggedIn()):?>
+                        <li><a href="<?php echo $this->getUrl('uagent/createorder/createorder')?>" ><?php echo $this->__('Create Order')?></a></li>
+                   <?php endif ?>
+            <?php if ($_session->isLoggedIn()):?>
+                        <li><a href="<?php echo $this->getUrl('uagent/index/agentgeneratecoupon')?>" ><?php echo $this->__('Generate Coupon')?></a></li>
+             <?php endif ?>
+             <?php if ($_session->isLoggedIn()):?>
+                    <li <?php if ($_active=='paidstatus'): ?>class="active"<?php endif ?>><a href="<?php echo $this->getUrl('uagent/index/paidstatus')?>" ><?php echo $this->__('Commission Payouts')?></a></li>
+             <?php endif ?>   
+             
+               <?php if ($_session->isLoggedIn()):?>
+                    <li><a href="<?php echo $this->getUrl('uagent/index/createcatalog')?>" ><?php echo 
+
+$this->__('Create Catalog')?></a></li>
+                   <?php endif ?>     
+                   
+    </ul>
+    </div>
+    </div>
+<!-- AdElement Tag :     Dynamic Retargeting Tag - Craftsvilla.com    Description :   Place this tags on all pages of Craftsvilla.com  -->
+
+      <script type = "text/javascript">
+
+          var ae_parms_kv = {};
+
+          (function () {
+
+              var el_adv_id = "20f7372138cbeb6c012ec0bafd86fc95"; var oldonload = window.onload;window.onload = function(){__ele_loaded=true;var scr = document.createElement("script");var host = (("https:" == document.location.protocol) ? "https://d313lzv9559yp9.cloudfront.net" : "http://cache.adelement.com");scr.setAttribute("async", "true");scr.type = "text/javascript";scr.src = host + "/"+el_adv_id+".js";document.documentElement.firstChild.appendChild(scr);if(oldonload){oldonload()}};}());</script>
+
+<!--  End of AdElement Retargeting Tag  -->

@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<config>
+      <modules>
+        <Craftsvilla_ShopSearch>
+          <version>0.1.0</version>
+        </Craftsvilla_ShopSearch>
+      </modules>
+	  <frontend>
+      <routers>
+        <shopsearch>
+          <use>standard</use>
+         <args>
+           <module>Craftsvilla_ShopSearch</module>
+           <frontName>shopsearch</frontName>
+         </args>
+        </shopsearch>
+      </routers>
+	  <layout>
+          <updates>
+              <shopsearch>
+                  <file>shopsearch.xml</file>
+              </shopsearch>
+          </updates>
+      </layout>
+    </frontend>
+   <global>
+
+   
+   
+      <helpers>
+       <shopsearch>
+           <class>Craftsvilla_ShopSearch_Helper</class>
+       </shopsearch>
+      </helpers>   
+
+	  <blocks><shopsearch><class>Craftsvilla_ShopSearch_Block</class></shopsearch></blocks>
+   </global> 
+   
+
+</config> 

@@ -1,0 +1,22 @@
+<style type="text/css">
+<!--
+
+.shareButton { margin: 10px 0 0 0; height: 20px; line-height: 20px; }
+.fb_share { float: left; clear: both; }
+.twitter-share-button { display: block; float: left; margin: 0px 0 0 10px; cursor: pointer; }
+-->
+</style>
+
+<?php $_description = $this->getProduct()->getDescription(); ?>
+<?php if ($_description): ?>
+    <h2><?php echo $this->__('Details') ?></h2>
+    <div class="std">
+        <?php echo $this->helper('catalog/output')->productAttribute($this->getProduct(), $_description, 'description') ?>
+    </div>
+    <div class="shareButton">
+        <a class="fb_share" name="fb_share" type="button" href="http://www.facebook.com/sharer.php?u=<?php echo $currUrl;?>">Share</a>
+        <script src="http://static.ak.fbcdn.net/connect.php/js/FB.Share" type="text/javascript"></script>
+        <a href="http://twitter.com/share" class="twitter-share-button" data-count="none" data-via="YourTwitterID">Tweet</a>
+        <script src="http://platform.twitter.com/widgets.js" type="text/javascript" ></script>
+    </div>
+<?php endif; ?>

@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Livechat_Livechat>
+            <active>false</active>
+            <codePool>community</codePool>
+        </Livechat_Livechat>
+    </modules>
+</config> 

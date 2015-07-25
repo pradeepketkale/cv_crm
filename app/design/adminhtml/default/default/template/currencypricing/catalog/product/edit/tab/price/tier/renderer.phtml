@@ -1,0 +1,160 @@
+<?php
+/**
+ * Innoexts
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the InnoExts Commercial License
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://innoexts.com/commercial-license-agreement
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@innoexts.com so we can send you a copy immediately.
+ * 
+ * @category    Innoexts
+ * @package     Innoexts_CurrencyPricing
+ * @copyright   Copyright (c) 2012 Innoexts (http://www.innoexts.com)
+ * @license     http://innoexts.com/commercial-license-agreement  InnoExts Commercial License
+ */
+?>
+<?php $helper             = $this->helper('currencypricing'); ?>
+<?php $element            = $this->getElement(); ?>
+<?php $elementHtmlId      = $element->getHtmlId(); ?>
+<?php $elementName        = $element->getName(); ?>
+<?php $elementClass       = $element->getClass(); ?>
+<?php $elementReadonly    = $element->getReadonly(); ?>
+<?php $isShowWebsite      = $this->isMultiWebsites(); ?>
+<?php $isEditWebsite      = $this->isAllowChangeWebsite(); ?>
+<?php $priceValidator     = $this->getPriceValidation('validate-greater-than-zero'); ?>
+<?php $tableColSpan       = 5; ?>
+
+<tr>
+    <td class="label"><?php echo $element->getLabel() ?></td>
+    <td colspan="10" class="grid tier-price-grid">
+    <table cellspacing="0" class="data border" id="tier_price_table">
+        <?php if ($isShowWebsite): ?>
+        <col width="120" />
+        <?php endif; ?>
+        <col width="120" />
+        <col width="95" />
+        <col />
+        <col width="80" />
+        <col width="1" />
+        <thead>
+            <tr class="headings">
+                <th <?php if (!$isShowWebsite): ?>style="display:none"<?php endif; ?>><?php echo Mage::helper('sales')->__('Website') ?></th>
+                <th><?php echo Mage::helper('catalog')->__('Customer Group') ?></th>
+                <th><?php echo Mage::helper('catalog')->__('Qty') ?></th>
+                <th><?php echo $this->getPriceColumnHeader(Mage::helper('catalog')->__('Price')) ?></th>
+                <th><?php echo $helper->__('Currency') ?></th>
+                <th class="last"><?php echo Mage::helper('catalog')->__('Action') ?></th>
+            </tr>
+        </thead>
+        <tbody id="<?php echo $elementHtmlId ?>_container"></tbody>
+        <tfoot>
+            <tr>
+                <td <?php if (!$isShowWebsite): ?>style="display:none"<?php endif; ?>></td>
+                <td colspan="<?php echo $tableColSpan ?>" class="a-right"><?php echo $this->getAddButtonHtml() ?></td>
+            </tr>
+        </tfoot>
+    </table>
+
+<script type="text/javascript">
+//<![CDATA[
+var tierPriceRowTemplate = '<tr>'
+    + '<td<?php if (!$isShowWebsite): ?> style="display:none"<?php endif; ?>>'
+    + '<select class="<?php echo $elementClass ?> required-entry" name="<?php echo $elementName ?>[{{index}}][website_id]" id="tier_price_row_{{index}}_website">'
+    <?php foreach ($this->getWebsites() as $_websiteId => $_info): ?>
+    + '<option value="<?php echo $_websiteId ?>"><?php echo $this->jsQuoteEscape($this->htmlEscape($_info['name'])) ?><?php if (!empty($_info['currency'])): ?> [<?php echo $this->htmlEscape($_info['currency']) ?>]<?php endif; ?></option>'
+    <?php endforeach ?>
+    + '</select></td>'
+    + '<td><select class="<?php echo $elementClass ?> custgroup required-entry" name="<?php echo $elementName ?>[{{index}}][cust_group]" id="tier_price_row_{{index}}_cust_group">'
+    <?php foreach ($this->getCustomerGroups() as $_groupId=>$_groupName): ?>
+    + '<option value="<?php echo $_groupId ?>"><?php echo $this->jsQuoteEscape($this->htmlEscape($_groupName)) ?></option>'
+    <?php endforeach ?>
+    + '</select></td>'
+    + '<td class="nobr"><input class="<?php echo $elementClass ?> qty required-entry validate-greater-than-zero" type="text" name="<?php echo $elementName ?>[{{index}}][price_qty]" value="{{qty}}" id="tier_price_row_{{index}}_qty" />'
+    + ' <small class="nobr"><?php echo Mage::helper("catalog")->__("and above")?></small></td>'
+    + '<td><input class="<?php echo $elementClass ?> required-entry <?php echo $priceValidator ?>" type="text" name="<?php echo $elementName ?>[{{index}}][price]" value="{{price}}" id="tier_price_row_{{index}}_price" /></td>'
+    
+    + '<td><select class="<?php echo $elementClass ?> currency required-entry" name="<?php echo $elementName ?>[{{index}}][currency]" id="tier_price_row_{{index}}_currency">'
+    <?php foreach ($this->getCurrencyCodes() as $currency): ?>
+    + '<option value="<?php echo $currency ?>"><?php echo $this->jsQuoteEscape($this->htmlEscape($currency)) ?></option>'
+    <?php endforeach ?>
+    + '</select></td>'
+    
+    + '<td class="last"><input type="hidden" name="<?php echo $elementName ?>[{{index}}][delete]" class="delete" value="" id="tier_price_row_{{index}}_delete" />'
+    + '<button title="<?php echo Mage::helper("catalog")->__("Delete Tier") ?>" type="button" class="scalable delete icon-btn delete-product-option" id="tier_price_row_{{index}}_delete_button" onclick="return tierPriceControl.deleteItem(event);">'
+    + '<span><?php echo Mage::helper("catalog")->__("Delete") ?></span></button></td>'
+    + '</tr>';
+
+var tierPriceControl = {
+    template: new Template(tierPriceRowTemplate, new RegExp('(^|.|\\r|\\n)({{\\s*(\\w+)\\s*}})', "")),
+    itemsCount: 0,
+    addItem : function () {
+        <?php if ($elementReadonly): ?>
+        if (arguments.length < <?php echo $tableColSpan ?>) { return; }
+        <?php endif; ?>
+        var data = {
+            website_id: '<?php echo $this->getDefaultWebsite() ?>', 
+            group: '<?php echo $this->getDefaultCustomerGroup() ?>', 
+            qty: '', 
+            price: '', 
+            currency: '<?php echo $this->getDefaultCurrencyCode() ?>', 
+            readOnly: false, 
+            index: this.itemsCount++
+        };
+        if(arguments.length >= <?php echo $tableColSpan ?>) {
+            data.website_id = arguments[0];
+            data.group      = arguments[1];
+            data.qty        = arguments[2];
+            data.price      = arguments[3];
+            data.currency   = arguments[4];
+        }
+        if (arguments.length == <?php echo $tableColSpan + 1 ?>) { data.readOnly = arguments[<?php echo $tableColSpan ?>]; }
+        Element.insert($('<?php echo $elementHtmlId ?>_container'), { bottom : this.template.evaluate(data) });
+        $('tier_price_row_' + data.index + '_cust_group').value = data.group;
+        $('tier_price_row_' + data.index + '_website').value = data.website_id;
+        $('tier_price_row_' + data.index + '_currency').value = data.currency;
+        <?php if ($this->isShowWebsiteColumn() && !$this->isAllowChangeWebsite()):?>
+        var wss = $('tier_price_row_' + data.index + '_website');
+        var txt = wss.options[wss.selectedIndex].text;
+        wss.insert({after:'<span class="website-name">' + txt + '</span>'});
+        wss.hide();
+        <?php endif;?>
+        if (data.readOnly == '1') {
+            ['website', 'cust_group', 'qty', 'price', 'currency', 'delete'].each(function(idx) {
+                $('tier_price_row_' + data.index + '_' + idx).disabled = true;
+            });
+            $('tier_price_row_' + data.index + '_delete_button').hide();
+        }
+        <?php if ($elementReadonly): ?>
+        $('<?php echo $elementHtmlId ?>_container').select('input', 'select').each(this.disableElement);
+        $('<?php echo $elementHtmlId ?>_container').up('table').select('button').each(this.disableElement);
+        <?php else: ?>
+        $('<?php echo $elementHtmlId ?>_container').select('input', 'select').each(function(el){ Event.observe(el, 'change', el.setHasChanges.bind(el)); });
+        <?php endif; ?>
+    }, 
+    disableElement: function(el) { el.disabled = true; el.addClassName('disabled'); }, 
+    deleteItem: function(event) {
+        var tr = Event.findElement(event, 'tr');
+        if (tr) {
+            Element.select(tr, '.delete').each(function(elem){elem.value='1'});
+            Element.select(tr, ['input', 'select']).each(function(elem){elem.hide()});
+            Element.hide(tr);
+            Element.addClassName(tr, 'no-display template');
+        }
+        return false;
+    }
+};
+
+<?php foreach ($this->getValues() as $item): ?>
+tierPriceControl.addItem('<?php echo $item['website_id'] ?>', '<?php echo $item['cust_group'] ?>', '<?php echo $item['price_qty']*1 ?>', '<?php echo sprintf('%.2f', $item['price']) ?>', '<?php echo $item['currency'] ?>', <?php echo (int)!empty($item['readonly'])?>);
+<?php endforeach; ?>
+<?php if ($elementReadonly): ?>
+$('<?php echo $elementHtmlId ?>_container').up('table').select('button').each(tierPriceControl.disableElement);
+<?php endif; ?>
+//]]>
+</script>
+</td></tr>

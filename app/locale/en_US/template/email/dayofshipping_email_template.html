@@ -1,0 +1,54 @@
+<!--@subject Change in Expected Dispatched Date Of Your Shipment : {{var shipmentId}} / {{var expdate}}! @-->
+
+<div>
+<table cellspacing="0" cellpadding="0" border="0" width="98%" style="margin-top:10px; margin-bottom:10px; background:#FFF;">
+<tr>
+    <td align="center" valign="top">
+        <!-- [ header starts here] -->
+        <table cellspacing="0" cellpadding="0" border="0" width="800">
+           <tr>
+            <td valign="top" align="center"><a href="{{store url=''}}"><img src="{{skin url='images/logo_email.gif' _area='frontend'}}" alt="Craftsvilla"  style="margin-bottom:10px;" border="0"/></a></td>
+          </tr>
+        </table>
+        <!-- [ middle starts here] -->
+        <table cellspacing="0" cellpadding="0" border="0" width="800">
+         <tr><td><img src="{{skin url='images/top_image.jpg' _area='frontend'}}" alt="" /></td></tr>
+            <tr>
+                <td valign="top" style="font-size:14px; color:#444; padding:0 40px; line-height:18px; line-height:20px;">
+                
+                  
+                                   
+                    <p style="font-size:18px;">Dear <span style="color:#CE3D49;">{{var custname}}</span></p>
+
+ <p><span style="color: #013B58;font-family: times New Roman;font-size: 18px;">There is a change in  expected dispatch date by the seller: {{var sellerName}} for your shipment {{var shipmentId}}. Your shipment will be dispatched on the date which seller has mentioned below.</span></p>                    
+                    
+<p style="background:#7599AB; padding:5px; color:#FFF;margin:20px 0;"><font size="+1">Expected Dispatch Date Of Your Shipment is : {{var expdate}}<font></p>                    
+<div class="table-border table-bordersmall widtheight">
+	
+   <table cellspacing="0" cellpadding="0" border="0" style="border: 1px solid #DDDDDD;
+    border-collapse: separate;
+    border-spacing: 1px;
+    font-family: Arial,Helvetica,sans-serif;
+    font-size: 11px;
+    text-align: left; margin-bottom:20px; color:#000;">
+			{{var vendorItemHTML}}
+</table>
+<p>In case of any queries please contact designer at: {{var vendorTelephone}}</p>
+   
+   
+	 
+Thank You<br/>
+Craftsvilla Team
+	</p>
+
+
+</div>
+<p align="right" style="clear:both;"><img border="0" style="margin-bottom:10px;" alt="" src="{{skin url='images/smalllogo.jpg' _area='frontend'}}"></p>
+
+               </td>
+           </tr>
+       </table>
+   </td>
+</tr>
+</table>
+</div>

@@ -1,0 +1,80 @@
+<?php /*custom breadcrumbs*/ 
+/*$breadcrumbs = $this->getLayout()->getBlock('breadcrumbs');
+ 
+$breadcrumbs->addCrumb('home', array('label'=>Mage::helper('cms')->__('Home'), 'title'=>Mage::helper('cms')->__('Home Page'), 'link'=>Mage::getBaseUrl()));
+ 
+$breadcrumbs->addCrumb('cart', array('label'=>'Checkout', 'title'=>'Checkout'));
+ 
+echo $this->getLayout()->getBlock('breadcrumbs')->toHtml();*/
+?>
+<script type="text/javascript">
+			
+        jQuery(function()
+        {
+                // this initialises the demo scollpanes on the page.
+                jQuery('.sub').jScrollPane();
+
+        });
+        
+</script>   
+<script type="text/javascript" src="<?php echo $this->getJsUrl('varien/accordion.js') ?>"></script>
+<script type="text/javascript" src="<?php echo $this->getSkinUrl('js/opcheckout.js') ?>"></script>
+<script type="text/javascript">countryRegions = <?php echo $this->helper('directory')->getRegionJson() ?></script>
+<ul class="tabs">
+  <li><a href="#" id="tabone" onclick="menu(5);" class="tabselected"><span>1</span>Email &amp; Shipping Details</a></li>
+  <li><a href="#" id="tabtwo" onclick="menu(6);"><span>2</span>Make Payment</a></li>
+</ul>
+<span class="clr"></span>
+<div class="blockcontent">
+    <div id="logindeatils">
+        <?php echo $this->getChildHtml('login')?>
+        <?php echo $this->getChildHtml('billing')?>
+    </div>
+	<div id="billingdetails" style="display:none;">
+        <?php echo $this->getChildHtml('billing')?>
+	</div>
+    <div id="paymethod" class="displaynone">
+        <?php echo $this->getChildHtml('payment')?>
+    </div>
+</div>
+<!--<ol class="opc" id="checkoutSteps">
+<?php /*$i=0; foreach($this->getSteps() as $_stepId => $_stepInfo): ?>
+<?php if (!$this->getChild($_stepId) || !$this->getChild($_stepId)->isShow()): continue; endif; $i++ ?>
+    <li id="opc-<?php echo $_stepId ?>" class="section<?php echo !empty($_stepInfo['allow'])?' allow':'' ?><?php echo !empty($_stepInfo['complete'])?' saved':'' ?>">
+        <div class="step-title">
+            <span class="number"><?php echo $i ?></span>
+            <h2><?php echo $_stepInfo['label'] ?></h2>
+            <a href="#"><?php echo $this->__('Edit') ?></a>
+        </div>
+        <div id="checkout-step-<?php echo $_stepId ?>" class="step a-item" >
+            <?php echo $this->getChildHtml($_stepId) ?>
+        </div>
+    </li>
+<?php endforeach */?>
+</ol>-->
+
+<script type="text/javascript">
+//<![CDATA[
+    var accordion = new Accordion('checkoutSteps', '.step-title', true);
+    <?php if($this->getActiveStep()): ?>
+    accordion.openSection('opc-<?php echo $this->getActiveStep() ?>');
+    <?php endif ?>
+    var checkout = new Checkout(accordion,{
+        progress: '<?php echo $this->getUrl('checkout/onepage/progress') ?>',
+        review: '<?php echo $this->getUrl('checkout/onepage/review') ?>',
+        saveMethod: '<?php echo $this->getUrl('checkout/onepage/saveMethod') ?>',
+        failure: '<?php echo $this->getUrl('checkout/cart') ?>'}
+    );
+//]]>
+	jQuery(document).ready(new function(){
+
+		<?php if($this->isCustomerLoggedIn()): ?>
+			jQuery("#billingdetails, .bill-ship-user").show();
+			jQuery("#logindeatils").hide();
+		<?php else:?>
+		<?php endif;?>
+		
+	});
+
+</script>
+</div>

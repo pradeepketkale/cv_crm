@@ -1,0 +1,79 @@
+<?php  if ($this->getTarget() == "community" && !Mage::helper('relatedproducts')->isEnterprise()): ?>
+<?php if($this->getEnabled() && $this->getRelatedProductsCollection()->getSize()): ?>
+
+
+	
+		<p class="heading_css"><?php echo $this->__('Customers Who Bought This Also Bought') ?></p>
+        <div class="breadcrumbs_bottom"></div>
+
+<ul class="products-grid first category-products floatl">
+
+<div class="aw-content" <?php if (Mage::helper('relatedproducts')->checkVersion('1.4.1.0')) { echo "id=\"after1400\""; }?>>
+   
+			<?php foreach($this->getRelatedProductsCollection() as $_item): ?>
+            <?php if($_item->isComposite() || !$_item->isSaleable()): ?> <?php endif; ?>
+<!--        <div class="product-images">
+-->   <li class="item"><div class="prCnr">
+            <a href="<?php echo $_item->getProductUrl() ?>" title="<?php echo $this->htmlEscape($_item->getName()) ?>" class="product-image spriteimg" >
+                <img src="<?php echo $this->helper('catalog/image')->init($_item, 'thumbnail')->resize(125) ?>" alt="<?php echo $this->htmlEscape($_item->getName()) ?>" width="125" height="125" />
+            </a>
+       <!-- </div>-->
+       
+<!--        <div class="product-details">
+-->                 
+            <?php if(!$_item->isComposite() && $_item->isSaleable()): ?>
+            <?php else: ?>
+          <!--  <span class="checkbox-container">&nbsp;</span>-->
+            <?php endif; ?>
+            <p class="shopbrief"><a href="<?php echo $_item->getProductUrl() ?>" title="<?php echo $this->htmlEscape($_item->getName())?>"><?php echo $this->htmlEscape($_item->getName()) ?></a></p>
+            <div class="products price-box">
+                                            				<span class="regular-price" id="product-price-16294">
+                    <span class="price 123"> <?php echo $this->getPriceHtml($_item, true); ?> </span></span></div>
+          </div></li>
+<!--        </div>
+-->   
+    <?php endforeach ?>
+   
+
+
+</ul> 
+<script type="text/javascript">
+<!--
+$$('.aw-related-checkbox').each(function(elem){
+    Event.observe(elem, 'click', addAwRelatedToProduct)
+});
+
+var relatedAwProductsCheckFlag = false;
+function selectAllAwRelated(txt){
+    if (relatedAwProductsCheckFlag == false) {
+        $$('.aw-related-checkbox').each(function(elem){
+            elem.checked = true;
+        });
+        relatedAwProductsCheckFlag = true;
+        txt.innerHTML="<?php echo $this->__('unselect all') ?>";
+    } else {
+        $$('.aw-related-checkbox').each(function(elem){
+            elem.checked = false;
+        });
+        relatedAwProductsCheckFlag = false;
+        txt.innerHTML="<?php echo $this->__('select all') ?>";
+    }
+    addAwRelatedToProduct();
+}
+
+function addAwRelatedToProduct(){
+    var checkboxes = $$('.aw-related-checkbox');
+    var values = [];
+    for(var i=0;i<checkboxes.length;i++){
+        if(checkboxes[i].checked) values.push(checkboxes[i].value);
+    }
+    
+    if($('related-products-field')){
+        $('related-products-field').value = values.join(',');
+    }
+    
+}
+//-->
+</script>
+<?php endif ?>
+<?php endif ?>

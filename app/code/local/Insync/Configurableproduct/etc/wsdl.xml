@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns:typens="urn:{{var wsdl.name}}" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+    xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns="http://schemas.xmlsoap.org/wsdl/"
+    name="{{var wsdl.name}}" targetNamespace="urn:{{var wsdl.name}}">
+<types>
+        <schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="urn:Magento">
+            <import namespace="http://schemas.xmlsoap.org/soap/encoding/" schemaLocation="http://schemas.xmlsoap.org/soap/encoding/" />
+            <complexType name="configurableproductConfigurableproductCreateEntity">
+                <all>
+					<element name="associated_product" type="typens:ArrayOfString" />
+					<element name="configuarable_attribute" type="typens:ArrayOfString" />
+					<element name="configuarable_attribute_price" type="typens:ArrayOfString" />
+                </all>
+            </complexType>
+			 <complexType name="configurableproductConfigurableproductAttributePriceEntity">
+                <all>
+					<element name="value_id" type="xsd:string" minOccurs="0" />
+					<element name="product_super_attribute_id" type="xsd:string" minOccurs="0" />
+					<element name="value_index" type="xsd:string" minOccurs="0" />
+					<element name="is_percent" type="xsd:string" minOccurs="0" />
+					<element name="pricing_value" type="xsd:string" minOccurs="0" />
+					<element name="website_id" type="xsd:string" minOccurs="0" />
+                </all>
+            </complexType>
+			 <complexType name="ArrayOfAttibutePriceData">
+                <complexContent>
+                    <restriction base="soapenc:Array">
+                        <attribute ref="soapenc:arrayType" wsdl:arrayType="typens:configurableproductConfigurableproductAttributePriceEntity[]" />
+                    </restriction>
+                </complexContent>
+            </complexType>
+			 <complexType name="ArrayOfAttibutesPricesRowData">
+                <complexContent>
+                    <restriction base="soapenc:Array">
+                        <attribute ref="soapenc:arrayType" wsdl:arrayType="typens:ArrayOfAttibutePriceData[]" />
+                    </restriction>
+                </complexContent>
+            </complexType>
+        </schema>
+    </types>
+	<message name="configurableproductConfigurableproductCreateRequest">
+        <part name="sessionId" type="xsd:string" />
+		<part name="configuarble_productId" type="xsd:string" />
+        <part name="configuarbleProductData" type="typens:configurableproductConfigurableproductCreateEntity" />
+    </message>
+    <message name="configurableproductConfigurableproductCreateResponse">
+        <part name="configuarbleProductId" type="xsd:string" />
+    </message>
+	<message name="configurableproductConfigurableproductListAttributeRequest">
+        <part name="sessionId" type="xsd:string" />
+		<part name="configuarble_productId" type="xsd:string" />
+    </message>
+	<message name="configurableproductConfigurableproductListAttributeResponse">
+        <part name="configurableAttributes" type="typens:ArrayOfString" />
+    </message>
+	<message name="configurableproductConfigurableproductListChildProductRequest">
+        <part name="sessionId" type="xsd:string" />
+		<part name="configuarble_productId" type="xsd:string" />
+    </message>
+	<message name="configurableproductConfigurableproductListChildProductResponse">
+        <part name="childProduct" type="typens:ArrayOfString" />
+    </message>
+	<message name="configurableproductConfigurableproductListAttributePriceRequest">
+        <part name="sessionId" type="xsd:string" />
+		<part name="configuarble_productId" type="xsd:string" />
+    </message>
+	<message name="configurableproductConfigurableproductListAttributePriceResponse">
+        <part name="attributePriceData" type="typens:ArrayOfAttibutesPricesRowData" />
+    </message>
+    <portType name="{{var wsdl.handler}}PortType">
+        <operation name="configurableproductConfigurableproductCreate">
+            <documentation>Create Configurable Product</documentation>
+            <input message="typens:configurableproductConfigurableproductCreateRequest" />
+            <output message="typens:configurableproductConfigurableproductCreateResponse"/>
+        </operation>
+		 <operation name="configurableproductConfigurableproductListAttribute">
+            <documentation>Retrieve Configurable Attributes</documentation>
+            <input message="typens:configurableproductConfigurableproductListAttributeRequest" />
+            <output message="typens:configurableproductConfigurableproductListAttributeResponse"/>
+        </operation>
+		<operation name="configurableproductConfigurableproductListChildProduct">
+            <documentation>Retrieve Child Product</documentation>
+            <input message="typens:configurableproductConfigurableproductListChildProductRequest" />
+            <output message="typens:configurableproductConfigurableproductListChildProductResponse"/>
+        </operation>
+		<operation name="configurableproductConfigurableproductListAttributePrice">
+            <documentation>Retrieve Attribute Price Data</documentation>
+            <input message="typens:configurableproductConfigurableproductListAttributePriceRequest" />
+            <output message="typens:configurableproductConfigurableproductListAttributePriceResponse"/>
+        </operation>
+    </portType>
+    <binding name="{{var wsdl.handler}}Binding" type="typens:{{var wsdl.handler}}PortType">
+        <soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http" />
+        <operation name="configurableproductConfigurableproductCreate">
+            <soap:operation soapAction="urn:{{var wsdl.handler}}Action" />
+            <input>
+                <soap:body namespace="urn:{{var wsdl.name}}" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+            </input>
+            <output>
+                <soap:body namespace="urn:{{var wsdl.name}}" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+            </output>
+        </operation>
+		 <operation name="configurableproductConfigurableproductListAttribute">
+            <soap:operation soapAction="urn:{{var wsdl.handler}}Action" />
+            <input>
+                <soap:body namespace="urn:{{var wsdl.name}}" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+            </input>
+            <output>
+                <soap:body namespace="urn:{{var wsdl.name}}" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+            </output>
+        </operation>
+		 <operation name="configurableproductConfigurableproductListChildProduct">
+            <soap:operation soapAction="urn:{{var wsdl.handler}}Action" />
+            <input>
+                <soap:body namespace="urn:{{var wsdl.name}}" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+            </input>
+            <output>
+                <soap:body namespace="urn:{{var wsdl.name}}" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+            </output>
+        </operation>
+		 <operation name="configurableproductConfigurableproductListAttributePrice">
+            <soap:operation soapAction="urn:{{var wsdl.handler}}Action" />
+            <input>
+                <soap:body namespace="urn:{{var wsdl.name}}" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+            </input>
+            <output>
+                <soap:body namespace="urn:{{var wsdl.name}}" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+            </output>
+        </operation>
+    </binding>
+    <service name="{{var wsdl.name}}Service">
+        <port name="{{var wsdl.handler}}Port" binding="typens:{{var wsdl.handler}}Binding">
+            <soap:address location="{{var wsdl.url}}" />
+        </port>
+    </service>
+</definitions>

@@ -1,0 +1,136 @@
+<?php
+/**
+ * Innoexts
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the InnoExts Commercial License
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://innoexts.com/commercial-license-agreement
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@innoexts.com so we can send you a copy immediately.
+ * 
+ * @category    Innoexts
+ * @package     Innoexts_CurrencyPricing
+ * @copyright   Copyright (c) 2012 Innoexts (http://www.innoexts.com)
+ * @license     http://innoexts.com/commercial-license-agreement  InnoExts Commercial License
+ */
+?>
+<?php $helper             = $this->helper('currencypricing'); ?>
+<?php $element            = $this->getElement(); ?>
+<?php $product            = $this->getProduct(); ?>
+<?php $elementHtmlId      = $element->getHtmlId(); ?>
+<?php $elementName        = $element->getName(); ?>
+<?php $elementClass       = $element->getClass(); ?>
+<?php $elementReadonly    = $element->getReadonly(); ?>
+<?php $isGlobalPriceScope   = $this->isGlobalPriceScope(); ?>
+<?php $baseCurrencyCode     = $this->getStoreBaseCurrencyCode(); ?>
+<tr>
+    <td class="label"><?php echo $this->getElement()->getLabel() ?></td>
+    <td id="currency_special_price_grid" colspan="10" class="grid currency-special-price-grid">
+    <p>
+        <input type="checkbox" id="recalculate_currency_special_price" name="recalculate_currency_special_price" value="1" onclick="" class="checkbox"/>
+        &nbsp;<?php echo $helper->__('Recalculate by') ?>&nbsp;
+        <select id="recalculate_currency_special_price_currency" name="recalculate_currency_special_price_currency">
+            <?php foreach ($this->getCurrencyCodes() as $currency): ?>
+            <option value="<?php echo $currency ?>"<?php if ($currency == $baseCurrencyCode): ?> selected="selected"<?php endif; ?>>
+                <?php echo $currency ?>
+            </option>
+            <?php endforeach ?>
+        </select>
+    </p>
+    <table cellspacing="0" class="data border" id="currency_special_price_table">
+        <col width="75"/>
+        <col width="75" />
+        <col width="75" />
+        <thead>
+            <tr class="headings">
+                <th><?php echo $helper->__('Currency'); ?></th>
+                <th>
+                    <?php echo $helper->__('Price'); ?><br/>
+                    <?php echo $helper->__((($isGlobalPriceScope) ? '[GLOBAL]' : '[WEBSITE]')) ?>
+                </th>
+                <th>
+                    <?php echo $helper->__('Default Price'); ?><br/>
+                </th>
+            </tr>
+        </thead>
+        <tbody id="<?php echo $elementHtmlId ?>_container">
+            <?php foreach ($this->getValues() as $item) : ?>
+            <?php $currency = $item['currency']; ?>
+            <?php $price = $item['price']; ?>
+            <?php $rate = $item['rate']; ?>
+            <?php $useDefault = (int) $item['use_default']; ?>
+            <?php $defaultPrice = $item['default_price']; ?>
+            <tr>
+                <td>
+                    <?php if (count($rate)) : ?>
+                    <?php foreach ($rate as $_currency => $_rate) : ?>
+                    <input class="rate <?php echo $_currency ?>-rate" type="hidden" name="<?php echo $elementName ?>[<?php echo $currency ?>][rate][<?php echo $_currency ?>]" value="<?php echo $_rate ?>"/>
+                    <?php endforeach; ?>
+                    <?php endif; ?>
+                    <input class="currency" type="hidden" name="<?php echo $elementName ?>[<?php echo $currency ?>][currency]" value="<?php echo $currency ?>"/>
+                    <strong><?php echo $currency ?></strong>
+                </td>
+                <td class="nobr">
+                    <input class="<?php echo $elementClass ?> price special-price validate-number" type="text" name="<?php echo $elementName ?>[<?php echo $currency ?>][price]" value="<?php echo $price ?>"<?php if ($useDefault) : ?> disabled="disabled"<?php endif; ?> onchange="currencySpecialPriceControl.changePrice(event);"/>&nbsp;
+                    <input type="checkbox" name="<?php echo $elementName ?>[<?php echo $currency ?>][use_default]" value="1"<?php if ($useDefault) : ?> checked="checked"<?php endif; ?> onclick="toggleValueElements(this, this.parentNode);" class="checkbox"/>
+                    <label class="normal"><?php echo $helper->__('Default') ?></label>
+                </td>
+                <td class="a-right">
+                    <?php echo $defaultPrice ?>
+                </td>
+            </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+        
+<script type="text/javascript">
+//<![CDATA[
+var currencySpecialPriceControl = {
+
+    changePrice: function(event) {
+        if ($('recalculate_currency_special_price').checked) {
+            var baseCurrency = $('recalculate_currency_special_price_currency').value;
+            var currentTr = Event.findElement(event, 'tr');
+            if (currentTr) {
+                var currentCurrency = null;
+                Element.select(currentTr, '.currency').each(function(elem){ currentCurrency = elem.value });
+                if (baseCurrency && (baseCurrency == currentCurrency)) {
+                    var basePrice = null;
+                    Element.select(currentTr, '.price').each(function(elem){ basePrice = elem.value });
+                    if (basePrice) {
+                        var table = $('currency_special_price_table');
+                        if (table) {
+                            Element.select(table, 'tr').each(function(trElem) {
+                                var currency = null;
+                                Element.select(trElem, '.currency').each(function(elem){ currency = elem.value });
+                                if (currency && (currentCurrency != currency)) {
+                                    var rate = null;
+                                    Element.select(trElem, '.' + baseCurrency + '-rate').each(function(elem){ rate = elem.value });
+                                    if (rate) {
+                                        Element.select(trElem, '.price').each(function(elem){ 
+                                            var price = Number(basePrice) * Number(rate);
+                                            if (price) {
+                                                price = Math.round(price * 100) / 100;
+                                                elem.value = String(price);
+                                            }
+                                        });
+                                    }
+                                }
+                            });
+                        }
+                    }
+                }
+            }
+        }
+        return false;
+    }
+}
+//]]>
+</script>
+        
+    </td>
+</tr>

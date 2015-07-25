@@ -1,0 +1,159 @@
+<?xml version="1.0"?>
+<config>
+  <modules>
+		<Craftsvilla_Wholesale>
+		  <version>0.1.1</version>
+		</Craftsvilla_Wholesale>
+  </modules>
+  
+	  <frontend>
+		<routers>
+		  <wholesale>
+			<use>standard</use>
+			  <args>
+				<module>Craftsvilla_Wholesale</module>
+				<frontName>wholesale</frontName>
+			  </args>
+		  </wholesale>
+		</routers>
+		<layout>
+		  <updates>
+			<wholesale>
+			  <file>wholesale.xml</file>
+			</wholesale>
+		  </updates>
+		</layout>
+	  </frontend>
+  <admin>
+        <routers>
+			<wholesale>
+				<use>admin</use>
+				<args>
+					<module>Craftsvilla_Wholesale</module>
+					<frontName>wholesale</frontName>
+				</args>
+			</wholesale>
+        </routers>
+    </admin>
+  <adminhtml>
+		<menu>
+			<report>
+				<children>
+					<wholesale module="wholesale">
+						<title>Manage Wholesale</title>
+						<action>wholesale/adminhtml_wholesale</action>
+					</wholesale>
+				</children>
+			</report>
+			<wholesale module="wholesale">
+				<!--<title>Wholesale</title>
+				<sort_order>71</sort_order>               
+				<children>
+					<items module="wholesale">
+						<title>Manage Items</title>
+						<sort_order>0</sort_order>
+						<action>wholesale/adminhtml_wholesale</action>
+					</items>
+				</children>-->		
+			</wholesale>
+		</menu>
+		<acl>
+			<resources>
+				<all>
+					<title>Allow Everything</title>
+				</all>
+				<admin>
+					<children>
+						<Craftsvilla_Wholesale>
+							<title>Wholesale</title>
+							<sort_order>10</sort_order>
+							<action>wholesale/adminhtml_wholesale</action>
+						</Craftsvilla_Wholesale>
+					</children>
+				</admin>
+			</resources>
+		</acl>
+		<layout>
+			<updates>
+				<wholesale>
+					<file>wholesale.xml</file>
+				</wholesale>
+			</updates>
+		</layout>
+    </adminhtml>
+	<global>
+  	<template>
+		<email>
+			<wholesale_email_template module="wholesale">
+			<label>Buy wholesale</label>
+			<file>wholesale_email_template.html</file>
+			<type>html</type>
+			</wholesale_email_template>
+		
+			<wholesale_admin_email_template module="wholesale">
+			<label>Buy Wholesale</label>
+			<file>wholesale_admin_email_template.html</file>
+			<type>html</type>
+			</wholesale_admin_email_template>
+			<!--Added By dileswar for send email to Vendor on dated 20-11-2012-->
+			<wholesale_vendor_email_template module="wholesale">
+			<label>Buy Wholesale</label>
+			<file>wholesale_vendor_email_template.html</file>
+			<type>html</type>
+			</wholesale_vendor_email_template>
+			
+			<wholesale_export_csv module="wholesale">
+			<label>Buy Wholesale</label>
+			<file>wholesale_export_csv.html</file>
+			<type>html</type>
+			</wholesale_export_csv>
+		
+		</email>
+		</template>
+	<models>
+            <wholesale>
+                <class>Craftsvilla_Wholesale_Model</class>
+                <resourceModel>wholesale_mysql4</resourceModel>
+            </wholesale>
+            <wholesale_mysql4>
+                <class>Craftsvilla_Wholesale_Model_Mysql4</class>
+                <entities>
+                    <wholesale>
+                        <table>wholesale</table>
+                    </wholesale>
+                </entities>
+            </wholesale_mysql4>
+        </models>
+        <resources>
+            <wholesale_setup>
+                <setup>
+                    <module>Craftsvilla_Wholesale</module>
+                </setup>
+                <connection>
+                    <use>core_setup</use>
+                </connection>
+            </wholesale_setup>
+            <wholesale_write>
+                <connection>
+                    <use>core_write</use>
+                </connection>
+            </wholesale_write>
+            <wholesale_read>
+                <connection>
+                    <use>core_read</use>
+                </connection>
+            </wholesale_read>
+        </resources>
+        
+    <helpers>
+      <wholesale>
+        <class>Craftsvilla_Wholesale_Helper</class>
+      </wholesale>
+    </helpers>
+	<blocks>
+	  <wholesale>
+		<class>Craftsvilla_Wholesale_Block</class>
+	  </wholesale>
+	</blocks>
+  </global>
+</config> 

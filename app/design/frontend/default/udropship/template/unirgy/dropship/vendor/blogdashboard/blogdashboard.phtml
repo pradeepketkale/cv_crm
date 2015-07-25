@@ -1,0 +1,38 @@
+<!--Below Line Added By Dileswar On dated 29-07-2013 for to see the link to vendors url-->
+<a target="_blank" href="<?php echo 'http://blog.craftsvilla.com/'?>"> <b><p align="center">Your Blog Will be Posted at </p> </b><p align="center" style="background:#B22222; padding:2px;margin:20px 0;"><font size="+1" color="#FFF"><?php echo 'http://blog.craftsvilla.com/' ?></font></p></a>
+
+
+<html><body>
+<form name="blogdata" id="blogdata" action="<?php echo $this->getUrl('udropship/vendor/blogcreate');?>" method="post" enctype="multipart/form-data">
+<b>Blog Title:</b><br><br><input type="text" name="blogtitle" id="blogtitle" style="width: 300px; height: 50px;" ><br><br>
+<b>Blog:</b><br><br><textarea name="blog" id="blog" style="width: 300px; height: 300px;"></textarea><br><br>
+<input type="submit" value="Submit" class="form-button"/>
+</form>
+ </body></html>
+ 
+
+<script language="javascript" type="text/javascript">
+
+
+	//Added by Manoj Sir
+//NB: the single quotes for the doctype param must be backslashed; wiki format is removing them.
+Event.observe(window, 'load', function() {
+    tinyMCE.init({
+        mode : "exact",
+        theme : "advanced",
+        strict_loading_mode : true, 
+        elements : "blog",
+        theme_advanced_toolbar_location : "top",
+        theme_advanced_toolbar_align : "left",
+        theme_advanced_path_location : "bottom",
+        extended_valid_elements : "a[name|href|target|title|onclick],img[class|src|border=0|alt|title|hspace|vspace|width|height|align|onmouseover|onmouseout|name],hr[class|width|size|noshade],font[face|size|color|style],span[class|align|style]",
+        theme_advanced_resize_horizontal : "true",
+        theme_advanced_resizing : "true",
+        apply_source_formatting : "true",
+        convert_urls : "false",
+        force_br_newlines : "true",
+        doctype : '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">' 
+    });  
+});
+
+</script>

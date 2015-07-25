@@ -1,0 +1,99 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Craftsvilla_Follow>
+            <version>0.1.0</version>
+        </Craftsvilla_Follow>
+    </modules>
+	 <frontend>
+         <routers>
+            <follow>
+                <use>standard</use>
+                <args>
+                    <module>Craftsvilla_Follow</module>
+                    <frontName>follow</frontName>
+                </args>
+            </follow>
+        </routers>
+	<layout>
+		<updates>
+			<follow>
+				<file>follow.xml</file>
+			</follow>
+		</updates>
+	</layout>
+     </frontend>
+    <global>
+		<template>
+		    <email>
+		        <follow_email_template module="follow">
+		            <label>Follow Reminder</label>
+		            <file>follow_reminder_mail_send.html</file>
+		            <type>html</type>
+		        </follow_email_template>
+			<follow_email_seller module="follow">
+	            <label>Follow Seller</label>
+	            <file>follow_email_seller.html</file>
+	            <type>html</type>
+	        </follow_email_seller>
+			<follow_email_customer module="follow">
+	            <label>Follow Customer</label>
+	            <file>follow_email_customer.html</file>
+	            <type>html</type>
+	        </follow_email_customer>
+		    </email>
+		</template>
+        <models>
+            <follow>
+                <class>Craftsvilla_Follow_Model</class>
+                <resourceModel>follow_mysql4</resourceModel>
+            </follow>
+            <follow_mysql4>
+                <class>Craftsvilla_Follow_Model_Mysql4</class>
+                <entities>
+                    <follow>
+                        <table>follow</table>
+                    </follow>
+                </entities>
+            </follow_mysql4>
+        </models>
+        <resources>
+            <follow_setup>
+                <setup>
+                    <module>Craftsvilla_Follow</module>
+                </setup>
+                <connection>
+                    <use>core_setup</use>
+                </connection>
+            </follow_setup>
+            <follow_write>
+                <connection>
+                    <use>core_write</use>
+                </connection>
+            </follow_write>
+            <follow_read>
+                <connection>
+                    <use>core_read</use>
+                </connection>
+            </follow_read>
+        </resources>
+	<blocks>
+            <follow>
+                <class>Craftsvilla_Follow_Block</class>
+            </follow>
+        </blocks>
+        <helpers>
+            <follow>
+                <class>Craftsvilla_Follow_Helper</class>
+            </follow>
+        </helpers>
+    </global>
+	<!--<crontab>
+        <jobs>
+            <craftsvilla_follow>
+                <schedule><cron_expr>30 16 * * 1</cron_expr></schedule>
+                <run><model>follow/cron::sendfollow</model></run>
+            </craftsvilla_follow>
+        </jobs>
+    </crontab>-->
+</config>

@@ -1,0 +1,131 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Craftsvilla_Codrefundshipmentgrid>
+            <version>0.1.0</version>
+        </Craftsvilla_Codrefundshipmentgrid>
+    </modules>
+    <!--<frontend>
+      <routers>
+            <codrefundshipmentgrid>
+                <use>standard</use>
+                <args>
+                    <module>Craftsvilla_Codrefundshipmentgrid</module>
+                    <frontName>codrefundshipmentgrid</frontName>
+                </args>
+            </codrefundshipmentgrid>
+        </routers>
+        <layout>
+            <updates>
+                <codrefundshipmentgrid>
+                    <file>codrefundshipmentgrid.xml</file>
+                </codrefundshipmentgrid>
+            </updates>
+        </layout>
+    </frontend>-->
+    <admin>
+        <routers>
+			<codrefundshipmentgrid>
+				<use>admin</use>
+				<args>
+					<module>Craftsvilla_Codrefundshipmentgrid</module>
+					<frontName>codrefundshipmentgrid</frontName>
+				</args>
+			</codrefundshipmentgrid>
+        </routers>
+    </admin>
+    <adminhtml>
+		<menu>
+			<sales>
+				<children>
+				<codrefundshipmentgrid module="codrefundshipmentgrid">
+				<title>Codrefundshipmentgrid</title>
+				<action>codrefundshipmentgrid/adminhtml_codrefundshipmentgrid</action>
+				<sort_order>71</sort_order>    
+				<children>
+				      <codrefundshipmentimport translate="title">
+                                                                    <title>COD Shipment Refund Import</title>
+                                                                    <action>codrefundshipmentgrid/adminhtml_codrefundshipmentimport</action>
+                                                                    <sort_order>20</sort_order>
+                                                                </codrefundshipmentimport>
+							
+						</children>           
+				
+				</codrefundshipmentgrid>
+			</children>
+		</sales>
+	</menu>
+		<acl>
+			<resources>
+				<all>
+					<title>Allow Everything</title>
+				</all>
+<admin>
+<children>
+<sales>
+<children>
+<codrefundshipmentgrid>
+<title>Codrefundshipmentgrid Module</title>
+<sort_order>10</sort_order>
+</codrefundshipmentgrid>
+</children>
+</sales>
+</children>
+</admin>
+			</resources>
+		</acl>
+		<layout>
+			<updates>
+				<codrefundshipmentgrid>
+					<file>codrefundshipmentgrid.xml</file>
+				</codrefundshipmentgrid>
+			</updates>
+		</layout>
+    </adminhtml>   
+    <global>
+        <models>
+            <codrefundshipmentgrid>
+                <class>Craftsvilla_Codrefundshipmentgrid_Model</class>
+                <resourceModel>codrefundshipmentgrid_mysql4</resourceModel>
+            </codrefundshipmentgrid>
+            <codrefundshipmentgrid_mysql4>
+                <class>Craftsvilla_Codrefundshipmentgrid_Model_Mysql4</class>
+             <entities>
+                    <codrefundshipmentgrid>
+                        <table>codrefundshipmentgrid</table>
+                    </codrefundshipmentgrid>
+                </entities>
+            </codrefundshipmentgrid_mysql4>
+        </models>
+        <resources>
+            <codrefundshipmentgrid_setup>
+                <setup>
+                    <module>Craftsvilla_Codrefundshipmentgrid</module>
+                </setup>
+                <connection>
+                    <use>core_setup</use>
+                </connection>
+            </codrefundshipmentgrid_setup>
+            <codrefundshipmentgrid_write>
+                <connection>
+                    <use>core_write</use>
+                </connection>
+            </codrefundshipmentgrid_write>
+            <codrefundshipmentgrid_read>
+                <connection>
+                    <use>core_read</use>
+                </connection>
+            </codrefundshipmentgrid_read>
+        </resources>
+        <blocks>
+            <codrefundshipmentgrid>
+                <class>Craftsvilla_Codrefundshipmentgrid_Block</class>
+            </codrefundshipmentgrid>
+        </blocks>
+        <helpers>
+            <codrefundshipmentgrid>
+                <class>Craftsvilla_Codrefundshipmentgrid_Helper</class>
+            </codrefundshipmentgrid>
+        </helpers>
+    </global>
+</config>

@@ -1,0 +1,8 @@
+<?php
+$_session = Mage::getSingleton('udropship/session');
+if (Mage::helper('udropship')->isModuleActive('Unirgy_DropshipMicrosite')
+    && $_session->isLoggedIn()
+    && $_session->getVendor()->getShowProductsMenuItem()): 
+?> 
+<iframe src="<?php echo Mage::helper('umicrosite')->getManageProductsUrl() ?>" width="100%" height="550px" frameborder="no"></iframe>
+<?php endif;?>

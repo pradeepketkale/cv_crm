@@ -1,0 +1,125 @@
+<!--<div class="right-box-form">
+	<div id="content-colum-var">
+		<div class="leftarea">
+			<div><?php echo $this->getMessagesBlock()->getGroupedHtml(); ?> </div>
+			<table border="0" cellspacing="0" cellpadding="2" class="table-border" width="100%">
+                <tr >
+                  <th>S. NO.</th>
+                  <th>DATE</th>
+                  <th>EMAIL</th>
+                  <th>IS MEMBER</th>
+                  <th>HAS PURCHASED </th>
+                  
+                </tr>
+                <tr>
+                  <td>1</td>
+                  <td>05-12-2011 15:20:30</td>
+                  <td>amit@craftsvilla.com</td>
+                  <td>Yes</td>
+                  <td>Yes</td>
+                 
+                </tr>
+                <tr>
+                  <td>2</td>
+                  <td>05-12-2011 15:20:30</td>
+                  <td>amit@craftsvilla.com</td>
+                  <td>Yes</td>
+                  <td>Yes</td>
+                 
+                </tr>
+                <tr>
+                  <td>3</td>
+                  <td>05-12-2011 15:20:30</td>
+                  <td>amit@craftsvilla.com</td>
+                  <td>Yes</td>
+                  <td>Yes</td>
+                 
+                </tr>
+              </table>
+              
+              
+              
+              
+              
+             
+              <br />
+              <h2>My Gift Coupons</h2>
+              
+              <tr>
+              <td bgcolor="#f2e7e1"><b class="colrorgl txt12px"></b></td>
+              <td bgcolor="#f2e7e1"><b class="colrorgl txt12px"></b></td>
+              <td bgcolor="#f2e7e1"><b class="colrorgl txt12px"></b></td>
+			  <td bgcolor="#f2e7e1"><b class="colrorgl txt12px"></b></td>
+			  <td bgcolor="#f2e7e1"><b class="colrorgl txt12px"></b></td>
+			  <td bgcolor="#f2e7e1"><b class="colrorgl txt12px"></b></td>
+			   <td bgcolor="#f2e7e1"><b class="colrorgl txt12px"></b></td>
+            </tr>
+              
+              
+              
+              <table border="0" cellspacing="0" cellpadding="2" class="table-border" width="100%">
+                <tr >
+                  <th>Code Description</th>
+                  <th>Usage Limit</th>
+                  <th>Coupon Value</th>
+                  <th>Code</th>
+                  <th>Expiry Date</th>
+                  <th>Status</th>
+                  <th>Gift Status</th>                  
+                </tr>
+                <tr>
+                  <td><span class="WebRupee">Rs.</span> 950.0000 updated for gift coupon before 1st april</td>
+                  <td>2</td>
+                  <td><span class="WebRupee">Rs.</span> 207</td>
+                  <td>0K5GMNS4RH</td>
+                  <td>2012-04-02 00:00:00</td>                 
+                  <td>Used</td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td><span class="WebRupee">Rs.</span> 250 updated for refer a friend</td>
+                  <td>2</td>
+                  <td><span class="WebRupee">Rs</span> 207</td>
+                  <td>0K5GMNS4RH</td>
+                  <td>2012-04-02 00:00:00</td>                 
+                  <td>Used</td>
+                  <td></td>                
+                </tr>
+                <tr>
+                  <td><span class="WebRupee">Rs.</span> 250 updated for refer a friend</td>
+                  <td>2</td>
+                  <td><span class="WebRupee">Rs</span> 207</td>
+                  <td>0K5GMNS4RH</td>
+                  <td>2012-04-02 00:00:00</td>                 
+                  <td>Used</td>
+                  <td></td>
+                </tr>
+              </table>
+		</div>
+	</div>
+</div>-->
+<script type="text/javascript">// <![CDATA[
+function sendInvite() {
+	var invite_friends = document.getElementById('Invite1_txtEmail').value;
+	var reg = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
+
+	if(invite_friends=='')
+	{
+		alert("Please enter invite email");
+	}
+	else if(reg.test(invite_friends) == false) {
+		alert('Please enter valid email');      
+	}
+	else {
+		var reloadurl = "<?php echo $this->getUrl('referfriend/index/send/')?>";
+		new Ajax.Request(reloadurl, {
+			method: 'post',
+			parameters: {invite_friends:invite_friends,invite_box:'1',Submit:'Send Invites',homeInvite:'1'},
+			onComplete: function(transport) {
+				alert('Invite mail has been sent!');
+			}
+		});
+	}
+}
+// ]]>
+</script>

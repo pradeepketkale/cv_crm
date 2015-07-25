@@ -1,0 +1,121 @@
+<?php $_CacheId = "most-trend";
+$lifetime = 3600;
+
+if ($cacheContent = Mage::app()->loadCache($_CacheId)) 
+	echo $cacheContent;
+else{ 
+    
+$_pageHtml = '';
+$_pageHtml .='<div id="wishthis">
+  <div id="welcome_img" class="popuphead"><span class="popuoheading">Add to Wishlist</span></div>
+    <div id="bg_welcome" class="shortpop">
+        <ul class="followshop">
+          <li>
+            <h2 class="greyheading">Already Member</h2>
+            <a href="#login" class="spriteimg bluesmallbtn fancybox">Login</a></li>
+          <li class="nobor">
+            <h2 class="greyheading">New Customer </h2>
+            <a class="spriteimg bluesmallbtn fancybox" href="#signUpForm">Sign Up</a></li>
+        </ul>
+        <p class="clr"></p>
+        <p align="center" class="clr margintoptwenty"><span class="required">Note:</span> To Wish this product You need to login or register.</p>
+  </div>
+</div>';
+
+$_pageHtml .= '<h4 class="heading_css_new smallpadding floatl">Whats trending</h4><div class="breadcrumbs_bottom clr"></div><div id="container" class="transitions-enabled clearfix">
+  ';
+
+$date=date('Y-m-d');
+$two_back_days = date('Y-m-d',strtotime($date.'-'. 2 .'days'));
+
+$_itemCollection=Mage::getModel('wishlist/item')->getCollection()
+        ->addFieldToSelect('product_id')
+        ->addFieldToFilter('added_at', array('gt' => $two_back_days));
+
+$_itemCollection->getSelect()
+        ->group('main_table.product_id')
+        ->columns('COUNT(main_table.product_id) as count_item')
+        ->order('count_item DESC')
+        ->order('added_at DESC')
+        ;
+$_itemCollection->getSelect()->joinLeft(
+              array('stock' => 'cataloginventory_stock_item'),
+              "main_table.product_id = stock.product_id",
+              array('stock.is_in_stock')
+      );
+     $_itemCollection->getSelect()->joinLeft(array('productload' => 'catalog_product_flat_1'),
+              "main_table.product_id = productload.entity_id",
+              array('productload.url_path','productload.small_image','productload.name','productload.price','productload.special_price')
+        )->limit(100);
+
+$j=1;
+
+//echo $_itemCollection->getSelect()->__toString();exit;
+
+foreach($_itemCollection as $_productCollection):
+    //$_productCollection=Mage::getModel('catalog/product')->load($_item->getProductId());
+    $qtyStock=$_productCollection->getIsInStock();
+$_pageHtml .= 
+     '<div class="item">
+      <div class="prCnr">
+        <a href="'. $_productCollection->getProductUrl().'">
+            <div class="pro_image"><img src="'.$this->helper('catalog/image')->init($_productCollection, 'small_image')->resize(170).'" width="170"/></div>
+            <div class="productinfo">';
+      $_pageHtml .= '<p class="productname">'.$_productCollection->getName().'</p>';
+      if($_productCollection->getSpecialPrice()):
+        $_pageHtml .= '<p class="old-price floatr">             
+                <span id="old-price-27370" class="price">'.'Rs. '.number_format($_productCollection->getPrice(),0).'</span>
+            </p>
+            <p class="special-price">
+                <span id="product-price-27370" class="price">'.'Rs. '. number_format($_productCollection->getSpecialPrice(),0).'</span>
+            </p>';
+      else: 
+        $_pageHtml .= '<p>
+                <span id="product-price-27370" class="price">'.'Rs. '. number_format($_productCollection->getPrice(),0).'</span>
+            </p>';
+      endif; 
+     if($qtyStock<1):
+       $_pageHtml .= '<p class="sold_icon spriteimg"></p>';
+     elseif($_productCollection->getSpecialPrice()):
+       $_pageHtml .= '<p class="sell_icon spriteimg"></p>';
+     endif;
+    $_pageHtml .='</div>
+        </a>
+        <div id="socielicon">
+          <p class="wishit">';
+            $_pageHtml .='<input type="button" value="" title="Rewish" id="imgwish'.$j.'" class="wishit_buttons rewish_buttons" onclick="wishitval('.$_productCollection->getProductId().',this.id)" />';
+         
+            $_pageHtml .= '</p>
+            <p><a href="http://pinterest.com/pin/create/button/?url=www.craftsvilla.com&media='.$this->helper('catalog/image')->init($_productCollection, 'small_image')->resize(500, 500).'" class="pin-it-button" count-layout="none" target="_blank"><img border="0" src="'.$this->getSkinUrl('img/PinExt.png').'"/></a></p>
+        </div>';
+            $_pageHtml .='</div>
+    </div>';
+$j++; endforeach;
+  $_pageHtml .='
+</div>';
+
+$tags = array();
+Mage::app()->saveCache($_pageHtml, $_CacheId, $tags, $lifetime);
+echo $_pageHtml;
+//Mage::app()->removeCache($_CacheId);
+}?> 
+<!-- Once the page is loaded, initalize the plug-in. --> 
+<script type="text/javascript">
+    function wishitval(val,ival) {
+       <?php if(Mage::getSingleton('customer/session')->isLoggedIn()):?>
+           jQuery('#'+ival).addClass('wishit_hide');
+        var u = "<?php echo Mage::getBaseUrl().'wishlist/index/add/product/';?>"+val;
+                new Ajax.Request(u, {method:'post', parameters: {}, onSuccess: function(transport) {
+                                if(transport.responseText == 'wished')
+                                    var locate = "<?php echo $_SERVER['HTTP_REFERER']; ?>";
+                                window.location(locate);	
+                        }
+                });	
+        
+       <?php else :?>
+               jQuery.fancybox({width:'430px', height:'22px',href:"#wishthis"});
+       <?php endif; ?>
+       
+     }  
+
+</script> 

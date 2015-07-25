@@ -1,0 +1,76 @@
+<div class="btmNews clear paddingbottom">
+	<div class="section clear featured-seller linksnew">
+ 		<h2 style="padding:0;">Recently Listed</h2>
+    <?php 
+    /*$orders = Mage::getModel('sales/order')->getCollection()
+            ->addFieldToFilter('status', array('in' => array('complete')))
+            ->setOrder('entity_id', DESC)
+	    ->setPageSize(16)	
+           ->load();*/
+    $i=1;
+    
+    //$one_back_day = date('Y-m-d',strtotime($date.'-'. 1 .'days'));
+    //below line added by dileswar
+    $five_back_day = date('Y-m-d',strtotime($date.'-'. 20 .'days'));
+    $one_back_day = date('Y-m-d',strtotime($date.'-'. 1 .'days'));
+?>
+   
+    <ul class="small_block_list">
+        <?php //foreach($orders as $order) :
+            //$items=$order->getAllVisibleItems();
+        $_productsCollection=Mage::getModel('catalog/product')->getCollection()
+        ->addAttributeToSelect(array('small_image','url_path'), 'inner')
+        ->setOrder('entity_id','DESC');
+        $_productsCollection->getSelect()->limit(16);
+        
+        /*$_productsCollection=Mage::getModel('catalog/product')->getCollection()
+                            ->addAttributeToFilter('visibility', array('eq' => 4))
+                            ->addAttributeToSelect(array('small_image','url_path'), 'inner')
+                            ->addAttributeToFilter('status', 1)
+                            ->addAttributeToFilter('updated_at',array('lt'=>$one_back_day))
+                            ->setOrder('entity_id','DESC')
+                            ->setPageSize(16);
+                            
+           
+           $_productsCollection->getSelect()
+                   ->joinLeft('catalog_product_website','e.entity_id = catalog_product_website.product_id','website_id')
+                   ->where('catalog_product_website.website_id = 1');
+           /* $_productsCollection->getSelect()->joinLeft(
+                              array('stock' => 'cataloginventory_stock_item'),
+                              "e.entity_id = stock.product_id",
+                              array('stock.is_in_stock')
+                      )->where('stock.is_in_stock = 1')
+                      ;*/
+          //echo $_productsCollection->getSelect()->__toString();exit;
+           
+            foreach($_productsCollection as $_product):
+
+                //$_product=Mage::getModel('catalog/product')->load($_products->getEntityId());
+                //$itemId=$item->getProductId();
+               // $_prod=$_products->getData();
+              
+                    if($i%8==0){
+                        $class='class="lstCld"';
+                    }
+                    else{
+                        $class='';
+                    }
+
+                $imgPath = $this->helper('catalog/image')->init($_product, 'small_image')->resize(82,82);
+                $productUrl = $_product->getUrlPath();
+                ?>
+                <li <?php echo $class;?>>
+                    <a href="<?php echo $productUrl ?>">
+                        <img src="<?php echo $imgPath ?>" alt="" border="1" />
+                    </a>
+                </li> 
+               <?php if ($i % 8 == 0) {
+            echo '</ul> <ul class="small_block_list">';
+        }
+        $i++;?>
+            <?php  //endforeach;
+       endforeach;
+?>
+    </ul>
+</div>
+</div>

@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Cust_Refer>
+            <active>true</active>
+            <codePool>local</codePool>
+        </Cust_Refer>
+    </modules>
+</config> 

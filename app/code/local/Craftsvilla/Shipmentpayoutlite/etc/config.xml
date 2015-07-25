@@ -1,0 +1,132 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Craftsvilla_Shipmentpayoutlite>
+            <version>0.1.0</version>
+        </Craftsvilla_Shipmentpayoutlite>
+    </modules>
+    <frontend>
+      <routers>
+            <shipmentpayoutlite>
+                <use>standard</use>
+                <args>
+                    <module>Craftsvilla_Shipmentpayoutlite</module>
+                    <frontName>shipmentpayoutlite</frontName>
+                </args>
+            </shipmentpayoutlite>
+        </routers>
+        <layout>
+            <updates>
+                <shipmentpayoutlite>
+                    <file>shipmentpayoutlite.xml</file>
+                </shipmentpayoutlite>
+            </updates>
+        </layout>
+    </frontend>
+	<admin>
+	<routers>
+	<shipmentpayoutlite>
+	<use>admin</use>
+	<args>
+	<module>Craftsvilla_Shipmentpayoutlite</module>
+	<frontName>shipmentpayoutlite</frontName>
+	</args>
+	</shipmentpayoutlite>
+	</routers>
+	</admin>
+    <adminhtml>
+		<menu>
+<report>
+<children>
+			<shipmentpayoutlite module="shipmentpayoutlite">
+				<title>Shipment Payout Lite</title>
+				<sort_order>71</sort_order>               
+				<!--<children>
+					<items module="shipmentpayoutlite">
+						<title>Manage Item</title>
+						<sort_order>0</sort_order> -->
+						<action>shipmentpayoutlite/adminhtml_shipmentpayoutlite</action>
+					<!--</items>
+				</children>-->
+			</shipmentpayoutlite>
+</children>
+</report>
+		</menu>
+	
+
+<acl>
+    <resources>
+		<all>
+		   <title>Allow Everything</title>
+		</all>
+	<admin>
+		<children>
+			<report>
+				<children>
+					<shipmentpayoutlite translate="title" module="shipmentpayoutlite">
+						<title>Shipmentpayoutlite Module</title>                
+					</shipmentpayoutlite>
+				</children>
+			</report>
+		</children>
+	</admin>
+    </resources>
+</acl>
+
+
+
+		<layout>
+			<updates>
+				<shipmentpayoutlite>
+					<file>shipmentpayoutlite.xml</file>
+				</shipmentpayoutlite>
+			</updates>
+		</layout>
+    </adminhtml>   
+    <global>
+        <models>
+            <shipmentpayoutlite>
+                <class>Craftsvilla_Shipmentpayoutlite_Model</class>
+                <resourceModel>shipmentpayoutlite_mysql4</resourceModel>
+            </shipmentpayoutlite>
+            <shipmentpayoutlite_mysql4>
+                <class>Craftsvilla_Shipmentpayoutlite_Model_Mysql4</class>
+             <entities>
+                    <shipmentpayoutlite>
+                        <table>shipmentpayoutlite</table>
+                    </shipmentpayoutlite>
+                </entities>
+            </shipmentpayoutlite_mysql4>
+        </models>
+        <resources>
+            <shipmentpayoutlite_setup>
+                <setup>
+                    <module>Craftsvilla_Shipmentpayoutlite</module>
+                </setup>
+                <connection>
+                    <use>core_setup</use>
+                </connection>
+            </shipmentpayoutlite_setup>
+            <shipmentpayoutlite_write>
+                <connection>
+                    <use>core_write</use>
+                </connection>
+            </shipmentpayoutlite_write>
+            <shipmentpayoutlite_read>
+                <connection>
+                    <use>core_read</use>
+                </connection>
+            </shipmentpayoutlite_read>
+        </resources>
+        <blocks>
+            <shipmentpayoutlite>
+                <class>Craftsvilla_Shipmentpayoutlite_Block</class>
+            </shipmentpayoutlite>
+        </blocks>
+        <helpers>
+            <shipmentpayoutlite>
+                <class>Craftsvilla_Shipmentpayoutlite_Helper</class>
+            </shipmentpayoutlite>
+        </helpers>
+    </global>
+</config>

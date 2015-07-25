@@ -1,0 +1,88 @@
+<?xml version="1.0"?>
+<config>
+
+    <modules>
+        <AW_Previousnext>
+            <version>1.0.3</version><platform>ce</platform>
+        </AW_Previousnext>
+    </modules>
+
+    <frontend>
+        <layout>
+            <updates>
+                <previousnext module="AW_Previousnext">
+                    <file>previousnext.xml</file>
+                </previousnext>
+            </updates>
+        </layout>
+		<routers>
+			<previousnext>
+				<use>standard</use>
+				<args>
+					<module>AW_Previousnext</module>
+					<frontName>previousnext</frontName>
+				</args>
+			</previousnext>
+		</routers>
+	</frontend>
+
+    <adminhtml>
+		<acl>
+            <resources>
+                <all>
+                    <title>Allow Everything</title>
+                </all>
+                <admin>
+                    <children>
+                        <system>
+                            <children>
+                                <config>
+                                    <children>
+                                        <previousnext>
+                                            <title>aheadWorks - Previous Next Settings Section</title>
+                                        </previousnext>
+                                    </children>
+                                </config>
+                            </children>
+                        </system>
+                    </children>
+                </admin>
+            </resources>
+        </acl>
+	</adminhtml>
+	
+	<global>
+        <blocks>
+            <previousnext>
+                <class>AW_Previousnext_Block</class>
+            </previousnext>
+        </blocks>
+        <helpers>
+            <previousnext>
+                <class>AW_Previousnext_Helper</class>
+            </previousnext>
+        </helpers>
+    </global>
+
+	<default>
+		<previousnext>
+			<general>
+				<displaycontrols>1</displaycontrols>
+				<loopproducts>1</loopproducts>
+				<symbolsnumber>40</symbolsnumber>
+				<ending>..</ending>
+			</general>
+            <previouscontrol>
+				<linktext><![CDATA[<<<  <b>Previous</b> (#PRODUCT#)]]></linktext>
+            </previouscontrol>
+			<nextcontrol>
+				<linktext><![CDATA[<b>Next</b> (#PRODUCT#) >>>]]></linktext>
+            </nextcontrol>
+			<upcontrol>
+				<upcontrol>1</upcontrol>
+				<linktext><![CDATA[<b>Back</b> (#CATEGORY#)]]></linktext>
+            </upcontrol>
+        </previousnext>
+    </default>
+
+</config>

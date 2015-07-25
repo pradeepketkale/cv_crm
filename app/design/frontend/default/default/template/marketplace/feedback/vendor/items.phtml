@@ -1,0 +1,478 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2010 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+ 
+?>
+ <style type='text/css'>
+ 
+.error-msg {
+    background-color: #FAEBE7;
+    background-image: url("http://dev.craftsvilla.com/skin/frontend/default/udropship/images/i_msg-error.gif");
+    border-color: #F16048;
+    color: #DF280A;
+}
+.success-msg {
+    background-color: #EFF5EA;
+    background-image: url("<?php echo $this->getBaseUnsecureUrl() ?>/skin/frontend/default/udropship/images/i_msg-success.gif");
+    border-color: #446423;
+    color: #3D6611;
+}
+.note-msg, .notice-msg {
+    background-color: #FAFAEC;
+    background-image: url("<?php echo $this->getBaseUnsecureUrl() ?>/skin/frontend/default/udropship/images/i_msg-note.gif");
+    border-color: #FCD344;
+    color: #3D6611;
+}
+
+.shipment-info-loader {
+    line-height: 16px;
+    padding-left: 24px;
+}
+.data-table a.action {
+    display: block;
+    padding: 4px;
+}
+.data-table a.action span {
+    background: url("<?php echo $this->getBaseUnsecureUrl() ?>/skin/frontend/default/udropship/images/icon_collapsed.png") repeat scroll 0 0 transparent;
+    display: block;
+    height: 15px;
+    margin: auto;
+    width: 15px;
+}
+.data-table a.action span.open {
+    background: url("<?php echo $this->getBaseUnsecureUrl() ?>/skin/frontend/default/udropship/images/icon_expanded.png") repeat scroll 0 0 transparent;
+}
+.box-head a.action {
+    display: block;
+    padding: 3px 0;
+}
+.box-head a.action span {
+    background: url("<?php echo $this->getBaseUnsecureUrl() ?>/skin/frontend/default/udropship/images/icon_collapsed.png") repeat scroll 0 0 transparent;
+    display: block;
+    height: 15px;
+    margin: auto;
+    width: 15px;
+}
+.box-head a.action span.open {
+    background: url("<?php echo $this->getBaseUnsecureUrl() ?>/skin/frontend/default/udropship/images/icon_expanded.png") repeat scroll 0 0 transparent;
+}
+ </style>
+
+
+<?php  $_order = $this->getOrder() ?>
+<p class="order-links">
+    <?php  if ($_order->getTracksCollection()->count()) : ?>
+        <a href="#" onclick="popWin('<?php echo $this->helper('shipping')->getTrackingPopupUrlBySalesModel($_order) ?>','trackorder','width=800,height=600,top=0,left=0,resizable=yes,scrollbars=yes'); return false;" title="<?php echo $this->__('Track all shipment(s)') ?>"><?php echo $this->__('Track all shipments') ?></a> <span class="separator">|</span>
+    <?php endif; ?>
+    <a href="<?php echo $this->getPrintAllShipmentsUrl($_order) ?>" onclick="this.target='_blank'" class="link-print"><?php echo $this->__('Print All Shipments') ?></a>
+</p>
+<?php foreach ($_order->getShipmentsCollection() as $_shipment): ?>
+<h2 class="sub-title"><?php echo $this->__('Shipment #') ?><?php echo $_shipment->getIncrementId(); ?> <span class="separator">|</span> <a href="<?php echo $this->getPrintShipmentUrl($_shipment) ?>" onclick="this.target='_blank'" class="link-print"><?php echo $this->__('Print Shipment') ?></a></h2>
+<?php $tracks = $_shipment->getTracksCollection(); ?>
+<?php  if ($tracks->count()): ?>
+    <table class="data-table tracking-table" id="my-tracking-table-<?php echo $_shipment->getId(); ?>">
+        <tbody>
+            <tr>
+                <td colspan="2">
+                    <a href="#" onclick="popWin('<?php echo $this->helper('shipping')->getTrackingPopupUrlBySalesModel($_shipment) ?>','trackshipment','width=800,height=600,top=0,left=0,resizable=yes,scrollbars=yes'); return false;" title="<?php echo $this->__('Track this shipment') ?>"><?php echo $this->__('Track this shipment') ?></a>
+                </td>
+            </tr>
+            <tr>
+                <th class="label"><?php echo $this->__('Tracking Number(s):') ?></th>
+                <td>&nbsp;
+                <?php
+                $i = 1;
+                $_size = $tracks->count();
+                foreach($tracks as $track): ?>
+                <?php if($track->isCustom()): ?>
+                    <?php echo $track->getNumber() ?>
+                <?php else: ?>
+                    <a href="#" onclick="popWin('<?php echo $this->helper('shipping')->getTrackingPopupUrlBySalesModel($track) ?>','trackorder','width=800,height=600,left=0,top=0,resizable=yes,scrollbars=yes')" ><?php echo $track->getNumber() ?></a>
+                <?php endif; ?>
+                <?php if($i!=$_size): ?>, <?php endif; ?>
+                <?php $i++;
+                endforeach; ?>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <script type="text/javascript">decorateTable('my-tracking-table-<?php echo $_shipment->getId(); ?>')</script>
+<?php  endif; ?>
+<h3 class="table-caption"><?php echo $this->__('Items Shipped') ?></h3>
+<table class="data-table" id="my-shipment-table-<?php echo $_shipment->getId(); ?>">
+    <col />
+    <col width="1" />
+    <col width="1" />
+    <thead>
+        <tr>
+            <th><?php echo $this->__('Product Name') ?></th>
+            <th><?php echo $this->__('SKU') ?></th>
+            <th class="a-center"><span class="nobr"><?php echo $this->__('Qty Shipped') ?></span></th>
+        </tr>
+    </thead>
+    <?php $_items = $_shipment->getAllItems(); ?>
+    <?php $_count = count($_items) ?>
+    <?php foreach ($_items as $_item): ?>
+    <?php if ($_item->getOrderItem()->getParentItem()) continue; ?>
+    <tbody>
+        <?php echo $this->getItemHtml($_item) ?>
+    </tbody>
+    <?php endforeach; ?>
+</table>
+
+------this one is market place folder remove upper grid donew by U.I. -------------------------
+<?php
+//echo "<pre>";
+//print_r($_shipment->getData());
+?>
+    <?php $_hlp = Mage::helper('udropship'); ?>
+    <?php $_items = $_shipment->getAllItems(); ?>
+    <?php  $ship_ids = $_shipment->getId(); //shipment Id ?>
+    <?php  $Vendor_id = $_shipment->getUdropshipVendor(); //vendor Id ?>
+    <?php $_count = count($_items);?>
+    <?php $_items = $_shipment->getItemsCollection(); ?>
+    
+ <?php    
+$_ajaxInfoUrl = $this->getUrl('feedback/vendor/shipmentInfo/vendor_id/'.$Vendor_id.'/ship_id/'.$ship_ids .'/id/ID/ajax/1');
+$_ajaxPostUrl = $this->getUrl('feedback/vendor/shipmentPost/id/ID/ship_id/SID/vendor_id/VID/ajax/1');
+//echo $this->getChildHtml('toolbar') ?>
+<p>
+    <a href="#" onclick="collapseAllRows(); return false"><?php echo $_hlp->__('Collapse all rows') ?></a> / <a href="#" onclick="expandAllRows(); return false"><?php echo $_hlp->__('Expand all rows') ?></a>
+</p>
+
+
+<table cellspacing="0" class="data-table" id="shipment-grid">
+    <col width="1" />
+    <col />
+    <col />
+    <col />
+    <col />
+    <col />
+    <col width="1" />
+    <col />
+    <thead>
+        <tr>
+            <th><?php echo $_hlp->__('')?></th>
+            <th><?php echo $_hlp->__('Shipment ID')?></th>
+            <th><?php echo $_hlp->__('Name')?></th>
+            <th><?php echo $_hlp->__('SKU')?></th>
+            <th><?php echo $_hlp->__('Qty')?></th>
+            <th><?php echo $_hlp->__('Shipment Date')?></th>
+            <th><?php echo $_hlp->__('Status')?></th>
+            <th><?php echo $_hlp->__('Action')?></th>
+            <th><?php echo $_hlp->__('Feedback')?></th>
+       </tr>
+    </thead>
+    <tbody>
+    
+  
+    
+    <?php foreach ($_items as $_item): ?>
+    <?php if ($_item->getOrderItem()->getParentItem()) continue; ?>
+        <?php   //echo "<pre>";
+       // print_r($_shipment->getData()); //shipmet created date
+       //echo $this->getItemHtml($_item) ?>
+    <?php endforeach; ?>
+<?php if ($_shipment): ?>
+    <?php foreach ($_items as $_id=>$_s): ?>
+        <tr id="row-<?php echo $_id?>-<?php echo $ship_ids?>-<?php echo $Vendor_id?>" class="trigger <?php echo $_shipment->getIsEven() ? 'even' : 'odd'?>">
+            <td><a class="action" href="#" onclick="return false"><span></span></a></td>
+            <td><?php echo $_shipment->getIncrementId() ?></td>
+            <td><h4 class="product-name"><?php echo $this->htmlEscape($_item->getName()) ?></h4></td>
+            <td><?php echo $this->htmlEscape(Mage::helper('core/string')->splitInjection($_item->getSku())) ?></td>
+            <td><?php echo $_s->getQty()*1 ?></td>
+            <td><?php echo Mage::helper('core')->formatDate($_s->getCreatedAt(), 'short', true) ?></td>
+            <td id="status-<?php echo $_id ?>"><?php echo $_hlp->__($_hlp->getShipmentStatusName($_shipment)) ?></td>
+            <td>
+                <a style="white-space:nowrap" href="<?php echo $this->getUrl('udropship/vendor/pdf', array('shipment_id'=>$_s->getId()))?>"><?php echo $_hlp->__('Recieved/ Feedback')?></a>
+            </td>
+            <td><span>
+            <?php $feedback = Mage::getModel('feedback/vendor_feedback')->load();
+        	$userfeedback = $feedback->load($_id ,'ship_item_id' );
+        	echo $userfeedback->getFeedback();
+        	?>
+            </span></td>
+        </tr>
+        <tr id="info-<?php echo $_id?>" style="display:none">
+            <td id="container-<?php echo $_id?>" colspan="10">
+                <span class="shipment-info-loader"><?php echo $_hlp->__('Please wait, loading shipment information...')?></span>
+            </td>
+        </tr>
+    <?php endforeach ?>
+<?php endif ?>
+    </tbody>
+</table>
+<?php echo $this->getChildHtml('toolbar') ?>
+
+<script type="text/javascript">
+var dateFields = ['filter-order_date-from', 'filter-order_date-to', 'filter-shipment_date-from', 'filter-shipment_date-to'];
+$$('#shipment-grid tbody tr.trigger').each(function (row) {
+    var a = row.down('a.action');
+    a.observe('click', expandRow.curry(false, row));
+});
+
+function expandRow(openFlag, row) {
+    var a = row.down('a.action');
+    var id = row.id.split('-')[1];
+    var sid = row.id.split('-')[2];
+    var vid = row.id.split('-')[3];
+    var info = $('info-'+id), container = $('container-'+id), img = a.down('span');
+    if (!info.isInfoLoaded) {
+        info.isInfoLoaded = true;
+        new Ajax.Updater(container, '<?php echo $_ajaxInfoUrl ?>'.replace('ID', id), {
+            onComplete: function (transport) { initShipmentForm.defer(id,sid,vid); },
+            evalScripts: true
+        });
+    }
+    if (openFlag) info.show();
+    else info.toggle();
+    if (openFlag) {
+        info.removeClassName('collapsed');
+    } else if (info.hasClassName('collapsed')) {
+        info.removeClassName('collapsed');
+    } else {
+        info.addClassName('collapsed');
+    }
+    if (info.hasClassName('collapsed')) {
+        img.removeClassName('open');
+    } else {
+        img.addClassName('open');
+    }
+}
+
+function onSubmitActionChange(el) {
+    if (el.value=='updateShipmentsStatus') {
+        $('batch_update_status').show();
+    } else {
+        $('batch_update_status').hide();
+    }
+}
+
+function massActionSubmit(form) {
+    if (validateSearch(form)) {
+        action = '<?php echo $this->getUrl('udpo/vendor') ?>'+'?'
+        action = action + '&' + serializeFormElements('shipments-filter-form')
+        action = action + '&' + serializeFormElements(form.id)
+        setLocation(action)
+        return true;
+    }
+    return false;
+}
+
+function validateSearch(form) {
+    var downloadAction
+    switch ($('submit_action').value) {
+    case 'labelBatch':
+        if (confirm('<?php echo $_hlp->__('This action will create shipping labels for all filtered shipments and mark them as shipped.') ?>')) {
+            downloadAction = true
+        }
+        break;
+
+    case 'packingSlips':
+        if (confirm('<?php echo $_hlp->__('This action will print packing slips for all filtered shipments and mark them as ready to ship.') ?>')) {
+            downloadAction = true
+        }
+        break;
+
+    case 'existingLabelBatch':
+        if (confirm('<?php echo $_hlp->__('This action will print existing shipping labels for all filtered shipments.') ?>')) {
+            downloadAction = true
+        }
+        break;
+
+    case 'updateShipmentsStatus':
+        if (!$('batch_update_status').value) {
+            alert('<?php echo $_hlp->__('Please select a status.') ?>');
+            return false;
+        }
+        return confirm('<?php echo $_hlp->__('This action will update status for all filtered shipments.') ?>');
+    }
+    if (downloadAction) {
+        var qs = serializeFormElements('shipments-filter-form', true)
+        qs.update_status = ''
+        qs.use_json_response = 1
+        var ifrId = 'ifr_id_'+(new Date()).getTime()
+        if (Prototype.Browser.IE) {
+            Element.insert($('download_iframe'), {after: '<iframe id="'+ifrId+'" src="?'+Object.toQueryString(qs)
+                +'" style="display:none" onreadystatechange="ieDownloadSubmitWrapper(\''+ifrId+'\')"></iframe>'
+            })
+        } else {
+            Element.insert($('download_iframe'), {after: '<iframe id="'+ifrId+'" src="?'+Object.toQueryString(qs)
+                +'" style="display:none" onload="afterDownloadSubmit(\''+ifrId+'\')"></iframe>'
+            })
+        }
+    } 
+    return false;
+}
+
+function ieDownloadSubmitWrapper(ifrId) {
+    if ($(ifrId) && ($(ifrId).readyState=='complete' || $(ifrId).readyState=='interactive')) {
+        afterDownloadSubmit.defer(ifrId)
+        $(ifrId).onreadystatechange = Prototype.emptyFunction
+    }
+}
+
+function afterDownloadSubmit(ifrId) {
+    var response
+    try {
+        response = $(ifrId).contentDocument.body.innerHTML.evalJSON()
+    } catch(e) {}
+    if (response && response.error) {
+        if (response.message) {
+            alert(response.message)
+        } else {
+            alert('Unknown error')
+        }
+    } else {
+        var qs = serializeFormElements('shipments-filter-form', true)
+        if ($('batch_update_status').value) {
+            qs.submit_action = 'updateShipmentsStatus'
+        } else {
+            qs.submit_action = ''
+        }
+        setLocation('?'+Object.toQueryString(qs))
+    }
+    //Element.remove($(ifrId))
+}
+
+// fix of Prototype.js Form.serialize for IE
+function serializeFormElements(form, options) {
+    var elements = [];
+    $$('#'+form+' *').each(function(child) {
+        if (Form.Element.Serializers[child.tagName.toLowerCase()]) {
+            elements.push(Element.extend(child));
+        }
+    });
+    return Form.serializeElements(elements, options);
+}
+
+function initShipmentForm(id,sid,vid) {
+    var statusUpdate = $('status-update-'+id), statusCell = $('status-'+id);
+    if (statusUpdate && statusUpdate.innerHTML!=statusCell.innerHTML) {
+        statusCell.innerHTML = statusUpdate.innerHTML;
+        var h = new Effect.Highlight(statusCell);
+    }
+
+    var downloadUrl = $('download-url-'+id);
+    if (downloadUrl) {
+        $('download_iframe').src = downloadUrl.innerHTML;
+    }
+
+    $$('#container-'+id+' .highlight').each(function(el){ var h = new Effect.Highlight(el); });
+    $$('#container-'+id+' .item-gift-message-trigger').each(function(el) {
+        $(el).observe('click', function(e) {
+            e.stop();
+            $(this).up().next('div.item-gift-message-content').toggle();
+        });
+    });
+
+    $('submit-'+id).observe('click', function () {
+        var parameters = serializeFormElements('shipment-form-'+id);
+        if (parameters == 'tracking_id=&comment=') {
+            return;
+        }
+        $('submit-'+id).disabled = true;
+        $('submit-loader-'+id).show();
+//alert(parameters);
+    var url = '<?php echo $_ajaxPostUrl ?>'.replace('ID', id ).replace('SID', sid).replace('VID', vid);
+        new Ajax.Updater($('container-'+id), url , {
+            method: 'post',
+            parameters: parameters,
+            onComplete: function (transport) { initShipmentForm(id,sid,vid).defer(); }
+        });
+    });
+}
+
+function toggleLabelForm(el, id) {
+    var i, l, t;
+    for (i=1; i<20; i++) {
+        l = $('label_info-'+i+'-'+id);
+        t = $('tracking_id-'+i+'-'+id);
+        if (el.checked) {
+            l && l.show(); t && t.hide();
+            $('change_status-'+id).value = '';
+        } else {
+            l && l.hide(); t && t.show();
+            $('is_shipped-'+id).checked = false;
+        }
+    }
+    if (!el.checked) {
+        showExtraLabelForm(id, false)
+    }
+}
+
+function toggleExtraLabelForm(el, id) {
+    var i, l, t;
+    for (i=1; i<20; i++) {
+        l = $('label_info-ext-'+i+'-'+id);
+        if (el.checked) {
+            l && l.show();
+            l && l.select('input').invoke('enable');
+            l && l.select('select').invoke('enable');
+            l && l.select('textarea').invoke('enable');
+        } else {
+            l && l.hide();
+            l && l.select('input').invoke('disable');
+            l && l.select('select').invoke('disable');
+            l && l.select('textarea').invoke('disable');
+        }
+    }
+}
+
+function showExtraLabelForm(id, showFlag) {
+    var i, l, t;
+    for (i=1; i<10; i++) {
+        l = $('label_info-ext-'+i+'-'+id);
+        if (showFlag) {
+            l && l.show();
+            l && l.select('input').invoke('enable');
+            l && l.select('select').invoke('enable');
+            l && l.select('textarea').invoke('enable');
+        } else {
+            l && l.hide();
+            l && l.select('input').invoke('disable');
+            l && l.select('select').invoke('disable');
+            l && l.select('textarea').invoke('disable');
+        }
+    }
+}
+
+function collapseAllRows() {
+    $$('#shipment-grid tbody tr.trigger').each(function(row) {
+        var id = row.id.split('-')[1];
+        $('info-'+id).hide();
+        row.down('a.action span').removeClassName('open');
+    });
+}
+
+function expandAllRows() {
+    $$('#shipment-grid tbody tr.trigger').each(expandRow.curry(true));
+}
+</script>
+<iframe id="download_iframe" src="<?php echo
+$this->helper('core/js')->getJsUrl('blank.html') ?>" name="download_iframe" style="display:none"></iframe>
+<script type="text/javascript">decorateTable('my-shipment-table-<?php echo $_shipment->getId(); ?>', {'tbody' : ['odd', 'even'], 'tbody tr' : ['first', 'last']})</script>
+<?php echo $this->getCommentsHtml($_shipment)?>
+<?php endforeach; ?>

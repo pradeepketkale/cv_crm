@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <modules>
+        <Insync_Creditcard>
+            <version>1.0</version>
+        </Insync_Creditcard>
+    </modules>
+    <global>
+        <models>
+            <creditcard>
+                <class>Insync_Creditcard_Model</class>
+            </creditcard>
+        </models>
+    </global>
+</config>

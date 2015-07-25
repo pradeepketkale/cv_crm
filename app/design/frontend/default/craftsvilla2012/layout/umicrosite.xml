@@ -1,0 +1,83 @@
+<?xml version="1.0"?>
+<layout>
+    <udropship_vendor_login>
+        <reference name="login_links">
+            <action method="addLink" translate="label title" module="umicrosite">
+                <label>Register New Account</label>
+                <url helper="umicrosite/getVendorRegisterUrl"/>
+                <title>Register New Account</title><prepare/>
+                <urlParams/>
+                <position>20</position>
+            </action>
+        </reference>
+    </udropship_vendor_login>
+
+    <umicrosite_vendor_register>
+        <update handle="udropship_vendor" />
+		<reference name="root">
+		  <action method="setTemplate">
+			<template>page/2columns-left.phtml</template>
+		  </action>
+		</reference>
+
+        <reference name="content">
+            <block type="directory/data" template="unirgy/microsite/vendor/register.phtml" name="register" />
+        </reference>
+    </umicrosite_vendor_register>
+
+    <umicrosite_vendor_registerSuccess>
+        <update handle="udropship_vendor" />
+        <reference name="content">
+            <block type="core/template" template="unirgy/microsite/vendor/regsuccess.phtml" name="registerSuccess" />
+        </reference>
+    </umicrosite_vendor_registerSuccess>
+
+    <umicrosite_index_index>
+        <reference name="head">
+            <action method="setTitle">
+                <title helper="umicrosite/getLandingPageTitle" />
+            </action>
+            <!-- Start
+    			Craftsvilla Comment
+    			Added Meta Description by suresh on 28-06-2012
+    		-->
+            <action method="setDescription">
+                <title helper="umicrosite/getLandingPageMetaDescription" />
+            </action>
+            <!-- Start
+    			Craftsvilla Comment
+    			Added Meta Description by suresh on 28-06-2012
+    		-->
+            <action method="addJs"><script>jquery.form.js</script></action>
+            <action method="addJs"><script>ajaxupload.js</script></action>
+        </reference>
+        <reference name="left">
+         <block type="catalog/navigation" name="catalog.leftnav" before="-" template="catalog/navigation/left.phtml"/>
+            <!--<block type="customer/account_navigation" name="customer_account_navigation" before="-" template="customer/account/navigation.phtml">
+                <action method="addLink" translate="label" module="customer"><name>profile</name><path>thoughtyard/profile/</path><label> > Profile</label></action>
+                <action method="addLink" translate="label" module="customer"><name>product</name><path>thoughtyard/products/</path><label> > Product</label></action>
+                <action method="addLink" translate="label" module="customer"><name>feedback</name><path>feedback/index/</path><label> > Feedback</label></action>
+                <action method="addLink" translate="label" module="customer"><name>policies</name><path>thoughtyard/policies/</path><label> > Shipping and Returns</label></action>-->
+			<block type="customer/account_navigation" name="customer_account_navigation" before="-" template="marketplace/thoughtyard/profile/navigation.phtml">
+            </block>
+        </reference>
+        <reference name="content">
+			<block type="core/template" template="unirgy/microsite/home.phtml" name="vendorHome">
+                <block type="umicrosite/frontend_vendorProducts" name="product_list" template="catalog/product/list.phtml">
+				<block type="page/html_breadcrumbs" name="breadcrumbs" as="breadcrumbs" />
+				<block type="catalog/product_list_toolbar" name="product_list_toolbar" template="catalog/product/list/toolbarvendor.phtml">
+					<action method="setDefaultGridPerPage"><limit>3</limit></action>
+					<action method="addPagerLimit"><mode>grid</mode><limit>120</limit></action>
+					<block type="page/html_pager" name="product_list_toolbar_pager" template="page/pagervendor.phtml" />
+				</block>
+<!--<block type="catalog/product_list_toolbar" name="product_list_toolbar" template="catalog/product/list/toolbar.phtml">-->
+                        <!-- <block type="page/html_pager" name="product_list_toolbar_pager"/> -->
+				<!--		<block type="page/html_pager" name="product_list_toolbar_pagervendor" template="page/html/pagervendor.phtml"/>
+                    </block>-->
+                    <action method="setToolbarBlockName"><name>product_list_toolbar</name></action>
+                </block>
+		<block type="catalog/product" name="highsold" as="highsold" template="marketplace/microsite/product/highsold.phtml" />
+            </block>
+        </reference>
+    </umicrosite_index_index>
+</layout>

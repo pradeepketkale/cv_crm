@@ -1,0 +1,84 @@
+<style type="text/css">
+ .category-products{ margin-top:-35px;}	
+ .breadcrumbs_bottom,.col-left{ display:none;}
+ .clmnRht .clmnRht{ padding-top:0px;}
+ .clmnRht .clmnRht .breadcrumbs_bottom,.clmnRht .col-left{ display:block;} 
+ .clmnRht{position:relative; padding-top:15px;}
+ .breadcrumbs{ position:absolute; right:0; width:774px;z-index: 555; top:52px;}
+ .sort-by{ width:210px;}
+ .pageTitle h1{ margin:0px 0 28px;}
+ div.sort-by label{font-weight: bold;padding-top: 5px;}
+ .mainBrd .breadcrumbs{ top:-20px;}
+ .pager .pages{ position:relative; left:auto;}
+</style>
+
+
+<style>
+#demo-frame > div.demo { padding: 10px !important; };
+</style>
+
+<div class="col-left sidebar 123">
+   
+<div class="block block-layered-nav">
+	<div class="block-title-new">Shop By</div>
+	<div class="block-content" id="shop_by_div"></div>
+	<div class="block-content accordi">
+		<dl id="narrow-by-list">
+		
+			<a class="menuitem submenuheader" href="#"><dt></dt></a>
+			<dd id="cat_div1" class="submenu accodianheight"></dd>
+		<!--	<a class="menuitem submenuheader" href="#"><dt>Category</dt></a>
+			<dd id="cat_div" class="submenu accodianheight"></dd> -->
+			<a class="menuitem submenuheader" href="#"><dt>Price</dt></a>
+			<dd id="price_div" class="submenu accodianheight"></dd>
+			<a class="menuitem submenuheader" href="#"><dt>Color</dt></a>
+			<dd id="color_div" class="submenu accodianheight"></dd>
+		<!--	<a class="menuitem submenuheader" href="#"><dt>Location</dt></a>
+			<dd id="location_div" class="submenu accodianheight"></dd>
+			<a class="menuitem submenuheader" href="#"><dt>Country</dt></a>
+			<dd id="country_div" class="submenu accodianheight"></dd>-->
+			
+		</dl>
+		</div>
+	</div>
+</div>
+
+<div class="clmnRht">
+	<div class="pageTitle" id="search_title_div"><?php echo "<h1>Search results for ".str_ireplace('<script>', '&lt;script&gt;',$_GET['q'])."</h1>";?></div>
+	<div class="category-products">	
+    	<div class="topLine"></div>
+        <div id="fancybox-overlay" class="loadercss"><img src="<?php echo $this->getSkinUrl('images/ajax-loader.gif')?>" alt="loader" border="0" class="imgload" /></div>       
+<div class="toolbar">
+	<div class="pager">
+		<input type="hidden" name="color_hidden" id="color_hidden" value="" /> 
+		<!-- <input type=hidden name="size_hidden" id="size_hidden" value="" /> -->
+		 <input type="hidden" name="location_hidden" id="location_hidden" value="" />
+		<input type="hidden" name="price_hidden" id="price_hidden" value="" />
+		<input type="hidden" name="category_hidden" id="category_hidden" value="" />
+		<input type="hidden" name="price_min" id="price_min" value="" />
+		<input type="hidden" name="price_max" id="price_max" value="" />
+		<input type="hidden" name="initialise_price_min" id="initialise_price_min" value="" />
+		<input type="hidden" name="initialise_price_max" id="initialise_price_max" value="" />
+		<input type="hidden" name="sort_orderby" id="sort_orderby" value="" />
+		<input type="hidden" name="sort_order" id="sort_order" value="" />
+		<input type="hidden" name="open_close_div_val" id="open_close_div_val" value="close" />
+		<input type="hidden" name="prev_val" id="prev_val" value="" />
+		<div class="amount" id="total_items"></div>
+		<div class="sort-by">
+			<label>Sort By</label> 
+			<ul id="sortby">
+				<li><a rel="nofollow" href="javascript: process_search(document.getElementById('search').value, document.getElementById('category_hidden').value, 0, document.getElementById('price_min').value, document.getElementById('price_max').value, 'new', 'desc');">Newest</a> </li>
+				<li><a rel="nofollow" href="javascript: process_search(document.getElementById('search').value, document.getElementById('category_hidden').value, 0, document.getElementById('price_min').value, document.getElementById('price_max').value, 'name', 'desc');">Name</a> </li>
+				<li><a rel="nofollow" href="javascript: process_search(document.getElementById('search').value, document.getElementById('category_hidden').value, 0, document.getElementById('price_min').value, document.getElementById('price_max').value, 'price', 'desc');">Price</a> </li>
+			</ul>
+			<a rel="nofollow" title="Set Ascending Direction" href="javascript:search_order_func('<?php echo $this->getSkinUrl(); ?>');"><span id="image_val"><img class="v-middle" id="asc_desc_img" alt="Set Ascending Direction" src="<?php echo $this->getSkinUrl('images/i_asc_arrow.gif'); ?>"></span>
+			</a>
+		</div>
+	</div>
+</div> 
+
+<div id="products_display"></div>
+<div class="pager"><div class="pages"></div></div>
+</div>
+</div>
+

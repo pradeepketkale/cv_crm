@@ -1,0 +1,26 @@
+<config>
+    <api>
+        <resources>
+            <customer translate="title" module="customer">
+                <model>customer/customer_api</model>
+                <title>Customer API</title>
+                <acl>customer</acl>
+                <methods>
+                    <utmCreate translate="title" module="customer">
+                        <title>Create UTM customer</title>
+                        <acl>customer/utmCreate</acl>
+                    </utmCreate>
+                </methods>
+            </customer>
+        </resources>
+        <acl>
+            <resources>
+                <customer translate="title" module="customer">
+                     <utmCreate translate="title" module="customer">
+                        <title>UTM Customer Create</title>
+                     </utmCreate>
+                </customer>
+            </resources>
+        </acl>
+    </api>
+</config>

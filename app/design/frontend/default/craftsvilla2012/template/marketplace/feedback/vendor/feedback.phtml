@@ -1,0 +1,90 @@
+<?php 
+$_helpm = $this->helper('umicrosite');
+$vendor_info = $_helpm->getCurrentVendor(); 
+$Feedback = Mage::getModel('feedback/vendor_feedback')->getCollection()
+			->addFieldToFilter('feedback_type',1)
+			->addFieldToFilter('vendor_id',$vendor_info->getId())
+			->addFieldToSelect('feedback_id')
+			->addFieldToSelect('feedback_at')
+			->addFieldToSelect('cust_id')
+			->addFieldToSelect('image_path')
+			->addFieldToSelect('feedback')
+			->addFieldToSelect('received')
+			->addFieldToSelect('rating')
+			->addOrder('feedback_at');
+?>
+<h1 class="headingvendor homeprite fleft">
+<?php echo $vendor_info->getShopName()!=''?$vendor_info->getShopName():"US"?> Feedback
+</h1>
+
+<div class="fright">
+          <ul class="feedbackhistory iconmeaning">
+							<li class="positive"><p class="icon fleft"></p><label>Positive</label></li>
+							<li class="negative"><p class="icon fleft"></p><label>Negative</label></li>
+							<li class="neutral"><p class="icon fleft"></p><label>Neutral</label></li>
+          </ul> 
+</div>
+
+<span class="clr"></span>
+<div class="topLine"></div>
+<div class="feedback">
+ 
+
+<div class="clr"></div>
+	<ul class="feedbackhistory frontend">
+
+
+          <li class="headingcss">
+			<p class="icon floatl"></p>
+		     <div class="floatl commentshere"><p>Message</p></div>
+			<p class="date floatl">Date</p>
+			<p class="floatl cusname">Name</p>
+			<p class="floatl picimg">Image</p>
+			<p class="statusorder floatl">Status</p>
+				<div class="clr"></div>
+				<hr class="marginzero"/>
+		</li>	
+
+
+
+
+
+
+
+
+	<?php if($Feedback->count()){
+			foreach($Feedback as $_feedback){
+				$customers = '';
+				$_feedbackRating = '';
+				$_feedbackImage = '';
+				$_feedbackRating = $_feedback->getRating();
+				$_feedbackImage = $_feedback->getImagePath();
+
+				$customers = Mage::getModel('customer/customer')->getCollection()
+						->addNameToSelect()
+						->addFieldToFilter('entity_id', $_feedback->getCustId())
+						->addAttributeToFilter('website_id', '1')->getData();
+	?>	
+				<li class="<?php if($_feedbackRating == 0) { ?>negative <?php }elseif($_feedbackRating == 1) {?>neutral <?php } ?>">
+					<p class="icon floatl"></p>
+					<div class="floatl commentshere"><p><?php echo $_feedback->getFeedback()?></p></div>
+					<p class="date floatl"><?php echo date("d/m/Y",strtotime($_feedback->getFeedbackAt()));?></p>
+					<p class="floatl cusname"><?php echo $customers[0]['name']; ?></p>
+					<p class="floatl picimg">
+						<?php 
+							if($_feedbackImage){
+								$_feedbackImagePath = "feedback".$_feedbackImage;
+						?>
+							<a href="<?php echo $this->getUrl('feedback/vendor/imageshow/'); ?>id/<?php echo $_feedback->getFeedbackId(); ?>" target="_blank"><img src="<?php echo $_helpm->getResizedUrl($_feedbackImagePath,35); ?>" /></a>
+						<?php } ?>
+					</p>
+					<p class="statusorder floatl"><?php echo $_feedback->getReceived()==0 ? "Order Not Recevied" : "Order Recevied"; ?></p>
+					<div class="clr"></div>
+					<hr/>
+				</li>	
+<?php 	
+			}
+		}	 
+?>	
+	</ul>
+</div>

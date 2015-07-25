@@ -1,0 +1,340 @@
+		
+<?php //if($this->isCustomerLoggedIn()): ?>
+	<div id="billship2" class="bill-ship-user" style="display:none;">	
+		User Logged into the system
+		<?php 
+			//echo '<pre>';
+			//print_r($this->getAddress()->getdata());
+			//print_r(get_class_methods($this->getAddress()));
+		?>
+
+	<!--start-->
+		<form id="co-billing-form" action="">
+			<fieldset>
+				<ul class="form-list">
+				<?php if ($this->customerHasAddresses()): ?>
+					<li class="wide">
+						<label for="billing-address-select"><?php echo $this->__('Select a billing address from your address book or enter a new address.') ?></label>
+						<div class="input-box">
+							<?php echo $this->getAddressesHtmlSelect('billing') ?>
+						</div>
+					</li>
+					<script type="text/javascript">
+						jQuery('#billing-address-select').bind('onchange', function(){
+							alert('a');return false;
+						});
+					</script>
+				<?php endif; ?>
+				<li id="billing-new-address-form"<?php if ($this->customerHasAddresses()): ?> style="display:none;"<?php endif; ?>>
+				
+				
+				  <div class="shippingadd floatl">
+						<p class="greentext bold paddingtop">Billing Address:</p>
+						<p>Please Submit your Shipping Details.</p>
+						<ul class="form paddingtop">
+						  <li><?php echo $this->getLayout()->createBlock('customer/widget_name')->setObject($this->getAddress()->getFirstname() ? $this->getAddress() : $this->getQuote()->getCustomer())->setFieldIdFormat('billing:%s')->setFieldNameFormat('billing[%s]')->toHtml() ?></li>
+						  
+						  <li>
+							<label>Contact No<span class="req">*</span>:</label>
+							<input type="text" name="contact" id="contact"  class="required input-text" value="<?php echo $this->escapeHtml($this->getAddress()->getTelephone()) ?>" maxlength="10"/>
+							<p class="note"> For Cash in advance payment enter as 9876543210</p>
+						  </li>
+						  <li>
+							<label>Address<span class="req">*</span>:</label>
+							<textarea name="address" id="address"></textarea>
+						  </li>
+						</ul>
+						<ul class="form locations">
+						  <li>
+							<label>Country<span class="req">*</span>:</label>
+							<?php echo $this->getCountryHtmlSelect('billing') ?>
+						  </li>
+						  <li>
+							<label class="small">State<span class="req">*</span>:</label>
+							<select name="state" id="state">
+							  <option selected="selected">Delhi</option>
+							  <option>1</option>
+							  <option>2</option>
+							  <option>3</option>
+							</select>
+
+						  </li>
+						  <li>
+							<label>City<span class="req">*</span>:</label>
+							<input type="text" name="contact" id="contact"  class="required input-text" />
+						  </li>
+						  <li>
+							<label class="small">Zip<span class="req">*</span>:</label>
+							<input type="text" name="postal_code" class="required input-text" id="postal_code" />
+						  </li>
+						</ul>
+						<input type="hidden" id="billing:company" value="" />
+						<input type="hidden" id="billing:street1" value="" />
+						<input type="hidden" id="billing:street2" value="" />
+						<input type="hidden" id="billing:region_id" value="" />
+						<input type="hidden" id="billing:region" value="" />
+						<ul class="form clr">
+						  <li>
+							<input type="checkbox" name="gift" id="gift" class="floatl" />
+							<p class="gift"> Planning to gift someone? You can send a message </p>
+						  </li>
+						</ul>
+					  </div>
+					  <div class="shippingadd_right floatr">
+						<p class="greentext bold paddingtop">Shipping Address:</p>
+						<p class="title padbott">
+						  <input type="checkbox" name="new_addres" id="new_address" onclick="vi(this);" checked />
+						  Shipping Address will be the same as billing address.</p>
+
+						<!--Change the Shipping Address-->
+						<div id="otheraddress" class="shippingbox" style="display:none;">
+						  <ul class="form">
+							<li><?php echo $this->getLayout()->createBlock('customer/widget_name')->setObject($this->getAddress()->getFirstname() ? $this->getAddress() : $this->getQuote()->getCustomer())->setFieldIdFormat('billing:%s')->setFieldNameFormat('billing[%s]')->toHtml() ?></li>
+							<li>
+								<label>Contact No<span class="req">*</span>:</label>
+								<input type="text" name="contact" id="contact"  class="required input-text" maxlength="10"/>
+								<p class="note"> For Cash in advance payment enter as 9876543210</p>
+							 </li>
+						 <li>
+							<label>Address<span class="req">*</span>:</label>
+							<textarea name="address" id="address"></textarea>
+						  </li>
+						  <li>
+							<label>Address Line 1</label>
+							<input type="text" class="input-text required" id="billing:street1" />
+						  </li>
+						</ul>
+						<ul class="form locations">
+						  <li>
+							<label>Country<span class="req">*</span>:</label>
+							<?php echo $this->getCountryHtmlSelect('billing') ?>
+						  </li>
+						  <li>
+							<label class="small">State<span class="req">*</span>:</label>
+							<select name="state" id="state">
+							  <option selected="selected">Delhi</option>
+							  <option>1</option>
+							  <option>2</option>
+							  <option>3</option>
+							</select>
+
+						  </li>
+						  <li>
+							<label>City<span class="req">*</span>:</label>
+							<input type="text" name="contact" id="contact"  class="required input-text" />
+						  </li>
+						  <li>
+							<label class="small">Zip<span class="req">*</span>:</label>
+							<input type="text" name="postal_code" class="required input-text" id="postal_code" />
+						  </li>
+						  </ul>
+						</div>
+						<!--Change the Shipping Address End--> 
+
+					  </div>
+					  <span class="clr"></span>
+					  <input type="submit" class="btn spriteimg floatr" value="Continue"  />
+				
+				
+				
+				 </li>
+				<?php if ($this->canShip()): ?>
+					<!--li class="control">
+						<input type="radio" name="billing[use_for_shipping]" id="billing:use_for_shipping_yes" value="1"<?php if ($this->isUseBillingAddressForShipping()) {?> checked="checked"<?php }?> title="<?php echo  $this->__('Ship to this address') ?>" onclick="$('shipping:same_as_billing').checked = true;" class="radio" /><label for="billing:use_for_shipping_yes"><?php echo  $this->__('Ship to this address') ?></label></li>
+					<li class="control">
+						<input type="radio" name="billing[use_for_shipping]" id="billing:use_for_shipping_no" value="0"<?php if (!$this->isUseBillingAddressForShipping()) {?> checked="checked"<?php }?> title="<?php echo $this->__('Ship to different address') ?>" onclick="$('shipping:same_as_billing').checked = false;" class="radio" /><label for="billing:use_for_shipping_no"><?php echo $this->__('Ship to different address') ?></label>
+					</li-->
+				<?php endif; ?>
+				</ul>
+				<?php if (!$this->canShip()): ?>
+					<input type="hidden" name="billing[use_for_shipping]" value="1" />
+				<?php endif; ?>
+				<div class="buttons-set" id="billing-buttons-container">
+					<!--p class="required"><?php //echo $this->__('* Required Fields') ?></p-->
+					<button type="button" title="<?php echo $this->__('Continue') ?>" class="button" onclick="billing.save()"><span><span><?php echo $this->__('Continue') ?></span></span></button>
+					<span class="please-wait" id="billing-please-wait" style="display:none;">
+						<img src="<?php echo $this->getSkinUrl('images/opc-ajax-loader.gif') ?>" alt="<?php echo $this->__('Loading next step...') ?>" title="<?php echo $this->__('Loading next step...') ?>" class="v-middle" /> <?php echo $this->__('Loading next step...') ?>
+					</span>
+				</div>
+			</fieldset>
+		</form>
+		<!--end-->
+		
+		
+	</div>	
+<?php //else:?>
+
+
+<div id="billship" style="display:none;">
+    <form method="post" action="" name="Shipping_address">
+      <div class="emailid_field">
+        <ul class="form">
+          <li>
+            <label class="bold">Emal ID:</label>
+            <input type="text" id="emailid" value="amit@craftsvilla.com" name="emailid">
+            <!--a href="#">Edit</a--> </li>
+        </ul>
+      </div>
+      <div class="shippingadd floatl">
+        <p class="greentext bold paddingtop">Billing Address:</p>
+        <p>Please Submit your Shipping Details.</p>
+        <ul class="form paddingtop">
+          <li>
+            <label>First Name<span class="req">*</span>:</label>
+            <input type="text" name="name" id="name" />
+          </li>
+          <li>
+            <label>Last Name<span class="req">*</span>:</label>
+            <input type="text" name="last_name" id="last_name" />
+          </li>
+          <li>
+            <label>Contact Number<span class="req">*</span>:</label>
+            <input type="text" name="contact" id="contact" />
+            <p class="note"> For Cash in advance payment enter as 9876543210</p>
+          </li>
+          <li>
+            <label>Address<span class="req">*</span>:</label>
+            <textarea name="address" id="address"></textarea>
+          </li>
+        </ul>
+        <ul class="form locations">
+          <li>
+            <label>Country<span class="req">*</span>:</label>
+            <select name="country" id="country">
+              <option selected="selected">India</option>
+              <option>USA</option>
+              <option>USA</option>
+              <option>USA</option>
+            </select>
+          </li>
+          <li>
+            <label class="small">State<span class="req">*</span>:</label>
+            <select name="state" id="state">
+              <option selected="selected">Delhi</option>
+              <option>1</option>
+              <option>2</option>
+              <option>3</option>
+            </select>
+          </li>
+          <li>
+            <label>City<span class="req">*</span>:</label>
+            <select name="cuty" id="city">
+              <option selected="selected">Noida</option>
+              <option>1</option>
+              <option>2</option>
+              <option>3</option>
+            </select>
+          </li>
+          <li>
+            <label class="small">Zip<span class="req">*</span>:</label>
+            <input type="text" name="postal_code" id="postal_code" />
+          </li>
+        </ul>
+        <ul class="form clr">
+          <li>
+            <label></label>
+            <input type="checkbox" name="gift" id="gift" class="floatl" />
+            <p class="gift"> Planning to gift someone? You can send a message </p>
+          </li>
+        </ul>
+      </div>
+      <div class="shippingadd_right floatr">
+        <p class="greentext bold paddingtop">Shipping Address:</p>
+        <p class="title padbott">
+          <input type="checkbox" checked="checked" name="new_addres" id="new_address" onclick="vi(this);" checked />
+          Shipping Address will be the same as billing address.</p>
+
+        <!--Change the Shipping Address-->
+        <div id="otheraddress1" class="shippingbox" style="display:none;">
+          <ul class="form">
+            <li>
+              <input type="text" name="name" id="name" value="First Name" />
+            </li>
+            <li>
+              <input type="text" name="last_name" id="last_name" value="Last Name" />
+            </li>
+            <li>
+              <input type="text" name="contact" id="contact" value="Contact Number" />
+            </li>
+            <li>
+              <textarea name="address" id="address">Address</textarea>
+            </li>
+          </ul>
+          <ul class="form locations locations_ship">
+            <li>
+              <select name="country" id="country">
+                <option selected="selected">Country</option>
+                <option>India</option>
+                <option>USA</option>
+                <option>USA</option>
+              </select>
+            </li>
+            <li>
+              <select name="state" id="state">
+                <option selected="selected">State</option>
+                <option>1</option>
+                <option>2</option>
+                <option>3</option>
+              </select>
+            </li>
+            <li>
+              <select name="city" id="city">
+                <option selected="selected">City</option>
+                <option>1</option>
+                <option>2</option>
+                <option>3</option>
+              </select>
+            </li>
+            <li>
+              <input type="text" name="postal_code" id="postal_code" value="Zip" />
+            </li>
+          </ul>
+        </div>
+        <!--Change the Shipping Address End--> 
+
+      </div>
+      <span class="clr"></span>
+      <input type="submit" class="btn spriteimg floatr" value="Continue"  />
+    </form>
+  </div>
+  
+  <?php //endif;?>
+  <!--Shipping Addres Div End--> 
+
+
+<script type="text/javascript">
+    function vi(super_id)
+    { 
+		var ischecked = jQuery(super_id).attr("checked");
+		//alert(ischecked);return false;
+		if(ischecked === 'checked'){
+            jQuery(".shippingbox").hide();
+		}else{
+            jQuery(".shippingbox").show();
+		}
+        
+    }
+	
+//<![CDATA[
+    var billing = new Billing('co-billing-form', '<?php echo $this->getUrl('checkout/onepage/getAddress') ?>address/', '<?php echo $this->getUrl('checkout/onepage/saveBilling') ?>');
+    var billingForm = new VarienForm('co-billing-form');
+
+    //billingForm.setElementsRelation('billing:country_id', 'billing:region', '<?php echo $this->getUrl('directory/json/childRegion') ?>', '<?php echo $this->__('Select State/Province...') ?>');
+    $('billing-address-select') && billing.newAddress(!$('billing-address-select').value);
+
+    var billingRegionUpdater = new RegionUpdater('billing:country_id', 'billing:region', 'billing:region_id', countryRegions, undefined, 'billing:postcode');
+//]]>
+
+	jQuery(document).ready(new function(){
+		
+		var tabtwoval = jQuery('#tabtwo').attr('onclick');
+		jQuery('#tabtwo').attr('onclick', 'return false;');
+		
+		<?php if($this->isCustomerLoggedIn()): ?>
+			jQuery("#billingdetails").show();
+			jQuery("#billingdetails #billship2").show();
+			//jQuery("#logindeatils").hide();
+		<?php else:?>
+		<?php endif;?>
+	});
+</script>

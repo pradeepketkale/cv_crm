@@ -1,0 +1,629 @@
+<?php
+/******************************************************
+ * @package MT OneStepCheckOut module for Magento 1.4.x.x and Magento 1.5.x.x
+ * @version 1.5.2.1
+ * @author http://www.magentheme.com
+ * @copyright (C) 2011- MagenTheme.Com
+ * @license PHP files are GNU/GPL
+*******************************************************/
+?>
+<?php
+$hlp = Mage::helper('generalcheck');
+$ismobile = $hlp->ismobile();
+
+if(!$ismobile)
+{?> 
+
+<fieldset>
+    <ul class="form-list">
+    <?php if ($this->isCustomerLoggedIn() && $this->customerHasAddresses() && $this->getCustomer()->getDefaultBillingAddress()): ?>
+        <li class="wide">
+            <label for="billing-address-select"><?php echo $this->__('Select a billing address from your address book or enter a new address.') ?></label>
+            <div class="input-box">
+                <?php echo $this->getAddressesHtmlSelect('billing') ?>
+            </div>
+        </li>
+		
+		<?php $primaryBillingAddressId = $this->getCustomer()->getPrimaryBillingAddress()->getId(); ?>
+		<script type="text/javascript">
+        //<![CDATA[
+            $('billing-address-select').observe('change', function(event){billing.setAddress($('billing-address-select').value);}.bind(this));
+            billingSelect = $('billing-address-select');
+            for(var i=0;i<billingSelect.length;i++) {
+                if(billingSelect[i].value == <?php echo $primaryBillingAddressId ?>) {
+                    billingSelect[i].selected = true;
+                }
+            }
+        //]]
+        </script>
+    <?php endif; ?>
+    <li id="billing-new-address-form">
+        <fieldset>
+            <input type="hidden" name="billing[address_id]" value="<?php echo $this->getAddress()->getId() ?>" id="billing:address_id" />
+            <ul>
+                <li class="fields"><?php echo $this->getLayout()->createBlock('customer/widget_name')->setObject($this->getAddress())->setFieldIdFormat('billing:%s')->setFieldNameFormat('billing[%s]')->toHtml() ?></li>
+                <li class="fields companyfield">
+                    <?php if(!Mage::helper('mtonestepcheckout')->excludeCompany()): ?>
+                    <div class="field">
+                        <label for="billing:company"><?php echo $this->__('Company') ?></label>
+                        <div class="input-box">
+                            <input type="text" id="billing:company" name="billing[company]" value="<?php echo $this->htmlEscape($this->getAddress()->getCompany()) ?>" title="<?php echo $this->__('Company') ?>" class="input-text" />
+                        </div>
+                    </div>
+                    <?php else: ?>
+                    <input type="hidden" name="billing[company]" value="<?php echo $this->htmlEscape($this->getAddress()->getCompany()) ?>" />
+                    <?php endif; ?>
+                </li>
+                    <?php if(!$this->isCustomerLoggedIn()): ?>
+                <li class="two_fields">
+                
+                    <div class="field">
+                        <label for="billing:email" class="required"><em>*</em><?php echo $this->__('Email Address') ?></label>
+                        <div class="input-box">
+                            <input type="text" name="billing[email]" id="billing:email" value="<?php echo $this->htmlEscape($this->getAddress()->getEmail()) ?>" title="<?php echo $this->__('Email Address') ?>" class="input-text validate-email required-entry" maxlength="320"/>
+                        </div>
+                    </div>
+                    
+                    <div class="field">
+                       <?php if(!Mage::helper('mtonestepcheckout')->excludeTelephone()): ?>
+                    <div class="field">
+                        <label for="billing:telephone" class="required"><em>*</em><?php echo $this->__('Telephone') ?></label>
+                        <div class="input-box">
+                            <input type="text" name="billing[telephone]" value="<?php echo $this->htmlEscape($this->getAddress()->getTelephone()) ?>" title="<?php echo $this->__('Telephone') ?>" class="input-text required-entry validate-number" id="billing:telephone" maxlength="25"/>
+                        </div>
+                    </div>
+                   
+                    <?php else: ?>
+                    <input type="hidden" name="billing[telephone]" value="<?php echo $this->htmlEscape($this->getAddress()->getTelephone()) ?>" />
+                    <?php endif; ?>
+                    </div>
+                    
+                    
+                </li>
+                    <?php endif ?>
+                <li class="wide address_wide">
+                    <label for="billing:street1" class="required"><em>*</em><?php echo $this->__('Address') ?></label>
+                    <div class="input-box">
+                        <input type="text" title="<?php echo $this->__('Street Address') ?>" name="billing[street][]" id="billing:street1" value="<?php echo $this->htmlEscape($this->getAddress()->getStreet(1)) ?>" class="input-text required-entry" maxlength="250"/>
+                    </div>
+                </li>
+                <?php for ($_i=2, $_n=$this->helper('customer/address')->getStreetLines(); $_i<=$_n; $_i++): ?>
+                <li class="wide address_wide">
+                    <div class="input-box">
+                        <input type="text" title="<?php echo $this->__('Street Address '.$_i) ?>" name="billing[street][]" id="billing:street<?php echo $_i?>" value="<?php echo $this->htmlEscape($this->getAddress()->getStreet($_i)) ?>" class="input-text" maxlength="250"/>
+                    </div>
+                </li>
+                <?php endfor ?>
+                
+                <li class="two_fields">
+                <div class="field">
+                   <?php if(!Mage::helper('mtonestepcheckout')->excludeCity()): ?>
+              
+                    <label for="billing:city" class="required"><em>*</em><?php echo $this->__('City') ?></label>
+                    <div class="input-box">
+                        <input type="text" title="<?php echo $this->__('City') ?>" name="billing[city]" value="<?php echo $this->htmlEscape($this->getAddress()->getCity()) ?>" class="input-text required-entry" id="billing:city" maxlength="250" />
+                    </div>
+               
+                <?php endif; ?>
+                
+                </div>
+                
+                    <?php if(!Mage::helper('mtonestepcheckout')->excludePostcode()): ?>
+                    <div class="field field-postcode">
+                        <label for="billing:postcode" class="required"><em>*</em><?php echo $this->__('Zip/Postal Code') ?></label>
+                        <div class="input-box">
+                            <input type="text" title="<?php echo $this->__('Zip/Postal Code') ?>" name="billing[postcode]" id="billing:postcode" value="<?php echo $this->htmlEscape($this->getQuote()->getBillingAddress()->getPostcode()) ?>" class="postcode input-text validate-zip-international required-entry"  maxlength="20"/>
+                            <?php if(Mage::helper('mtonestepcheckout')->onChangePostcode()): ?>
+                            <script type="text/javascript">
+                                //<![CDATA[
+                                    $('billing:postcode').observe('change', function(event){billing.saveCountry();Event.stop(event);}.bind(this));
+                                //]]
+                            </script>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                    <?php endif; ?>
+                
+                
+                
+                
+                </li>
+                
+                
+                
+                
+                
+                
+                <li class="two_fields country-li-billing">
+                 <div class="field">
+                    <label for="billing:country_id" class="required"><em>*</em><?php echo $this->__('Country') ?></label>
+                    <div class="input-box">
+                        <?php echo $this->getCountryHtmlSelect('billing') ?>
+                        <script type="text/javascript">
+                            //<![CDATA[
+                                <?php if($this->getQuote()->getBillingAddress()->getCountryId()): ?>
+                                billingCountry = $('billing:country_id');
+                                billingCountry[billingCountry.selectedIndex].removeAttribute('selected');
+                                for(var i=0; i<billingCountry.options.length; i++) {
+                                    if(billingCountry[i].value == '<?php echo $this->getQuote()->getBillingAddress()->getCountryId(); ?>') {
+                                        billingCountry[i].setAttribute('selected', true);
+                                    }
+                                }
+                                <?php endif; ?>
+                                <?php if(Mage::helper('mtonestepcheckout')->onChangeCountry()): ?>
+                                $('billing:country_id').observe('click', function(event){billing.currentCountry = $('billing:country_id').value;Event.stop(event);}.bind(this));
+                                $('billing:country_id').observe('change', function(event){billing.saveCountry();Event.stop(event);}.bind(this));
+                                <?php endif; ?>
+                            //]]
+                        </script>
+                    </div>
+                    </div>
+               
+                
+                
+                    <?php if(!Mage::helper('mtonestepcheckout')->excludeRegion()): ?>
+                    <div class="field field-region">
+                        <label for="billing:region_id" class="required"><em>*</em><?php echo $this->__('State/Province') ?></label>
+                        <div class="input-box">
+                            <select id="billing:region_id" name="billing[region_id]" title="<?php echo $this->__('State/Province') ?>" class="region validate-select" style="display:none;">
+                                <option value=""><?php echo $this->__('Please select state') ?></option>
+                            </select>
+                            <script type="text/javascript">
+                            //<![CDATA[
+                                $('billing:region_id').setAttribute('defaultValue',  "<?php echo $this->getQuote()->getBillingAddress()->getRegionId() ?>");
+                            //]]>
+                            </script>
+                            <input type="text" id="billing:region" name="billing[region]" value="<?php echo $this->htmlEscape($this->getQuote()->getBillingAddress()->getRegion()) ?>"  title="<?php echo $this->__('State/Province') ?>" class="region input-text" style="display:none;"  maxlength="250"/>
+                            <?php if(Mage::helper('mtonestepcheckout')->onChangeRegion()): ?>
+                            <script type="text/javascript">
+                                //<![CDATA[
+                                    $('billing:region_id').observe('change', function(event){billing.saveCountry();Event.stop(event);}.bind(this));
+                                    $('billing:region').observe('change', function(event){billing.saveCountry();Event.stop(event);}.bind(this));
+                                //]]
+                            </script>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                    <?php endif; ?>
+                </li>
+                <li class="fields two_fields">
+                   
+                    
+                    
+                    
+                    <?php if(!Mage::helper('mtonestepcheckout')->excludeFax()): ?>
+                    <div class="field">
+                        <label for="billing:fax"><?php echo $this->__('Fax') ?></label>
+                        <div class="input-box">
+                            <input type="text" name="billing[fax]" value="<?php echo $this->htmlEscape($this->getAddress()->getFax()) ?>" title="<?php echo $this->__('Fax') ?>" class="input-text" id="billing:fax" maxlength="25"/>
+                        </div>
+                    </div>
+                    <?php else: ?>
+                    <input type="hidden" name="billing[fax]" value="<?php echo $this->htmlEscape($this->getAddress()->getFax()) ?>" />
+                    <?php endif; ?>
+                </li>
+				 <?php if($this->isCustomerLoggedIn()): ?>
+                <li class="two_fields">
+                    
+                    <div class="field">
+                       <?php if(!Mage::helper('mtonestepcheckout')->excludeTelephone()): ?>
+                    <div class="field">
+                        <label for="billing:telephone" class="required"><em>*</em><?php echo $this->__('Telephone') ?></label>
+                        <div class="input-box">
+                            <input type="text" name="billing[telephone]" value="<?php echo $this->htmlEscape($this->getAddress()->getTelephone()) ?>" title="<?php echo $this->__('Telephone') ?>" class="input-text required-entry validate-number" id="billing:telephone" maxlength="25"/>
+                        </div>
+                    </div>
+                   
+                    <?php else: ?>
+                    <input type="hidden" name="billing[telephone]" value="<?php echo $this->htmlEscape($this->getAddress()->getTelephone()) ?>" />
+                    <?php endif; ?>
+                    </div>
+                    
+                    
+                </li>
+                    <?php endif ?>
+                <?php if(!$this->isCustomerLoggedIn()): ?>
+
+                <?php $_dob = $this->getLayout()->createBlock('customer/widget_dob') ?>
+                <?php $_gender = $this->getLayout()->createBlock('customer/widget_gender') ?>
+                    <?php if ($_dob->isEnabled() || $_gender->isEnabled()): ?>
+                <li class="fields">
+                    <?php if ($_dob->isEnabled()): ?>
+                    <div class="field">
+                        <?php echo $_dob->setDate($this->getQuote()->getCustomerDob())->setFieldIdFormat('billing:%s')->setFieldNameFormat('billing[%s]')->toHtml() ?>
+                    </div>
+                    <?php endif; ?>
+                    <?php if ($_gender->isEnabled()): ?>
+                    <div class="field">
+                        <?php echo $_gender->setGender($this->getQuote()->getCustomerGender())->setFieldIdFormat('billing:%s')->setFieldNameFormat('billing[%s]')->toHtml() ?>
+                    </div>
+                    <?php endif; ?>
+                </li>
+                <?php endif ?>
+
+                <?php $_taxvat = $this->getLayout()->createBlock('customer/widget_taxvat') ?>
+                <?php if ($_taxvat->isEnabled()): ?>
+                <li>
+                    <?php echo $_taxvat->setTaxvat($this->getQuote()->getCustomerTaxvat())->setFieldIdFormat('billing:%s')->setFieldNameFormat('billing[%s]')->toHtml() ?>
+                </li>
+                <?php endif ?>
+				
+                <!--<li class="control">
+                    <input type="checkbox" name="billing[register]" value="1" title="<?php //echo $this->__('Create an account') ?>" id="billing:register" class="checkbox" onclick="billing.register()" /><label for="billing:register"><?php //echo $this->__('Create an account') ?></label>
+                </li>
+                <li class="fields" id="register-customer-password" style="display:none;">
+                    <div class="field">
+                        <label for="billing:customer_password" class="required"><em>*</em><?php //echo $this->__('Password') ?></label>
+                        <div class="input-box">
+                            <input type="password" name="billing[customer_password]" id="billing:customer_password" title="<?php //echo $this->__('Password') ?>" class="input-text required-entry validate-password" />
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label for="billing:confirm_password" class="required"><em>*</em><?php //echo $this->__('Confirm Password') ?></label>
+                        <div class="input-box">
+                            <input type="password" name="billing[confirm_password]" title="<?php //echo $this->__('Confirm Password') ?>" id="billing:confirm_password" class="input-text required-entry validate-cpassword" />
+                        </div>
+                    </div>
+                    <?php //if(Mage::helper('mtonestepcheckout')->includeNewsletter()): ?>
+                    <div class="clear"></div>
+                    <ul class="newsletter">
+                        <li class="control">
+                            <input class="checkbox" type="checkbox" id="billing:is_subscribed" name="billing[is_subscribed]" title="<?php //echo $this->__('Sign Up for Newsletter') ?>" value="1" />
+                            <label for="billing:is_subscribed"><?php //echo $this->__('Sign Up for Newsletter') ?></label>
+                        </li>
+                    </ul>
+                    <?php //endif; ?>
+                </li>-->
+<li>* Your New Account Will be Created Automaticaly And Password Will be Sent to Your Email.</li>
+                <?php endif; ?>
+			
+
+                <?php if ($this->isCustomerLoggedIn() && $this->customerHasAddresses()):?>
+                    <li class="control">
+                        <input type="checkbox" name="billing[save_in_address_book]" value="1" title="<?php echo $this->__('Save in address book') ?>" id="billing:save_in_address_book" onchange="shipping.setSameAsBilling(false);"<?php if ($this->getAddress()->getSaveInAddressBook()):?> checked="checked"<?php endif;?> class="checkbox" /><label for="billing:save_in_address_book"><?php echo $this->__('Save in address book') ?></label>
+                    </li>
+                <?php else:?>
+                    <li class="no-display"><input type="hidden" name="billing[save_in_address_book]" value="1" /></li>
+                <?php endif; ?>
+				
+            </ul>
+        </fieldset>
+    </li>
+    <?php if ($this->canShip()): ?>
+    <?php if(!Mage::helper('mtonestepcheckout')->excludeShippingAddress()): ?>
+    <!--li class="control">
+        <?php $checkUseForShipping = Mage::getSingleton('core/session')->getData('use_for_shipping'); ?>
+        <input type="checkbox" name="billing[use_for_shipping]" id="billing:use_for_shipping_yes" <?php if($checkUseForShipping): ?>checked="checked"<?php endif; ?> value="2" title="<?php echo $this->__('Ship to different address') ?>" class="checkbox" /><label for="billing:use_for_shipping_yes"><?php echo $this->__('Ship to different address') ?></label>
+        <script type="text/javascript">
+            //<![CDATA[
+                $('billing:use_for_shipping_yes').observe('click', function(event){billing.enalbleShippingAddress();}.bind(this));
+            //]]
+        </script>
+    </li-->
+    <?php endif; ?>
+    <?php endif; ?>
+    </ul>
+</fieldset>
+<script type="text/javascript">
+//<![CDATA[
+    var billing = new Billing(
+                    '<?php if(Mage::getSingleton('core/session')->getData('use_for_shipping')) echo 0; else echo 1; ?>',
+                    '<?php echo $this->getUrl('mtonestepcheckout/index/saveBilling'); ?>',
+                    '<?php echo $this->getUrl('mtonestepcheckout/index/switchMethod'); ?>',
+                    '<?php echo $this->getUrl('mtonestepcheckout/index/getAddress') ?>address/'
+                );
+    $('billing-address-select') && billing.newAddress(!$('billing-address-select').value);
+    <?php if(!Mage::helper('mtonestepcheckout')->excludeRegion()): ?>
+    var billingRegionUpdater = new RegionUpdater('billing:country_id', 'billing:region', 'billing:region_id', countryRegions, undefined, 'billing:postcode');
+    <?php endif; ?>
+//]]>
+</script>
+
+
+
+<?php }else {?>
+<fieldset>
+    <ul class="form-list">
+    <?php if ($this->isCustomerLoggedIn() && $this->customerHasAddresses() && $this->getCustomer()->getDefaultBillingAddress()): ?>
+        <li class="wide" >
+            <label for="billing-address-select" style="font-size:1.3em;"><?php echo $this->__('Select a billing address from your address book or enter a new address.') ?></label>
+            <div class="input-box" >
+                <?php echo $this->getAddressesHtmlSelect('billing') ?>
+            </div>
+        </li>
+		
+		<?php $primaryBillingAddressId = $this->getCustomer()->getPrimaryBillingAddress()->getId(); ?>
+		<script type="text/javascript">
+        //<![CDATA[
+            $('billing-address-select').observe('change', function(event){billing.setAddress($('billing-address-select').value);}.bind(this));
+            billingSelect = $('billing-address-select');
+            for(var i=0;i<billingSelect.length;i++) {
+                if(billingSelect[i].value == <?php echo $primaryBillingAddressId ?>) {
+                    billingSelect[i].selected = true;
+                }
+            }
+        //]]
+        </script>
+    <?php endif; ?>
+    <li id="billing-new-address-form">
+        <fieldset>
+            <input type="hidden" name="billing[address_id]" value="<?php echo $this->getAddress()->getId() ?>" id="billing:address_id" />
+            <ul>
+                <li class="fields"><?php echo $this->getLayout()->createBlock('customer/widget_name')->setObject($this->getAddress())->setFieldIdFormat('billing:%s')->setFieldNameFormat('billing[%s]')->toHtml() ?></li>
+                <li class="fields companyfield">
+                    <?php if(!Mage::helper('mtonestepcheckout')->excludeCompany()): ?>
+                    <div class="field">
+                        <label for="billing:company"><?php echo $this->__('Company') ?></label>
+                        <div class="input-box">
+                            <input type="text" id="billing:company" name="billing[company]" value="<?php echo $this->htmlEscape($this->getAddress()->getCompany()) ?>" title="<?php echo $this->__('Company') ?>" class="input-text" />
+                        </div>
+                    </div>
+                    <?php else: ?>
+                    <input type="hidden" name="billing[company]" value="<?php echo $this->htmlEscape($this->getAddress()->getCompany()) ?>" />
+                    <?php endif; ?>
+                </li>
+                    <?php if(!$this->isCustomerLoggedIn()): ?>
+                <li>
+                
+                    <div >
+                        <label for="billing:email" style="font-size:1.6em;"  class="required"><em>*</em><?php echo $this->__('Email Address') ?></label>
+                        <div class="input-box" style="width:97%;" >
+                            <input type="text" name="billing[email]" id="billing:email" value="<?php echo $this->htmlEscape($this->getAddress()->getEmail()) ?>" title="<?php echo $this->__('Email Address') ?>"  style="font-size:1.6em;height:68px;width:100% !important;line-height:26px;" class="input-text validate-email required-entry" maxlength="320"/>
+                        </div>
+                    </div>
+                    <br>
+                    <div>
+                       <?php if(!Mage::helper('mtonestepcheckout')->excludeTelephone()): ?>
+                    <div>
+                        <label for="billing:telephone" style="font-size:1.3em;" class="required"><em>*</em><?php echo $this->__('Telephone') ?></label>
+                        <div class="input-box" style="width:97%;">
+                            <input type="text" name="billing[telephone]" value="<?php echo $this->htmlEscape($this->getAddress()->getTelephone()) ?>" title="<?php echo $this->__('Telephone') ?>" style="font-size:1.6em;height:68px;width:100% !important;line-height:26px;" class="input-text required-entry validate-number" id="billing:telephone" maxlength="25"/>
+                        </div>
+                    </div>
+                   
+                    <?php else: ?>
+                    <input type="hidden" name="billing[telephone]" value="<?php echo $this->htmlEscape($this->getAddress()->getTelephone()) ?>" />
+                    <?php endif; ?>
+                    </div>
+                    
+                    
+                </li>
+                    <?php endif ?>
+                <li >
+                    <label for="billing:street1" style="font-size:1.3em;" class="required"><em>*</em><?php echo $this->__('Address') ?></label>
+                    <div class="input-box" style="width:97%;">
+                        <input type="text" title="<?php echo $this->__('Street Address') ?>" name="billing[street][]" id="billing:street1" value="<?php echo $this->htmlEscape($this->getAddress()->getStreet(1)) ?>" style="font-size:1.6em;height:68px;width:100% !important;line-height:26px;" class="input-text required-entry" maxlength="250"/>
+                    </div>
+                </li>
+                <?php for ($_i=2, $_n=$this->helper('customer/address')->getStreetLines(); $_i<=$_n; $_i++): ?>
+                <li >
+                    <div class="input-box" style="width:97%;">
+                        <input type="text" title="<?php echo $this->__('Street Address '.$_i) ?>" name="billing[street][]" id="billing:street<?php echo $_i?>" style="font-size:1.6em;height:68px;width:100% !important;line-height:26px;" value="<?php echo $this->htmlEscape($this->getAddress()->getStreet($_i)) ?>" class="input-text" maxlength="250"/>
+                    </div>
+                </li>
+                <?php endfor ?>
+                
+                <li >
+                <div >
+                   <?php if(!Mage::helper('mtonestepcheckout')->excludeCity()): ?>
+              
+                    <label for="billing:city" style="font-size:1.3em;" class="required"><em>*</em><?php echo $this->__('City') ?></label>
+                    <div class="input-box" style="width:97%;">
+                        <input type="text" title="<?php echo $this->__('City') ?>" name="billing[city]" value="<?php echo $this->htmlEscape($this->getAddress()->getCity()) ?>" style="font-size:1.6em;height:68px;width:100% !important;line-height:26px;" class="input-text required-entry" id="billing:city" maxlength="250" />
+                    </div>
+               
+                <?php endif; ?>
+                
+                </div>
+                
+                    <?php if(!Mage::helper('mtonestepcheckout')->excludePostcode()): ?>
+                    <div >
+                        <label for="billing:postcode" style="font-size:1.3em;" class="required"><em>*</em><?php echo $this->__('Zip/Postal Code') ?></label>
+                        <div class="input-box" style="width:97%;">
+                            <input type="text" title="<?php echo $this->__('Zip/Postal Code') ?>" name="billing[postcode]" id="billing:postcode" value="<?php echo $this->htmlEscape($this->getQuote()->getBillingAddress()->getPostcode()) ?>" class="postcode input-text validate-zip-international required-entry" style="font-size:1.6em;height:68px;width:100% !important;line-height:26px;" maxlength="20"/>
+                            <?php if(Mage::helper('mtonestepcheckout')->onChangePostcode()): ?>
+                            <script type="text/javascript">
+                                //<![CDATA[
+                                    $('billing:postcode').observe('change', function(event){billing.saveCountry();Event.stop(event);}.bind(this));
+                                //]]
+                            </script>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                    <?php endif; ?>
+                
+                
+                
+                
+                </li>
+                
+                
+                
+                
+                
+                
+                <li >
+                 <div>
+                    <label for="billing:country_id" style="font-size:1.6em;" class="required"><em>*</em><?php echo $this->__('Country') ?></label><br><br>
+                    <div class="" style="width:97%">
+                        <?php echo $this->getCountryHtmlSelect('billing') ?>
+                        <script type="text/javascript">
+                            //<![CDATA[
+                                <?php if($this->getQuote()->getBillingAddress()->getCountryId()): ?>
+                                billingCountry = $('billing:country_id');
+                                billingCountry[billingCountry.selectedIndex].removeAttribute('selected');
+                                for(var i=0; i<billingCountry.options.length; i++) {
+                                    if(billingCountry[i].value == '<?php echo $this->getQuote()->getBillingAddress()->getCountryId(); ?>') {
+                                        billingCountry[i].setAttribute('selected', true);
+                                    }
+                                }
+                                <?php endif; ?>
+                                <?php if(Mage::helper('mtonestepcheckout')->onChangeCountry()): ?>
+                                $('billing:country_id').observe('click', function(event){billing.currentCountry = $('billing:country_id').value;Event.stop(event);}.bind(this));
+                                $('billing:country_id').observe('change', function(event){billing.saveCountry();Event.stop(event);}.bind(this));
+                                <?php endif; ?>
+                            //]]
+                        </script>
+                    </div>
+                    </div>
+               
+                
+                
+                    <?php if(!Mage::helper('mtonestepcheckout')->excludeRegion()): ?>
+                    <div>
+                        <label for="billing:region_id" style="font-size:1.3em;"class="required"><em>*</em><?php echo $this->__('State/Province') ?></label>
+                        <div class="input-box" style=width:97%;>
+                            <select id="billing:region_id" name="billing[region_id]" title="<?php echo $this->__('State/Province') ?>" class="region validate-select" style="display:none;font-size:1.6em;height:68px;width:100% !important;line-height:26px;">
+                                <option value=""><?php echo $this->__('Please select state') ?></option>
+                            </select>
+                            <script type="text/javascript">
+                            //<![CDATA[
+                                $('billing:region_id').setAttribute('defaultValue',  "<?php echo $this->getQuote()->getBillingAddress()->getRegionId() ?>");
+                            //]]>
+                            </script>
+                            <input type="text" id="billing:region" name="billing[region]" value="<?php echo $this->htmlEscape($this->getQuote()->getBillingAddress()->getRegion()) ?>"  title="<?php echo $this->__('State/Province') ?>" class="region input-text" style="display:none;"  maxlength="250"/>
+                            <?php if(Mage::helper('mtonestepcheckout')->onChangeRegion()): ?>
+                            <script type="text/javascript">
+                                //<![CDATA[
+                                    $('billing:region_id').observe('change', function(event){billing.saveCountry();Event.stop(event);}.bind(this));
+                                    $('billing:region').observe('change', function(event){billing.saveCountry();Event.stop(event);}.bind(this));
+                                //]]
+                            </script>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                    <?php endif; ?>
+                </li>
+                <li class="fields two_fields">
+                   
+                    
+                    
+                    
+                    <?php if(!Mage::helper('mtonestepcheckout')->excludeFax()): ?>
+                    <div class="field">
+                        <label for="billing:fax"><?php echo $this->__('Fax') ?></label>
+                        <div class="input-box">
+                            <input type="text" name="billing[fax]" value="<?php echo $this->htmlEscape($this->getAddress()->getFax()) ?>" title="<?php echo $this->__('Fax') ?>" class="input-text" id="billing:fax" maxlength="25"/>
+                        </div>
+                    </div>
+                    <?php else: ?>
+                    <input type="hidden" name="billing[fax]" value="<?php echo $this->htmlEscape($this->getAddress()->getFax()) ?>" />
+                    <?php endif; ?>
+                </li>
+				 <?php if($this->isCustomerLoggedIn()): ?>
+                <li class="two_fields">
+                    
+                    <div class="field">
+                       <?php if(!Mage::helper('mtonestepcheckout')->excludeTelephone()): ?>
+                    <div class="field">
+                        <label for="billing:telephone" class="required"><em>*</em><?php echo $this->__('Telephone') ?></label>
+                        <div class="input-box">
+                            <input type="text" name="billing[telephone]" value="<?php echo $this->htmlEscape($this->getAddress()->getTelephone()) ?>" title="<?php echo $this->__('Telephone') ?>" class="input-text required-entry validate-number" id="billing:telephone" maxlength="25"/>
+                        </div>
+                    </div>
+                   
+                    <?php else: ?>
+                    <input type="hidden" name="billing[telephone]" value="<?php echo $this->htmlEscape($this->getAddress()->getTelephone()) ?>" />
+                    <?php endif; ?>
+                    </div>
+                    
+                    
+                </li>
+                    <?php endif ?>
+                <?php if(!$this->isCustomerLoggedIn()): ?>
+
+                <?php $_dob = $this->getLayout()->createBlock('customer/widget_dob') ?>
+                <?php $_gender = $this->getLayout()->createBlock('customer/widget_gender') ?>
+                    <?php if ($_dob->isEnabled() || $_gender->isEnabled()): ?>
+                <li class="fields">
+                    <?php if ($_dob->isEnabled()): ?>
+                    <div class="field">
+                        <?php echo $_dob->setDate($this->getQuote()->getCustomerDob())->setFieldIdFormat('billing:%s')->setFieldNameFormat('billing[%s]')->toHtml() ?>
+                    </div>
+                    <?php endif; ?>
+                    <?php if ($_gender->isEnabled()): ?>
+                    <div class="field">
+                        <?php echo $_gender->setGender($this->getQuote()->getCustomerGender())->setFieldIdFormat('billing:%s')->setFieldNameFormat('billing[%s]')->toHtml() ?>
+                    </div>
+                    <?php endif; ?>
+                </li>
+                <?php endif ?>
+
+                <?php $_taxvat = $this->getLayout()->createBlock('customer/widget_taxvat') ?>
+                <?php if ($_taxvat->isEnabled()): ?>
+                <li>
+                    <?php echo $_taxvat->setTaxvat($this->getQuote()->getCustomerTaxvat())->setFieldIdFormat('billing:%s')->setFieldNameFormat('billing[%s]')->toHtml() ?>
+                </li>
+                <?php endif ?>
+				
+                <!--<li class="control">
+                    <input type="checkbox" name="billing[register]" value="1" title="<?php //echo $this->__('Create an account') ?>" id="billing:register" class="checkbox" onclick="billing.register()" /><label for="billing:register"><?php //echo $this->__('Create an account') ?></label>
+                </li>
+                <li class="fields" id="register-customer-password" style="display:none;">
+                    <div class="field">
+                        <label for="billing:customer_password" class="required"><em>*</em><?php //echo $this->__('Password') ?></label>
+                        <div class="input-box">
+                            <input type="password" name="billing[customer_password]" id="billing:customer_password" title="<?php //echo $this->__('Password') ?>" class="input-text required-entry validate-password" />
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label for="billing:confirm_password" class="required"><em>*</em><?php //echo $this->__('Confirm Password') ?></label>
+                        <div class="input-box">
+                            <input type="password" name="billing[confirm_password]" title="<?php //echo $this->__('Confirm Password') ?>" id="billing:confirm_password" class="input-text required-entry validate-cpassword" />
+                        </div>
+                    </div>
+                    <?php //if(Mage::helper('mtonestepcheckout')->includeNewsletter()): ?>
+                    <div class="clear"></div>
+                    <ul class="newsletter">
+                        <li class="control">
+                            <input class="checkbox" type="checkbox" id="billing:is_subscribed" name="billing[is_subscribed]" title="<?php //echo $this->__('Sign Up for Newsletter') ?>" value="1" />
+                            <label for="billing:is_subscribed"><?php //echo $this->__('Sign Up for Newsletter') ?></label>
+                        </li>
+                    </ul>
+                    <?php //endif; ?>
+                </li>-->
+<li style="font-size:1.3em;">* Your New Account Will be Created Automaticaly And Password Will be Sent to Your Email.</li>
+                <?php endif; ?>
+			
+
+                <?php if ($this->isCustomerLoggedIn() && $this->customerHasAddresses()):?>
+                    <li class="control">
+                        <input type="checkbox" name="billing[save_in_address_book]" value="1" title="<?php echo $this->__('Save in address book') ?>" id="billing:save_in_address_book" onchange="shipping.setSameAsBilling(false);"<?php if ($this->getAddress()->getSaveInAddressBook()):?> checked="checked"<?php endif;?> class="checkbox" /><label for="billing:save_in_address_book"><?php echo $this->__('Save in address book') ?></label>
+                    </li>
+                <?php else:?>
+                    <li class="no-display"><input type="hidden" name="billing[save_in_address_book]" value="1" /></li>
+                <?php endif; ?>
+				
+            </ul>
+        </fieldset>
+    </li>
+    <?php if ($this->canShip()): ?>
+    <?php if(!Mage::helper('mtonestepcheckout')->excludeShippingAddress()): ?>
+    <!--li class="control">
+        <?php $checkUseForShipping = Mage::getSingleton('core/session')->getData('use_for_shipping'); ?>
+        <input type="checkbox" name="billing[use_for_shipping]" id="billing:use_for_shipping_yes" <?php if($checkUseForShipping): ?>checked="checked"<?php endif; ?> value="2" title="<?php echo $this->__('Ship to different address') ?>" class="checkbox" /><label for="billing:use_for_shipping_yes"><?php echo $this->__('Ship to different address') ?></label>
+        <script type="text/javascript">
+            //<![CDATA[
+                $('billing:use_for_shipping_yes').observe('click', function(event){billing.enalbleShippingAddress();}.bind(this));
+            //]]
+        </script>
+    </li-->
+    <?php endif; ?>
+    <?php endif; ?>
+    </ul>
+</fieldset>
+<script type="text/javascript">
+//<![CDATA[
+    var billing = new Billing(
+                    '<?php if(Mage::getSingleton('core/session')->getData('use_for_shipping')) echo 0; else echo 1; ?>',
+                    '<?php echo $this->getUrl('mtonestepcheckout/index/saveBilling'); ?>',
+                    '<?php echo $this->getUrl('mtonestepcheckout/index/switchMethod'); ?>',
+                    '<?php echo $this->getUrl('mtonestepcheckout/index/getAddress') ?>address/'
+                );
+    $('billing-address-select') && billing.newAddress(!$('billing-address-select').value);
+    <?php if(!Mage::helper('mtonestepcheckout')->excludeRegion()): ?>
+    var billingRegionUpdater = new RegionUpdater('billing:country_id', 'billing:region', 'billing:region_id', countryRegions, undefined, 'billing:postcode');
+    <?php endif; ?>
+//]]>
+</script>
+<?php } ?>

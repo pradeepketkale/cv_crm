@@ -1,0 +1,173 @@
+<!--Hard Code-->
+<div class="feedback">
+<h1 class="venheadingsblk">Amit's <span class="sold-header-seller-name emphasis-text">Feedback</span></h1>
+  <ul class="feedback-header">
+    <li class="positive"><span class="icon"></span> Positive: 417</li>
+    <li class="neutral"><span class="icon"></span> Neutral: 1</li>
+    <li class="negative"><span class="icon"></span> Negative: 2</li>
+  </ul>
+  <ul class="tabs clear">
+       <li class="first"> <a href="#">As a shop owner</a> </li>
+     </ul>
+  <ul class="user-feedback-header clear">
+    <li class="author-comment">Comment</li>
+    <li class="date">Date</li>
+  </ul>
+  <div class="user-feedback positive even clear" id="feedback-68525167">
+    <div class="author-comment">
+      <h6>
+        <p class="comment">Perfect! thank you!</p>
+        &nbsp;
+        <p></p>
+      </h6>
+    </div>
+    <div class="date">Jan 18, 2012</div>
+    <div class="user-image"> </div>
+    <ul class="listing-info">
+      <li class="listing-image"> <a href="/transaction/68525167"><img height="75" width="75" alt="" src="http://cdnkribha1.s3.amazonaws.com/catalog/product/cache/1/small_image/205x205/9df78eab33525d08d6e5fb8d27136e95/M/M/MMUSARAH0000094_1.jpg"></a> </li>
+      <li class="listing-title"> <a href="/transaction/68525167">Reserved order for Beth</a> </li>
+    </ul>
+  </div>
+  <div class="user-feedback neutral even clear" id="feedback-68525167">
+    <div class="author-comment">
+      <h6>
+        <p class="comment">No comments!</p>
+        &nbsp;
+        <p></p>
+      </h6>
+    </div>
+    <div class="date">Jan 18, 2012</div>
+    <div class="user-image"> </div>
+    <ul class="listing-info">
+      <li class="listing-image"> <a href="/transaction/68525167"><img height="75" width="75" alt="" src="http://cdnkribha1.s3.amazonaws.com/catalog/product/cache/1/small_image/205x205/9df78eab33525d08d6e5fb8d27136e95/M/M/MMUSARAH0000094_1.jpg"></a> </li>
+      <li class="listing-title"> <a href="/transaction/68525167">Reserved order for Beth</a> </li>
+    </ul>
+  </div>
+  <div class="user-feedback positive even clear" id="feedback-68525167">
+    <div class="author-comment">
+      <h6>
+        <p class="comment">Perfect! thank you!</p>
+        &nbsp;
+        <p></p>
+      </h6>
+    </div>
+    <div class="date">Jan 18, 2012</div>
+    <div class="user-image"> </div>
+    <ul class="listing-info">
+      <li class="listing-image"> <a href="/transaction/68525167"><img height="75" width="75" alt="" src="http://cdnkribha1.s3.amazonaws.com/catalog/product/cache/1/small_image/205x205/9df78eab33525d08d6e5fb8d27136e95/M/M/MMUSARAH0000094_1.jpg"></a> </li>
+      <li class="listing-title"> <a href="/transaction/68525167">Reserved order for Beth</a> </li>
+    </ul>
+  </div>
+  <div class="user-feedback negative even clear" id="feedback-68525167">
+    <div class="author-comment">
+      <h6>
+        <p class="comment">Not Perfect! thank you!</p>
+        &nbsp;
+        <p></p>
+      </h6>
+    </div>
+    <div class="date">Jan 18, 2012</div>
+    <div class="user-image"> </div>
+    <ul class="listing-info">
+      <li class="listing-image"> <a href="/transaction/68525167"><img height="75" width="75" alt="" src="http://cdnkribha1.s3.amazonaws.com/catalog/product/cache/1/small_image/205x205/9df78eab33525d08d6e5fb8d27136e95/M/M/MMUSARAH0000094_1.jpg"></a> </li>
+      <li class="listing-title"> <a href="/transaction/68525167">Reserved order for Beth</a> </li>
+    </ul>
+  </div>     
+</div>
+<!--Hard Code End-->
+
+
+
+
+
+
+<span class="clr"></span>
+
+
+
+
+
+
+
+
+
+<div style="margin-top:250px;">
+        <h1 class=">Vendor name willcome here Feedback</h1>
+        <ul class="">
+            <li class="positive"><span class="icon"></span> Positive: <?php echo count($this->getCustomerFeedbacks()->addFilter('feedback','1')); ?> </li>
+            <li class="neutral"><span class="icon"></span> Neutral: <?php echo count($this->getCustomerFeedbacks()->addFilter('feedback', '0')); ?></li>
+            <li class="negative"><span class="icon"></span> Negative: <?php echo count($this->getCustomerFeedbacks()->addFilter	('feedback', '-1' )); ?></li>
+        </ul>
+        
+        <ul class="tabs clear">
+             <li class="first  active">
+             <a href="#">As a shop owner</a>
+             </li>
+             <li class="">
+             <a href="http://www.etsy.com/people/pecanieregirl/feedback?type=for_others">Left for others</a>
+            </li>
+        </ul>
+ <ul class="user-feedback-header clear">
+        <li class="author-comment">Comment</li>
+        <li class="date">Date</li>
+    </ul>
+   <?php
+	echo $this->getToolbarHtml();
+?>
+    
+<?php foreach ($this->getCustomerFeedbacks() as $_feedbacks): ?>
+
+
+     <div class="user-feedback <?php if($_feedbacks->getFeedback() == '1') echo 'positive'; elseif($_feedbacks->getFeedback() == '-1') echo 'negative'; else echo 'neutral';   ?> positive odd clear" id="feedback-57893992_<?php $_feedbacks->getFeedbackAt() ?>">
+        <div class="author-comment">
+         <h6>
+          <p class="comment">
+<?php
+
+//Mage::getModel('order_item')->
+//print_r($_feedbacks);
+?>
+<?php echo $_feedbacks->getFeedbackComments() ?></p>&nbsp;<p></p>
+          </h6>
+        </div>
+        <div class="date"><?php echo $this->formatTime($_feedbacks->getFeedbackAt(),'d-m-y', true); ?></div>
+        <div class="user-image"> <ul class="listing-info">
+           <li class="listing-image">
+              <a href="/transaction/57893992"><img width="75" height="75" alt="" src="http://img0.etsystatic.com/il_75x75.264616924.jpg"></a>
+            </li>
+            <li class="listing-title">
+              <a href="/transaction/57893992">Personalized Birthday </a>
+            </li>
+         </ul>
+        </div>
+       </div>
+    
+  <?php endforeach; ?> 
+  
+<?php
+echo $this->getToolbarHtml();
+?>
+
+  </div>      
+  
+  
+                                     
+        <div align="center" class="page-wrapper">
+                
+    
+<!--[if lte IE 7]>
+<table class="pager-table" align="center">
+<tr><td>
+<![endif]-->
+
+<!--[if lte IE 7]>
+</td></tr>
+</table>    
+<![endif]-->
+        </div>
+<?php //echo $this->getChildHtml('toolbar') ?>    
+<?php
+//echo "helllo";
+//print_r($this->getCustomerFeedbacks()->getData());
+return;
+?>

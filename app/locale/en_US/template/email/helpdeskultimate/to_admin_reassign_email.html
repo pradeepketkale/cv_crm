@@ -1,0 +1,73 @@
+<!--@subject [#{{var ticket.uid}}] Ticket assigned: {{var ticket.title}}@-->
+
+<style type="text/css">
+body, td {
+	color:#2f2f2f;
+	font:11px Arial, Helvetica, sans-serif;
+}
+</style>
+
+<div>
+  <table cellspacing="0" cellpadding="0" border="0" width="98%" style="margin-top:10px; margin-bottom:10px; background:#FFF;">
+    <tr>
+      <td align="center" valign="top"><!-- [ header starts here] -->
+        
+          <table cellspacing="0" cellpadding="0" border="0" width="800">
+          <tr>
+            <td valign="top" align="center"><a href="{{store url=''}}"><img src="{{skin url='images/logo_email.gif' _area='frontend'}}" alt="Craftsvilla"  style="margin-bottom:10px;" border="0"/></a></td>
+          </tr>
+        </table>
+              
+              
+<table cellspacing="0" cellpadding="0" border="0" width="800">
+        
+            <tr><td><img src="{{skin url='images/top_image.jpg' _area='frontend'}}" alt="" /></td></tr>
+            
+            
+                       
+            
+                                <tr>
+                       <td valign="top" style="font-size:13px; color:#444; padding:0 40px; line-height:18px; line-height:20px;">
+
+ <p style="font-size:18px;"><span style="color:#CE3D49;" class="_CONTENT_">
+ 
+			Dear {{var newdepartment.name}},</span></p>
+			
+            <p>
+			This ticket has been (re)assigned to you</p>
+            <p>We have received an email to the customer and a ticket has been created with Ticket ID <a href="{{var ticket.getAdminUrl()}}">{{var ticket.uid}}</a. Please treat this as an urgent priority and respond to this ticket within a maximum of 1 working day. ></p>
+            
+            
+
+                            <p>
+
+                            <p><strong>Ticket details:</strong></p>
+
+                                <p  style="border:1px dashed #ccc; padding:10px; background:#F7F7F3; margin:0;">
+                                <b>Name:</b> {{var ticket.customer_name}}<br/>
+                                <b>Email:</b> {{var ticket.customer_email}}<br/>
+                                <b>Ticket ID:</b> <a href="{{var ticket.getAdminUrl()}}">{{var ticket.uid}}</a><br/>
+                                <b>Title:</b> {{var ticket.title}}<br/>
+                            </p>
+
+                            <p>
+                                <br/>
+                                <br/>
+                                You can view the ticket and reply from web interface from <a
+                                    href="{{var ticket.getAdminUrl()}}">here</a>.
+                        </td>
+                    </tr>
+                    
+                      <tr>
+                      <td><p align="right" style="float:right;"><img border="0" style="margin-bottom:10px;" alt="Craftsvilla" src="{{skin url='images/smalllogo.jpg' _area='frontend'}}"></p></td>                    
+                    </tr>
+                    
+                    
+                </table>
+
+            </td>
+        </tr>
+    </table>
+</div>
+
+

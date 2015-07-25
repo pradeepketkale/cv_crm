@@ -1,0 +1,74 @@
+<?php
+/**
+ * aheadWorks Co.
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://ecommerce.aheadworks.com/LICENSE-M1.txt
+ *
+ * @category   AW
+ * @package    AW_Ajaxcatalog
+ * @copyright  Copyright (c) 2011 aheadWorks Co. (http://www.aheadworks.com)
+ * @license    http://ecommerce.aheadworks.com/LICENSE-M1.txt
+ */ 
+
+ /**
+  * @see AW_Ajaxcatalog_Block_Catalog_Product_List
+  */
+?>
+<?php 
+//var_dump($this->getRequest());
+
+?>
+<div class="category-products">
+    <?php echo $this->getToolbarHtml() ?>    
+</div>
+<div class="awac-catalog-container" id="awac_catalog_container">   
+    <?php echo $this->getNativeListHtml(); ?>    
+</div>
+
+<?php if ($this->needAjaxLoad()): ?>
+    <?php if ($this->getActionType() == AW_Ajaxcatalog_Model_System_Config_Source_Actiontype::TYPE_BUTTON): ?>
+    <div class="awac-button" id="awac_button">
+        <?php echo $this->getButtonHtml(); ?>
+    </div>    
+    <?php else: ?>
+    <div class="awac-loader" id="awac_loader">
+        <?php echo $this->getLoaderHtml(); ?>
+    </div>    
+    <?php endif; ?>
+    <?php if ($url = $this->getNextJumpUrl()): ?>
+    <div class="robot-link">
+        <a href="<?php echo $url; ?>" title="<?php echo $this->__('More products'); ?>"><?php echo $this->__('More products'); ?></a>
+    </div>
+    <?php endif; ?>
+
+    <script type="text/javascript">
+        var _ajaxCatalog = new AWAjaxCatalog({
+            'page_count': <?php echo $this->getPageCount() ? $this->getPageCount() : 0 ; ?>,
+            'current_page': <?php echo $this->getCurrentPage() ? $this->getCurrentPage() : 1 ; ?>,
+            'container_id': 'awac_catalog_container',
+            'button_id': 'button_label',
+            'button_container_id': 'awac_button',
+            'loader_id': 'loader_label',
+            'next_page': <?php echo $this->getNextPageNum() ?>,        
+            'next_url': '<?php echo $this->getUrl('awajaxcatalog/load/next', array('pa'=>'{{page}}')) ?>',
+            'params': <?php echo $this->getFilterParams(); ?>,
+            'route': '<?php echo $this->getRoute(); ?>',
+            'action_type': '<?php echo $this->getActionType(); ?>',
+            'decorate_clean': 'div.awac-catalog-container ul.products-grid, div.awac-catalog-container ol.grid-row, div.awac-catalog-container .products-list li.item',
+            'decorate_decorate': ['div.awac-catalog-container ul.products-grid', 'div.awac-catalog-container ol.grid-row', 'div.awac-catalog-container .products-list li.item']            
+        });
+    </script>
+
+<?php endif; ?>
+
+<div class="category-products">
+    <div class="toolbar-bottom">
+        <?php echo $this->getToolbarHtml() ?>
+    </div>    
+</div>
+

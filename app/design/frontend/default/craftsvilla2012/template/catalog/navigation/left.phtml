@@ -1,0 +1,153 @@
+<?php if (!Mage::registry('current_category')) return ?>
+<?php $_categories = $this->getCurrentChildCategories(); ?>
+<?php $_count = is_array($_categories)?count($_categories):$_categories->count(); ?>
+<?php if($_count): ?>
+
+<?php $actual_link = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+?>
+<div class="block block-layered-nav">
+
+   <?php /*?> <div class="block-title-new">
+        <?php echo $this->__('Browse By') ?>
+    </div><?php */
+$symbol = Mage::app()->getLocale()->currency(Mage::app()->getStore()->getCurrentCurrencyCode())->getSymbol();
+	$baseCurrencyCode = Mage::app()->getStore()->getBaseCurrencyCode(); 
+$currentCurrencyCode = Mage::app()->getStore()->getCurrentCurrencyCode(); 
+ // price should be in  base CurrencyCode 
+$precision=2; //float point of price
+$Range1 = 500;
+$Range2 = 1000;
+$Range3 = 2000;
+$Range4 = 5000;
+ if ($baseCurrencyCode != $currentCurrencyCode) {
+        // convert price from current currency to base currency
+        $Range1 = round((Mage::helper('directory')->currencyConvert(500, $baseCurrencyCode, $currentCurrencyCode)*1.5),0);
+		$Range2 = round((Mage::helper('directory')->currencyConvert(1000, $baseCurrencyCode, $currentCurrencyCode)*1.5),0);
+		$Range3 = round((Mage::helper('directory')->currencyConvert(2000, $baseCurrencyCode, $currentCurrencyCode)*1.5),0);
+		$Range4 = round((Mage::helper('directory')->currencyConvert(5000, $baseCurrencyCode, $currentCurrencyCode)*1.5),0);
+
+        // convert price from base currency to current currency
+        //$priceTwo = Mage::helper('directory')->currencyConvert($amount, $baseCurrencyCode, $currentCurrencyCode);
+    }
+	
+?>
+
+<div id="removeFiltPrice32514"></div>
+<div id="removeFiltDiscount758214"></div>
+<div id ="removeFiltColor65412"></div>
+<div id ="removeFiltCashondelivery9635"></div>
+<div id ="removeFiltZipcode85258"></div>
+
+
+
+<div style="height: auto;
+width: 149px;
+border: 1px groove #DFDFDF; margin:3px;">
+    <div class="block-content">
+        <dl id="narrow-by-list">
+            <dt style="margin-left:3px"><?php echo $this->__('Filter By Category') ?></dt>
+            <dd style="margin-left:5px">
+                <ol>
+                <?php foreach ($_categories as $_category): ?>
+                    <?php if($_category->getIsActive()): ?>
+                    <li>
+                        <a href="<?php echo $this->getCategoryUrl($_category) ?>"<?php if ($this->isCategoryActive($_category)): ?> class="current"<?php endif; ?>><?php echo $this->htmlEscape($_category->getName()) ?></a> (<?php echo $_category->getProductCount() ?>)
+                    </li>
+                    <?php endif; ?>
+                <?php endforeach ?>
+                </ol>
+            </dd>
+        </dl>
+        <script type="text/javascript">decorateDataList('narrow-by-list2')</script>
+    </div>
+</div> 
+<input id = "currencysymbol" name = "currencysymbol" type = "hidden" value = "<?php echo $symbol ?>" >      
+ <div style="height: auto;width: 149px;border: 1px groove #DFDFDF; margin:3px;">
+         <dl id="narrow-by-list">
+            <dt style="margin-left:5px"><?php echo $this->__('Filter By Price') ?></dt>
+            <dd style="margin-left:3px">
+      <form><div onclick="submitprice()" style="cursor:pointer;"><font color="#0192B5"><?php echo $symbol;?><?php echo '0'; ?>  - <?php echo $symbol;?><?php echo $Range1;?></font></div></form>
+       <form><div onclick="submitprice1()" style="cursor:pointer;"><font color="#0192B5"><?php echo $symbol;?><?php echo $Range1; ?>  - <?php echo $symbol;?><?php echo $Range2;?></font></div></form>
+        <form><div onclick="submitprice2()" style="cursor:pointer;"><font color="#0192B5"><?php echo $symbol;?><?php echo $Range2; ?>  - <?php echo $symbol;?><?php echo $Range3;?></font></div></form>
+      <form><div onclick="submitprice3()" style="cursor:pointer;"><font color="#0192B5"><?php echo $symbol;?><?php echo $Range3; ?>  - <?php echo $symbol;?><?php echo $Range4;?></font></div></form>
+  <!-- <form> <div onclick="submitprice4()" style="cursor:pointer;"><input type="text" id="max_value4" name="max_value" class="subreadonly" onClick='this.readOnly = true;'  value="Above Rs. 5000" disabled="disabled" style="width:92px; color:#0192B5;border: none;background: transparent;
+    outline:none;margin-left:2px;" /></div></form>-->
+    <form> <div onclick="submitprice4()" style="cursor:pointer;"> <input type="text" id="min_value4" name="min_value" onfocus="this.blur()" class="subreadonly" readonly="readonly" value="" style="width:0px; color:#0192B5;border: none;background: transparent;
+    outline:none;cursor:pointer"><input type="text" id="max_value4" name="max_value" onfocus="this.blur()" class="subreadonly" value="Above <?php echo $symbol.''.$Range4;?>" readonly="readonly" style="width:92px; color:#0192B5;border: none;background: transparent;
+    outline:none;margin-left:-15px;cursor:pointer" /></div></form><br />
+    
+   
+      
+     <div style="color: #0192B5; size: 2px; margin-left:-2px; margin-top:-15px">         
+      Rs.<input type="text" name='min_value' placeholder='' id='min_value5' style='width:33px;height:10px' /><font color="#0192B5"> - </font>             
+             
+      <!--<div style="color: #0192B5; size: 2px; margin-left:5px; margin-top:-15px">         
+      To: &nbsp;&nbsp;&nbsp;&nbsp;-->
+       
+      
+      Rs.<input type="text" name='max_value' placeholder='' id='max_value5' style='width:33px;height:10px' /></div><br />
+             
+         
+        
+        <input type="button" name="submit" onClick="submitprice5()" value="Price Search" style='width:126px;height:26px;background-color: #39708E;font-size: 12px;text-shadow: black 2px 2px 3px;box-shadow:0px 0px 0px -8px #0192B5 inset;-webkit-border-top-left-radius:9px;	-moz-border-radius-topleft:9px;	border-top-left-radius:9px;	-webkit-border-top-right-radius:9px;	-moz-border-radius-topright:9px;border-top-right-radius:9px;-webkit-border-bottom-right-radius:9px;	-moz-border-radius-bottomright:9px;	border-bottom-right-radius:9px;	-webkit-border-bottom-left-radius:9px;	-moz-border-radius-bottomleft:9px;	border-bottom-left-radius:9px; cursor:pointer; margin-top:-26px; color:#FFF; margin-left:11px' />
+  
+
+          </dd>
+<div style="font-size:11px;margin-top:-26px;cursor:pointer;" align="center" onclick="removeUrloffiltersPrice()"  title ="<?php echo $this->__('Remove Price Filter')?>" >Clear Price Filter</div>
+             
+        </dl>   </div>
+       
+     <br />
+       
+<div style="height: auto;width: 149px;border: 1px groove #DFDFDF; margin:3px;float: left; ">
+<dl id="narrow-by-list">
+ <dt style="margin-left:7px"><?php echo $this->__('Filter By Color') ?></dt>
+<dd style="margin-left:5px">
+<div onclick="submitcolorred()" style ="float:left; width:30px;height:30px;background:red;cursor:pointer;margin:2px;" title ="Red" ></div>
+<div onclick="submitcolorgreen()" style ="float:left;width:30px;height:30px;background:green;cursor:pointer;margin:2px;"title = "Green"></div>
+<div onclick="submitcolorwhite()" style ="float:left; width:27px;height:27px;background:white;cursor:pointer;margin:1px;border-color:grey;border: 1px;border-style:groove;"  title ="White" ></div>
+<div onclick="submitcolorblack()" style ="float:left; width:30px;height:30px;background:black;cursor:pointer;margin:2px;" title ="Black" ></div>
+<div onclick="submitcoloryellow()" style ="float:left; width:30px;height:30px;background:yellow;cursor:pointer;margin:2px;" title ="Yellow" ></div>
+<div onclick="submitcolormagenta()"style="float:left; width:30px;height:30px;background:magenta;cursor:pointer;margin:2px;"title ="Magenta" ></div>
+<div onclick="submitcolorpurple()"style="float:left; width:30px;height:30px;background:purple;cursor:pointer;margin:1px;"title ="Purple" ></div>
+<div onclick="submitcolorgrey()"style="float:left; width:30px;height:30px;background:grey;cursor:pointer;margin:2px;"title ="Grey" ></div>
+<div onclick="submitcolorblue()"style="float:left; width:30px;height:30px;background:blue;cursor:pointer;margin:2px;"title ="Blue" ></div>
+<div onclick="submitcolorbrown()"style="float:left; width:30px;height:30px;background:brown;cursor:pointer;margin:2px;"title ="Brown" ></div>
+<div onclick="submitcolorsilver()"style="float:left; width:30px;height:30px;background:silver;cursor:pointer;margin:1px;"title ="Silver" ></div>
+<div onclick="submitcolorbeige()"style="float:left; width:30px;height:30px;background:beige;cursor:pointer;margin:2px;"title ="Beige" ></div>
+<div onclick="submitcolorgold()"style="float:left; width:30px;height:30px;background:gold;cursor:pointer;margin:2px;"title ="Gold" ></div>
+<div onclick="submitcolormulticolor()"style="float:left; width:30px;height:30px;background:multicolor;cursor:pointer;margin:2px;"title ="Multicolor" ></div>
+</dd></dl>
+<br/>
+<div style="float:left;font-size:11px;cursor:pointer;text-align:center;margin-left:25px" onclick="removefiltersColor()"  title ="<?php echo $this->__('Remove Color Filter')?>" ><strong>Clear Color Filter</strong></div>
+</div>
+
+
+<div style="height: auto;width: 149px;border: 1px groove #DFDFDF; margin:3px;float: left; ">
+<dl id="narrow-by-list">
+ <dt style="margin-left:7px"><?php echo $this->__('Filter By Discount') ?></dt>
+<dd style="margin-left:5px">
+                    
+       
+		<form><div onclick="submitdiscount50()" style="cursor:pointer;"><font color="#0192B5">Discount Above 50%</font></div></form>
+		<form><div onclick="submitdiscount40()" style="cursor:pointer;"><font color="#0192B5">Discount Above 40%</font></div></form>
+		<form><div onclick="submitdiscount30()" style="cursor:pointer;"><font color="#0192B5">Discount Above 30%</font></div></form>
+		<form><div onclick="submitdiscount20()" style="cursor:pointer;"><font color="#0192B5">Discount Above 20%</font></div></form>
+		<form><div onclick="submitdiscount10()" style="cursor:pointer;"><font color="#0192B5">Discount Above 10%</font></div></form>
+  
+</dd></dl>
+<div style="float:left;font-size:11px;cursor:pointer;text-align:center;margin-left:15px" onclick="removefiltersDiscount()"  title ="<?php echo $this->__('Remove Discount Filter')?>" ><strong>Clear Discount Filter</strong></div>
+</div>
+<br/><br/>
+ 
+<!--Added By Dileswar On dated 04-06-2014 for showing  banner on Category page     Start-->
+<div class="banner_index_categoryclmn" style="margin-left:-5px;">
+		<?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('banner_category')->toHtml(); ?>   
+	</div>
+<!--Added By Dileswar On dated 04-06-2014 for showing  banner on Category page     End-->
+</div>
+</div>
+    
+<?php endif; ?>
+ 
+

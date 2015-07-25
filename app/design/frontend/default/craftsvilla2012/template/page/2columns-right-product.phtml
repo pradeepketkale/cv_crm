@@ -1,0 +1,197 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $this->getLang() ?>" lang="<?php echo $this->getLang() ?>" xmlns:og="http://ogp.me/ns#" xmlns:fb="http://www.facebook.com/2008/fbml">
+    <!--
+   		*Start..
+   		*Commented by suresh on 21-05-2012
+   		*for remove kismatrix, tyroo, mythings
+	-->
+    <?php /*if($_SERVER['SERVER_ADDR'] != "127.0.0.1" && $_SERVER['SERVER_ADDR'] != "192.168.1.90"){?>
+        
+        <script type="text/javascript">var _sf_startpt=(new Date()).getTime()</script>
+        <script type="text/javascript">
+           
+                var _kmq = _kmq || [];
+                function _kms(u){
+                    setTimeout(function(){
+                        var s = document.createElement('script'); var f = document.getElementsByTagName('script')[0]; s.type = 'text/javascript'; s.async = true;
+                        s.src = u; f.parentNode.insertBefore(s, f);
+                    }, 1);
+                }
+                _kms('//i.kissmetrics.com/i.js');_kms('//doug1izaerwt3.cloudfront.net/319a0179551de1a2e35f62f9f246b81c015f96ea.1.js');
+
+        </script>
+        <?php
+        Mage::getSingleton('customer/session')->setBeforeAuthUrl($this->getRequest()->getRequestUri());  //save requested URL for later redirection
+        if (Mage::getSingleton('customer/session')->isLoggedIn()) {
+            $email_unique1 = Mage::getSingleton('customer/session')->getCustomer()->getEmail();
+            ?>
+            <script type="text/javascript">
+                
+                    var _kmq = _kmq || []; 
+                    function _kms(u)
+                    { 
+                        setTimeout (function(){ var s = document.createElement('script'); 
+                            var f = document.getElementsByTagName('script')[0]; 
+                            s.type = 'text/javascript'; 
+                            s.async = true; 
+                            s.src = u; f.parentNode.insertBefore(s, f); }, 1); } _kms
+                    ('//i.kissmetrics.com/i.js');_kms
+                    ('//doug1izaerwt3.cloudfront.net/319a0179551de1a2e35f62f9f246b81c015f96ea.1.js'); 
+                    _kmq.push(['identify', '<?php echo $email_unique1; ?>']);
+                
+            </script>
+            <?php
+        }
+    }*/
+        ?>                        
+        <!--
+   			*End..
+   			*Commented by suresh on 21-05-2012
+   			*for remove kismatrix, tyroo, mythings
+		-->
+		<?php
+		$productId = (int) $this->getRequest()->getParam('id');
+		$_currencyCodeProduct = Mage::app()->getStore()->getCurrentCurrencyCode();
+        
+        //$clmnleftcacheId = preg_replace('/[^a-zA-Z0-9\']/','',$_SERVER['REQUEST_URI']).'-'.preg_replace('/[^a-zA-Z0-9\']/','',$this->getBodyClass()); 
+
+$hlp = Mage::helper('generalcheck');
+$ismobile = $hlp->ismobile();
+
+        $clmnleftcacheId = 'fullproductcache-'.$productId.'-currency-'.$_currencyCodeProduct.'-'.$ismobile; 
+        //$lifetime = 864000;//10 days
+         //$lifetime = 604000;//7 days
+         //$lifetime = 170000;//2 days
+         $lifetime = 432000;//5 days
+         //$lifetime = 0;//10 days
+
+        
+        $cacheContentProduct = '';
+        if (($cacheContentProduct = Mage::app()->loadCache($clmnleftcacheId))){
+        //if (($cacheContentProduct = Mage::app()->loadredisCache($clmnleftcacheId))){ 
+		   echo $cacheContentProduct;
+
+            }
+        else{
+        ?> 
+       <?php 
+// for call a newfunction to set meta title....etc...@ app/code/core/Mage/Catalog/Helper/Product.php on date 21-03-2014
+
+	  $this->helper('catalog/product')->productheaderLayout($productId);
+	   
+	   $cacheContentProduct .= '<head>';?> 
+       <?php $cacheContentProduct .= $this->getChildHtml('head') ?>
+    <?php $cacheContentProduct .= '</head>'?>
+ <?php $bodyClass = $this->getBodyClass() ? ' class="' . $this->getBodyClass() . '"' : '';?>
+    <?php  $cacheContentProduct .= '<body'.$bodyClass. '>' ?>
+        <?php 
+        
+$cacheContentProduct .= $this->getChildHtml('ie') ?>
+
+        <?php 
+$cacheContentProduct .= $this->getChildHtml('after_body_start') ?>
+
+<?php $cacheContentProduct .= $this->getChildHtml('header') ?>
+<?php $cacheContentProduct .= $this->getChildHtml('global_notices') ?>
+     
+          
+<?php     $cacheContentProduct .= '<div class="algnCntr wrapper">
+            <div class="page">
+                <div class="main-container col2-right-layout">
+                    <div class="main">
+                        <div class="col-main">
+                            <div class="bdyShadow2">
+                                <div class="bodyWpr">
+                                    <div class="innerThree">';?>
+                                        <?php $cacheContentProduct .= $this->getChildHtml('breadcrumbs') ?>
+                                        <?php $cacheContentProduct .= $this->getChildHtml('global_messages') ?>
+
+                                        <?php $cacheContentProduct .= $this->getChildHtml('content') ?>
+                                    <?php $cacheContentProduct .='</div>
+                                    <div class="col-right sidebar">';?><?php $cacheContentProduct .= $this->getChildHtml('right') ?>
+                                   <?php $cacheContentProduct .= '</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+			<div class="push"></div>';?>
+
+           
+            <?php $cacheContentProduct .= $this->getChildHtml('before_body_end'); ?>
+        <?php $cacheContentProduct .='</div>';?>
+	<?php 
+
+
+		//if(!$ismobile){
+
+			$cacheContentProduct .= $this->getChildHtml('footer');
+
+		//}
+
+
+	?>
+
+        <?php $cacheContentProduct .= $this->getAbsoluteFooter();
+			
+		$tags = array(
+                    //Mage_Catalog_Model_Product::CACHE_TAG,
+                    //Mage_Catalog_Model_Product::CACHE_TAG . '_' . $productIdCache
+                );
+    Mage::app()->saveCache($cacheContentProduct, $clmnleftcacheId, $tags, $lifetime);
+		//Mage::app()->saveredisCache($cacheContentProduct, $clmnleftcacheId, $tags, $lifetime);
+    echo $cacheContentProduct; 
+	}
+	
+	?>
+      <?php if($_SERVER['SERVER_ADDR'] != "127.0.0.1" && $_SERVER['SERVER_ADDR'] != "192.168.1.90"){?>
+      <!--
+   		*Start..
+   		*Commented by suresh on 21-05-2012
+   		*for remove kismatrix, tyroo, mythings
+	  -->
+      <?php 
+        /*if($this->getRequest()->getControllerName() != 'onepage' && $this->getRequest()->getActionName() != 'success'){ 
+        ?>
+        	<!-- script for visit tag of craftsvilla -->
+        	<script type="text/javascript">
+		        function _mt_ready(){
+		        	if (typeof(MyThings) != "undefined") {
+		        		MyThings.Track({
+		        			EventType: MyThings.Event.Visit,
+		        			Action: "300"
+		        		});
+		        	}
+		        }
+		        var mtHost = (("https:" == document.location.protocol) ? "https" : "http") + "://rainbow-in.mythings.com";
+		        var mtAdvertiserToken = "1714-100-in";
+		        document.write(unescape("%3Cscript src='" + mtHost + "/c.aspx?atok="+mtAdvertiserToken+"' type='text/javascript'%3E%3C/script%3E"));
+	        </script>
+	        <!-- ---------------------------------- -->
+	  <?php }*/?>
+	  <!--
+   		*End..
+   		*Commented by suresh on 21-05-2012
+   		*for remove kismatrix, tyroo, mythings
+	  -->
+	<!--chart beat -->
+
+<!--<script type="text/javascript">
+    var _sf_async_config={uid:27315,domain:"craftsvilla.com"};
+        function loadChartbeat() {
+            window._sf_endpt=(new Date()).getTime();
+            var e = document.createElement('script');
+            e.setAttribute('language', 'javascript');
+            e.setAttribute('type', 'text/javascript');
+            e.setAttribute('src',
+            (("https:" == document.location.protocol) ? "https://a248.e.akamai.net/chartbeat.download.akamai.com/102508/" : "http://static.chartbeat.com/") + "js/chartbeat.js");
+            document.body.appendChild(e);
+    }
+var oldonload = window.onload;
+window.onload = (typeof window.onload != 'function') ? loadChartbeat : function() { oldonload(); loadChartbeat(); };
+</script>-->
+<!-- end chart beat -->
+<?php }?>
+    </body>
+</html>

@@ -1,0 +1,8 @@
+<config>
+    <modules>
+        <AW_Relatedproducts>
+            <active>false</active>
+            <codePool>community</codePool>
+        </AW_Relatedproducts>
+    </modules>
+</config>

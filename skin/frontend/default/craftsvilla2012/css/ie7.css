@@ -1,0 +1,89 @@
+.details input{
+	height: 21px !important;
+	padding-top: 4px !important;
+}
+#numbers {
+	margin-top: -30px !important;
+}
+#dtlAddCartinput{
+	margin-top: 11px !important;
+}
+.dtlLink-select {
+	text-indent: 0px !important;
+}
+#narrow-by-list{
+	margin-top: -15px;
+}
+.pager {
+	margin-top: 3px !important;
+}
+div .breadcrumbs strong {
+	margin-top: -1px;
+}
+.breadcrumbs li span {
+	margin-top: -3px !important;
+}
+.sel-size {
+	border: none !important;
+	width: 150px;
+	background: none !important;
+}
+.sel-size select {
+	width: 145px !important;
+	padding: 0 !important;
+}
+.numbers_cart{
+	height: 30px;
+	margin-right: 4px;
+}
+.qty_cart {
+	height: 15px;
+}
+.fancybox-inner,.fancybox-outer{
+	width: 650px !important;
+	margin: 0 auto !important;
+}
+#login,#signUpForm{
+	padding-top: 5px;
+}
+.country_edit {
+	border: none !important;
+}
+.right-info #country,.left-info #country {
+	width: 335px !important;
+	border: 1px solid #ddd;
+}
+.registered-users .editInfoInput{
+	margin-top: 25px;
+}
+.bdyShadow2{
+	margin-top: 45px;
+}
+.info-table{
+	margin: 0 auto;
+}
+#company,#street_1,#street_2{
+	width: 705px !important;
+}
+#region_id{
+	margin-top: 10px;
+}
+.info-table #region_id,.info-table #region,.info-table #zip {
+	float:right;
+}	
+.footer_wrapper{
+	margin-top: 45px;
+}
+#signUpForm{
+	position:relative !important;
+}
+.fancybox-wrap,.fancybox-default,.fancybox-opened{
+	width: 650px !important;
+	margin: 0 auto !important;
+}
+.footer_wrapper > div {
+  padding-top: 48px;
+}
+.footer > div {
+	margin-top: -26px;
+}

@@ -1,0 +1,44 @@
+<?php 
+$_helpm = $this->helper('umicrosite');
+$_vendor = $_helpm->getCurrentVendor();
+/******** Code added by Mandar for vendor Shop Stats on 4-05-2012 ********/
+//Mage::getModel('udropship/vendor_stats')->setStats($_vendor->getVendorId(),'shop');
+/************************************************************************/
+$_productListBlock = $this->getChild('product_list');
+$storeCode = Mage::app()->getStore()->getCode();
+?>
+<div class="vendorNameHead">
+	<h1 class="headingvendor homeprite">
+	<?php echo $_vendor->getVendorName();?> Products
+	</h1>
+	<?php /*?><div class="social-vendor">
+		<!-- facebook -->
+		<?php $fb = $_vendor['facebook_link'];?>
+		<?php if($fb==true) { ?>
+		<a href="<?php echo $fb;?>">
+			<img src="<?php echo $this->getSkinUrl('images/dtl_fb.jpg') ?>" />
+		</a>
+		<?php } ; ?>
+		<!-- twitter -->
+		<a href="http://twitter.com/">
+			<img src="<?php echo $this->getSkinUrl('images/dtl_tw.jpg') ?>" />
+		</a>
+		<!-- mail -->
+		<a href="mailto:<?php echo $_vendor['email']; ?>">
+			<img src="<?php echo $this->getSkinUrl('images/dtl_mail.jpg') ?>" />
+		</a>
+	</div><?php */?>
+	<div style="clear: both"></div>
+	<?php 
+		$vendorBanner = $_vendor->getShopBanner()!='' ? $_vendor->getShopBanner() : ''; 
+		if($vendorBanner!=''){
+	?>
+	<div class="banner_index_top">
+		<img src="<?php echo $_helpm->getResizedUrl($vendorBanner,717); ?>" alt="" /> 
+	</div>
+	<?php } ?> 
+</div>
+<div id="our-products">
+
+<?php echo $_productListBlock->toHtml() ?>
+</div>

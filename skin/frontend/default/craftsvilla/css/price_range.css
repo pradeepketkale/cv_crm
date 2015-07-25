@@ -1,0 +1,37 @@
+.indicator
+{
+width: 16px;
+height: 16px;
+background-color: #FF9900;
+position: absolute;
+font-size: 1px;
+overflow: hidden;
+border: none;
+}
+.indicator:focus
+{
+background-color: #f00;
+}
+
+.slideroot{background: url(../images/price_range/slider_back.png) no-repeat; width:168px; padding:0 0 0 5px; margin:10px 0;}
+.pform input{margin:0 5px;width: 85px;}
+.pform input[type="button"]{ margin-left:0; width:auto;}
+
+
+.slider4
+{
+width:158px;
+height: 11px;
+position: relative;
+border: 0px hidden #000;
+}
+#indicator1,#indicator2{
+background:url(../images/price_range/discpng.png) no-repeat 0 4px;
+        width:10px; height:14px; display:block;}
+
+#indicator3{
+background-image:url(images/indicator3.gif);
+background-color: transparent;
+}
+
+

@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+    <bulkinventoryupdate_adminhtml_bulkinventoryupdate_index>
+        <reference name="content">
+            <block type="bulkinventoryupdate/adminhtml_bulkinventoryupdate" name="bulkinventoryupdate" />
+        </reference>
+    </bulkinventoryupdate_adminhtml_bulkinventoryupdate_index>
+</layout>

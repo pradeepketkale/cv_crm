@@ -1,0 +1,264 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2010 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+
+<div class="page-title">
+    <h1><?php echo $this->__('Your order has been received') ?></h1>
+</div>
+<?php echo $this->getMessagesBlock()->getGroupedHtml() ?>
+<h2 class="sub-title"><?php echo $this->__('Thank you for your purchase!') ?></h2>
+
+<?php if ($this->getOrderId()): ?>
+    <?php if ($this->getCanViewOrder()) : ?>
+        <p><?php echo $this->__('Your order # is: %s.', sprintf('<a href="%s">%s</a>', $this->escapeHtml($this->getViewOrderUrl()), $this->escapeHtml($this->getOrderId()))) ?></p>
+    <?php else : ?>
+        <p><?php echo $this->__('Your order # is: %s.', $this->escapeHtml($this->getOrderId())) ?></p>
+    <?php endif; ?>
+    <p><?php echo $this->__('You will receive an order confirmation email with details of your order and a link to track its progress.') ?></p>
+    <?php if ($this->getCanViewOrder() && $this->getCanPrintOrder()) : ?>
+        <p>
+            <?php echo $this->__('Click <a href="%s" onclick="this.target=\'_blank\'">here to print</a> a copy of your order confirmation.', $this->getPrintUrl()) ?>
+            <?php echo $this->getChildHtml() ?>
+        </p>
+    <?php endif; ?>
+<?php endif; ?>
+
+<?php if ($this->getAgreementRefId()): ?>
+    <p><?php echo $this->__('Your billing agreement # is: %s.', sprintf('<a href="%s">%s</a>', $this->escapeHtml($this->getAgreementUrl()), $this->escapeHtml($this->getAgreementRefId()))) ?></p>
+<?php endif; ?>
+
+<?php if ($profiles = $this->getRecurringProfiles()): ?>
+    <p><?php echo $this->__('Your recurring payment profiles:'); ?></p>
+    <ul class="disc">
+        <?php foreach ($profiles as $profile): ?>
+            <?php $profileIdHtml = ($this->getCanViewProfiles() ? sprintf('<a href="%s">%s</a>', $this->escapeHtml($this->getProfileUrl($profile)), $this->escapeHtml($this->getObjectData($profile, 'reference_id'))) : $this->escapeHtml($this->getObjectData($profile, 'reference_id'))); ?>
+            <li><?php echo $this->__('Payment profile # %s: "%s".', $profileIdHtml, $this->escapeHtml($this->getObjectData($profile, 'schedule_description'))) ?></li>
+        <?php endforeach; ?>
+    </ul>
+<?php endif; ?>
+<!--<button type="button" class="button btn-update" title="<?php echo $this->__('Continue Shopping') ?>" onclick="window.location='<?php //echo $this->getUrl() ?>'"><?php //echo $this->__('Continue Shopping') ?></button>-->
+<?php
+//Get Order Number & Order Total
+$order 	= Mage::getModel('sales/order')->loadByIncrementId(Mage::getSingleton('checkout/session')->getLastRealOrderId());
+
+/********** This is for cod change State new to processing ************/
+if($order->getPayment()->getMethod()=='checkmo' && $order->getState() == 'new'):
+	$order->setState(Mage_Sales_Model_Order::STATE_PROCESSING, true,'',false);
+	$order->save();
+endif;
+
+/**********************************************************************/
+
+/********** This is for sending mail after order complete ************/
+if($order->getPayment()->getMethod()=='secureebs_standard' && $order->getStatus() == 'processing'):
+    $sendMail=$order->sendNewOrderEmail();
+endif;
+/*********************************************************************/
+
+$city 	= $order->getBillingAddress()->getCity();
+foreach ($order->getAllItems() as $item) {
+	$product = Mage::getModel('catalog/product')->load($item->getProductId());
+	foreach($product->getCategoryIds() as $_categoryId){
+		$category 		 = Mage::getModel('catalog/category')->load($_categoryId);
+		$categoryName 	.= $category->getName().",";
+	}
+	$category 		= explode(",", $categoryName);
+	$count 			= count($category)-2;
+	$categoryType  .= $category[$count].",";
+	$category 		= '';
+}
+$amount = number_format($order->getGrandTotal(), 2);
+?>
+<!-- Google Code for Sale Conversion Page -->
+<?php if($_SERVER['SERVER_ADDR'] == "10.134.214.27" || $_SERVER['SERVER_ADDR'] == "10.134.226.28"){?> 
+<script type="text/javascript">
+        /* <![CDATA[ */
+        var google_conversion_id = 969666423;
+        var google_conversion_language = "ar";
+        var google_conversion_format = "2";
+        var google_conversion_color = "ffffff";
+        var google_conversion_label = "XWsNCKmB5QIQ996vzgM";
+        var google_conversion_value = 0;
+        if (100) {
+            google_conversion_value = 100;
+        }
+        /* ]]> */
+</script>
+<script type="text/javascript" src="http://www.googleadservices.com/pagead/conversion.js">
+</script>
+<noscript>
+<div style="display:inline;">
+    <img height="1" width="1" style="border-style:none;" alt="" src="http://www.googleadservices.com/pagead/conversion/969666423/?value=100&amp;label=XWsNCKmB5QIQ996vzgM&amp;guid=ON&amp;script=0"/>
+</div>
+</noscript>
+<!-- ----------------------------------------------------- -->
+
+<script type="text/javascript"> var _kmq = _kmq || []; function _kms(u){ setTimeout(function(){ var s = document.createElement('script'); var f = document.getElementsByTagName('script')[0]; s.type = 'text/javascript'; s.async = true; s.src = u; f.parentNode.insertBefore(s, f); }, 1); } _kms('//i.kissmetrics.com/i.js');_kms('//doug1izaerwt3.cloudfront.net/319a0179551de1a2e35f62f9f246b81c015f96ea.1.js');</script>
+
+<!-- Script for tyroo affiliates  -->
+<script src="http://affiliates.tyroodr.com/i_sale_third/251/LINE_ITEM_STRING/<?php echo $order->getIncrementId();?>/<?php echo $categoryType.$amount;?>,<?php echo $city;?>&sale_status=<?php echo $order->getStatus();?>"></script>
+<noscript><img src="http://affiliates.tyroodr.com/i_track_sale/251/LINE_ITEM_STRING/<?php echo $order->getIncrementId();?>/<?php echo $categoryType.$amount;?>,<?php echo $city;?>&sale_status=<?php echo $order->getStatus();?>"></noscript>
+<!-- ----------------------------- -->
+
+<!-- Script for conversion tag -->
+<script type="text/javascript">
+function _mt_ready(){
+   if (typeof(MyThings) != "undefined") {
+MyThings.Track({
+EventType: MyThings.Event.Conversion, 
+           Action: "9902",
+Products:[
+          <?php foreach ($order->getAllItems() as $item) {?>
+           {id: "<?php echo $item->getSku();?>",price:"<?php echo number_format($item->getPrice(),2);?>",qty:<?php echo round($item->getQtyOrdered());?>}, 
+          <?php }?>
+		 ],  
+TransactionReference: "[<?php echo $order->getIncrementId();?>]",
+TransactionAmount: "[<?php echo $amount;?>]"
+     });
+ }
+}
+var mtHost = (("https:" == document.location.protocol) ? "https" : "http") + "://rainbow-in.mythings.com";
+var mtAdvertiserToken = "1714-100-in";
+document.write(unescape("%3Cscript src='" + mtHost + "/c.aspx?atok="+mtAdvertiserToken+"' type='text/javascript'%3E%3C/script%3E"));
+</script>
+
+<script type="text/javascript">
+_kmq.push(['record', 'Completed Purchase', {
+'Purchase Amount' : '<?php echo $amount; ?>', 'Order Id' : '<?php echo $order->getIncrementId(); ?>'}]);
+	</script>
+
+
+<!-- AdElement Tag :     Craftsvilla Sale Conversion Tag Added by Amit Pitre on (12-03-2012) for tyroo campaign
+
+Description :   This tag tracks purchases  -->
+<?php 
+$tyrooProductId = array();
+$tyrooProductprice = array();
+$tyrooProductqty = array();
+foreach ($order->getAllItems() as $item) {
+	$tyrooProductId[] = $item->getId();
+	$tyrooProductprice[] = number_format($item->getPrice(),2);
+	$tyrooProductqty[] = round($item->getQtyOrdered());
+}
+$tyrooProductIdStr = implode("|",$tyrooProductId);
+$tyrooProductpriceStr = implode("|",$tyrooProductprice);
+$tyrooProductqtyStr = implode("|",$tyrooProductqty);
+?>
+
+<script type = "text/javascript">
+
+         var ae_conv_parms_kv =
+
+{productid:"<?php echo $tyrooProductIdStr; ?>",price:"<?php echo $tyrooProductpriceStr; ?>",quantity:"<?php echo $tyrooProductqtyStr; ?>",transactionid:"<?php echo $this->escapeHtml($this->getOrderId()); ?>",transactionval:"<?php echo $amount;?>"};
+
+         (function () {
+
+             var el_adv_id = "6b86d19b1f5b93ffb98b6dbbf0ba8793"; var
+
+oldonload = window.onload;window.onload =
+
+function(){__ele_loaded=true;var scr =
+
+document.createElement("script");var host = (("https:" ==
+
+document.location.protocol) ? "https://d313lzv9559yp9.cloudfront.net"
+
+: "http://cache.adelement.com");scr.setAttribute("async",
+
+"true");scr.type = "text/javascript";scr.src = host +
+
+"/"+el_adv_id+".js";document.documentElement.firstChild.appendChild(scr);if(oldonload){oldonload()}};}());</script>     
+
+<!--  End of AdElement Conversion Tag  -->
+<?php }?>
+<!-- ------------------------- -->
+
+<?php if($order->getAppliedRuleIds() == 276){?>
+<!-- Script for cash back sales pixel -->
+<img src='http://www.cashitback.com/cmpst/www/delivery/?MerchantId=A6A59C595E&TransactionValue=[<?php echo $amount;?>]&TransactionId=[<?php echo $order->getIncrementId();?>]&PaymentStatus=[<?php echo $order->getStatus();?>]&OrderId=[<?php echo $order->getIncrementId();?>]' border='0' />
+<!-- -------------------------------- -->
+<?php }?>
+
+
+
+<!-- Meanbee OrderShare -->
+<?php if ($this->getOrderId()):?>
+    <div class="ordershare">
+        <h2  class="heading"><?php echo $this->__('Why not share your purchase to twitter or facebook?') ?></h2>
+        <?php $order = $this->getOrder(); ?>
+        <?php foreach ( $order->getAllItems() as $item ) : ?>
+            <?php $_product = $this->getOrderedProduct($item)?>
+            <?php
+                if (!$_product->isVisibleInSiteVisibility()) {
+                    continue;
+              }   
+            ?>
+            <?php $_helper = $this->helper('catalog/output'); ?>
+            <?php $_twitter_text = "I just bought a " . $_product->getName(); ?>
+            <?php $_twitter_user = $this->getTwitterUser(); ?>
+                                    
+            <div class="product">
+                <h3><?php echo $_product->getName() ?></h3>
+                <?php if ($_product->getImage()) :?>
+                    <?php $_img = '<img src="'.$this->helper('catalog/image')->init($_product, 'image')->resize(150).'" alt="'.$this->htmlEscape($this->getImageLabel()).'" title="'.$this->htmlEscape($this->getImageLabel()).'" />'; 
+                        echo $_helper->productAttribute($_product, $_img, 'image'); ?>
+                <?php endif; ?>
+                <?php if (!$this->isUsingCSS3Icons()): ?>
+                    <div class="share">
+                    <div class="twitter">
+                       <a href="http://twitter.com/share" class="twitter-share-button"
+                           data-url="<?php echo $_product->getProductUrl() ?>"
+                           <?php if ($_twitter_user != "") : ?>
+                               data-via="<?php echo $_twitter_user ?>"
+                           <?php endif; ?>
+                           data-text="<?php echo $_twitter_text ?> <?php echo $this->__('from') ?> <?php echo $this->getStoreName() ?>"
+                          data-count="vertical">Tweet</a>
+                    </div>
+                    <div class="facebook">
+                        <a name="fb_share" type="box_count" share_url="<?php echo $_product->getProductUrl() ?>"></a></li>
+                    </div>
+                    </div>
+                    <script src="http://platform.twitter.com/widgets.js" type="text/javascript"></script>
+                    <script src="http://static.ak.fbcdn.net/connect.php/js/FB.Share" type="text/javascript"></script>
+                <?php else: ?>
+                    <?php $_twitter_url = $this->getTwitterUrl($_twitter_text, $_product) ?>
+                    <?php $_facebook_url = $this->getFacebookUrl($_product) ?>
+                    <ul>
+                        <li class="twitter"><a target="_blank" href="<?php echo $_twitter_url; ?>">t</a></li>
+                        <li class="facebook"><a target="_blank" href="<?php echo $_facebook_url; ?>">f</a></li>
+                    </ul>
+                <?php endif; ?>
+            
+            
+            </div>
+        <?php endforeach; ?>
+    </div>
+    <?php endif; ?> 
+    <!-- End Meanbee OrderShare -->
+
+<div style="padding:10px 0 0px 11px;" class="clear">
+    <button type="button" class="button" title="<?php echo $this->__('Continue Shopping') ?>" onclick="window.location='<?php echo $this->getUrl() ?>'"><?php echo $this->__('Continue Shopping') ?></button>
+</div>

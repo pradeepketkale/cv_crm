@@ -1,0 +1,151 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * @category   Mage
+ * @package    Iksula_Ccavenue
+ * @copyright  Copyright (c) 2008 Irubin Consulting Inc. DBA Varien (http://www.varien.com)
+ * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ */
+-->
+<config>
+    <modules>
+        <Iksula_Ccavenue>
+            <version>0.1.0</version>
+        </Iksula_Ccavenue>
+    </modules>
+    <global>
+        <models>
+            <ccavenue>
+                <class>Iksula_Ccavenue_Model</class>
+                <resourceModel>ccavenue_mysql4</resourceModel>
+            </ccavenue>
+            <ccavenue_mysql4>
+                <class>Iksula_Ccavenue_Model_Mysql4</class>
+                <entities>
+                    <api_debug><table>ccavenue_api_debug</table></api_debug>
+                </entities>
+            </ccavenue_mysql4>
+        </models>
+        <resources>
+            <ccavenue_setup>
+                <setup>
+                    <module>Iksula_Ccavenue</module>
+                    <class>Iksula_Ccavenue_Model_Mysql4_Setup</class>
+                </setup>
+                <connection>
+                    <use>core_setup</use>
+                </connection>
+            </ccavenue_setup>
+            <ccavenue_write>
+                <connection>
+                    <use>core_write</use>
+                </connection>
+            </ccavenue_write>
+            <ccavenue_read>
+                <connection>
+                    <use>core_read</use>
+                </connection>
+            </ccavenue_read>
+        </resources>
+        <blocks>
+            <ccavenue><class>Iksula_Ccavenue_Block</class></ccavenue>
+        </blocks>
+		<helpers>
+            <ccavenue><class>Iksula_Ccavenue_Helper</class></ccavenue>
+        </helpers>
+        <payment>
+            <cc>
+                <types>
+                    <DI>
+                        <code>DI</code>
+                        <name>Discover</name>
+                        <order>60</order>
+                    </DI>
+                    <JCB>
+                        <code>JCB</code>
+                        <name>JCB</name>
+                        <order>61</order>
+                    </JCB>
+                    <DICL>
+                        <code>DICL</code>
+                        <name>Diners Club</name>
+                        <order>62</order>
+                    </DICL>
+                    <ENR>
+                        <code>ENR</code>
+                        <name>enRoute</name>
+                        <order>63</order>
+                    </ENR>
+                    <SS>
+                        <code>SS</code>
+                        <name>Switch/Solo</name>
+                        <order>64</order>
+                    </SS>
+                </types>
+            </cc>
+        </payment>
+    </global>
+    <frontend>
+        <secure_url>
+            <ccavenue_standard>/ccavenue/standard</ccavenue_standard>
+        </secure_url>
+        <routers>
+            <ccavenue>
+                <use>standard</use>
+                <args>
+                    <module>Iksula_Ccavenue</module>
+                    <frontName>ccavenue</frontName>
+                </args>
+            </ccavenue>
+        </routers>
+        <translate>
+            <modules>
+                <Iksula_Ccavenue>
+                    <files>
+                        <default>Iksula_Ccavenue.csv</default>
+                    </files>
+                </Iksula_Ccavenue>
+            </modules>
+        </translate>
+        <layout>
+            <updates>
+                <ccavenue>
+                    <file>ccavenue.xml</file>
+                </ccavenue>
+            </updates>
+        </layout>
+    </frontend>
+    <adminhtml>
+        <translate>
+            <modules>
+                <Iksula_Ccavenue>
+                    <files>
+                        <default>Iksula_Ccavenue.csv</default>
+                    </files>
+                </Iksula_Ccavenue>
+            </modules>
+        </translate>
+    </adminhtml>
+    <default>
+        <payment>
+            <ccavenue_standard>
+                  <model>ccavenue/standard</model>
+                  <title>Ccavenue Standard</title>
+                  <allowspecific>0</allowspecific>
+                  <transaction_type>O</transaction_type>
+            </ccavenue_standard>
+        </payment>
+    </default>
+</config>

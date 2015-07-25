@@ -1,0 +1,45 @@
+<?php 
+$hlp = Mage::helper('generalcheck');
+$ismobile = $hlp->ismobile();
+
+if(!$ismobile)
+{?>
+<div class="total">
+	<div id="total_price">
+		<!-- <span class="total_left">ITEM TOTAL</span> -->
+		<table width="100%"><?php echo $this->renderTotals(); ?></table>
+		<div class="clear"></div>
+	</div>
+<!-- 	<div id="ship_price">
+		<span class="total_left">SHIPPING</span>
+		<span class="total_right">$6546</span>
+		<div class="clear"></div>
+	</div> -->
+</div>
+<div class="clear"></div>
+<div style="margin:10px; height:5px">
+	<div class="breadcrumbs_bottom"></div>
+</div>
+
+<div id="grand_total" ><table><?php echo $this->renderTotals('footer'); ?></table></div>
+<?php } else{?>
+<div class="total" style="float:none;margin: 40px 15px 0 0;width: 68%;">
+	<div id="total_price">
+		<!-- <span class="total_left">ITEM TOTAL</span> -->
+		<table width="100%" align="center"><?php echo $this->renderTotals(); ?></table>
+		<div class="clear"></div>
+	</div>
+<!-- 	<div id="ship_price">
+		<span class="total_left">SHIPPING</span>
+		<span class="total_right">$6546</span>
+		<div class="clear"></div>
+	</div> -->
+</div>
+<div class="clear"></div>
+<div style="margin:10px; height:5px">
+	<div class="breadcrumbs_bottom"></div>
+</div>
+
+<div id="grand_total" style="margin:30px 142px 49px 6px;width: 68%;"><table><?php echo $this->renderTotals('footer'); ?></table></div>
+
+<?php } ?>

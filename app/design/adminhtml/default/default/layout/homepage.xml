@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+    <homepage_adminhtml_homepage_index>
+        <reference name="content">
+            <block type="homepage/adminhtml_homepage" name="homepage" />
+        </reference>
+    </homepage_adminhtml_homepage_index>
+	
+	   <homepage_adminhtml_homepage2_index>
+        <reference name="content">
+            <block type="homepage/adminhtml_homepage2" name="homepage" />
+        </reference>
+    </homepage_adminhtml_homepage2_index>
+</layout>

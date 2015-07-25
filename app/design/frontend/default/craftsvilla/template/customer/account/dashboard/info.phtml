@@ -1,0 +1,27 @@
+<div class="fieldsetCntnr marginRt">
+    <div class="fieldset minHt">
+        <h2 class="legend">Contact Info</h2>
+        <a href="<?php echo $this->getUrl('customer/account/edit') ?>"><?php echo $this->__('Edit') ?></a>
+        <p>
+            <?php echo $this->htmlEscape($this->getCustomer()->getName()) ?><br />
+            <?php echo $this->htmlEscape($this->getCustomer()->getEmail()) ?><br />
+            <a href="<?php echo $this->getChangePasswordUrl() ?>"><?php echo $this->__('Change Password') ?></a>
+        </p>
+    </div>
+</div>
+
+<div class="fieldsetCntnr">
+    <?php if( $this->isNewsletterEnabled() ): ?>
+    <div class="fieldset minHt">
+        <h2 class="legend">Newsletters</h2>
+        <a href="<?php echo $this->getUrl('newsletter/manage') ?>"><?php echo $this->__('Edit') ?></a>
+        <p>
+            <?php if( $this->getIsSubscribed() ): ?>
+                <?php echo $this->__("You are currently subscribed to 'General Subscription'.") ?>
+            <?php else: ?>
+                <?php echo $this->__('You are currently not subscribed to any newsletter.') ?>
+            <?php endif; ?>
+        </p>
+    </div>
+    <?php endif; ?>
+</div>

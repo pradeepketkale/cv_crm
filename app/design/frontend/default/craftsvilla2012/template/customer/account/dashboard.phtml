@@ -1,0 +1,73 @@
+<?php /*custom breadcrumbs*/
+$breadcrumbs = $this->getLayout()->getBlock('breadcrumbs');
+ 
+$breadcrumbs->addCrumb('home', array('label'=>Mage::helper('cms')->__('Home'), 'title'=>Mage::helper('cms')->__('Home Page'), 'link'=>Mage::getBaseUrl()));
+ 
+$breadcrumbs->addCrumb('cart', array('label'=>'My Dashboard', 'title'=>'My Dashboard'));
+ 
+echo $this->getLayout()->getBlock('breadcrumbs')->toHtml();
+?>
+<div class="dashboard">
+	<div class="topLine"></div>
+    <div class="dashboard_head">
+        <h1><?php echo $this->__('My Dashboard') ?></h1>
+		<div class="breadcrumbs_bottom"></div>
+    </div>
+    <?php echo $this->getMessagesBlock()->getGroupedHtml() ?>
+    
+    <?php echo $this->getChildHtml('hello') ?>
+    <?php echo $this->getChildHtml('top') ?>
+    <div class="box-account box-info">
+		<div class="topLine"></div>
+		<div class="dashboard_info">
+			<table width="97%" cellspacing="0" cellpadding="0" class="info-table">
+				<tr height="50">
+					<td>
+						<?php echo $this->getChildHtml('info') ?>
+					</td>
+				</tr>
+				<tr><td><div class="breadcrumbs_bottom" style="padding:0;"></div></td></tr>
+				<tr height="50">
+					<td>
+						<?php echo $this->getChildHtml('address') ?>
+					</td>
+				</tr>
+				<!--<tr><td><div class="breadcrumbs_bottom" style="padding:0;"></div></td></tr>
+				<tr height="50">
+					<td>
+						<span class="red_info">WOULD YOU LKE TO RECEIVE OUR NEWSLETTER?</span>
+						<div class="right-info">
+							<div class="check" style="float:left;">
+								<input id="yes" type="radio" name="mail" class="radio_mail" />
+								<label for="yes" class="label_mail">Yes</label>
+							</div>
+							<div class="check" style="float:right;">
+								<input id="no" type="radio" name="mail" class="radio_mail" />
+								<label for="no" class="label_mail">No, thanks.</label>
+							</div>
+						</div>
+						<script type="text/javascript">  
+						jQuery(document).ready(function(){  
+							jQuery(".radio_mail").change(function(){  
+								if(jQuery(this).is(":checked")){ 
+									jQuery('.label_mail').css('background-position','0 bottom');  
+									jQuery(this).next("label").css('background-position','0 top');  
+								}else{  
+									jQuery(this).next("label").css('background-position','0 bottom');  
+								}  
+							});  
+						});  
+						</script>
+					</td>
+				</tr>-->
+			</table>
+		</div>
+        <!-- <div class="box-head">
+            <h2 class="blueHd"><?php echo $this->__('Account Information') ?></h2>
+        </div> -->
+        <?php // echo $this->getChildHtml('info') ?>
+        <?php // echo $this->getChildHtml('address') ?>
+    </div>
+    <?php /*echo $this->getChildHtml('info1') ?>
+    <?php echo $this->getChildHtml('info2')*/ ?>
+</div>

@@ -1,0 +1,272 @@
+<?php
+/**
+ * Unirgy LLC
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.unirgy.com/LICENSE-M1.txt
+ *
+ * @category   Unirgy
+ * @package    Unirgy_Dropship
+ * @copyright  Copyright (c) 2008-2009 Unirgy LLC (http://www.unirgy.com)
+ * @license    http:///www.unirgy.com/LICENSE-M1.txt
+ */
+?>
+<?php 
+$_session = Mage::getSingleton('udropship/session');
+$_dashboardUrl = Mage::helper('udropship')->isUdpoActive() ? $this->getUrl('udpo/vendor') : $this->getUrl('udropship/vendor');
+$_active = $this->getActivePage();
+?>
+    <div class="header_wrapper">
+    
+   <div class="header">
+   
+		<div class="inner">
+			<div class="top">
+            
+            </div>
+            
+            <div class="bottom"><a href="<?php echo $this->getUrl('') ?>"> <h1 id="logo" class="homeprite"><?php echo $this->getLogoAlt() ?></h1></a>
+            
+            
+            <div class="search_block"><div class="floatr">
+    
+    <div class="utility-nav">
+        <?php if ($_session->isLoggedIn()): ?>
+        
+        
+        <strong class="welcome_seller"><?php echo $this->htmlEscape($this->__('Welcome %s', $_session->getVendor()->getVendorName())) ?>!</strong> | 
+        
+        <?php /*?><a href="http://unirgy.com/products/udropship/help.php" onclick="this.target='_blank'"><?php echo $this->__('Help')?></a><?php */?>
+        
+        
+       <a href="<?php echo $this->getUrl('udropship/vendor/logout')?>" title="Sign Out"><?php echo $this->__('Sign out')?></a> | <a href="<?php echo $this->getUrl('') ?>">Web Store</a>
+       
+        <?php else: ?>
+         <?php echo $this->__('') ?>
+        
+	<!--	<a href="<?php// echo $this->getUrl('marketplace/vendor/')?>" class="homeprite" title="Sign in"><?php// echo $this->__('Sign in as Vendor') ?></a>-->
+        
+        
+        
+        <?php endif ?>
+    </div>
+    <!--<p class="bnrTxt bnrrht"><a href="<?php echo $this->getUrl('') ?>">GO TO WEB STORE<br></a></p>-->
+    
+    
+    
+    </div></div>            
+            
+            </div>
+            
+            
+            </div></div></div>
+              
+            
+        
+        
+        
+             
+
+    
+    <div class="clear"></div>
+    
+  
+   <div class="main-container">
+   
+                    <div class="main">
+                    
+                        <div class="col-main">
+                        
+                            <div class="bdyShadow2">
+                             
+                                <div class="bodyWpr">
+                                    <div class="innerTwo">
+                               <?php 
+                              $_hlp = Mage::helper('udropship');
+                              $session = Mage::getSingleton('udropship/session');
+			if($session->isLoggedIn())
+			{
+			$vendorid = $session->getVendorId();
+            $read = Mage::getSingleton('core/resource')->getConnection('core_read');
+		 $readquery = "select count(*) as disputecount from `disputeraised` where `status` IN ('3','1') AND vendor_id=".$vendorid;
+		 $readqueryresult = $read->query($readquery)->fetch();
+     	 $disputecount = $readqueryresult['disputecount'];
+		  if($disputecount>0)
+		 { ?>
+ <a href="<?php echo Mage::getBaseUrl()?>/marketplace/vendor/disputeraised/" target="_blank">  <p align="center" style="padding:2px;margin:20px 0;margin-left:353px;height:20px;margin-right:112px;text-align:center"><font color="red" style="width:130px"><b>*You have unresolved open disputes which require actions. Please see open disputes here.</b></font></p> </a>
+ <div class="listanitem" style="margin-left:225px;">
+<p align="justify" style="margin-left:0px;border:ridge"><b><font color= "red" size="2">From May 1st 2015 Craftsvilla will no longer do International Shipping for Sellers. Sellers will have to directly ship International Shipments to Customers. Please enter International Shipping Charges as per applicable to you. For any further queries please email places@craftsvilla.com</font><b></p>  
+</div>
+
+     <?php } }?>
+
+   <div class="col-left sidebar"><div class="about_nav">
+   
+
+        <ul>
+         
+        <!--//added by dileswar on dated 15-01-2014  for change the direction of dashboard url to prepaid ordres in prepaid orders action...	-->
+                    
+                    <li class="first <?php if ($_active=='dashboard'): ?>active<?php endif ?>"><a href="<?php echo $_dashboardUrl.'prepaidorders'?>"><?php echo $this->__('Prepaid Orders')?></a></li>
+            <?php if (false && $_session->getVendor()->getLabelType()): ?>
+                    <li <?php if ($_active=='batches'): ?>class="active"<?php endif ?>><a href="<?php echo $this->getUrl('udropship/vendor/batches')?>"><?php echo $this->__('Label Batches')?></a></li>
+            <?php endif ?>
+             <?php if (Mage::helper('udropship')->isModuleActive('Unirgy_DropshipMicrosite')
+                && $_session->isLoggedIn()):?>
+                        <li><a href="<?php echo $this->getUrl('udropship/vendor/codorders')?>" ><?php echo $this->__('COD Orders')?></a></li>
+                   
+                   <?php endif ?>
+                    
+            <?php if (Mage::helper('udropship')->isModuleActive('Unirgy_DropshipMicrosite')
+                && $_session->isLoggedIn()):?>
+                 
+                        <li><a href="<?php echo $this->getUrl('udropship/vendor/pickupreference')?>" ><?php echo $this->__('Pickup Reference number')?></a></li>
+                        
+                   <?php endif ?>
+
+ 
+                   <?php if (Mage::helper('udropship')->isModuleActive('Unirgy_DropshipMicrosite')
+                && $_session->isLoggedIn()):?>
+                        <li><a href="<?php echo $this->getUrl('udropship/vendor/internationalorders')?>" ><?php echo $this->__('International Orders')?></a></li>
+                   <?php endif ?>
+                 
+                 <li <?php if ($_active=='preferences'): ?>class="active"<?php endif ?>><a href="<?php echo $this->getUrl('udropship/vendor/preferences')?>"><?php echo $this->__('Settings')?></a></li>
+                    <?php if (Mage::helper('udropship')->isModuleActive('Unirgy_DropshipBatch')): ?>
+                    <li <?php if ($_active=='importstock'): ?>class="active"<?php endif ?>><a href="<?php echo $this->getUrl('udbatch/vendor_batch/importStock') ?>" ><?php echo $this->__('Import Stock')?></a></li>
+                    <li <?php if ($_active=='importorders'): ?>class="active"<?php endif ?>><a href="<?php echo $this->getUrl('udbatch/vendor_batch/importOrders') ?>" ><?php echo $this->__('Import Tracking')?></a></li>
+                    <?php endif ?>
+            
+			<?php if (Mage::helper('udropship')->isModuleActive('modules/Unirgy_DropshipMulti')): ?>
+                    <li <?php if ($_active=='stockprice'): ?>class="active"<?php endif ?>><a href="<?php echo $this->getUrl('udmulti/vendor_product')?>"><?php echo $this->__('Stock And Price')?></a></li>
+            <?php else: ?>
+                   <li <?php if ($_active=='stockprice'): ?>class="active"<?php endif ?>><a href="<?php echo $this->getUrl('udropship/vendor/product')?>"><?php echo $this->__('Manage Products')?></a></li>
+            <?php endif ?>
+             
+            <?php if (Mage::helper('udropship')->isModuleActive('Unirgy_DropshipMicrosite')
+                && $_session->isLoggedIn()
+                && $_session->getVendor()->getShowProductsMenuItem()): ?>
+                   <li><a href="<?php echo $this->getUrl('udropship/vendor/addproduct')?>" ><?php echo $this->__('Add Product')?></a></li>
+                   <!--Commented to block the shopstats on dated 13-12-12--> 
+                   <li><a href="<?php echo $this->getUrl('udropship/vendor/shopstats')?>" ><?php echo $this->__('Shop Stats')?></a></li>
+                   <li><a href="<?php echo $this->getUrl('udropship/vendor/statement')?>" ><?php echo $this->__('Reports')?></a></li>
+			<?php endif ?>
+		<!--
+                 <?php if (Mage::helper('udropship')->isModuleActive('Unirgy_DropshipMicrosite')
+                && $_session->isLoggedIn()):?>
+                        <li><a href="<?php echo $this->getUrl('udropship/vendor/vendorinbox')?>" ><?php echo $this->__('Inbox')?></a></li>
+                   <?php endif ?>
+                  
+				   <?php if (Mage::helper('udropship')->isModuleActive('Unirgy_DropshipMicrosite')
+                && $_session->isLoggedIn()):?>
+                        <li><a href="<?php echo $this->getUrl('udropship/vendor/wholesale')?>" ><?php echo $this->__('Wholesale')?></a></li>
+                   <?php endif ?>
+ -->	
+                   <!--Below Line added By dileswar for BUy MktVendorpackages On dated 25-04-2013-->
+				   <?php if (Mage::helper('udropship')->isModuleActive('Unirgy_DropshipMicrosite')
+                && $_session->isLoggedIn()):?>
+                       <!--<li><a href="<?php echo $this->getUrl('udropship/vendor/mktvendors')?>" ><?php echo $this->__('Marketing')?></a></li>-->
+                   <?php endif ?>
+                   <?php if (Mage::helper('udropship')->isModuleActive('Unirgy_DropshipMicrosite')
+                && $_session->isLoggedIn()):?>
+                        <li><a href="<?php echo $this->getUrl('udropship/vendor/claimproduct')?>" ><?php echo $this->__('Claim Board')?></a></li>
+                   <?php endif ?>
+		<!--//***********Below function has added By Dileswar On dated 03-07-2013****************//--> 
+				   <?php if (Mage::helper('udropship')->isModuleActive('Unirgy_DropshipMicrosite')
+                && $_session->isLoggedIn()):?>
+                        <li><a href="<?php echo $this->getUrl('udropship/vendor/generatecoupon')?>" ><?php echo $this->__('Generate Coupon')?></a></li>
+                   <?php endif ?>
+        <!--Added by Gayatri on dated 03-07-2013-->
+
+<!--
+                   <?php if (Mage::helper('udropship')->isModuleActive('Unirgy_DropshipMicrosite')
+                && $_session->isLoggedIn()):?>
+                        <li><a href="<?php echo $this->getUrl('udropship/vendor/blogdashboard')?>" ><?php echo $this->__('Add a Blog')?></a></li>
+                   <?php endif ?> -->	
+              <!--Added By Gayatri to set vacation mode for vendor on dated 23/08/2013-->    
+                    <?php if (Mage::helper('udropship')->isModuleActive('Unirgy_DropshipMicrosite')
+                && $_session->isLoggedIn()):?>
+                        <li><a href="<?php echo $this->getUrl('udropship/vendor/vacationmode')?>" ><?php echo $this->__('Set Vacation Mode')?></a></li>
+                        
+                   <?php endif ?>
+                    <?php if (Mage::helper('udropship')->isModuleActive('Unirgy_DropshipMicrosite')
+                && $_session->isLoggedIn()):?>
+                       <!--<li><a href="<?php echo $this->getUrl('udropship/vendor/bulkuploadcsv')?>" ><?php echo $this->__('Bulk Upload of Products')?></a></li>-->
+                        
+                   <?php endif ?>
+                  
+                   <!--Added by Gayatri to add option of product download for vendors on dated 03-10-2013-->
+                    <?php if (Mage::helper('udropship')->isModuleActive('Unirgy_DropshipMicrosite')
+                && $_session->isLoggedIn()):?>
+                        <li><a href="<?php echo $this->getUrl('udropship/vendor/productdownloadreq')?>" ><?php echo $this->__('Product Download Request')?></a></li>
+                        
+                   <?php endif ?>
+                   
+                    <!--Added by Gayatri to add option of inventory update for vendors on dated 03-10-2013-->
+                    <?php if (Mage::helper('udropship')->isModuleActive('Unirgy_DropshipMicrosite')
+                && $_session->isLoggedIn()):?>
+                        <li><a href="<?php echo $this->getUrl('udropship/vendor/bulkinventoryupdate')?>" ><?php echo $this->__('Bulk Inventory Update')?></a></li>
+                        
+                   <?php endif ?>
+                   
+                   <?php if (Mage::helper('udropship')->isModuleActive('Unirgy_DropshipMicrosite')
+                && $_session->isLoggedIn()):?>
+                        <li><a href="<?php echo $this->getUrl('udropship/vendor/noticeboard')?>" ><?php echo $this->__('Notice Board')?></a></li>
+                        
+                   <?php endif ?>
+                   
+                    <?php if (Mage::helper('udropship')->isModuleActive('Unirgy_DropshipMicrosite')
+                && $_session->isLoggedIn()):?>
+                        <li><a href="<?php echo $this->getUrl('udropship/vendor/disputeraised')?>" ><?php echo $this->__('Dispute Raised Shipments')?></a></li>
+                        
+                   <?php endif ?>
+                    <?php if (Mage::helper('udropship')->isModuleActive('Unirgy_DropshipMicrosite')
+                && $_session->isLoggedIn()):?>
+                        <li><a href="<?php echo $this->getUrl('udropship/vendor/refundpolicy')?>" ><?php echo $this->__('Return And Refund Policy')?></a></li>
+                        
+                   <?php endif ?>                   
+                   <?php if (Mage::helper('udropship')->isModuleActive('Unirgy_DropshipMicrosite')
+                && $_session->isLoggedIn()):?>
+                 
+                        <li><a href="<?php echo $this->getUrl('udropship/vendor/penaltycharges')?>" ><?php echo $this->__('Craftsvilla Penalty And Charges')?></a></li>
+                        
+                   <?php endif ?>
+             
+        
+  <?php if (Mage::helper('udropship')->isModuleActive('Unirgy_DropshipMicrosite')
+                && $_session->isLoggedIn()):?>
+                 
+                        <li><a href="<?php echo $this->getUrl('udropship/vendor/sellerfaq')?>" ><?php echo $this->__('Seller FAQ')?></a></li>
+                        
+                   <?php endif ?>
+
+ 
+
+    </ul>
+    </div>
+    </div>
+    
+    
+   
+    
+    
+    
+    
+    
+    
+    
+
+<!-- AdElement Tag :     Dynamic Retargeting Tag - Craftsvilla.com    Description :   Place this tags on all pages of Craftsvilla.com  -->
+
+      <script type = "text/javascript">
+
+          var ae_parms_kv = {};
+
+          (function () {
+
+              var el_adv_id = "20f7372138cbeb6c012ec0bafd86fc95"; var oldonload = window.onload;window.onload = function(){__ele_loaded=true;var scr = document.createElement("script");var host = (("https:" == document.location.protocol) ? "https://d313lzv9559yp9.cloudfront.net" : "http://cache.adelement.com");scr.setAttribute("async", "true");scr.type = "text/javascript";scr.src = host + "/"+el_adv_id+".js";document.documentElement.firstChild.appendChild(scr);if(oldonload){oldonload()}};}());</script>
+
+<!--  End of AdElement Retargeting Tag  -->

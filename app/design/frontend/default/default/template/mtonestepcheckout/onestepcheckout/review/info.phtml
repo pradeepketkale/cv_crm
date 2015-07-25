@@ -1,0 +1,65 @@
+<?php
+/******************************************************
+ * @package MT OneStepCheckOut module for Magento 1.4.x.x and Magento 1.5.x.x
+ * @version 1.5.2.1
+ * @author http://www.magentheme.com
+ * @copyright (C) 2011- MagenTheme.Com
+ * @license PHP files are GNU/GPL
+*******************************************************/
+?>
+<?php
+$hlp = Mage::helper('generalcheck');
+$ismobile = $hlp->ismobile();
+
+if(!$ismobile)
+{?> 
+
+<?php echo $this->getChildHtml('items_before'); ?>
+<div id="checkout-review-table-wrapper" >
+    <table class="data-table" id="checkout-review-table" >
+
+        <?php if ($this->helper('tax')->displayCartBothPrices()): $colspan = $rowspan = 2; else: $colspan = $rowspan = 1; endif; ?>
+       
+        <?php if ($this->helper('tax')->displayCartBothPrices()): ?>
+       
+        <?php endif; ?>
+
+        <?php echo $this->getChildHtml('totals'); ?>
+
+        
+    </table>
+    <?php if(Mage::helper('mtonestepcheckout')->enableUpdateQty()): ?>
+
+    <?php endif; ?>
+</div>
+<script type="text/javascript">
+//<![CDATA[
+    decorateTable('checkout-review-table');
+    truncateOptions();
+//]]>
+</script>
+<?php } else{?>
+
+<?php echo $this->getChildHtml('items_before'); ?>
+<div id="checkout-review-table-wrapper" >
+    <table class="data-table" id="checkout-review-table" style="font-size:25px;">
+        <?php if ($this->helper('tax')->displayCartBothPrices()): $colspan = $rowspan = 2; else: $colspan = $rowspan = 1; endif; ?>
+       
+        <?php if ($this->helper('tax')->displayCartBothPrices()): ?>
+       
+        <?php endif; ?>
+
+        <?php echo $this->getChildHtml('totals'); ?>
+        
+    </table>
+    <?php if(Mage::helper('mtonestepcheckout')->enableUpdateQty()): ?>
+
+    <?php endif; ?>
+</div>
+<script type="text/javascript">
+//<![CDATA[
+    decorateTable('checkout-review-table');
+    truncateOptions();
+//]]>
+</script>
+<?php }?>

@@ -1,0 +1,188 @@
+<?php
+/**
+ * Unirgy LLC
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.unirgy.com/LICENSE-M1.txt
+ *
+ * @category   Unirgy
+ * @package    Unirgy_Dropship
+ * @copyright  Copyright (c) 2008-2009 Unirgy LLC (http://www.unirgy.com)
+ * @license    http:///www.unirgy.com/LICENSE-M1.txt
+ */
+?>
+<?php if ($_entity = $this->getEntity()): ?>
+<?php 
+   	$_order_id = $_entity->getOrder();
+	$_shippingAddress_value = $_order_id->getShippingAddress();
+	$country_id_value = $_shippingAddress_value->getCountry_id();
+	$autoRefundedamount = Mage::helper('udropship')->getrefundCv($_entity->getId());	
+?>
+<div id="comments_block">
+    <span class="field-row">
+        <label class="normal" for="comment_status"><?php echo Mage::helper('sales')->__('Status') ?></label><br/>
+        <select name="comment[status]" class="select" id="comment_status" onchange="showfield(this.options[this.selectedIndex].value)">
+		
+        <?php 
+
+foreach (Mage::getSingleton('udropship/source')->setPath('shipment_statuses')->toOptionHash() as $_code=>$_label):
+        		/*
+        		*Craftsvilla Comment
+        		*Changed Shipped to Shipped To Customer and added one more condition Shipped To Craftsvilla
+        		*Added by Suresh on 31-05-2012
+        		*/
+        		//if($_label == 'Processing' || $_label == 'Shipped' || $_label == 'Delivered' || $_label == 'Refund Initiated' || $_label == 'Not Delivered' || $_label == 'Charge Back' || $_label == 'Canceled'):
+        		/*if($country_id_value != 'IN')
+        		{*/
+        			
+					if($_label == '' || $_label == 'Processing' || $_label == 'Shipped To Customer' || $_label == 'Delivered' || $_label == 'Refund Initiated' || $_label == 'Partially Refund Initiated' || $_label == 'Not Delivered' || $_label == 'Charge Back' || $_label == 'Canceled' || $_label == 'Shipped To Craftsvilla' || $_label == 'QC Rejected by Craftsvilla' || $_label == 'Received in Craftsvilla' || $_label == 'Product Out Of Stock' || $_label == 'Dispute Raised' || $_label == 'Shipment Delayed' || $_label == 'Partially Shipped' || $_label == 'Refund To Do' || $_label == 'Accepted' || $_label == 'COD RTO' || $_label == 'Returned By Customer' || $_label == 'COD Manifest Shared' || $_label == 'COD Shipment Picked Up'|| $_label == 'Accept To Ship Directly To Customer'|| $_label == 'Pending Pickup' || $_label == 'Packing Slip Printed' || $_label == 'Handed To Courier' || $_label == 'Return Recieved From Customer' || $_label == 'Partially Recieved' || $_label == 'Refund Voucher Requested' || $_label == 'Refund Voucher Sent'):
+        ?>
+            <option value="<?php echo $_code ?>"<?php if($_code==$this->getEntity()->getUdropshipStatus()): ?> selected="selected"<?php endif; ?>><?php echo $_label ?></option>
+
+
+        <?php 
+       			
+				endif;
+				
+				/*}
+        		else {
+        			if($_label == 'Processing' || $_label == 'Shipped To Customer' || $_label == 'Delivered' || $_label == 'Refund Initiated' || $_label == 'Not Delivered' || $_label == 'Charge Back' || $_label == 'Canceled'):
+        ?>
+            <option value="<?php echo $_code ?>"<?php if($_code==$this->getEntity()->getUdropshipStatus()): ?> selected="selected"<?php endif; ?>><?php echo $_label ?></option>
+        <?php 
+        			endif;
+        		}*/	
+				?><?php
+		
+			 
+        	  endforeach; 
+			  
+        ?>
+        </select><br/><br/>
+       <?php //echo $this->getUrl('udropshipadmin/adminhtml_qcreject/qcreject/', array('shipment_id'=>$_entity->getId()));exit; ?>
+       
+
+
+	<!--Added By Dileswar on dated 30-03-2013 for add a extra text box to get the refund amount-->	 
+         <div id="div1"></div>
+         <div id="div2"></div>		
+		<script type="text/javascript">
+		    $('comment_status').origValue = $('comment_status').value
+	    </script>
+        
+        </span>
+          <form name="qcreject" action="<?php echo $this->getUrl('udropshipadmin/adminhtml_shipment/qcreject/', array('shipment_id'=>$_entity->getId())); ?>" method="post" enctype="multipart/form-data">
+         Attach Image: <input type="file" name="import_image" class="input-file" id="import_image"/>
+                <input type="submit" value="Send QC Reject" class="form-button" style="margin-top:5px"/>
+                <input name="form_key" type="hidden" value="<?php echo Mage::getSingleton('core/session')->getFormKey() ?>" />
+               <!-- <textarea name="comment[comment]" rows="3" cols="5" style="height:3em; width:50%; display:none" id="comment_comment"></textarea>-->
+                
+        
+    
+    <span class="field-row">
+        <label class="normal" for="comment_comment"><?php echo Mage::helper('sales')->__('Comment Text') ?></label>
+        <textarea name="comment[comment]" rows="3" cols="5" style="height:6em; width:99%;" id="comment_comment"></textarea>
+    </span>
+   
+    <div class="f-left">
+        <input name="comment[is_vendor_notified]" type="checkbox" id="vendor_comment_notify" value="1" /><label class="normal" for="vendor_comment_notify"> <?php echo Mage::helper('sales')->__('Notify Vendor by Email') ?></label><br />
+        <input name="comment[is_visible_to_vendor]" type="checkbox" id="comment_visible" value="1" /><label class="normal" for="comment_visible"> <?php echo Mage::helper('sales')->__('Visible to Vendor') ?></label><br />
+        <?php if ($this->canSendCommentEmail()): ?>
+        <input name="comment[is_customer_notified]" type="checkbox" id="customer_comment_notify" value="1" /> <label class="normal" for="customer_comment_notify"><?php echo Mage::helper('sales')->__('Notify Customer') ?></label>
+        <?php endif; ?>
+    </div>
+    <div class="f-right">
+        <?php echo $this->getChildHtml('submit_button') ?>
+    </div>
+    <div class="clear"></div>
+    <ul class="note-list">
+    <?php foreach ($_entity->getCommentsCollection(true) as $_comment): ?>
+        <li>
+            <strong><?php echo $this->helper('core')->formatDate($_comment->getCreatedAtDate(), 'medium') ?></strong>
+            <?php echo $this->helper('core')->formatTime($_comment->getCreatedAtDate(), 'medium') ?><span class="separator">|</span><strong><?php echo $_comment->getUdropshipStatus() ?></strong><br/>
+            <small><?php echo $this->helper('udropship')->__('Vendor') ?>
+            <strong class="subdue">
+                <?php if ($_comment->getIsVendorNotified()): ?>
+                <?php echo $this->helper('sales')->__('Notified') ?>
+                <img src="<?php echo $this->getSkinUrl('images/ico_success.gif') ?>" width="16" height="16" alt="" />
+                <?php else: ?>
+                <?php echo $this->helper('sales')->__('Not Notified') ?>
+                <?php endif; ?>
+            </strong></small>
+            <span class="separator">|</span>
+            <small><?php echo $this->helper('sales')->__('Customer') ?>
+            <strong class="subdue">
+                <?php if ($_comment->getIsCustomerNotified()): ?>
+                <?php echo $this->helper('sales')->__('Notified') ?>
+                <img src="<?php echo $this->getSkinUrl('images/ico_success.gif') ?>" width="16" height="16" alt="" />
+                <?php else: ?>
+                <?php echo $this->helper('sales')->__('Not Notified') ?>
+                <?php endif; ?>
+            </strong></small>
+            <br/>
+            <?php echo Mage::helper('core')->htmlEscape($_comment->getComment(), array('b','br','strong','i','u')) ?>
+        </li>
+    <?php endforeach; ?>
+    </ul>
+    </form> 
+<script type="text/javascript">
+function submitComment() {
+    if (validateShipmentStatusSubmit()) {
+        submitAndReloadArea($('comments_block').parentNode, '<?php echo $this->getUrl('udropshipadmin/adminhtml_shipment/addComment', array('shipment_id'=>$_entity->getId())) ?>')
+    }
+}
+
+
+function validateShipmentStatusSubmit()
+{
+    if (<?php echo (int)Mage::helper('udropship')->isUdpoActive()?> == 0) return true;
+    if ($('comment_status').value == $('comment_status').origValue) return true
+    switch ($('comment_status').value) {
+        case '<?php echo Unirgy_Dropship_Model_Source::SHIPMENT_STATUS_CANCELED ?>':
+            return confirm('<?php echo Mage::helper('udropship')->__('This will cancel shipment (if possible).') ?>');
+        case '<?php echo Unirgy_Dropship_Model_Source::SHIPMENT_STATUS_SHIPPED ?>':
+            return confirm('<?php echo Mage::helper('udropship')->__('This will mark shipment as shipped to customer (and if possible change PO status as well).') ?>');
+        case '<?php echo Unirgy_Dropship_Model_Source::SHIPMENT_STATUS_SHIPPED_CRAFTSVILLA ?>':
+            return confirm('<?php echo Mage::helper('udropship')->__('This will mark shipment as shipped to craftsvilla (and if possible change PO status as well).') ?>');    
+        case '<?php echo Unirgy_Dropship_Model_Source::SHIPMENT_STATUS_OUTOFSTOCK_CRAFTSVILLA ?>':
+            return confirm('<?php echo Mage::helper('udropship')->__('This will mark shipment as Product Out Of Stock') ?>');
+		case '<?php echo Unirgy_Dropship_Model_Source::SHIPMENT_STATUS_DELIVERED ?>':
+            return confirm('<?php echo Mage::helper('udropship')->__('This will mark shipment as delivered (and if possible change PO status as well).') ?>');
+			
+        default:
+            return true;
+    }
+}
+<!--Added By Dileswar on dated 30-03-2013 for add a extra text box to get the refund amount-->
+function showfield(name)
+		{
+		if(name==23)
+		{
+		document.getElementById('div1').innerHTML= 'Refund To Do/System Refund Amount of <font face="Tahoma" size="3" color="green"> Rs:<?php echo $autoRefundedamount?> </font><br><input type="text" name ="refundamount" value = "<?php echo $autoRefundedamount?>"/><br/>';
+		}
+
+		else
+		{ document.getElementById('div1').innerHTML='';
+		}
+		if(name==20)
+		{
+		document.getElementById('div2').innerHTML=  '<input type="checkbox" name ="disputeMail" value = "" onclick="sendDisputeRaisedEmailtoCustomer();"> Send return address to customer</input><br/>';
+		}
+		else
+		{ document.getElementById('div2').innerHTML='';
+		}
+		}
+
+
+if ($('submit_comment_button')) {
+    $('submit_comment_button').observe('click', submitComment);
+}
+
+
+</script>
+</div>
+<?php endif; ?>

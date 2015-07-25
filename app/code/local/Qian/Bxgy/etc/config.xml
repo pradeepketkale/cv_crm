@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+<config>
+	<modules>
+		<Qian_Bxgy>
+			<version>0.1.2</version>
+		</Qian_Bxgy>
+	</modules>
+	<global>
+		<models>
+			<bxgy>
+				<class>Qian_Bxgy_Model</class>
+			</bxgy>
+		</models>
+		<blocks>
+			<bxgy>
+				<class>Qian_Bxgy_Block</class>
+			</bxgy>
+		</blocks>
+		<helpers>
+			<bxgy>
+				<class>Qian_Bxgy_Helper</class>
+			</bxgy>
+		</helpers>
+		<events>
+			<salesrule_validator_process>
+				<observers>
+					<processBxgy>
+						<type>singleton</type>
+						<class>Qian_Bxgy_Helper_Event</class>
+						<method>processBxgy</method>
+					</processBxgy>
+				</observers>
+			</salesrule_validator_process>
+		</events>
+	</global>
+	<frontend>
+		<!-- If you do not want to show offer reminder message,
+		you can comment out layout updates.
+		 -->
+		<layout>
+			<updates>
+				<bxgy>
+					<file>qian/bxgy.xml</file>
+				</bxgy>
+			</updates>
+		</layout>
+	</frontend>
+	<default>
+		<qian_bxgy>
+			<general>
+				<enable_reminder>0</enable_reminder>
+				<reminder_template><![CDATA[You have qualified for %s of any Y product! If you want to take advantage of this offer, add <a href='/'>Y product</a> to your cart for free!]]></reminder_template>
+				<yqty_unit>pack(s)</yqty_unit>
+				<yqty_unit_more>more pack(s)</yqty_unit_more>
+			</general>
+		</qian_bxgy>
+	</default>
+</config>

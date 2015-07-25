@@ -1,0 +1,371 @@
+<?php 
+$_session = Mage::getSingleton('uagent/session');
+$agentId = $_session->getAgentId();
+$hlp = Mage::helper('uagent');
+if ($_session->isLoggedIn()):
+?> 
+
+<style type="text/css">
+.col-left {
+    padding: 0 0 0 0;
+    width: 129px;
+}  
+* {
+	margin:0;
+	padding:0;
+	list-style:none;
+}
+.listanitem {
+	overflow:hidden;
+		padding:10px 0;
+}
+.listanitem.last {
+	border:0;
+}
+.listanitem li {
+	float:left;
+	font-family:Arial, Helvetica, sans-serif;
+	font-size:12px;
+	color:#444;
+	padding-right:8px;
+}
+.listaniteminputs li {
+	float:none;
+	padding-bottom:10px;
+        overflow:hidden;
+}
+.listaniteminputs li label {
+	float:left;
+	padding-right:10px;
+	width:130px;
+        font-weight: normal;
+}
+
+.listanitem li label {
+	display:block;
+}
+.listanitem li select {
+	width:180px;
+	font-family:Arial, Helvetica, sans-serif;
+}
+
+.listanitem li select,.listanitem li textarea,.listanitem li input{background:#fff;}
+
+.listaniteminputs li select,.listaniteminputs li textarea,.listaniteminputs li input{ width:231px;}
+
+
+.listaniteminputs li input, .listaniteminputs li textarea {
+	width:220px;
+	padding:3px;
+}
+.listanitem li .img {
+	border:1px solid #ccc;
+	width:80px;
+	height:80px;
+}
+.listfomrs {
+	padding:5px;
+	background:#f7f7f7;
+	border:1px solid #ccc;
+	margin:10px 0;
+}
+.listfomrs {
+	padding:5px;
+	background:#f7f7f7;
+	border:1px solid #ccc;
+	margin:10px 0;
+}
+.shippingdata{
+	text-align:left;
+	margin: 0 0 0 180px;
+	 width:220px;
+	padding:3px;
+	
+	}
+
+.productpic_thumbnew{
+    border: 1px solid #CCCCCC;
+    float: right;
+    margin: 0 0 0 15px;}
+.valignm { border-spacing: 3px;}
+.valignm tr td{ vertical-align: middle;}
+.valignm tr td input{ padding:3px;}
+</style>
+<div class="uagent_box_desc"><div>Here you can create order for customer. You need to know SKU codes of the product (available on the product pages on Craftsvilla.com) to add the product. Please click add to address book after entering shipping details. Once you create the order, you can send a credit card/net banking payment link to customer or you can can collect cash and deposit to following bank account. Please send email to<a href="mailto:places@craftsvilla.com" target="_blank">: places@craftsvilla.com</a> once you have deposited the money. You need to also change the status of the order as "Payment Deposited" for us to know you have deposited the cash.<br>
+  <br>
+</div>
+Bank account for cash deposit:<br>
+A/c name	 :	KRIBHA HANDICRAFTS PVT LTD<br>
+A/c No.	 :	103205000280<br>
+IFSC CODE	:	ICIC0001032<br>
+Bank name	:	ICICI Bank<br>
+Branch	 :	Kandivali(East),Mumbai</div>
+	<div class="box-head">
+  		<h3>Create Order</h3>
+	</div>
+
+<?php echo $this->getMessagesBlock()->getGroupedHtml(); ?> 
+<!------------------------Add Sku & qty to cart-----------------START---------------------------------------------------------------------->   
+    <form name="productdata" id="productdata" action="<?php echo $this->getUrl('uagent/createorder/addProductTocart');?>" method="post" enctype="multipart/form-data">
+        <div class="listfomrs">
+            <ul class="listanitem last listaniteminputs">
+                <li class="lablelist"><label>sku</label> 
+	                <div class="floatl"><input type="text" name="sku" id="sku" class="inputtext required-entry"  /></div>
+                </li>
+                <li class="lablelist clr"><label>Qty To Order</label> 
+                    <div class="floatl"><input type="text" name="qty" id="qty" class="validate-digits required-entry validate-greater-than-zero"/></div>
+                </li>
+            
+            </ul>
+        </div>
+    <input type="submit" value="Add To Cart" class="form-button"/>
+    </form>
+<!------------------------Add Sku & qty to cart-----------------END---------------------------------------------------------------------->   
+<!------------------------Add Coupon to cart-----------------START---------------------------------------------------------------------->   
+    <?php        $_quote = Mage::getSingleton('checkout/session')->getQuote();
+		 $oldCouponCode = $_quote->getCouponCode();
+		 
+		 $oCoupon = Mage::getModel('salesrule/coupon')->load($oldCouponCode, 'code');
+		 $oRule = Mage::getModel('salesrule/rule')->load($oCoupon->getRuleId());
+		 $discountAmount = $oRule->getDiscountAmount();
+		 
+		 ?>
+    <form name="addcoupon" id="addcoupon" action="<?php echo $this->getUrl('uagent/createorder/couponpost');?>">
+        <div class="listfomrs">
+        <?php if($oldCouponCode == NULL) {?>
+            <ul class="listanitem listaniteminputs">
+            	<li class="lablelist clr"><label>Apply Discount Code</label> 
+            		<div class="floatl"><input type="text" name="coupon_code" id="coupon_code" class="inputtext required-entry"/></div>
+            	</li>
+            </ul>
+        <input type="submit" value="Apply"  class="form-button" />
+        <?php } else {?>
+        	<ul class="listanitem listaniteminputs">
+        		<li class="lablelist clr"><label>Apply Discount Code</label> 
+        			<div class="floatl"><input disabled="disabled" type="text" name="coupon_cancel" id="coupon_cancel" value="<?php echo $oldCouponCode?>"/></div>
+        		</li>
+        	</ul>
+        <input  type="submit" value="cancel coupon"  class="form-button" /><?php }?>
+        </div>
+    </form>
+<!------------------------Add Coupon to cart-----------------END---------------------------------------------------------------------->   
+
+<!------------------------You're Ordered Products Form-----------------START---------------------------------------------------------------------->   
+<div class="box-head">
+  <h3>You're Ordered Product:</h3>
+</div>
+<div class="a-left" style="margin:10px 0">
+    <div style="max-height: 517px;overflow: scroll;width: 900px;">    
+        
+        <table cellspacing="1" cellpadding="0" class="data-table table-gride vtop">
+         <thead>
+            <tr>
+              <th><?php echo $this->__('Image')?></th>
+              <th><?php echo $this->__('Sku')?></th>
+              <th><?php echo $this->__('Product Name')?></th>
+              <th><?php echo $this->__('Qty')?></th>
+              <th><?php echo $this->__('Price')?></th>
+              <th>Remove</th>
+             </tr>
+          </thead>
+          <tbody>
+            <?php
+    
+            $agentId = Mage::getSingleton('uagent/session')->getAgentId();
+			$quote_id = Mage::getSingleton('checkout/session')->getQuote()->getId();
+            $quote = Mage::getModel('sales/quote')->load($quote_id);
+            $grandTotal = $quote->getBaseGrandTotal();
+            $qtyOrdered = $quote->getItemsCount();
+			
+            //echo '<pre>';print_r($quote->getData());exit;	
+            $salesQuoteItem = Mage::getModel('sales/quote_item')->getCollection()
+                        ->setQuote($quote)
+                        ->addFieldToFilter('quote_id', $quote_id);
+                
+    	//echo '<pre>';print_r($salesQuoteItem->getData());exit;
+           $doemshippingCost = 0;
+		   $intershippingCost = 0;
+		   foreach ($salesQuoteItem as $collect) 
+            {
+				$idPd = $collect['product_id'];
+            ?>	
+            <tr>
+              <?php //$product = Mage::getModel('catalog/product')->loadByAttribute('sku',$collect['sku']);
+			   $product = Mage::getModel('catalog/product')->load($idPd);
+			//echo '<pre>';print_r($product);exit;
+			  ?>
+                                
+								<?php //$childId=$product->getId(); ?>
+                                <?php $parentIds = Mage::getResourceSingleton('catalog/product_type_configurable')->getParentIdsByChild($idPd); ?>
+                                <td align="left" valign="top" style="font-size:11px; padding:3px 9px;" width="60"><img src="<?php echo Mage::helper('catalog/image')->init($product, 'image')->resize(145);?>" alt=""  border="0"/></td>
+              <td><?php echo $collect['sku'];?></td>
+              <td><?php echo $collect['name'];?></td>
+              <td><?php echo $collect['qty'];?></td>
+              <td><?php echo $collect['base_row_total'];?></td>
+              <td class="removecart">
+                  <form method="post" action="<?php echo $this->getUrl('uagent/createorder/removeProductcart') ?>">  
+                  <input type="hidden" name ="remove" value="<?php echo $collect['item_id'];?>" />
+                  <input name="cancel" type="submit" id="cancel" value="Remove" class="bluebtnsmall" /> 
+              </form> 
+              </td>	
+            </tr> 
+            
+          
+          <?php
+		  $doemshippingCost += $product->getShippingcost();
+		  $intershippingCost += $product->getIntershippingcost();
+		    }
+            ?>
+            <tr><td></td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td><b>Quantity Ordered :</b></td><td><b><?php echo $qtyOrdered ?></b></td></tr>
+            <tr><td></td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td><b>Grand Total :</b></td><td><b><?php  echo Mage::app()->getLocale()->currency($quote->getBaseCurrencyCode())->getSymbol();?><?php echo $grandTotal ?></b></td>
+           </tbody>
+        </table>
+    </div>
+</div>
+
+<!------------------------You're Ordered Products Form-----------------END---------------------------------------------------------------------->   
+
+<!------------------------Create Customer & Account Information---------START--------------------------->
+
+
+    <div class="box-head">
+        <h3><?php echo $this->__('Billing Address/Shipping Address') ?></h3>
+    </div>
+    
+    	<form name="accountinformation" id="accountinformation" action="<?php echo $this->getUrl('uagent/createorder/addToaddress');?>" method="post" enctype="multipart/form-data">
+                <div class="listfomrs">
+                    <table><tr><td>
+                    <ul class="listanitem last listaniteminputs">
+                        <li>
+                            <label for="email"><?php echo $this->__('Email Address') ?> <span class="required">*</span></label>
+                            <input name="email"  title="<?php echo $this->__('Email Address') ?>" id="email" type="text" class="input-text required-entry validate-email" />
+                    	</li>
+  						<li>
+                        	<label for="firstname"><?php echo $this->__('First Name') ?> <span class="required">*</span></label>
+                        	<input name="firstname" title="<?php echo $this->__('First Name') ?>" id="firstname" type="text" class="input-text required-entry" />
+                    	</li>                  
+                       <li>
+                        	<label for="lastname"><?php echo $this->__('Last Name') ?> <span class="required">*</span></label>
+                        	<input name="lastname" title="<?php echo $this->__('Last Name') ?>" id="firstname" type="text" class="input-text required-entry" />
+                    	</li>
+                    
+                        <li>
+                        	<label for="street1"><?php echo $this->__('Street Address') ?> <span class="required">*</span></label>
+                        	<input name="street1"  title="<?php echo $this->__('Street Address') ?>" id="street1" type="text" class="input-text required-entry" />
+                    	</li>
+
+                    	<li><label>&nbsp;</label>
+                        	<input name="street2"  title="<?php echo $this->__('Street Address Line 2') ?>" id="street2" type="text" class="input-text " />
+                    	</li>
+                        <li>
+                        	<label for="city"><?php echo $this->__('City') ?> <span class="required">*</span></label>
+                        	<input name="city" type="text" class="input-text required-entry" id="city"  />
+                    	</li>
+						<li>
+                         <label for="country"><?php echo $this->__('Country') ?> <span class="required">*</span></label>
+						<?php $countries = Mage::getResourceModel('directory/country_collection')
+                                                            ->loadData()
+                                                            ->toOptionArray(false) ?>
+                        <?php if (count($countries) > 0): ?>
+                            <select name="country" id="country">
+                                <option value="">-- Please Select --</option>
+                                <?php foreach($countries as $country): ?>
+                                    <option value="<?php echo $country['value'] ?>">
+                                        <?php echo $country['label'] ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                        <?php endif; ?>
+						</li>
+                 		
+                        <li>
+                        	<label for="region_id"><?php echo $this->__('State/Province') ?> <span class="required">*</span></label>
+                        	<!--<select id="region_id" name="region_id" title="<?php //echo $this->__('State/Province') ?>" class="validate-select" style="display:none" defaultValue="<?php //echo $_r->getRegionId()?>">
+                            	<option value=""><?php //echo $this->__('Please select region, state or province') ?></option>
+                        	</select>
+                        	<input type="text" id="region" name="region" value="<?php //echo $_r->getRegion()?>"  title="<?php //echo $this->__('State/Province') ?>" class="input-text" style="display:none" />-->
+                            <input name="region_id" type="text" class="input-text required-entry" id="region_id"  />
+                    	</li>
+                        <li>
+                        	<label for="zip"><?php echo $this->__('Zip/Postal Code') ?><span class="required">*</span></label>
+                        	<input name="zip" type="text" class="input-text required-entry" id="zip" value="<?php //echo $_r->getZip()?>" />
+                    	</li>
+                        <li>
+                        	<label for="telephone"><?php echo $this->__('Phone Number') ?> <span class="required">*</span></label>
+                        	<input name="telephone"  title="<?php echo $this->__('Phone Number') ?>" id="telephone" type="text" class="input-text required-entry" />
+                    	</li>       
+                    </ul></td><td>
+     					<ul>
+                        <li>
+                            <div class='shippingdata'> 
+                            <?php $customer = Mage::getModel('customer/customer')
+                            				->setWebsiteId(Mage::app()->getStore()->getWebsiteId())
+                            				->loadByEmail($quote->getCustomerEmail());
+                            
+                            $quote->assignCustomer($customer);
+
+                            $address = $quote->getShippingAddress();
+							?><p><u><h4>Billing / Shipping Address</h4></u></p><?php
+							?><p><?php echo $address['firstname'].' '.$address['lastname'];?></p><?php
+								?><p><?php echo $address['street'];?></p><?php
+								?><p><?php echo $address['city'];?></p><?php
+								?><p><?php echo $address['region'];?></p><?php
+								?><p><?php echo $address['telephone'];?></p><?php
+								?><p><?php echo $address['postcode'];?></p><?php
+								
+								if($address['country_id'] == 'IN')
+									{
+										$shippingAmount= $doemshippingCost;
+									}
+								else{
+										$shippingAmount = $intershippingCost;
+									}
+							
+							//echo '<pre>';print_r($address->getData());
+							?></div>
+                    	</li>       
+                    </ul></td></tr></table>               
+                    
+                	<input type="submit" value="Save in address book" class="form-button"/>
+                </div>
+    	</form>
+			
+<!------------------------Create Customer & Account Information---------END--------------------------->
+
+<!------------------------Order details-----------------START---------------------------------------------------------------------->   
+<div class="box-head">
+  <h3>Order Totals:</h3>
+</div>
+
+    <form name="createorder" id="createorder" action="<?php echo $this->getUrl('uagent/createorder/createorderpost');?>" method="post" enctype="multipart/form-data">
+        <div class="listfomrs" align="right">
+            <ul class="listanitem last listaniteminputs">
+            <?php $gtot = str_replace(',','',number_format($grandTotal,2)) ;
+            $scost = str_replace(',','',number_format($shippingAmount,2));
+			$basegrandtot = $gtot+$scost;
+			
+			?>
+                <li><b>Applied Coupon(<?php echo $oldCouponCode ?>) </b><?php  //echo Mage::app()->getLocale()->currency($quote->getBaseCurrencyCode())->getSymbol();?> <?php  //echo number_format($discountAmount,2); ?> </li>
+                <li><b>Shipping Amount :</b><?php  echo Mage::app()->getLocale()->currency($quote->getBaseCurrencyCode())->getSymbol();?> <?php  echo number_format($shippingAmount,2); ?></li>
+                <li><b>Grand total :</b><?php  echo Mage::app()->getLocale()->currency($quote->getBaseCurrencyCode())->getSymbol();?> <?php  echo number_format($basegrandtot,2) ?></li>
+            </ul>
+      <input type="submit" value="Create Order" class="form-button"/>
+      </div>
+    
+    </form>
+<!------------------------Order details-----------------END---------------------------------------------------------------------->   
+
+
+<?php endif ?>
+<script>            
+	var dataForm = new VarienForm('accountinformation', true);
+	//new RegionUpdater('country', 'region', 'region_id', <?php //echo $this->helper('directory')->getRegionJson() ?>);
+</script>
+<script>            
+	var productForm = new VarienForm('productdata', true);
+	//new RegionUpdater('country', 'region', 'region_id', <?php //echo $this->helper('directory')->getRegionJson() ?>);
+</script>
+<script>            
+	var addcouponForm = new VarienForm('addcoupon',true);
+
+</script>

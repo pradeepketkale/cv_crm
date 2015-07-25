@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+	<modules>
+		<Marketplace_Peritemshipping>
+			<active>true</active>
+			<codePool>local</codePool>
+		</Marketplace_Peritemshipping>
+
+               <Marketplace_Peritemshippingcost>
+	                <active>true</active>
+	                <codePool>local</codePool>
+			 <version>0.1.2</version>
+               </Marketplace_Peritemshippingcost>
+               
+               <Marketplace_Feedback>
+	                <active>true</active>
+	                <codePool>local</codePool>
+               </Marketplace_Feedback>
+             
+               <Marketplace_Thoughtyard>
+	                <active>true</active>
+	                <codePool>local</codePool>
+               </Marketplace_Thoughtyard>
+	</modules>
+</config>

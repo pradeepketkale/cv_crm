@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+    <default>
+    </default>
+    <ebslink_index_index>
+        <reference name="content">
+            <block type="ebslink/ebslink" name="ebslink" template="ebslink/ebslink.phtml" />
+        </reference>
+    </ebslink_index_index>
+
+	 <sales_email_order_items_ebslink>
+        <block type="sales/order_email_items" name="items" template="email/ebslink/items.phtml">
+            <action method="addItemRender"><type>default</type><block>sales/order_email_items_order_default</block><template>email/order/items/order/default.phtml</template></action>
+        </block>
+    </sales_email_order_items_ebslink>
+</layout> 

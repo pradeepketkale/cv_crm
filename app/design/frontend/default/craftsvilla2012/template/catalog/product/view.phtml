@@ -1,0 +1,116 @@
+<?php
+$hlp = Mage::helper('generalcheck');
+$ismobile = $hlp->ismobile();
+
+
+	if(!$ismobile)
+	{
+	$desktop_view = $this->desktopProductView();
+	echo $desktop_view;
+
+?>
+<!------------------------------------------Desktop View End------------------------------------------------------->
+<?php
+
+	}
+	 else {
+
+//<!--------------------------------------------------------Mobile View-------------------------------------------->
+	$mobile_view = $this->mobileProductView();
+	echo $mobile_view;
+
+	 }
+
+?>
+<!----------------------------------------------------Mobile View End---------------------------------------------->
+
+
+<script type="text/javascript">
+
+     function contactseller(){
+         jQuery.fancybox({width:'430px', height:'22px',href:"#contact_seller"});
+          
+       } 
+	   
+	  
+    function wishthisprod(){
+        <?php //if(Mage::getSingleton('customer/session')->isLoggedIn()):?>
+               var u ='<?php echo Mage::getBaseUrl().'wishlist/publicshare/wishthisprod' ?>';
+        new Ajax.Request(u, {method:'post', parameters: {}, onSuccess: function(transport) {
+	if(transport.responseText == 'notlogged')
+				{
+				 jQuery.fancybox({width:'430px', height:'22px',href:"#wishthis"});
+				}
+			else{
+
+                   jQuery('#imgwish').addClass('wishit_hide');
+                    var u = "<?php echo $_wishlistSubmitUrl ?>" ;
+                            new Ajax.Request(u, {method:'post', parameters: {}, onSuccess: function(transport) {
+                                            if(transport.responseText == 'wished')
+
+                                                var locate = "<?php echo $_SERVER['HTTP_REFERER']; ?>";
+                                            window.location(locate);	
+                                    }
+                            });
+		               }		
+				}
+        });
+            <?php //else:?>
+                //jQuery.fancybox({width:'430px', height:'22px',href:"#wishthis"});
+            <?php //endif;?>
+    }
+    
+    
+    //<![CDATA[
+            var productAddToCartForm = new VarienForm('product_addtocart_form');
+            productAddToCartForm.submit = function(button){
+                if (this.validator.validate()) {
+                    this.form.submit();
+                    if (button && button != '.undefined.') {
+                        button.disabled = true;
+                    }
+                }
+            }.bind(productAddToCartForm);
+    //]]>
+	
+	
+	
+      function submitform() {
+		jQuery('#pincode').show();
+		 var pincode = document.getElementById("pincode_value").value;
+
+	 var param = 'pincode='+pincode;
+	var pincodeurl = '<?php echo Mage::getBaseUrl().'generalcheck/pincode/pincodecheck' ?>';
+
+	jQuery.ajax({
+		url : pincodeurl,
+		type: "post",
+		//cache : false,
+		data : param,
+		success : function(data) {
+			jQuery('#pincode').html(data);
+		// window.scrollTo(0, 0);
+			return false;
+  
+					
+		},
+		error:function(){
+            alert("failure");
+            jQuery("#pincode").html('There is error while submit');
+        }
+	})
+      }
+	  
+	  
+	  jQuery(document).ready(new function() {
+		  var pidvalue = document.getElementById("qtyproductid12").value;
+		  
+      var u ='<?php echo Mage::getBaseUrl().'generalcheck/inventory/inventorycheck/' ?>';
+       new Ajax.Request(u, {method:'post', parameters: {pidvalue:pidvalue}, onSuccess: function(transport) {
+                  jQuery('#quantity').html(transport.responseText);
+               }
+        })
+	});
+	
+	
+    </script> 

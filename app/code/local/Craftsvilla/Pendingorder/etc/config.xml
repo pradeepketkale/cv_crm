@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Craftsvilla_Pendingorder>
+            <version>0.1.0</version>
+        </Craftsvilla_Pendingorder>
+    </modules>  
+    <global>
+		<template>
+		    <email>
+		        <Pendingorder_email_template module="referfriend">
+		            <label>Pending Order Reminder</label>
+		            <file>pending_order_reminder_mail_send.html</file>
+		            <type>html</type>
+		        </Pendingorder_email_template>
+		    </email>
+		</template>
+        <models>
+            <pendingorder>
+                <class>Craftsvilla_Pendingorder_Model</class>
+            </pendingorder>
+        </models>
+    </global>
+	<!--<crontab>
+        <jobs>
+            <craftsvilla_pendingorder>
+                <schedule><cron_expr>*/30 * * * *</cron_expr></schedule>
+                <run><model>pendingorder/cron::sendreminder</model></run>
+            </craftsvilla_pendingorder>
+        </jobs>
+    </crontab>-->
+</config>

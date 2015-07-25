@@ -1,0 +1,155 @@
+<title><?php echo str_replace("@","",$this->getTitle()) ?></title>
+<meta http-equiv="Content-Type" content="<?php echo $this->getContentType() ?>" />
+<meta name="description" content="<?php echo htmlspecialchars($this->getDescription()) ?>" />
+<meta name="keywords" content="<?php echo htmlspecialchars($this->getKeywords()) ?>" />
+<?php $pageTitle = Mage::getSingleton('cms/page')->getIdentifier(); ?>
+<meta name="robots" content="<?php if($pageTitle=='no-route') echo 'NOINDEX, NOFOLLOW'; else echo htmlspecialchars($this->getRobots()); ?>" />
+<meta name="msvalidate.01" content="4E5D359E6324750669BC46C6109DC035" />
+<meta name="google-site-verification" content="1qWRwJJsXk0TKS-YT5AOF1PCPzsnuhdaxex8cvW_Yv4" />
+<meta property="og:title" content="Largest Online Marketplace in India"/>
+<meta property="og:type" content="website"/>
+<meta property="og:url" content="http://www.craftsvilla.com"/>
+<meta property="og:image" content="http://www.craftsvilla.com/skin/frontend/default/default/images/logo_email.gif"/>
+<meta property="og:site_name" content="Craftsvilla.com"/>
+<meta property="fb:admins" content="places@craftsvilla.com"/>
+<meta property="og:description" content="Largest online marketplace for unique Indian products with more than 300,000+ jewellery, sarees, salwar suits and handmade and natural products. It is ETSY of India."/>
+<meta property="og:latitude" content="19.21028"/>
+<meta property="og:longitude" content="72.87341"/>
+<meta property="og:street-address" content="36,CENTRIUM, Lokhandwala, Kandivli (E)"/>
+<meta property="og:locality" content="Mumbai"/>
+<meta property="og:region" content="Maharashtra"/>
+<meta property="og:postal-code" content="400101"/>
+<meta property="og:country-name" content="India"/>
+<meta property="og:email" content="customercare@craftsvilla.com"/>
+<!--Below Line added for pinterest on dated 11-09-2013-->
+<meta name="p:domain_verify" content="510940beb9db6381236151038bd51da7"/>
+<!--<meta property="og:phone_number" content="+91-92232-11777"/>-->
+<meta name="google-site-verification" content="1tkbXQEgmaBJhxZBdx65hIZWqITga0hzB1ogs1xLp88" />
+<meta name="netinsert" content="0.0.1.12.5.1">
+<link rel="icon" href="http://d1g63s1o9fthro.cloudfront.net/skin/frontend/default/craftsvilla2012/img/favicon.ico" type="image/x-icon" />
+<!-- UNBXD script 
+<link rel="stylesheet" href="//d21gpk1vhmjuf5.cloudfront.net/jquery-unbxdautosuggest.css">
+<script src="//d21gpk1vhmjuf5.cloudfront.net/jquery-unbxdautosuggest.js"></script>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/1.3.0/handlebars.min.js"></script>
+UNBXD SCRPT END --> 
+
+<!--[if lt IE 7]>
+<script type="text/javascript">
+//<![CDATA[
+    var BLANK_URL = '<?php echo $this->helper('core/js')->getJsUrl('blank.html') ?>';
+    var BLANK_IMG = '<?php echo $this->helper('core/js')->getJsUrl('spacer.gif') ?>';
+//]]>
+</script>
+<![endif]-->
+<!--Search tab selected--><script type="text/javascript" src="<?php echo $this->getSkinUrl('js/changeclass.js')?>"></script><!--Search tab End-->
+ 
+ <!--Accordian Scripts end-->
+ <script type="text/javascript" src="<?php echo $this->getSkinUrl('js/jquery.min.js')?>"></script>
+ <script type="text/javascript"  src="<?php echo $this->getSkinUrl('js/ddaccordion.js')?>"></script>
+                <script type="text/javascript">
+				    ddaccordion.init({
+                    headerclass: "submenuheader", //Shared CSS class name of headers group
+                    contentclass: "submenu", //Shared CSS class name of contents group
+                    revealtype: "click", //Reveal content when user clicks or onmouseover the header? Valid value: "click", "clickgo", or "mouseover"
+                    ouseoverdelay: 900, //if revealtype="mouseover", set delay in milliseconds before header expands onMouseover
+                    collapseprev: false, //Collapse previous content (so only one open at any time)? true/false 
+                    defaultexpanded:false, //index of content(s) open by default [index1, index2, etc] [] denotes no content
+                    onemustopen:false, //Specify whether at least one header should be open always (so never all headers closed)
+                    animatedefault: false, //Should contents open by default be animated into view?
+                    persiststate: false, //persist state of opened contents within browser session?
+                    toggleclass: ["", "menuitem2"], //Two CSS classes to be applied to the header when it's collapsed and expanded, respectively ["class1", "class2"]
+                  //comment by kpl need arrow remove this comment	togglehtml: ["suffix", "<img src='images/plus.gif' class='statusicon' />", "<img src='images/minus.gif' class='statusicon' />"], //Additional HTML added to the header when it's collapsed and   				    expanded, respectively  ["position", "html1", "html2"] (see docs)
+                    animatespeed: "fast", //speed of animation: integer in milliseconds (ie: 200), or keywords "fast", "normal", or "slow"
+                    oninit:function(headers, expandedindices){ //custom code to run when headers have initalized
+                        //do nothing
+                    },
+                    onopenclose:function(header, index, state, isuseractivated){ //custom code to run whenever a header is opened or closed
+                        //do nothing
+                    }
+                    })
+                </script>
+<!--Accordian Scripts end-->
+ 
+<!-- Auto Complete start -------->
+
+<!--<script type="text/javascript">
+ //<![CDATA[
+
+ var a1;
+
+jQuery(function() {
+	var url_value = '';
+	if(document.getElementById('searchby').value == 'shop')
+	{
+		//url_value = '/solariumsearch/auto_vendorsuggestions.php';
+		url_value = '/solariumsearch/auto_suggestions.php';
+	}
+	else
+	{
+		url_value = '/solariumsearch/auto_suggestions.php';
+	}
+				
+	var options = {
+		serviceUrl: url_value,
+		width: 300,
+		delimiter: /(,|;)\s*/,
+		deferRequestBy: 0, //miliseconds
+		noCache: false //set to true, to disable caching
+ 	};
+
+	a1 = jQuery('#search').autocomplete(options);
+	jQuery('#navigation a').each(function() {
+		jQuery(this).click(function(e) {
+			var element = jQuery(this).attr('href');
+			jQuery('html').animate({ scrollTop: jQuery(element).offset().top }, 300, null, function() { document.location = element; });
+			e.preventDefault();
+			//document.getElementById('search_mini_form').submit();
+		});
+	});
+});
+
+function checkmenu_values(menuon)
+{
+	menu(menuon);
+	jQuery(function() {
+		var url_value = '';
+		url_value = '/solariumsearch/auto_suggestions.php';
+					
+		var options = {
+			serviceUrl: url_value,
+			width: 300,
+			delimiter: /(,|;)\s*/,
+			deferRequestBy: 0, //miliseconds
+			noCache: false //set to true, to disable caching
+	 	};
+
+		a1 = jQuery('#search').autocomplete(options);
+		jQuery('#navigation a').each(function() {
+			jQuery(this).click(function(e) {
+				var element = jQuery(this).attr('href');
+				jQuery('html').animate({ scrollTop: jQuery(element).offset().top }, 300, null, function() { document.location = element; });
+				e.preventDefault();
+				//document.getElementById('search_mini_form').submit();
+			});
+		});
+	});
+}
+//]]>
+</script>-->
+
+<!-- Auto Complete end --------> 
+
+
+<script type="text/javascript">
+	jQuery(function(){
+		jQuery('input[placeholder], textarea[placeholder]').placeholder();
+	});
+</script>
+
+<?php echo $this->getCssJsHtml() ?>
+<!--[if IE 7]>
+	<link rel="stylesheet" type="text/css" href="/skin/frontend/default/craftsvilla2012/css/ie7.css">
+<![endif]-->
+<?php echo $this->getChildHtml() ?>
+<?php echo $this->helper('core/js')->getTranslatorScript() ?>
+<?php echo $this->getIncludes() ?>

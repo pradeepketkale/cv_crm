@@ -1,0 +1,14 @@
+app/etc/local.xml
+scripts/dbConnection.php
+scripts/rabbitConfig.php
+scripts/solrConfig.php
+app/code/local/Craftsvilla/Config/etc/config.xml 
+*.swp
+*.swo
+sitemap.xml
+downloader/
+*.*~
+/.htaccess
+*.swn
+solariumsearch/config.dist.php
+/nbproject/

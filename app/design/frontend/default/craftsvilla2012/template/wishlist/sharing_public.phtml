@@ -1,0 +1,86 @@
+<!--<script src="{{skin url='js/jquery.wookmark.js'}}"></script>-->
+<?php 
+$_CacheId = "wishlist-share";
+$lifetime = 8640;
+
+if ($cacheContent = Mage::app()->loadCache($_CacheId)) 
+	echo $cacheContent;
+else{
+$customerData=Mage::getModel('customer/customer')->getCollection()
+            ->addAttributeToSelect('customer_photo')
+            //->addNameToSelect()
+            ->addAttributeToSelect('firstname','wishlist_share')
+            ->addAttributeToFilter('wishlist_share',0);
+
+$customerData->getSelect()
+        ->joinLeft('wishlist','e.entity_id=wishlist.customer_id','wishlist_id');
+
+$customerData->getSelect()
+        ->joinLeft('wishlist_item','wishlist.wishlist_id=wishlist_item.wishlist_id',array('product_id','added_at'))
+        ->where("wishlist_item.product_id !='' ")
+        ->order('added_at DESC')
+        ->group('wishlist.wishlist_id')
+        ->columns('COUNT(wishlist_item.wishlist_id) as count_item');
+		
+		$url=Mage::getBaseUrl().'wishlist/publicshare/trend';
+		$feedUrl=Mage::getBaseUrl().'wishlist/publicshare/recentwishlistproducts';
+        $totalBoards=$customerData->count();
+
+$_pageHtml = '';
+?>
+<?php $_pageHtml .=
+'<h4 class="heading_css_new paddingzero floatl">Wish It Wall<br/><span class="tboards">Total Wish Boards:'.$totalBoards.'</span></h4><div class="floatr"><a href="'.$feedUrl.'" class="bluebtnsmall trend marginright" >Live Feed</a><a href="'.$url.'" class="bluebtnsmall trend" >Whats trending</a></div>
+<div class="breadcrumbs_bottom clr"></div>
+
+<p align="center" class="black_heading">Wishboard is a Beautiful Collection of Products You Love on Craftsvilla!</p>
+<p align="center"> Browsing wishboards is a fun way to discover new products on Craftsvilla. Best of all, you <br />
+can browse wishboards created by other people and discover more.</p>
+
+<div class="breadcrumbs_bottom clr small_line"></div>
+<div id="container" class="transitions-enabled clearfix">';
+     
+foreach($customerData as $_customer):
+
+$_custImgResize=$this->helper('craftsvillacustomer');
+
+if($_customer->getCustomerPhoto()!=''){
+    $_imageCustomer = $_customer->getCustomerPhoto();
+    $url=Mage::getBaseUrl('media');
+    $imageCustomerImg=split($url,$_imageCustomer);//trim($_imageCustomer,$url);
+    $_image=$_custImgResize->getResizedUrl($imageCustomerImg[1],40);
+}
+else{
+    $_image=$this->getSkinUrl('img/messages/default_avatar_40px.jpg');
+}
+/*$wishlistData=Mage::getModel('wishlist/wishlist')->getCollection()
+            ->addFieldToFilter('customer_id',$_customer->getId())
+            ->getData();
+
+$wishlistId=$wishlistData[0]['wishlist_id'];
+
+$_itemCollection=Mage::getModel('wishlist/item')->getCollection()
+        ->addFieldToFilter('wishlist_id',$wishlistId);*/
+$url=Mage::getBaseUrl().'wishlist/publicshare/sharepublicproducts/'.'wishlistid/'.$_customer->getWishlistId().'/custId/'.$_customer->getId();
+?>
+<?php 
+
+$_pageHtml .= ' <div class="item">';
+$_pageHtml .= '<a href="'.$url.'">';
+$_pageHtml .= '<div class="profile_section"><p class="profile_pic fleft"><img src="'.$_image.'" alt="profile pic" border="0" width="40" height="40" /></p><p class="fleft"><span class="name_wishholder">'.$_customer->getFirstname()."'s".'</span><span>Items:'.$_customer->getCountItem().'</span></p></div>';
+
+$_product=Mage::getModel('catalog/product')->load($_customer->getProductId());
+
+$_pageHtml .= '<div class="pro_image"><img src="'.$this->helper('catalog/image')->init($_product,'image')->resize(170).'"width="170"/></div>';
+$_pageHtml .='</a>
+            </div>';   
+   
+ endforeach; 
+  $_pageHtml .=  
+  '</div>';
+
+  $tags = array();
+  Mage::app()->saveCache($_pageHtml, $_CacheId, $tags, $lifetime);
+  echo $_pageHtml;
+?>
+<?php } ?>
+

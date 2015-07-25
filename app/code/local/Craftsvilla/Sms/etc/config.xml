@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Craftsvilla_Sms>
+            <version>0.1.0</version>
+        </Craftsvilla_Sms>
+    </modules>  
+    <global>
+        <models>
+            <sms>
+                <class>Craftsvilla_Sms_Model</class>
+            </sms>
+        </models>
+		<helpers>
+            <sms>
+                <class>Craftsvilla_Sms_Helper</class>
+            </sms>
+        </helpers>
+		<events>
+			<udropship_order_save_after>
+				<observers>
+					<craftsvilla_sms_shipping_save>
+						<class>Craftsvilla_Sms_Model_Observer</class>
+						<method>hookToShippmentSaveEvent</method>
+					</craftsvilla_sms_shipping_save>
+				</observers>
+			</udropship_order_save_after>
+   </events>
+    </global>
+	<adminhtml>
+		<acl>
+			<resources>
+				<all>
+					<title>Allow Everything</title>
+				</all>
+				<admin>
+					<children>
+						<system>
+							<children>
+								<config>
+									<children>
+										<sms translate="title">
+											<title>SMS - All</title>
+											<sort_order>100</sort_order>
+										</sms>
+									</children>
+								</config>
+							</children>
+						</system>
+					</children>
+				</admin>
+			</resources>
+		</acl>
+	</adminhtml>
+</config>

@@ -1,0 +1,911 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Unirgy LLC
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.unirgy.com/LICENSE-M1.txt
+ *
+ * @category   Unirgy
+ * @package    Unirgy_Dropship
+ * @copyright  Copyright (c) 2008-2009 Unirgy LLC (http://www.unirgy.com)
+ * @license    http:///www.unirgy.com/LICENSE-M1.txt
+ */
+ -->
+<config>
+    <sections>
+        <udropship>
+            <tab>sales</tab>
+            <label>Drop Shipping</label>
+            <frontend_type>text</frontend_type>
+            <sort_order>330</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store>
+            <groups>
+                <admin>
+                    <label>Administrator Options</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>10</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <vendor_comments_receiver>
+                            <label>Vendor Comments Receiver (store owner)</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_email_identity</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </vendor_comments_receiver>
+                        <vendor_comments_subject>
+                            <label>Vendor Comments Email Subject</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </vendor_comments_subject>
+                        <vendor_comments_template>
+                            <label>Vendor Comments Template</label>
+                            <frontend_type>textarea</frontend_type>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </vendor_comments_template>
+
+                        <letterhead_info>
+                            <label>Letterhead Info</label>
+                            <frontend_type>textarea</frontend_type>
+                            <sort_order>40</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </letterhead_info>
+                        <letterhead_logo translate="label">
+                            <label>Letterhead Logo</label>
+                            <frontend_type>image</frontend_type>
+                            <backend_model>adminhtml/system_config_backend_image</backend_model>
+                            <upload_dir config="system/filesystem/media" scope_info="1">udropship</upload_dir>
+                            <base_url type="media" scope_info="1">udropship</base_url>
+                            <sort_order>50</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </letterhead_logo>
+
+                        <interface_theme>
+                            <label>Admin Interface Theme</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>100</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </interface_theme>
+
+                        <notifications translate="label comment">
+                            <label>Subscribe for extension update notifications</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </notifications>
+
+                        <show_order_view_vendor_rates translate="label">
+                            <label>Show vendor rates in "Shipping &amp; Handling Information"
+ box of order view page</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>110</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </show_order_view_vendor_rates>
+                        <for_update_split_check translate="label">
+                            <label>Use "select ... for update" to check if order already split to pos</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>110</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment>This option should be used when you experience problem when duplicate POs created</comment>
+                        </for_update_split_check>
+                    </fields>
+                </admin>
+                <vendor>
+                    <label>Vendor Options</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>20</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <local_vendor translate="label">
+                            <label>Local Vendor</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>udropship/source</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </local_vendor>
+
+                        <make_available_to_dropship translate="label">
+                            <label>Make Available to Dropship on Order Status(es)</label>
+                            <frontend_type>multiselect</frontend_type>
+                            <source_model>udropship/source</source_model>
+                            <sort_order>25</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </make_available_to_dropship>
+
+                        <default_shipment_status translate="label">
+                            <label>Default Vendor Order (Shipment) Status</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>udropship/source</source_model>
+                            <sort_order>26</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </default_shipment_status>
+
+                        <ready_on_packingslip translate="label">
+                            <label>Make Order Ready to Ship on Printing Packing Slip</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>27</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </ready_on_packingslip>
+                        <vendor_notification_field>
+                            <label>Vendor Notification Email Recipient Field</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>udropship/source</source_model>
+                            <sort_order>29</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </vendor_notification_field>
+                        <vendor_email_identity translate="label">
+                            <label>Vendor Notification Email Sender</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_email_identity</source_model>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </vendor_email_identity>
+                        <vendor_email_template translate="label">
+                            <label>Default Vendor Notification Template</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_email_template</source_model>
+                            <sort_order>40</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </vendor_email_template>
+                        <shipment_comment_vendor_email_template translate="label">
+                            <label>Shipment Comment Vendor Notification Template</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_email_template</source_model>
+                            <sort_order>45</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </shipment_comment_vendor_email_template>
+                        <vendor_password_template translate="label">
+                            <label>Default Vendor Password Reminder Template</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_email_template</source_model>
+                            <sort_order>50</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </vendor_password_template>
+                        <notify_lowstock_email_template translate="label">
+                            <label>Low stock vendor notification template</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_email_template</source_model>
+                            <sort_order>52</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </notify_lowstock_email_template>
+
+                        <vendor_sku_attribute translate="label comment">
+                            <label>Vendor SKU Product Attribute</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>55</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </vendor_sku_attribute>
+                        <pdf_use_font translate="label">
+                            <label>Font to use in PDF</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>udropship/source</source_model>
+                            <sort_order>56</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment><![CDATA[NOTE: Using standard fonts will yield much smaller file size]]></comment>
+                        </pdf_use_font>
+                        <attach_packingslip translate="label">
+                            <label>Attach Packing Slip to Vendor Notification</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>60</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </attach_packingslip>
+                        <attach_shippinglabel translate="label">
+                            <label>Attach Shipping Label to Vendor Notification</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>65</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </attach_shippinglabel>
+
+                        <unique_email>
+                            <label>Unique Email</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>70</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment><![CDATA[NOTE: Email/password combination is always unique]]></comment>
+                        </unique_email>
+
+                        <interface_theme>
+                            <label>Vendor Interface Theme</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>100</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </interface_theme>
+
+                        <visible_preferences>
+                            <label>Visible Preferences</label>
+                            <frontend_type>multiselect</frontend_type>
+                            <source_model>udropship/source</source_model>
+                            <sort_order>110</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment><![CDATA[NOTE: if none are selected, all will be shown by default]]></comment>
+                        </visible_preferences>
+                        <preferences_allowed_tags>
+                            <label>Allowed HTML Tags for Vendor Preferences</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>120</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </preferences_allowed_tags>
+
+                        <tax_by_vendor translate="label">
+                            <label>Calculate order tax based on vendor locations</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>200</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </tax_by_vendor>
+
+                        <master_password translate="label comment">
+                            <label>Master Password</label>
+                            <frontend_type>obscure</frontend_type>
+                            <backend_model>adminhtml/system_config_backend_encrypted</backend_model>
+                            <sort_order>300</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment>Use this master password with vendor email to login to any vendor account</comment>
+                        </master_password>
+
+                        <void_labels translate="label">
+                            <label>Attempt to void labels on deletion</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>310</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment>Support for UPS only at the moment</comment>
+                        </void_labels>
+
+                        <manual_shipment_status translate="label">
+                            <label>Allow vendors to change shipment status manually</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>310</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </manual_shipment_status>
+                        <auto_shipment_complete translate="label">
+                            <label>Automatically complete vendor shipment</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>udropship/source</source_model>
+                            <sort_order>320</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </auto_shipment_complete>
+
+                        <reassign_available_shipping translate="label">
+                            <label>Available system shipping methods during vendor reassign in order</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>udropship/source</source_model>
+                            <sort_order>330</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </reassign_available_shipping>
+
+                        <allow_wysiwyg translate="label">
+                            <label>Allow wysiwyg editor</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>350</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </allow_wysiwyg>
+
+                        <autocomplete_htmlselect translate="label">
+                            <label>Use autocomplete for vendor html select</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>360</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </autocomplete_htmlselect>
+
+                        <hide_packingslip_amount translate="label">
+                            <label>Hide shipping amount in packingslip</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>365</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </hide_packingslip_amount>
+
+                        <is_restrict_shipment_status translate="label">
+                            <label>Restrict shipment statuses in vendor interface</label>
+                            <frontend_type>select</frontend_type>
+                            <frontend_model>udropship/adminhtml_systemConfigFormField_dependSelect</frontend_model>
+                            <depend_fields>
+                                <udropship_vendor_restrict_shipment_status>1</udropship_vendor_restrict_shipment_status>
+                            </depend_fields>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>370</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </is_restrict_shipment_status>
+                        <restrict_shipment_status translate="label">
+                            <label>Available shipment statuses in vendor interface</label>
+                            <frontend_type>multiselect</frontend_type>
+                            <source_model>udropship/source</source_model>
+                            <sort_order>380</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </restrict_shipment_status>
+
+                        <show_pid_in_manage_stock translate="label">
+                            <label>Show product ID in "Manage Stock" in vendor interface</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>400</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </show_pid_in_manage_stock>
+
+                        <label_method_allow_all translate="label">
+                            <label>Allow use of all carrier methods when generate label</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>410</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </label_method_allow_all>
+
+                    </fields>
+                </vendor>
+                <statement>
+                    <label>Vendor Statements Options</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>30</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <email_identity translate="label">
+                            <label>Statement Email Sender</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_email_identity</source_model>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </email_identity>
+                        <email_template translate="label">
+                            <label>Statement Email Template</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_email_template</source_model>
+                            <sort_order>40</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </email_template>
+                        <adjustment_trigger>
+                            <label>Adjustment Comment Trigger Word</label>
+                            <sort_order>50</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment><![CDATA[Use this as a first word in shipment comment for adjustment amounts in the following format:<br/>ADJUSTMENT: -120<br/>Comment here]]></comment>
+                        </adjustment_trigger>
+
+                    </fields>
+                </statement>
+                <customer>
+                    <label>Customer Options</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>30</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <vendor_enable_disable_action>
+                            <label>Action on enable/disable vendor</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>udropship/source</source_model>
+                            <sort_order>5</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </vendor_enable_disable_action>
+                        <vendor_delete_action>
+                            <label>Action on delete vendor</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>udropship/source</source_model>
+                            <sort_order>8</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </vendor_delete_action>
+                        <notify_on_shipment>
+                            <label>Customer Notification on Shipment Completion</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>udropship/source</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </notify_on_shipment>
+                        <notify_on_tracking>
+                            <label>Customer Notification on Tracking ID</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>udropship/source</source_model>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </notify_on_tracking>
+                        <tracking_email_template translate="label">
+                            <label>Tracking ID Notification Template</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_email_template</source_model>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </tracking_email_template>
+                        <tracking_email_template_guest translate="label">
+                            <label>Tracking ID Notification Template for Guests</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_email_template</source_model>
+                            <sort_order>40</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </tracking_email_template_guest>
+                        <!--
+                        <notify_on>
+                            <label>Customer Notification</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>udropship/source</source_model>
+                            <sort_order>50</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment><![CDATA[Deprecated, will be removed in future versions]]></comment>
+                        </notify_on>
+                        -->
+                        <repeat_poll_tracking>
+                            <label>Repeat tracking poll every ...</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>55</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment><![CDATA[hours]]></comment>
+                        </repeat_poll_tracking>
+                        <poll_tracking>
+                            <label>Poll Tracking API</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>60</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment><![CDATA[Will periodically poll available carrier tracking APIs, and mark items as shipped only after receiving confirmation that the packages were picked up]]></comment>
+                        </poll_tracking>
+
+                        <estimate_total_method>
+                            <label>Estimate Total Method</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>udropship/source</source_model>
+                            <sort_order>65</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </estimate_total_method>
+
+                        <estimate_error_action>
+                            <label>Estimate Error Action</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>udropship/source</source_model>
+                            <sort_order>70</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment><![CDATA[This action will be taken if one or more of vendor carriers participating in estimate returns an error or no results]]></comment>
+                        </estimate_error_action>
+
+                        <allow_shipping_extra_charge>
+                            <label>Allow shipping extra charge</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>100</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </allow_shipping_extra_charge>
+                    </fields>
+                </customer>
+                <stock>
+                    <label>Product Stock Options</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>40</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <availability>
+                            <label>Vendor Decision Method</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>udropship/source</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </availability>
+                        <reassign_availability>
+                            <label>Vendor Decision Method For Reassign</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>udropship/source</source_model>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment><![CDATA[When doing order items vendor reassign (Multivendor add-on) or manually creating PO (Advanced PO add-on) use this decision method to check vendors stock]]></comment>
+                        </reassign_availability>
+                        <reassign_skip_stockcheck>
+                            <label>Skip Stock Check For Reassign</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </reassign_skip_stockcheck>
+                    </fields>
+                </stock>
+                <misc>
+                    <label>Miscellaneous</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>50</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>0</show_in_store>
+                    <fields>
+                        <mail_transport>
+                            <label>Email Transport</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>udropship/source</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </mail_transport>
+<!--
+                        <enable_virtual>
+                            <label>Enable Virtual Items Processing</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment>EXPERIMENTAL</comment>
+                        </enable_virtual>
+-->
+                    </fields>
+                </misc>
+                <error_notifications>
+                    <label>Error Notifications Options</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>100</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <enabled>
+                            <label>Enabled</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </enabled>
+                        <sender>
+                            <label>Sender (email from identity)</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_email_identity</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </sender>
+                        <receiver>
+                            <label>Receiver (store owner)</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_email_identity</source_model>
+                            <sort_order>15</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </receiver>
+                        <label_request_failed_subject>
+                            <label>Label Request Failed Email Subject</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </label_request_failed_subject>
+                        <label_request_failed_template>
+                            <label>Label Request Failed Email Template</label>
+                            <frontend_type>textarea</frontend_type>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </label_request_failed_template>
+                        <poll_tracking_failed_subject>
+                            <label>Poll Tracking Failed Email Subject</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>40</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </poll_tracking_failed_subject>
+                        <poll_tracking_failed_template>
+                            <label>Poll Tracking Failed Email Template</label>
+                            <frontend_type>textarea</frontend_type>
+                            <sort_order>50</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </poll_tracking_failed_template>
+                        <poll_tracking_limit>
+                            <label>Poll Tracking Limit</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>60</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </poll_tracking_limit>
+                        <poll_tracking_limit_exceeded_subject>
+                            <label>Poll Tracking Limit Exceeded Email Subject</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>70</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </poll_tracking_limit_exceeded_subject>
+                        <poll_tracking_limit_exceeded_template>
+                            <label>Poll Tracking Limit Exceeded Email Template</label>
+                            <frontend_type>textarea</frontend_type>
+                            <sort_order>80</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </poll_tracking_limit_exceeded_template>
+                    </fields>
+                </error_notifications>
+            </groups>
+        </udropship>
+        <carriers>
+            <groups>
+                <udropship translate="label">
+                    <label>Drop Shipping</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>100</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <active translate="label">
+                            <label>Enabled</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </active>
+                        <title translate="label">
+                            <label>Title</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </title>
+
+                        <free_shipping_allowed>
+                            <label>Allow Free Shipping</label>
+                            <frontend_type>select</frontend_type>
+                            <frontend_model>udropship/adminhtml_systemConfigFormField_dependSelect</frontend_model>
+                            <depend_fields>
+                                <carriers_udropship_free_method>1</carriers_udropship_free_method>
+                                <carriers_udropship_freeweight_allowed>1</carriers_udropship_freeweight_allowed>
+                                <carriers_udropship_free_shipping_enable>1</carriers_udropship_free_shipping_enable>
+                                <carriers_udropship_free_shipping_subtotal>1</carriers_udropship_free_shipping_subtotal>
+                            </depend_fields>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>40</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </free_shipping_allowed>
+                        <freeweight_allowed>
+                            <label>Allow Free Weight Usage For Free Shipping</label>
+                            <frontend_type>select</frontend_type>
+                            <frontend_model>udropship/adminhtml_systemConfigFormField_dependSelect</frontend_model>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>45</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </freeweight_allowed>
+                        <free_method translate="label">
+                            <label>Free methods</label>
+                            <frontend_type>multiselect</frontend_type>
+                            <frontend_class>free-method</frontend_class>
+                            <source_model>udropship/source</source_model>
+                            <sort_order>50</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </free_method>
+                        <free_shipping_enable translate="label">
+                            <label>Free Shipping with Minimum Order Amount</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_enabledisable</source_model>
+                            <frontend_model>udropship/adminhtml_systemConfigFormField_dependSelect</frontend_model>
+                            <depend_fields>
+                                <carriers_udropship_free_shipping_subtotal>1</carriers_udropship_free_shipping_subtotal>
+                            </depend_fields>
+                            <sort_order>51</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </free_shipping_enable>
+                        <free_shipping_subtotal translate="label">
+                            <label>Minimum Order Amount for Free Shipping</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>52</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </free_shipping_subtotal>
+
+                        <handling_type translate="label">
+                            <label>Calculate Handling Fee</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>shipping/source_handlingType</source_model>
+                            <sort_order>60</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </handling_type>
+                        <handling_fee translate="label">
+                            <label>Handling Fee</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>61</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </handling_fee>
+
+                        <sallowspecific translate="label">
+                            <label>Ship to applicable countries</label>
+                            <frontend_type>select</frontend_type>
+                            <sort_order>70</sort_order>
+                            <frontend_class>shipping-applicable-country</frontend_class>
+                            <source_model>adminhtml/system_config_source_shipping_allspecificcountries</source_model>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </sallowspecific>
+                        <specificcountry translate="label">
+                            <label>Ship to Specific countries</label>
+                            <frontend_type>multiselect</frontend_type>
+                            <sort_order>71</sort_order>
+                            <source_model>adminhtml/system_config_source_country</source_model>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </specificcountry>
+                        <specificerrmsg translate="label">
+                            <label>Displayed Error Message</label>
+                            <frontend_type>textarea</frontend_type>
+                            <sort_order>72</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </specificerrmsg>
+
+                        <sort_order translate="label">
+                            <label>Sort order</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>100</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </sort_order>
+                    </fields>
+                </udropship>
+            </groups>
+        </carriers>
+    </sections>
+</config>

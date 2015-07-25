@@ -1,0 +1,45 @@
+<?xml version="1.0"?> 
+<config>
+	<api>
+		<resources>
+			<gharpay translate="title" module="gharpay">
+				<model>gharpay/api</model>
+                <title>Gharpay Resource</title>
+                <methods>
+                    <update translate="title" module="gharpay">
+                        <title>Update Order Status</title>
+                        <acl>sales/order</acl>
+                    </update>
+                 </methods>
+              </gharpay>
+          </resources>
+          <acl>
+        	  <resources>
+                 <gharpay translate="title" module="gharpay">
+                       <title>Gharpay</title>
+                       <update translate="title" module="gharpay">
+                         	<title>Update Order Status</title>
+                      </update>  
+                 </gharpay>
+              </resources>
+          </acl>
+          <faults module="gharpay">
+             <data_invalid> <!-- if we get invalid input data for gharpay -->
+                 <code>100</code >
+                 <message>Invalid gharpay data. Details in error message.</message>
+             </data_invalid>
+             <filters_invalid>
+                 <code>101</code >
+                 <message>Invalid filters specified. Details in error message.</message>
+             </filters_invalid>
+             <not_exists>
+                 <code>102</code>
+                 <message>Order doesn't exist.</message>
+             </not_exists>
+             <not_deleted>
+                 <code>103</code >
+                 <message>Order was not deleted. Details in error message.</message>
+             </not_deleted>
+         </faults>
+   </api>
+</config>

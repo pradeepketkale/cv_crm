@@ -1,0 +1,20 @@
+<?xml version="1.0"?>   
+<layout version="0.1.0">   
+   <shopcoupon_index_index>   
+        <reference name="root">   
+            <action method="setTemplate"><template>page/1column.phtml</template></action>   
+        </reference>
+		   
+        <reference name="content">   
+            <block type="shopcoupon/index" name="shopcoupon_index" template="shopcoupon/index.phtml"/>   
+        </reference>  
+        
+       <reference name="head">
+  			<action method="addItem">
+    		<type>js</type><script>shop_coupon/shopcoupon.js</script>
+  			</action>
+		</reference>
+		 
+    </shopcoupon_index_index>   
+</layout>   
+	

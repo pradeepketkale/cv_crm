@@ -1,0 +1,64 @@
+<?php
+
+$showattr = array (
+'ship_handling_time',
+'item_location',
+'item_return_in_days',
+'refund_made_as',
+'refund_cost_bearer',
+'return_policy_detail',
+'udropship_vendor' );
+
+    $_helper = $this->helper('catalog/output');
+    $_helpv = $this->helper('udropship');
+    $_helpm = $this->helper('umicrosite');
+    $_product = $this->getProduct();
+    $_vendor_id = $this->getProduct()->getUdropshipVendor();
+?>
+<?php   
+		$vendorIfo = $_helpv->getVendor($_product); 
+		$storeurl = $_helpm->getVendorUrl($vendorIfo->getData('vendor_id'));
+		/*$level = Mage::getStoreConfig('udropship/microsite/subdomain_level');
+		$url = parse_url(Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB));
+		$hostArr = explode('.', trim($url['host'], '.'));
+		$l = sizeof($hostArr);
+        if ($l-$level>=0) {
+            $hostArr[$l-$level] = $vendorIfo->getUrlKey();
+        } else {
+            array_unshift($hostArr, $vendorIfo->getUrlKey());
+        }
+        $baseUrl = $url['scheme'].'://'.join('.', $hostArr).(isset($url['path']) ? $url['path'] : '/');*/
+		$vendorLogo = $vendorIfo->getShopLogo()!='' ? Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA).$vendorIfo->getShopLogo() : $this->getSkinUrl('images/noimage.jpg');
+		if($vendorIfo->getUrlKey()) {
+        ?>
+<div class="section v2">
+	<div class="section-inner">
+		<h2>Shop owner</h2>
+		<a href="<?php if($vendorIfo->getUrlKey()) echo $storeurl; else echo '#';?>" title="<?php echo $vendorIfo->getVendorName();?>"><?php echo $vendorIfo->getVendorName()?></a>
+		<div class="seller-info v2 clear">
+			<div class="image-wrapper">
+				<a href="<?php echo $baseUrl; ?>" target="_blank">
+				<img width="75" alt="" src="<?php echo $vendorLogo; ?>" ></a>
+			</div>
+			<ul class="floatl seeregion">
+			<li class="location">
+			<?php 
+			echo $vendorIfo->getCity()."<br>";
+			$coutryid = $vendorIfo->getCountryId();
+			$regionid = $vendorIfo->getRegionId();
+			$reg =  Mage::getModel('directory/region')->load($regionid);
+			$cnt =  Mage::getModel('directory/country')->load($coutryid);
+			echo $cnt->getName()."<br>";
+			echo $reg->getName()."<br>";
+			?> 
+			</li>
+			</ul>
+
+			<ul class="clr selldetails">
+				<li class="member">
+				<a href="<?php if($vendorIfo->getUrlKey()) echo $storeurl; else echo '#'; ?>" class="username" target="_blank">Shop</a> | <a href="<?php if($vendorIfo->getUrlKey()) echo $storeurl.'thoughtyard/profile/'; else echo '#'; ?>" target="_blank">About</a> | <a href="<?php if($vendorIfo->getUrlKey()) echo $storeurl.'thoughtyard/policies/'; else echo '#'; ?>" target="_blank">Policies</a></li>
+			</ul>
+		</div>
+	</div>
+</div>
+		<?php } ?>

@@ -1,0 +1,130 @@
+<?php
+$_orders = $this->getOrders(); 
+$i=1;
+$_ajaxInfoUrl = $this->getUrl('feedback/vendor/pendingInfo/id/ID');
+?>
+<div class="postcontent paddingpager">
+<div class="pageTtl2">
+  <h1><?php echo $this->__('Payment Pending Orders') ?></h1>
+</div>
+<div class="category_desc_bot">Below are your payment pending orders which you can pay by clicking the "Pay Now" button. Once you pay for this order, you will receive an order confirmation email within 24 hours. We deliver in India within 10 days and outside of India within 21 days. For our detailed refund policy, please <a  target="_blank" href="http://www.craftsvilla.com/shipping-artisans-designers/">click here </a>. For any further query, please email customercare@craftsvilla.com</div>
+
+<!--<div id="policy" style="width:170px"><img class="hovertext" src="<?php //echo Mage::getDesign()->getSkinUrl('images/5-shipping-icon1.png')?>" />
+<div><p><strong>Shipping Policy:</strong><br>
+  We deliver in India  within 10 days and outside of India within 21 days.<br> Currently our average delivery time in India is around 4 days and outside<br> of India within 18 days. You will get email and sms of tracking details of <br>domestic shipments within 5-7 days. You can also request seller for<br> expedited shipping by clicking the "Contact Seller" button on the product<br> page after you place the order. We deliver to over 100 countries<br> globally including USA, UK, Australia and Canada. </p>
+</div>&nbsp;&nbsp;
+<img class="hovertextpending1" src="<?php //echo Mage::getDesign()->getSkinUrl('images/return-icon.jpg')?>"  />
+<div><p><strong>Refund Policy:</strong><br>
+We have a friendly return policy whereby we refund for products which are damaged,<br> broken, have manufacturing defects, wrong size or does not match with photo/description<br> as given on Craftsvilla. The customer/buyer has to get back to Craftsvilla customer care through<br> phone/email within 24 hours of receipt of damaged goods or goods not meeting description.<br> Craftsvilla will then log a dispute and initiate a process of resolution between the artisan/designer<br> and the customer. Customer will have to send an image of product on email in case she is claiming<br> that the product is damaged or not meeting description. </p>
+</div>&nbsp;
+<img class="hovertextpending2" src="<?php //echo Mage::getDesign()->getSkinUrl('images/40by40.png')?>" />
+<div><p><strong>100% Secured Payments:</strong><br>
+We guarantee that your payment is 100% secured with us as your payment details<br> are never shared to anyone during the payment process. You transparently pay through<br> our payment gateway or Paypal and all the data is transferred through high level encryption<br> technology. Please note you pay to "Kribha Handicrafts Pvt Ltd" since that is the company <br>which owns Craftsvilla.com brand and online store. Craftsvilla.com is a brand you can<br> 100% trust. We have been convered widely in Indian and Western Media including newspapers<br> like Timesofindia, Economic Times, Hindu ad TV channels like CNBC, ETNow and Zee and<br> Western Media like Dow Jones and Techcruch.</p>
+</div></div>-->
+<!--HTML Code-->
+<?php echo $this->getPagerHtml(); ?>
+<?php if($_orders->getSize()): ?>
+<table cellspacing="1" class="table-border feedcust" width="100%" id="shipment-grid">
+
+  <thead>
+    <tr>
+      <th></th>
+      <th>Order #</th>
+      <th>Name</th>
+      <th>QTY</th>
+      <th>Date</th>
+      <th>Status</th>
+      <th>Total Order Value</th>
+      <th>PAY</th>
+    </tr>
+  </thead>
+  <tbody>
+      <?php foreach($_orders as $order):
+       
+	    $_items=$order->getAllItems();
+		$_id = $order->getId();
+		$vendorShippHandling = array();
+		$newdate = '';
+		$_datediff = '';
+		$_shippmentCreateDate = $order->getCreatedAt();
+	  ?>  
+   
+	<tr id="row-<?php echo $_id?>" class="trigger">
+		<td><a class="action" href="#" onclick="return false"><span></span></a></td>
+		<td> <?php echo $order->getIncrementId();?></td>
+		<td><?php echo $this->htmlEscape($order->getCustomerFirstname().' '.$order->getCustomerLastname()); ?></td>
+		<td><?php echo number_format($order->getTotalQtyOrdered()); ?></td>
+		<td><?php echo date('d/m/Y', strtotime($_shippmentCreateDate)); ?></td>
+		<?php if( $order->getStatus() == "canceled"){ ?>
+        	<td><?php echo "pending";  ?></td>
+        <?php } else{ ?>
+			<td><?php echo $order->getStatus();  ?></td>
+		<?php } ?>
+		<td><?php echo $order->getBaseGrandTotal(); ?></td>
+        <td><form method="post" action="<?php echo $this->getUrl('feedback/vendor/sendOrderpayulink') ?>">  
+              <input type="hidden" name ="orderId" value="<?php echo $_id;?>" />
+		      <input width="100px" type="submit" style="filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#CE3D49',endColorstr='#019ad2',GradientType=0); 	background-color:#CE3D49; 	-moz-border-radius:6px; 	-webkit-border-radius:6px; 	border-radius:6px; 	border:1px ; 	display:inline-block; 	cursor:pointer; 	color:#ffffff; 	font-family:arial; 	font-size:15px; 	font-weight:bold; 	padding:2px 20px;text-decoration:none; " value="PAY NOW" id="paybutton" name="paybutton"> 
+          </form> </td>
+
+    </tr>
+   
+    <tr id="info-<?php echo $_id?>" class="collapsed" style="display:none;">
+            <td id="container-<?php echo $_id?>" colspan="9" class="expanded">
+                <span class="shipment-info-loader">Please wait, loading order information...</span>
+            </td>
+        </tr>
+    
+     <?php $i++; endforeach;?>
+  </tbody>
+</table>
+</div>
+<script type="text/javascript">decorateTable('my-orders-table');</script> 
+<?php else: ?>
+<p><?php echo $this->__('You have placed no orders.'); ?></p>
+<?php endif ?>
+<script type="text/javascript">
+
+$$('#shipment-grid tbody tr.trigger').each(function (row) {
+    var a = row.down('a.action');
+    a.observe('click', expandRow.curry(false, row));
+});
+
+function expandRow(openFlag, row) {
+    var a = row.down('a.action');
+    var id = row.id.split('-')[1];
+    
+	var info = $('info-'+id), container = $('container-'+id), img = a.down('span');
+	
+    if (!info.isInfoLoaded) {
+		info.isInfoLoaded = true;
+        new Ajax.Request('<?php echo $_ajaxInfoUrl ?>'.replace('ID', id), {
+            onComplete: function(transport) {
+            	 if(transport.responseText != 0){
+					document.getElementById('container-'+id).innerHTML = transport.responseText;
+					$('submit-'+id).observe('click', function () {
+						jQuery("#feedback-form-"+id).ajaxForm(
+						{
+							beforeSubmit:  showRequest,
+							success : showResponse
+						}).submit();
+				    });
+				}
+            }
+            });
+    }
+    if (openFlag) info.show();
+    else info.toggle();
+    if (openFlag) {
+        info.removeClassName('collapsed');
+    } else if (info.hasClassName('collapsed')) {
+        info.removeClassName('collapsed');
+    } else {
+        info.addClassName('collapsed');
+    }
+    if (info.hasClassName('collapsed')) {
+        img.removeClassName('open');
+    } else {
+        img.addClassName('open');
+    }
+}
+</script>

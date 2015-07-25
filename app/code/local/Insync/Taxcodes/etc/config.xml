@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <modules>
+        <Insync_Taxcodes>
+            <version>1.0</version>
+        </Insync_Taxcodes>
+    </modules>
+    <global>
+        <models>
+            <taxcodes>
+                <class>Insync_Taxcodes_Model</class>
+            </taxcodes>
+        </models>
+    </global>
+</config>

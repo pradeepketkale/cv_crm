@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout version="0.1.0">
+	<referfriend_index_invite>
+	<reference name="root">
+			<action method="setTemplate">
+				<template>page/invite.phtml</template>
+			</action>
+		</reference>
+		<reference name="head">
+			<action method="addCss">
+				<script></script>
+			</action>
+		</reference>
+		<reference name="content">
+			<block type="referfriend/referal" name="referfriend"  template="referfriend/layout/invite.phtml"></block>
+			<block type="referfriend/referral_statistics" name="referfriend.referral.statistics">
+				<block type="core/text_list" name="referfriend.referral.statistics.info" as="info"/>
+			</block>
+			
+		</reference> 
+	</referfriend_index_invite>
+
+	<referfriend_index_accept>
+	<reference name="root">
+			<action method="setTemplate">
+				<template>page/invite.phtml</template>
+			</action>
+		</reference>
+		<reference name="head">
+			<action method="addCss">
+				<script></script>
+			</action>
+		</reference>
+		<reference name="content">
+			<block type="referfriend/referal" name="referfriend"  template="referfriend/layout/invite.phtml"></block>
+			<block type="referfriend/referral_accept" name="referfriend.referral.accept">
+				<block type="core/text_list" name="referfriend.referral.accept.acc" as="acc"/>
+			</block>
+		</reference> 
+	</referfriend_index_accept>
+
+	<referfriend_index_index>		
+		
+		<reference name="head">
+			<action method="addCss">
+				<script>css/referfriend.css</script>
+			</action>
+		</reference>
+
+		<label>Customer My Account Order History</label>
+		<update handle="customer_account"/>
+		<reference name="my.account.wrapper">
+			<block type="referfriend/referal" name="referfriend"  template="referfriend/layout/myacccount_refer.phtml"></block>
+			<block type="referfriend/referral_myaccountgrid" name="referfriend.referral.myaccountgrid">
+				<block type="core/text_list" name="referfriend.referral.statistics.info" as="info"/>
+			</block>
+			
+		</reference>
+	</referfriend_index_index>
+
+	<referfriend_index_accepted>		
+		
+		<reference name="head">
+			<action method="addCss">
+				<script>css/referfriend.css</script>
+			</action>
+		</reference>
+
+		<label>Customer My Account Order History</label>
+		<update handle="customer_account"/>
+		<reference name="my.account.wrapper">
+			<block type="referfriend/referal" name="referfriend"  template="referfriend/layout/myacccount_refer.phtml"></block>
+			<block type="referfriend/referral_accepted" name="referfriend.referral.accepted">
+				<block type="core/text_list" name="referfriend.referral.accepted.acced" as="acced"/>
+			</block>
+			
+		</reference>
+	</referfriend_index_accepted>
+
+	<referfriend_index_send>
+		<reference name="root">
+			<action method="setTemplate">
+				<template>page/1column.phtml</template>
+			</action>
+		</reference>
+		<reference name="head">
+			<action method="addCss">
+				<script>css/referfriend.css</script>
+			</action>
+		</reference>
+		<reference name="content">
+			<block type="referfriend/referal" name="referfriend"  template="referfriend/layout/myacccount_refer.phtml"></block>
+		</reference>
+	</referfriend_index_send>
+
+	<referfriend_statistics_index translate="label">
+		<label>Customer My Account Order History</label>
+		<update handle="customer_account"/>
+		<reference name="my.account.wrapper">
+			<block type="referfriend/referral_statistics" name="referfriend.referral.statistics">
+				<block type="core/text_list" name="referfriend.referral.statistics.info" as="info"/>
+			</block>
+			<block type="customer/account_dashboard" name="customer.account.link.back" template="customer/account/link/back.phtml"/>
+		</reference>
+	</referfriend_statistics_index>
+	<!-- <referfriend_accept_index translate="label">
+		<label>Customer My Account Order History</label>
+		<update handle="customer_account"/>
+		<reference name="my.account.wrapper">
+			<block type="referfriend/referral_accept" name="referfriend.referral.accept">
+				<block type="core/text_list" name="referfriend.referral.accept.info" as="info"/>
+			</block>
+			<block type="customer/account_dashboard" name="customer.account.link.back" template="customer/account/link/back.phtml"/>
+		</reference>
+	</referfriend_accept_index> -->
+</layout>

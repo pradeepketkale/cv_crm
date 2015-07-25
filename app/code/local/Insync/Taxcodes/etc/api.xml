@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <api>
+        <resources>
+            <taxcodes_taxcodes translate="title" module="taxcodes">
+            	<title>Tax Resource</title>
+            	<model>taxcodes/taxcodes_api</model>
+            	  <methods>
+                	<list translate="title" module="taxcodes">
+                    	<title>Retrieve Customer Tax Class</title>
+                    	<method>getCustomerTaxClass</method>
+                   </list>
+				   <listProductTaxClass translate="title" module="taxcodes">
+                    	<title>Retrieve Product Tax Class</title>
+                    	<method>getProductTaxClass</method>
+                   </listProductTaxClass>
+				   <listTaxCode translate="title" module="taxcodes">
+                    	<title>Retrieve Tax Code Rate</title>
+                    	<method>getTaxCodeRate</method>
+                   </listTaxCode>
+            	 </methods>
+            </taxcodes_taxcodes>
+        </resources>
+		 <resources_alias>
+            <taxcodes>taxcodes_taxcodes</taxcodes>
+        </resources_alias>
+		<v2>
+        	<resources_function_prefix>
+                <taxcodes>taxcodesTaxcodes</taxcodes>
+            </resources_function_prefix>
+        </v2>
+    </api>
+</config>

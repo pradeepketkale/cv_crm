@@ -1,0 +1,10 @@
+<?php
+$_vendor = Mage::helper('umicrosite')->getCurrentVendor();
+?>
+<h1 class="headingvendor homeprite">
+Shipping and Returns</h1>
+<div id="shop-policy" class="para">
+	<div class="clear">
+		<?php echo $_vendor->getReturnPolicyDetail();?>
+    </div>    
+</div>

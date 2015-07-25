@@ -1,0 +1,153 @@
+<?php
+
+echo "feedback shipment unirgy place formation is coming";
+print_r($this->getRequest()->getParams());
+return;
+$_hlp = Mage::helper('udropship');
+$ret = $this->getShipmentItem();
+$_id= $ret->getData('entity_id');
+$session = Mage::getSingleton('customer/session');
+$cidData = $session->isLoggedIn();
+$custid = $session->getCustomerId();
+$Feedback = Mage::getModel('feedback/vendor_feedback');
+$userfeedback = $Feedback->load($ret->getFeedbackId() ,'feedback_id' );
+        //print_r($userfeedback);
+        //getCollection()->getData());
+
+
+$_shipmentPostUrl =  $this->getUrl('feedback/vendor/shipmentPost', array('id'=>$_id , 'ajax'=> '1' , 'vendor_id' => $this->getRequest()->getParam('vendor_id') , 'ship_id'=> $this->getRequest()->getParam('ship_id')));
+?>
+<?php if($session->getError()!=''): ?>
+<ul class="messages"><li class="error-msg"><ul><li><span><?php echo $session->getError() ?></span></li></ul></li>
+<?php endif ?>
+
+<?php if($session->getSuccess()!=''): ?>
+<li class="success-msg"><ul><li><span><?php echo $session->getSuccess() ?></span></li></ul></li></ul>
+<?php endif ?>
+
+<div class="form-add" id="form-add-feedback">
+    <h2><?php //echo $this->__('Write Your Own Feedback') ?></h2>
+    <form action="<?php echo $_shipmentPostUrl ?>" method="post" id="shipment-form-<?php echo $_id?>">
+        <fieldset>
+            <h3><?php echo $this->__("You're Giving Feedback:"); ?> <span><?php //echo $this->htmlEscape($this->getProductInfo()->getName()) ?></span></h3>
+            <?php if($cidData): ?>
+                <h4><?php echo $this->__('How do you rate this product?') ?> <em class="required">*</em></h4>
+                <span id="input-message-box"></span>
+                <table class="data-table" id="product-review-table" >
+                    <col />
+                    <col width="1" />
+                    <col width="1" />
+                    <col width="1" />
+                    <col width="1" />
+                    <col width="1" />
+                    <thead>
+                        <tr>
+                            <th>&nbsp;</th>
+                            <th><span class="nobr"><?php echo $this->__('Positive') ?></span></th>
+                            <th><span class="nobr"><?php echo $this->__('Negative') ?></span></th>
+                            <th><span class="nobr"><?php echo $this->__('Neutral') ?></span></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <?php //foreach ($this->getRatings() as $_rating): ?>
+                        <tr>
+                            <th><?php //echo $this->escapeHtml($_rating->getRatingCode()) ?></th>
+                        <?php //foreach ($_rating->getOptions() as $_option): ?>
+                            <td class="value"> <input type="radio" name="feedback" id="<?php echo $this->escapeHtml($_id) ?>_1" value="1" class="radio" <?php if($userfeedback->getFeedback()>0) echo "checked"; ?> /></td>
+                        <?php //endforeach; ?>
+                        <td class="value"><input type="radio" name="feedback" id="<?php echo $this->escapeHtml($_id) ?>_2" value="-1" class="radio" <?php if($userfeedback->getFeedback()<0) echo "checked"; ?> /></td>
+                        <?php //endforeach; ?>
+                        <td class="value"><input type="radio" name="feedback" id="<?php echo $this->escapeHtml($_id) ?>_3" value="0" class="radio" <?php if($userfeedback->getFeedback()==0) echo "checked"; ?> /></td>
+                        <?php //endforeach; ?>
+                        </tr>
+                    <?php //endforeach; ?>
+                    </tbody>
+                </table>
+                
+                <input type="text" name="customer_id"  value="<?php echo  $custid ?>" />
+                <input type="text" name="status"  value="<?php echo $userfeedback->getStatus() ?>" />
+              
+                
+                <script type="text/javascript">decorateTable('product-review-table')</script>
+          
+                <ul class="form-list">
+                    <li>
+                        <label for="nickname_field" class="required"><em>*</em><?php echo $this->__('Nickname') ?></label>
+                        <div class="input-box">
+                            <input type="text" name="nickname" id="nickname_field" class="input-text required-entry" value="<?php //echo $this->htmlEscape($data->getNickname()) ?>" />
+                        </div>
+                    </li>
+                    
+                    
+                    <li>
+                        <label for="resolution_field" class="required"><em>*</em><?php echo $this->__('Upload Image') ?></label>
+                        <div class="input-box">
+                            <input type="file" name="image" id="image_field" value="<?php //echo $this->htmlEscape($data->getTitle()) ?>" />
+                            <img src="" />
+                        </div>
+                    </li>
+                    
+                    
+                    <li>
+                        <label for="feedback_field" class="required"><em>*</em><?php echo $this->__('Feedback') ?></label>
+                        <div class="input-box">
+                            <textarea name="detail" id="feedback_field" cols="5" rows="3" class="required-entry"><?php echo $this->htmlEscape($userfeedback->getFeedbackComments()) ?></textarea>
+                        </div>
+                    </li>
+                     <li>
+                        <label for="resolution_field" class="required"><em>*</em><?php echo $this->__('How can we help?') ?></label>
+                        <div class="input-box">
+                            <input type="text" name="resolution" id="resolution_field" class="input-text required-entry" value="<?php echo $this->htmlEscape($userfeedback->getCustomerComments()) ?>" />
+                        </div>
+                    </li>
+                </ul>
+            </fieldset>
+            
+            
+           
+            <div class="buttons-set">
+             <button class="button" type="button" id="submit-<?php echo $_id  ?>"><span><?php echo $_hlp->__('Submit Feedback') ?></span></button>
+                        <span class="shipment-info-loader" style="display:none" id="submit-loader-<?php echo $_id  ?>"><?php echo $_hlp->__('Please wait, submitting...')?></span>
+                
+            </div>
+    </form>
+    <script type="text/javascript">
+    //<![CDATA[
+        var dataForm = new VarienForm('feedback-form');
+        Validation.addAllThese(
+        [
+               ['validate-rating', '<?php echo $this->__('Please select one of each of the ratings above') ?>', function(v) {
+                    var trs = $('product-review-table').select('tr');
+                    var inputs;
+                    var error = 1;
+    
+                    for( var j=0; j < trs.length; j++ ) {
+                        var tr = trs[j];
+                        if( j > 0 ) {
+                            inputs = tr.select('input');
+    
+                            for( i in inputs ) {
+                                if( inputs[i].checked == true ) {
+                                    error = 0;
+                                }
+                            }
+    
+                            if( error == 1 ) {
+                                return false;
+                            } else {
+                                error = 1;
+                            }
+                        }
+                    }
+                    return true;
+                }]
+        ]
+        );
+    //]]>
+    </script>
+    <?php else: ?>
+    <p class="review-nologged" id="review-form">
+        <?php echo $this->__('Only registered users can write feedback. Please, <a href="%s">log in</a> or <a href="%s">register</a>', $this->getLoginLink(), Mage::helper('customer')->getRegisterUrl()) ?>
+    </p>
+    <?php endif ?>
+</div>

@@ -1,0 +1,70 @@
+tables:
+  helpdeskultimate/department:
+    -  
+      id: 1
+      name: 
+      contact: helpdeskult@yandex.ru
+      email: helpdeskult@yandex.ru
+      notify: 1
+      sender: general
+      to_admin_new_email: helpdeskultimate_to_admin_new_email
+      to_admin_reply_email: helpdeskultimate_to_admin_reply_email
+      to_admin_reassign_email: helpdeskultimate_to_admin_reassign_email
+      to_customer_reply_email: helpdeskultimate_to_customer_reply_email
+      to_customer_new_email: helpdeskultimate_to_customer_new_email
+      new_from_admin_to_customer: helpdeskultimate_new_from_admin_to_customer
+      enabled: 1
+      primary_store_id: 1
+      gateways: 0
+      visibility: 1
+    - 
+      id: 2
+      name: Test department 2
+      contact: helpdeskult7@yandex.ru
+      email: 
+      notify: 1
+      sender: custom1
+      to_admin_new_email: helpdeskultimate_to_admin_new_email
+      to_admin_reply_email: helpdeskultimate_to_admin_reply_email
+      to_admin_reassign_email: helpdeskultimate_to_admin_reassign_email
+      to_customer_reply_email: helpdeskultimate_to_customer_reply_email
+      to_customer_new_email: helpdeskultimate_to_customer_new_email
+      new_from_admin_to_customer: helpdeskultimate_new_from_admin_to_customer
+      enabled: 1
+      primary_store_id: 2
+      gateways: 0
+      visibility: 1
+    -
+      id: 3
+      name: Test department 3
+      contact: helpdeskult77@yandex.ru
+      email:
+      notify: 1
+      sender: custom1
+      to_admin_new_email: helpdeskultimate_to_admin_new_email
+      to_admin_reply_email: helpdeskultimate_to_admin_reply_email
+      to_admin_reassign_email: helpdeskultimate_to_admin_reassign_email
+      to_customer_reply_email: helpdeskultimate_to_customer_reply_email
+      to_customer_new_email: helpdeskultimate_to_customer_new_email
+      new_from_admin_to_customer: helpdeskultimate_new_from_admin_to_customer
+      enabled: 1
+      primary_store_id: 1
+      gateways: 1,2,3
+      visibility: 1
+    -
+      id: 4
+      name: Test department 4
+      contact: helpdeskult77@yandex.ru
+      email:
+      notify: 1
+      sender: custom1
+      to_admin_new_email: helpdeskultimate_to_admin_new_email
+      to_admin_reply_email: helpdeskultimate_to_admin_reply_email
+      to_admin_reassign_email: helpdeskultimate_to_admin_reassign_email
+      to_customer_reply_email: helpdeskultimate_to_customer_reply_email
+      to_customer_new_email: helpdeskultimate_to_customer_new_email
+      new_from_admin_to_customer: helpdeskultimate_new_from_admin_to_customer
+      enabled: 1
+      primary_store_id: 1
+      gateways: ,,,
+      visibility: 1

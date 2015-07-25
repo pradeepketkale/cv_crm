@@ -1,0 +1,25 @@
+<li id="cartview">
+<?php
+	$cartview_link_class = '';
+	if(Mage::getSingleton('checkout/cart')->getQuote()->getGrandTotal() != 0)
+		$cartview_link_class = "class = 'filled_cart'";
+	
+?>
+  <div id="cartview-link" <?php echo $cartview_link_class; ?>>
+  
+ 
+   <p class="qtyitm">
+    <span class="arowleft"></span>
+    <?php //printf('<p class="bnrTxt"><a href="%s">%s: %s', $this->getUrl('checkout/cart'), $this->__('</p></a>'), $this->helper('checkout')->formatPrice(Mage::getSingleton('checkout/cart')->getQuote()->getGrandTotal())) 
+	echo number_format(Mage::getSingleton('checkout/cart')->getQuote()->getItemsQty(), 0, '', '');
+	
+	//number_format($number, 2, '.', '')
+	?>
+    </p>
+   
+    
+  </div>
+  <div id="cartview-panel" style="display:none;">
+    <?php echo $this->getChildHtml('topcart'); ?>
+  </div>
+</li>

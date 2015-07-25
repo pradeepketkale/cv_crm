@@ -1,0 +1,290 @@
+<?php
+$_hlp = Mage::helper('udropship');
+//$read = Mage::getSingleton('core/resource')->getConnection('core_read');
+/*$sql = "SELECT * FROM `wholesale`";
+$sql = $read->query("SELECT * FROM `wholesale`")->fetch();
+echo "<pre>";
+print_r($sql);
+*/
+?> 
+<div class="box-head">
+  <h3>Marketing Details</h3>
+</div>
+<!--<div style="max-height: 517px;overflow: scroll;width: 703px;">-->
+
+<div class="a-left" style="margin:10px 1">
+        <a href="http://www.craftsvilla.com/rs-1000-pack-marketing-services.html" class="bluebtnsmall">Buy 1000 Rs Pack</a>
+        <a href="http://www.craftsvilla.com/rs-2000-pack-marketing-services.html" class="bluebtnsmall">Buy 2000 Rs Pack</a> 
+        <a href="http://www.craftsvilla.com/rs-5000-pack-marketing-services.html" class="bluebtnsmall">Buy 5000 Rs Pack</a>
+        
+    </div><br>
+     <div>
+     	<a target="_blank" href="http://www.craftsvilla.com/mktpack" >Note: Please click here for details of different <b>Marketing Packages</b></a>
+     </div>
+    <br><br><br>
+<div style="max-height: 517px;overflow: scroll;width: 703px;">    
+    <table cellspacing="1" cellpadding="0" class="data-table table-gride vtop">
+     <thead>
+        <tr>
+          <!--<th><?php //echo $this->__('Mktvendor Id')?></th> -->
+          <!--<th>Image</th>-->
+          <!--<th><?php //echo $this->__('Product Id')?></th>-->
+          <!--<th><?php //echo $this->__('SKU')?></th>-->
+          <th><?php echo $this->__('Package Name')?></th>
+                <!--<th><?php //echo $this->__('Vendor Id')?></th>-->
+                <!--<th><?php //echo $this->__('Vendor Price')?></th>-->
+          <th><?php echo $this->__('Paid Amount ( Rs.)')?></th>
+          <th><?php echo $this->__('Balance Amount ( Rs.)')?></th>
+          <th><?php echo $this->__('Date Bought')?></th>
+          <th><?php echo $this->__('Valid Till')?></th>
+          <!--<th><?php //echo $this->__('Your Price')?></th>
+          <th><?php //echo $this->__('Customisation')?></th>
+          <th><?php //echo $this->__('Comments')?></th>
+          
+          <th>Vendor Quote And Delivery Date</th>-->
+          
+          
+        </tr>
+      </thead>
+      <tbody>
+      	<?php
+		
+		$vendorId = Mage::getSingleton('udropship/session')->getVendorId();
+		$collection = Mage::getModel('mktvendors/mktvendors')->getCollection()
+						->addFieldToFilter('vendor', $vendorId);
+		//echo "<pre>";
+		//print_r ($collection->getData());exit;
+		foreach ($collection as $collect) 
+		{
+			
+		?>	
+		<tr>
+          <!--<td><?php //echo $collect->getMktvendorsId(); ?></td>-->
+<!--          <td><img src="<?php //echo Mage::helper('catalog/image')->init($_productCollection, 'image')->resize(145);?>" /> </td>-->
+          <!--<td><?php //echo $collect->getProductid();?></td>-->
+          <td><?php if($collect->getPackageName() == 1){ echo "Rs 1000"; } if($collect->getPackageName() == 2){ echo "Rs 2000"; } if($collect->getPackageName() == 3){ echo "Rs 5000"; } if($collect->getPackageName() == 4){ echo "Other"; }//else{echo "Un-Paid"; }?></td>
+          <td><?php echo $collect->getPaidamount();?></td>
+          <td><?php echo $collect->getBalance();?></td>
+          <td><?php echo $collect->getDateBought();?></td>
+          <td><?php echo $collect->getValidTill();?></td>
+          
+            
+<!--          <td class="vendor_quote">
+          	  <form method="post" action="<?php //echo $this->getUrl('udropship/vendor/wholesalesave') ?>">  
+              <textarea name="vendorquote"></textarea>
+              <span class="del_date">Delivery Date</span>
+              <select name="day" value="day" id="day"><option selected="selected">Day</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option><option>11</option><option>12</option><option>13</option><option>14</option><option>15</option><option>16</option><option>17</option><option>18</option><option>19</option><option>20</option><option>21</option><option>22</option><option>23</option><option>24</option><option>25</option><option>26</option><option>27</option><option>28</option><option>29</option><option>30</option><option>31</option></select>
+              <select name="month" value="month" id="month"><option selected="selected">Month</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option><option>11</option><option>12</option></select>
+              <select name="year" value="year" id="year"><option selected="selected">Year</option><option>2012</option><option>2013</option></select>
+              <input type="hidden" name ="wholesale" value="<?php //echo $collect->getWholesaleId();?>" />
+              <input name="submit" type="submit" id="submit" value="save" class="bluebtnsmall" /> 
+          </form> 
+          </td>
+-->           
+        </tr> 
+		<?php
+        }
+		?>
+      </tbody>
+    </table>
+    
+    <div class="clr"></div>
+    <!--<div class="a-right" style="margin:10px 0">
+      <button class="form-button" type="submit"><?php //echo $this->__('Update Information On This Page') ?></button>
+    </div>-->
+</div>
+<br /><br /><br />
+<div class="box-head">
+	<h3>Request Your Marketing Activity</h3>
+</div>
+
+<div style="max-height: 517px;">    
+    <table cellspacing="1" cellpadding="0" class="data-table table-gride vtop">
+    	<form name="add" method="post" action="<?php echo $this->getUrl('udropship/vendor/mktvendorsurl'); ?>">
+        <thead>
+    		<tr>
+    			<th><?php echo $this->__('Activity')?></th>
+          		<th><?php echo $this->__('Start Date')?></th>
+          		<th><?php echo $this->__('End Date')?></th>
+          		<th><?php echo $this->__('Comment / Product Url')?></th>
+                <th></th>
+         	</tr>
+      </thead>
+      <tbody>
+      	<tr>
+        	<td><select name="activity" value="activity" id="activity"><option>Facebook Post</option><!--<option>Emailer</option>--><option>Homepage Banner</option><option>Homepage Products</option><option>Featured Seller</option><!--<option>Guaranteed Sale</option>--></select></td>
+            <td>
+            	<input type="text" name="start_date" id="start_date" class="input-text" style="width:55px !important;" value="" />
+        		<img src="<?php echo $this->getUrl();?>/skin/adminhtml/default/default/images/grid-cal.gif" alt="" class="v-middle" id="start_date_trig" title="Select Date" style="">
+				<script type="text/javascript">
+                //<![CDATA[
+                    Calendar.setup({
+                        inputField: "start_date",
+                        ifFormat: "%m/%e/%y",
+                        showsTime: false,
+                        button: "start_date_trig",
+                        align: "Bl",
+                        singleClick : true
+                    });
+                //]]>
+                </script>
+         </td>
+		<td><input type="text" name="end_date" id="end_date" class="input-text" style="width:55px !important;" value="" />
+        <img src="<?php echo $this->getUrl();?>/skin/adminhtml/default/default/images/grid-cal.gif" alt="" class="v-middle" id="end_date_trig" title="Select Date" style="">
+			<script type="text/javascript">
+            //<![CDATA[
+                Calendar.setup({
+                    inputField: "end_date",
+                    ifFormat: "%m/%e/%y",
+                    showsTime: false,
+                    button: "end_date_trig",
+                    align: "Bl",
+                    singleClick : true
+                });
+            //]]>
+            </script>
+       </td>
+       <td><input type="text" name="product_url" id = "product_url" style="height:22px !important " value =""/></td>
+     <td><input name="submit" align="middle" type="submit" id="submit" value="Request" class="form-button" /> </td>
+     </tr>
+     
+      </tbody>
+
+     </form>
+  </table> 
+    
+</div>
+
+<br /><br />
+
+
+<div class="box-head">
+  <h3>Details Of Your Marketing Activities</h3>
+</div>
+<div class="a-left" style="margin:10px 0">
+<button class="bluebtnsmall">Note : Once Activity has been executed ,it cannot be canceled.</button></div>
+
+<div style="max-height: 517px;overflow: scroll;width: 703px;">    
+    <table cellspacing="1" cellpadding="0" class="data-table table-gride vtop">
+     <thead>
+        <tr>
+          <th><?php echo $this->__('Activity')?></th>
+          <th><?php echo $this->__('Cost ( Rs.)')?></th>
+          <th><?php echo $this->__('Status')?></th>
+          <th><?php echo $this->__('Start Date')?></th>
+          <th><?php echo $this->__('End Date')?></th>
+          <th><?php echo $this->__('Comment / Product Url')?></th>
+          <th>Change Status</th>
+         </tr>
+      </thead>
+      <tbody>
+      	<?php
+		$vendorId = Mage::getSingleton('udropship/session')->getVendorId();
+		$collection = Mage::getModel('managemkt/managemkt')->getCollection()
+						->addFieldToFilter('vendorname', $vendorId)
+						->setOrder('managemkt_id','DESC');
+		
+		foreach ($collection as $collect) 
+		{
+		?>	
+		<tr>
+          <!--<td ><?php //echo $collect->getMktvendorsId(); ?></td>-->
+<!--          <td><img src="<?php //echo Mage::helper('catalog/image')->init($_productCollection, 'image')->resize(145);?>" /> </td>-->
+          <!--<td><?php //echo $collect->getProductid();?></td>-->
+          <td><?php if($collect->getActivity() == 1){ echo "Facebook Post"; } /*if($collect->getActivity() == 2){ echo "Emailer"; } */if($collect->getActivity() == 3){ echo "Homepage Banner"; } if($collect->getActivity() == 4){ echo "Homepage Products"; } if($collect->getActivity() == 5){ echo "Featured Seller"; }/*if($collect->getActivity() == 6){ echo "Guaranteed Sale"; }*///else{echo "Un-Paid"; }?></td>
+          <td><?php echo $collect->getCost()?></td>
+          <td><?php if($collect->getStatus() == 1){ echo "Requested"; } if($collect->getStatus() == 2){ echo "Accepted"; } if($collect->getStatus() == 3){ echo "Executed"; } if($collect->getStatus() == 4){ echo "On Hold"; } if($collect->getStatus() == 5){ echo "Declined"; } if($collect->getStatus() == 6){ echo "Cancelled"; }?></td>
+          <td><?php echo $collect->getStartDate();?></td>
+          <td><?php echo $collect->getEndDate();?></td>
+          <td><?php echo $collect->getCommentUrl();?></td>
+          
+          <?php if($collect->getStatus() == 3 || $collect->getStatus() == 6){?>
+		  	<td class="managemkt">
+              <input type="hidden" name ="managemkt" value="<?php echo $collect->getManagemktId();?>" />
+              <!--<input  disabled="disabled" name="submit" type="button" id="submit" value="Disabled" class="bluebtnsmall" />-->
+          </td>
+          
+		  <?php } else {?>
+            
+          <td class="managemkt">
+          	  <form method="post" action="<?php echo $this->getUrl('udropship/vendor/mktvendors') ?>">  
+              <input type="hidden" name ="managemkt" value="<?php echo $collect->getManagemktId();?>" />
+              <input name="cancel" type="submit" id="cancel" value="Cancel" class="form-button" /> 
+          </form> 
+          </td><?php } ?>
+           
+        </tr> 
+		<?php
+        }
+		?>
+      </tbody>
+    </table>
+    
+    <div class="clr"></div>
+    <!--<div class="a-right" style="margin:10px 0">
+      <button class="form-button" type="submit"><?php //echo $this->__('Update Information On This Page') ?></button>
+    </div>-->
+</div>
+
+<script type="text/javascript">
+//<![CDATA[
+enUS = {"m":{"wide":["January","February","March","April","May","June","July","August","September","October","November","December"],"abbr":["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]}}; // en_US locale reference
+Calendar._DN = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"]; // full day names
+Calendar._SDN = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"]; // short day names
+Calendar._FD = 0; // First day of the week. "0" means display Sunday first, "1" means display Monday first, etc.
+Calendar._MN = ["January","February","March","April","May","June","July","August","September","October","November","December"]; // full month names
+Calendar._SMN = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]; // short month names
+Calendar._am = "AM"; // am/pm
+Calendar._pm = "PM";
+
+// tooltips
+Calendar._TT = {};
+Calendar._TT["INFO"] = "About the calendar";
+
+Calendar._TT["ABOUT"] =
+"DHTML Date/Time Selector\n" +
+"(c) dynarch.com 2002-2005 / Author: Mihai Bazon\n" +
+"For latest version visit: http://www.dynarch.com/projects/calendar/\n" +
+"Distributed under GNU LGPL. See http://gnu.org/licenses/lgpl.html for details." +
+"\n\n" +
+"Date selection:\n" +
+"- Use the \xab, \xbb buttons to select year\n" +
+"- Use the " + String.fromCharCode(0x2039) + ", " + String.fromCharCode(0x203a) + " buttons to select month\n" +
+"- Hold mouse button on any of the above buttons for faster selection.";
+Calendar._TT["ABOUT_TIME"] = "\n\n" +
+"Time selection:\n" +
+"- Click on any of the time parts to increase it\n" +
+"- or Shift-click to decrease it\n" +
+"- or click and drag for faster selection.";
+
+Calendar._TT["PREV_YEAR"] = "Prev. year (hold for menu)";
+Calendar._TT["PREV_MONTH"] = "Prev. month (hold for menu)";
+Calendar._TT["GO_TODAY"] = "Go Today";
+Calendar._TT["NEXT_MONTH"] = "Next month (hold for menu)";
+Calendar._TT["NEXT_YEAR"] = "Next year (hold for menu)";
+Calendar._TT["SEL_DATE"] = "Select date";
+Calendar._TT["DRAG_TO_MOVE"] = "Drag to move";
+Calendar._TT["PART_TODAY"] = ' (' + "Today" + ')';
+
+// the following is to inform that "%s" is to be the first day of week
+Calendar._TT["DAY_FIRST"] = "Display %s first";
+
+// This may be locale-dependent. It specifies the week-end days, as an array
+// of comma-separated numbers. The numbers are from 0 to 6: 0 means Sunday, 1
+// means Monday, etc.
+Calendar._TT["WEEKEND"] = "0,6";
+
+Calendar._TT["CLOSE"] = "Close";
+Calendar._TT["TODAY"] = "Today";
+Calendar._TT["TIME_PART"] = "(Shift-)Click or drag to change value";
+
+// date formats
+Calendar._TT["DEF_DATE_FORMAT"] = "%b %e, %Y";
+Calendar._TT["TT_DATE_FORMAT"] = "%B %e, %Y";
+
+Calendar._TT["WK"] = "Week";
+Calendar._TT["TIME"] = "Time:";
+
+//]]>
+
+</script>

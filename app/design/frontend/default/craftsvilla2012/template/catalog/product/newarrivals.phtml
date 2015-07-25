@@ -1,0 +1,99 @@
+<?php
+$storeId = (int) $this->getStoreId();
+$_currencyCode = Mage::app()->getStore()->getCurrentCurrencyCode();
+$countCacheId = "newarrivals6-$_currencyCode-count-$storeId";
+$_pageCacheId1 = "newarrivals14-".$_currencyCode."-1";
+$lifetime = 86400;
+if ($cacheContent = Mage::app()->loadCache($_pageCacheId1)) 
+	//echo getRandomCache($cacheContent,$_currencyCode);
+	echo $cacheContent;
+else{
+	$cat_id = 991; // set desired category id
+	$category = Mage::getModel('catalog/category')->load($cat_id);
+	$_helper = $this->helper('catalog/output');
+	//$_customerLoggedInFlag = Mage::getSingleton('customer/session')->isLoggedIn();
+	$products1 = $category->getProductCollection()->addCategoryFilter($category)->addAttributeToSelect('*')->addAttributeToFilter('status', 1)->addAttributeToFilter('visibility', array('2','3','4'))
+	//->joinField('inventory_in_stock', 'cataloginventory_stock_item', 'is_in_stock', 'product_id=entity_id','is_in_stock',array('qty'=>'0','eq' => "0"))
+	->addAttributeToSort('entity_id','desc');
+	//echo $products1->getSelect()->__toString();exit;
+	//$numProductsPerPage = 40;
+	$numProductsPerPage = 80;
+	$_productCount = floor(($products1->count()/$numProductsPerPage));
+	$tags = array();
+	Mage::app()->saveCache($_productCount, $countCacheId, $tags, $lifetime);
+
+	$bcnt=0;
+	$j=0;
+	$_productCountPerCache = 0;
+	$_pageCount = 0;
+	$_pageHtml = '';
+	foreach($products1 as $product){
+		$bcnt++;
+		$_productCountPerCache++;
+		$_firstliClass = "";
+		if($bcnt==4 || $bcnt==8 || $bcnt==12 || $bcnt==16 || $bcnt==20 || $bcnt==24 || $bcnt==28 || $bcnt==32 || $bcnt==36 || $bcnt==40 || $bcnt==44 || $bcnt==48 || $bcnt==52 || $bcnt==56 || $bcnt==60 || $bcnt==64 || $bcnt==68 || $bcnt==72 || $bcnt==76 || $bcnt==80|| $bcnt==84 || $bcnt==88 || $bcnt==92 || $bcnt==96 || $bcnt==100 || $bcnt==104 || $bcnt==108|| $bcnt==112 || $bcnt==116 || $bcnt==120 || $bcnt==124 || $bcnt==128|| $bcnt==132 || $bcnt==136 || $bcnt==140 )
+		//if($bcnt==4 || $bcnt==8 || $bcnt==12 || $bcnt==16 || $bcnt==20)
+			$_firstliClass = "lstCld";
+		$_pageHtml .= '<li class="'.$_firstliClass.'">';
+		
+		if($bcnt == 1)
+		  $_pageHtml .= '<div class="icon-new_arrivals hide_text">New Arrivals</div>';
+		else{
+			
+			$_pageHtml .= '<div class="prCnr"><a class="product-image" href="'.$product->getProductUrl().'" title="'.$this->htmlEscape($this->getImageLabel($product, 'small_image')).'"> <img src="'.$this->helper('catalog/image')->init($product, 'small_image')->resize(166, 166).'" alt="'.$this->htmlEscape($this->getImageLabel($product, 'small_image')).'" title="'.$this->htmlEscape($this->getImageLabel($product, 'small_image')).'"/> </a>';
+			$_pageHtml .= '<ul id="socielicon">';
+			/*if($_customerLoggedInFlag)
+				$_pageHtml .= '<li class="wishit"><input type="button" title="Add to Wishlist" id="imgwish"'.$j.'" class="wishit_buttons" onclick="wishitval('.$product->getId().',this.id)" /> </li>';
+			else
+				$_pageHtml .= '<li class="wishit"><a href="#wishthis" class="fancybox"><input type="button" value="" title="Add to Wishlist" class="wishit_buttons" /></a></li>';*/
+			
+			$_pageHtml .= '<li><a href="http://pinterest.com/pin/create/button/?url='.$product->getProductUrl().'&media='.$this->helper('catalog/image')->init($product, 'small_image')->resize(500, 500).'&description='.$this->htmlEscape($product->getName()).'" class="pin-it-button" count-layout="none" target="_blank"><img border="0" src="'.$this->getSkinUrl('img/PinExt.png').'"/></a></li></ul>';
+
+			$_pageHtml .= '<p class="shopbrief"><a href="'.$product->getProductUrl().'" title="'.$this->htmlEscape($product->getName()).'">'.$this->htmlEscape($product->getName()).'</a></p>';
+
+			$storeurl = ''; 
+			$vendorinfo= Mage::helper('udropship')->getVendor($product);
+			$storeurl = Mage::helper('umicrosite')->getVendorUrl($vendorinfo->getData('vendor_id'));
+			$storeurl = substr($storeurl, 0, -1);
+			if($storeurl != '') 
+				$_pageHtml .= '<p class="vendorname">By: <a href="'.$storeurl.'" title="'.$vendorinfo->getVendorName().'" target="_blank">'.$vendorinfo->getVendorName().'</a></p>';
+			$_pageHtml .= $this->getPriceHtml($product, true);
+			$_pageHtml .='</div>';
+			}
+			$_pageHtml .='</li>';
+			$_pageHtml .='<div unbxdattr="product" unbxdparam_sku="'.$product->getSku().'"  unbxdparam_prank="1" ></div>';
+			/*if($_productCountPerCache == $numProductsPerPage){
+				$_productCountPerCache = 0;
+				$bcnt=0;
+				$_pageCount++;
+				$_pageHtml .= '<li id="viewall"><a href="'.Mage::getModel('catalog/category')->load($cat_id)->getUrl().'" class="spriteimg">View All</a></li>';
+				$cacheContent = $_pageHtml;
+				echo $cacheContent ;
+				$tags = array();
+				$_pageCacheId = "newarrivals1-".$_currencyCode."-".$_pageCount;
+				Mage::app()->saveCache($cacheContent, $_pageCacheId, $tags, $lifetime);
+				$_pageHtml = '';
+				if($_pageCount == $_productCount)
+					break;
+			}*/
+			$j++; 
+	}
+$_pageHtml .= '<img src="https://sp.analytics.yahoo.com/spp.pl?a=10001487429785&.yp=35012&js=no"/>';
+	$_pageHtml .= '<li id="viewall"><a href="'.Mage::getModel('catalog/category')->load($cat_id)->getUrl().'" class="spriteimg">View All</a></li>';
+				$cacheContent = $_pageHtml;
+				echo $cacheContent ;
+				$tags = array();
+				//$_pageCacheId = "newarrivals1-".$_currencyCode."-".$_pageCount;
+				Mage::app()->saveCache($cacheContent, $_pageCacheId1, $tags, $lifetime);
+	//echo getRandomCache($_productCount,$_currencyCode);
+}
+
+function getRandomCache($numcache,$currencyCode)
+{
+
+//	$_pageCacheId = rand(1,$numcache);
+        $_pageCacheId = 1;
+	$_CacheId = "newarrivals1-".$currencyCode."-".$_pageCacheId;
+	if($cacheContent = Mage::app()->loadCache($_CacheId))
+		return $cacheContent;
+}

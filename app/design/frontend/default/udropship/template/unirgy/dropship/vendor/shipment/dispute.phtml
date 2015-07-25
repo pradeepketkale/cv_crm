@@ -1,0 +1,227 @@
+<?php
+/**
+ * Unirgy LLC
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.unirgy.com/LICENSE-M1.txt
+ *
+ * @category   Unirgy
+ * @package    Unirgy_Dropship
+ * @copyright  Copyright (c) 2008-2009 Unirgy LLC (http://www.unirgy.com)
+ * @license    http:///www.unirgy.com/LICENSE-M1.txt
+ */
+?>
+<?php
+
+$_hlp = Mage::helper('udropship');
+$_session = Mage::getSingleton('udropship/session');
+$_vendor = $_session->getVendor();
+$vid = $_vendor->getVendorId();
+$_highlight = $_session->getHighlight(true);
+
+$vFieldsXml = Mage::getConfig()->getNode('global/udropship/vendor/fields');
+//$order = Mage::getModel('sales/order');
+$_shipment = $this->getShipment();
+$shipment_items = $_shipment->getOrder()->getAllVisibleItemsByVendor($_shipment->getUdropshipVendor(),true);
+
+$_id = $_shipment->getId();
+
+$shipping = $_hlp->getShippingMethods();
+$vShipping = $_vendor->getShippingMethods();
+
+$uMethod = explode('_', $_shipment->getOrder()->getShippingMethod(), 2);
+$uMethodCode = !empty($uMethod[1]) ? $uMethod[1] : '';
+
+
+
+$_masterId = $this->getIsInUdpo() ? $_shipment->getUdpoId() : $_shipment->getId();
+
+
+
+$_items = $_shipment->getAllItems();
+
+$_tracking = $_hlp->getVendorTracksCollection($_shipment);
+$_comments = $_hlp->getVendorShipmentsCommentsCollection($_shipment);
+
+$_statuses = $_hlp->getVendorShipmentStatuses();
+$_statusId = $_shipment->getUdropshipStatus();
+
+$_order = $_shipment->getOrder();
+$_udpo = $this->getUdpo($_shipment);
+$_address = $_order->getShippingAddress() ? $_order->getShippingAddress() : $_order->getBillingAddress();
+
+if ($this->getIsInUdpo()) {
+    $_poStatuses = Mage::getSingleton('udpo/source')->setPath('po_statuses')->toOptionHash();
+    $_poStatusId = $_udpo->getUdropshipStatus();
+}
+
+
+?>
+<?php echo $this->getMessagesBlock()->getGroupedHtml(); ?>
+<?php if ($this->getRequest()->isPost()): ?>
+    <span id="status-update-<?php echo $_masterId ?>" style="display:none"><?php echo $_hlp->__(isset($_statuses[$_statusId]) ? $_statuses[$_statusId] : 'Unknown') ?></span>
+    <?php if($this->getIsInUdpo()): ?>
+    <span id="udpo-status-update-<?php echo $_masterId ?>" style="display:none"><?php echo isset($_poStatuses[$_poStatusId]) ? $_poStatuses[$_poStatusId] : 'Unknown' ?></span>
+    <?php endif; ?>
+<?php endif ?>
+<?php if ($this->getDownloadUrl()): ?>
+    <span id="download-url-<?php echo $_masterId ?>" style="display:none"><?php echo $this->getDownloadUrl() ?></span>
+<?php endif ?>
+
+
+    <?php if($this->getIsInUdpo()): ?>
+    <div class="shipment-info-breadcrumb">
+        <span>Order # <?php echo $_order->getIncrementId() ?></span>
+        &gt;
+        <a href="javascript:void(0)" onclick="showUdpoInfo('<?php echo $_masterId ?>')">PO # <?php echo $_udpo->getIncrementId() ?></a>
+        &gt;
+        <span>Shipment # <?php echo sprintf('%s (%s)', $_shipment->getIncrementId(), $_hlp->__(isset($_statuses[$_statusId]) ? $_statuses[$_statusId] : 'Unknown')) ?></span>
+    </div>
+    <?php endif; ?>
+    
+    <div class="oditems">
+ 
+
+                <h4><?php echo $_hlp->__('Order Items') ?></h4>
+                <table cellspacing="0" class="data-table" id="order-items-<?php echo $_masterId ?>">
+                    <col />
+                    <col width="35%" />
+                    <col width="1" />
+                    
+                    
+                    
+                    
+                    <thead>
+						<tr>
+							<th>Image</th>
+							<th>Product Name</th>
+							<th>System/Vendor SKU</th>
+							<th>Qty</th>
+							<th>Rate</th>
+							<!--<th>Tax</th>-->
+							<th>Discount</th>
+							<th>Amount</th>
+						</tr>
+					</thead>
+					<tbody>
+					<?php foreach ($shipment_items as $_item):?>
+						<tr>
+							<?php $sku= $_item->getData('sku'); ?>
+                            <!--	//Commented below line on dated 13-01-2013 due to loadByattribute is not working..<>-->
+							<?php //$product = Mage::getModel('catalog/product')->loadByAttribute('sku',$sku);?>
+                            <?php //$product = Mage::getModel('catalog/product')->load($_item->getProductID());?>
+                            <?php $product = Mage::helper('catalog/product')->loadnew($_item->getProductID());?>
+							<?php $childId=$product->getId(); ?>
+							<?php $parentIds = Mage::getResourceSingleton('catalog/product_type_configurable')->getParentIdsByChild($childId); ?>
+							<td align="left" valign="top" style="font-size:11px; padding:3px 9px;" width="60"><img src="<?php echo Mage::helper('catalog/image')->init($product, 'image')->resize(145);?>" alt=""  border="0"/></td>
+							<td valign="top" width="150">
+								<div>
+									<?php echo $_item->getName(); ?>
+									<dl class="item-options item-optionsnew">
+										<?php  if(isset($parentIds[0])) : ?>
+										<?php $last_key = key(array_slice($parentIds, -1, 1, TRUE)); ?>
+										<?php $parentId=$parentIds[$last_key]; ?>
+												<?php $parentProduct = Mage::getModel('catalog/product')->load($parentId) ?>             
+												<?php $configurableAttributeCollection=$parentProduct->getTypeInstance()->getConfigurableAttributes() ?> 
+												<?php foreach($configurableAttributeCollection as $attribute):?> 
+												    <?php $attcode = $attribute->getProductAttribute()->getAttributeCode() ?> 
+												    <dt style="font-weight:bold"><?php echo $attribute->getProductAttribute()->getFrontend()->getLabel() ?></dt>
+												    <dd style="margin:0; padding-left:14px;"><?php echo Mage::getModel('catalog/product')->load($_item->getProductID())->getAttributeText($attcode) ?></dd>
+												<?php endforeach; ?> 
+										<?php endif; ?>
+										</dl>
+								</div>
+								<?php if($_item->getData('additional_data') != ''){?>
+								<br><table cellpadding="0px" cellspacing="0px"><td style="border-style:solid;border-color:#4B7B9F;border-width:1px;border-height:1px;font-size:11px;padding:3px 9px"><font color="green">Message From Customer: </font><font color = "gray"> <?php echo $_item->getData('additional_data'); ?></font></td></table>	
+						<?php } ?>
+							</td>
+							<td valign="top">
+								<?php 
+									echo $_item->getSku();
+									$vsku1 = $_hlp->getVendorskucv($_item->getProductID());
+									if($vsku1)
+										echo  " / ".$vsku1;
+								?>
+						
+							</td>
+							<td valign="top"><?php echo number_format($_item->getQtyOrdered(), 0); ?></td>
+							<td valign="top"><?php echo $_order->formatPriceTxt($_item->getOriginalPrice()); ?></td>
+							<!--<td valign="top"><?php echo $_order->formatPriceTxt($_item->getTaxAmount()); ?></td>-->
+							<td valign="top"><?php echo $_order->formatPriceTxt($_item->getDiscountAmount()) ?></td>
+							<td valign="top"><?php echo $_order->formatPriceTxt($_item->getOriginalPrice()*number_format($_item->getQtyOrdered(), 0)-$_item->getDiscountAmount()) ?></td>
+						</tr>
+				
+					<?php endforeach; ?>
+				    </tbody>
+                </table>
+
+
+    </div>
+    
+    <div class="col2-set shipment-items">
+        
+      
+                <div class="clear"></div>
+               
+<div>
+
+<!-- ------Below Function Added By dileswar on dated 12-10-2013  For action to send email to customer about vendor queries ---------Start-->
+
+<style>#custnote {float: left;margin:9px 3px 0;overflow: hidden;position: relative;}</style>
+<form id="custnote-<?php echo $_masterId ?>" method="post" action="<?php echo $this->getUrl('udropship/vendor/disputecustmessage', array('id'=>$_masterId)); ?>" enctype="multipart/form-data" name="custnote-form-<?php echo $_masterId ?>" >
+<label for="comment-5120">Send Note To Customer</label><br>
+<textarea title="Give Custnote" style="width:250px; height:70px;" class="textarea" name="custnote" id="custnote-<?php echo $_masterId; ?>"></textarea>
+<br />
+
+<div id="custnote"><input type="file" name="file" id="file"></div><br>
+<!--<input type="file" name="custnoteimgfile" id="cust-upload-shim" /></div>
+                        <div class="positionrelative" id="custnoteimgshow" style="display:none">
+                            <p class="up_cust"><img id="show_img" height="75" width="75" src="" /></p>
+                        </div>--><br />
+                        
+<br />
+
+<button class="form-button" type="submit" id="custnote-<?php echo $_masterId ?>"><span><?php echo $_hlp->__('Send Message To Customer') ?></span></button>
+<span class="shipment-info-loader" style="display:none" id="feedback-submit-loader-<?php echo $_masterId ?>"><?php echo $_hlp->__('Please wait, submitting...')?></span>
+</form>
+<br/><span class="required">Note: Please attach only image/jpeg pictures. You can also send alternate product option, delay notice and thank you note to customer from here.</span>
+<!-- ------Below Function Added By dileswar on dated 12-10-2013  For action to send email to customer about vendor queries ---------End-->
+</div>
+
+      
+ 
+<hr />
+
+
+	<div class="clear"></div>
+    
+           <?php if (count($_comments)){ ?>
+                <span class="clear"></span>
+                <h4 class="smallhead"><?php echo $_hlp->__('Comments history') ?></h4>
+               <?php $collection = Mage::getModel('disputeraised/disputeraised')->getCollection()
+						//->addFieldToFilter('customer_id', $custid)
+						->addFieldToFilter('increment_id', $_shipment->getIncrementId())
+						->setOrder('id', 'DESC');
+						$collection->getSelect()->limit(10);?>
+                <table width="350px" cellspacing="0" class="data-table" <?php if (!empty($_highlight['comment'])): ?>class="highlight"<?php endif ?>>
+                <tbody>
+                    <?php foreach($collection as $_c){ 
+                   ?>
+                    <tr <?php if (!empty($_highlight['comment_'.$_c->getId()])): ?>class="highlight"<?php endif ?> >
+                    
+                        <td width="150px">
+                            <nobr><strong><?php echo Mage::helper('core')->formatDate($_c->getCreatedAt(), 'short', true) ?></strong></nobr><br/>
+                           
+                        </td>
+                        <td><?php echo nl2br($this->htmlEscape($_c->getContent())) ?></td>
+                        <td width="20px" height="10px"><?php echo $_c->getImage() ?></td>
+                    </tr>
+                    <?php } ?>
+                </tbody></table>
+                <?php }  ?>
+        
+ 

@@ -1,0 +1,110 @@
+<?php
+$_hlp = Mage::helper('umicrosite');
+$_session = Mage::getSingleton('udropship/session');
+$_carriers = Mage::getSingleton('umicrosite/source')->setPath('registration_carriers')->toOptionHash();
+$_data = $_session->getRegistrationFormData(true);
+$_r = new Varien_Object();
+if ($_data) {
+    foreach ($_data as $_k=>$_v) {
+        if (!is_array($_v)) {
+            $_r->setData($_k, htmlspecialchars($_v));
+        }
+    }
+}
+?>
+
+<?php echo $this->getMessagesBlock()->getGroupedHtml() ?>
+
+<form action="<?php echo $this->getUrl('umicrosite/vendor/registerPost')?>" method="post" id="registration-form">
+<?php if (sizeof($_carriers)==1): ?>
+<input type="hidden" name="carrier_code" value="<?php echo key($_carriers) ?>" />
+<?php endif ?>
+<div class="generic-box filter">
+<div class="login-box">
+    <div class="col-1 registered-users">
+        <div class="content">
+        	<div class="dashboard_head">
+				<h1><?php echo $this->__('Vendor Registration') ?></h1>
+				<div class="breadcrumbs_bottom"></div>
+            </div>
+            <div class="left-info">
+				<label for="vendor_name"><?php echo $this->__('Shop Name') ?> <span class="required">*</span></label>
+				<input name="vendor_name" value="<?php echo $_r->getVendorName()?>" title="<?php echo $this->__('Business Name') ?>" id="vendor_name" type="text" class="editInfoInput margin_null input-text required-entry" />
+				
+				<label for="telephone"><?php echo $this->__('Phone Number') ?> <span class="required">*</span></label>
+				<input name="telephone" value="<?php echo $_r->getTelephone()?>" title="<?php echo $this->__('Phone Number') ?>" id="telephone" type="text" class="editInfoInput margin_null input-text required-entry" />
+				
+				<div><label for="email"><?php echo $this->__('Email Address') ?> <span class="required">*</span></label></div>
+				<input name="email" value="<?php echo $_r->getEmail()?>" title="<?php echo $this->__('Email Address') ?>" id="email" type="text" class="editInfoInput margin_null input-text required-entry validate-email" />
+				
+				<label for="alternate_email"><?php echo $this->__('Alternate Email Address') ?> <span class="required">*</span></label>
+				<input name="alternate_email" value="<?php echo $_r->getAlternateEmail()?>" title="<?php echo $this->__('Alternate Email Address') ?>" id="alternate_email" type="text" class="editInfoInput margin_null input-text required-entry validate-email" />
+				
+				<label for="password"><?php echo $this->__('Password') ?> <span class="required">*</span></label>
+				<input name="password" type="password" class="editInfoInput margin_null input-text required-entry validate-password" id="password" />
+				
+				<label for="password_confirm"><?php echo $this->__('Confirm Password') ?> <span class="required">*</span></label>
+				<input name="password_confirm" type="password" class="editInfoInput margin_null input-text required-entry validate-cpassword" id="password_confirm" />
+				
+				<div><label for="comments"><?php echo $this->__('About Shop') ?></label></div>
+				<textarea class="about_textarea" name="comments" id="comments"  title="<?php echo $this->__('About Shop') ?>"/><?php echo $_r->getComments()?></textarea>
+			</div>
+			<div class="right-info">
+				<label for="company_name"><?php echo $this->__('Company Name') ?> <span class="required">*</span></label>
+				<input name="company_name" value="<?php echo $_r->getCompanyName()?>" title="<?php echo $this->__('Company Name') ?>" id="company_name" type="text" class="editInfoInput margin_null input-text required-entry" />
+				
+				<div><label for="vendor_attn"><?php echo $this->__('Contact Person Name') ?> </label></div>
+				<div><input name="vendor_attn" value="<?php echo $_r->getVendorAttn()?>" title="<?php echo $this->__('Contact Person Name') ?>" id="vendor_attn" type="text" class="editInfoInpu margin_nullt input-text" /></div>
+			
+				<div><label for="street1"><?php echo $this->__('Street Address') ?> <span class="required">*</span></label></div>
+				<input name="street1" value="<?php echo $_r->getStreet1()?>" title="<?php echo $this->__('Street Address') ?>" id="street1" type="text" class="editInfoInput margin_null input-text required-entry" />
+				
+				<label>&nbsp;</label>
+				<input name="street2" value="<?php echo $_r->getStreet2()?>" title="<?php echo $this->__('Street Address Line 2') ?>" id="street2" type="text" class="editInfoInput margin_null input-text" />
+				
+				<label for="city"><?php echo $this->__('City') ?> <span class="required">*</span></label>
+				<input name="city" type="text" class="editInfoInput margin_null input-text required-entry" id="city" value="<?php echo $_r->getCity()?>" />
+				
+				<div><label for="zip"><?php echo $this->__('Zip/Postal Code') ?></label></div>
+				<input name="zip" type="text" class="editInfoInput margin_null input-text" id="zip" value="<?php echo $_r->getZip()?>" />
+				
+				<div><label for="region_id"><?php echo $this->__('State/Province') ?> <span class="required">*</span></label></div>
+				<select id="region_id" name="region_id" title="<?php echo $this->__('State/Province') ?>" class="validate-select" style="display:none" defaultValue="<?php echo $_r->getRegionId()?>">
+					<option value=""><?php echo $this->__('Please select region, state or province') ?></option>
+				</select>
+				<input type="text" id="region" name="region" value="<?php echo $_r->getRegion()?>"  title="<?php echo $this->__('State/Province') ?>" class="editInfoInput margin_null input-text" style="" />
+				
+				<div><label for="country"><?php echo $this->__('Country') ?> <span class="required">*</span></label></div>
+				<div class="country_edit">
+					<?php echo $this->getCountryHtmlSelect($_r->getCountryId()) ?>
+				</div> 
+			</div>    
+			
+			<div class="clear"></div>
+        </div>
+        <div class="right-info">
+			<button class="register_but" type="submit" name="send"></button>
+		</div>
+		
+		<div style="font-size:11px; margin-top: 15px"><span class="required">* Required Fields</span></div>
+		
+        <div class="fieldset"><h2 class="legend">Note</h2>
+			<ul class="arrowlist">
+			   <li>Your name will be publicly displayed on Craftsvilla. These fields are optional.</li>
+			   <li>Your confirmation will be sent to your email address.</li>
+			   <li><a class="links" href="<?php echo $this->getUrl('udropship/vendor')?>"><?php echo $this->__('Return to log in')?></a></li>
+			</ul>
+		</div>
+    </div>
+</div>
+</div>
+</form>
+<script type="text/javascript">
+    Validation.addAllThese([
+        ['validate-urlkey', 'Please use only letters (a-z) or numbers (0-9) in this field, first character should be a letter.', function (v) {
+                return Validation.get('IsEmpty').test(v) ||  /^[a-z]+[a-z0-9]+$/.test(v)
+        }],
+    ]);
+    var dataForm = new VarienForm('registration-form', true);
+    new RegionUpdater('country', 'region', 'region_id', <?php echo $this->helper('directory')->getRegionJson() ?>);
+</script>

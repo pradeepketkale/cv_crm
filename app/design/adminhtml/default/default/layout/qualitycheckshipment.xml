@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+    <qualitycheckshipment_adminhtml_qualitycheckshipment_index>
+        <reference name="content">
+            <block type="qualitycheckshipment/adminhtml_qualitycheckshipment" name="qualitycheckshipment" />
+        </reference>
+    </qualitycheckshipment_adminhtml_qualitycheckshipment_index>
+	
+</layout>

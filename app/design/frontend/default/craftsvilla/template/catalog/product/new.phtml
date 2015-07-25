@@ -1,0 +1,44 @@
+<!--<?php if (($_products = $this->getProductCollection()) && $_products->getSize()): ?>
+<h1 id="hdngBg1">New Products</h1>
+<?php $_columnCount = $this->getColumnCount(); ?>
+	<div>
+    <div class="box-left" id="left_but">
+        &nbsp;
+    </div>
+    <div class="box-top">
+    <?php $i=0; foreach ($_products->getItems() as $_product): ?>
+        <?php if ($i++%$_columnCount==0): ?>
+        <ul class="products-grid" id="slider_list">
+        <?php endif ?>
+            <li class="item<?php if(($i-1)%$_columnCount==0): ?> first<?php elseif($i%$_columnCount==0): ?> last<?php endif; ?>">
+                <a href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $this->htmlEscape($_product->getName()) ?>" class="product-image"><img src="<?php echo $this->helper('catalog/image')->init($_product, 'small_image')->resize(154) ?>" width="154" height="154" alt="<?php echo $this->htmlEscape($_product->getName()) ?>" /></a>
+				
+				<div class="slider-indent">
+					<h3 class="product-name"><a href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $this->htmlEscape($_product->getName()) ?>"><?php echo $this->htmlEscape($_product->getName()) ?></a></h3>
+					<div class="wrapper">
+						<div class="actions">
+							<?php //if($_product->isSaleable()): ?>
+								<b><button type="button" title="<?php echo $this->__('Add to Cart') ?>" class="button btn-cart" onclick="setLocation('<?php echo $this->getAddToCartUrl($_product) ?>')"><span><span><?php echo $this->__('Add to Cart') ?></span></span></button></b><br />
+								<button type="button" title="<?php echo $this->__('View Details') ?>" class="button " onclick="setLocation('<?php echo $_product->getProductUrl() ?>')"><span><span><?php echo $this->__('View Details') ?></span></span></button>
+							<?php //else: ?>
+								<p class="availability out-of-stock"><span><?php //echo $this->__('Out of stock') ?></span></p>
+							<?php //endif; ?>
+						</div>
+						<?php //echo $this->getPriceHtml($_product, true, '-new') ?>
+					</div>
+				</div>
+				
+            </li>
+        <?php if ($i%$_columnCount==0 || $i==count($_products)): ?>
+        </ul>
+        <?php endif ?>
+    <?php endforeach; ?>
+	<br class="clear" />
+    </div>
+    <div class="box-right" id="right_but">
+        &nbsp;
+    </div>
+	<div class="clear"></div>
+	</div>
+<?php endif; ?>
+-->

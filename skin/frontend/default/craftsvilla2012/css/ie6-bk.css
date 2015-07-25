@@ -1,0 +1,8 @@
+.topMenuRht{width:310px;}
+.topMenuRht ul li{float:left; margin-left:10px; list-style:none; color:#000; line-height:22px}
+.topMenuRht ul li a{color:#000; text-decoration:none;}
+.topMenuRht ul li a:hover{color:#000; text-decoration:underline}
+
+#hdngBg1{background:url(../images/home-sprite.png) 0px -397px no-repeat; width:970px; height:23px; margin:20px 0 15px 0; float:left}
+
+.ftrBg ul{margin-left:24px; float:left;}

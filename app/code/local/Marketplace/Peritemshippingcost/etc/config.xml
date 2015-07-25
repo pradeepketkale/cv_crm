@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+	<modules>
+		<Marketplace_Peritemshippingcost>
+			<version>0.1.4</version>
+		</Marketplace_Peritemshippingcost>
+	</modules>
+	<global>
+       <models>
+            <peritemshippingcost>
+                <class>Marketplace_Peritemshippingcost_Model</class>
+            </peritemshippingcost>
+        </models>
+        <resources>       
+            <peritemshippingcost_setup>
+                <setup>
+                    <module>Marketplace_Peritemshippingcost</module>
+                </setup>
+                <connection>
+                    <use>core_setup</use>
+                </connection>
+            </peritemshippingcost_setup>
+            <peritemshippingcost_write>
+                <connection>
+                    <use>core_write</use>
+                </connection>
+            </peritemshippingcost_write>
+            <peritemshippingcost_read>
+                <connection>
+                    <use>core_read</use>
+                </connection>
+            </peritemshippingcost_read>
+        </resources>
+
+		<blocks>
+			<checkout>
+				<rewrite>
+					<cart_item_renderer>Marketplace_Peritemshippingcost_Block_Cart_Item_Renderer</cart_item_renderer>
+				</rewrite>
+			</checkout>
+		</blocks>   
+		<events>
+			<sales_order_item_save_before>
+				<observers>
+					<Peritemshippingcost_Model>
+						<type>singleton</type>
+						<class>Marketplace_Peritemshippingcost_Model_Observer</class>
+						<method>sales_order_item_save_before</method>
+					</Peritemshippingcost_Model>
+				</observers>
+			</sales_order_item_save_before>
+		</events>
+		
+	</global>
+</config>

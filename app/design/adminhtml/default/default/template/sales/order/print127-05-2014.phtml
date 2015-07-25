@@ -1,0 +1,87 @@
+<script type="text/javascript">window.open();</script>
+<?php
+  $orderIds = $this->order_ids;
+   $order = Mage::getModel('sales/order')->load($orderIds); //load order             
+	//	echo '<pre>';print_r($order);exit;
+		$entityIdSus = $order->getEntityId();
+		$incrementId = $order->getIncrementId();
+		$custemail = $order->getCustomerEmail();
+		$totalQtyOrder = $order->getTotalQtyOrdered();
+		$shipment = Mage::getModel('sales/order_shipment')->getCollection()->addFieldToFilter('order_id', $entityIdSus)->load();
+	    
+		//$custaddress = Mage::getModel('sales/order_address')->getCollection()->addFieldToFilter('email', $custemail)->load();
+		
+		$custaddress = $order->getShippingAddress();
+		
+		
+		//foreach($custaddress as $_custaddress)
+		//{
+		  $custfirstname = $custaddress['firstname'];
+		  $custlastname = $custaddress['lastname'];
+		  $custstreet = $custaddress['street'];
+		  $custcity = $custaddress['city'];
+		  $custregion = $custaddress['region'];
+		  $custpostcode = $custaddress['postcode'];
+		  $custcountryid = $custaddress['country_id'];
+		  $countryName = Mage::getModel("directory/country")->load($custcountryid)->getName();
+		  $custtelephone = $custaddress['telephone']; 
+		//}
+if($orderIds)
+{
+?>
+ 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+		<body>
+		
+	<form id ="print" target="_blank" action="" method="post"">
+	<table><tr><td style="vertical-align:top;">
+	<font size="5">
+       <strong>Order #: <?php echo $incrementId;?><br>
+       Shipment #: <?php 
+       $i = 1;
+       foreach($shipment as $_shipment)
+		{
+		 if($i==1)
+		  $shipincrementid = $_shipment['increment_id'];
+		 else
+		  $shipincrementid = substr($_shipment['increment_id'],-2);
+		 $i++;
+		 ?><?php echo $shipincrementid.'/';?><?php }?><br>
+       Total Qty Ordered: <?php echo round($totalQtyOrder); ?></br></br>
+       
+       To,<br>
+       <?php echo $custfirstname.' '.$custlastname;?><br>
+       <?php echo $custstreet;?><br>
+       <?php echo $custcity;?><br>
+       <?php echo $custregion.' '.$custpostcode;?><br>
+       <?php echo $countryName;?><br>
+      T: +<?php echo $custtelephone;?></strong></font>
+       <br><br><br><br>       
+       <font size="5">
+       <strong>From,</strong><br>
+       <strong>Craftsvilla.com,</strong><br>
+       <strong>21, Centrium Mall,</strong><br>
+       <strong>First Floor, Lokhandwala Complex,</strong><br>
+       <strong>Kandivali, East,</strong><br>
+       <strong>Mumbai, 400101,</strong><br>
+       <strong>T:+91-9892676399</strong><br>
+       </font>
+       </td><td style="vertical-align:top;padding:0px 100px"><div style="border:solid 3px;height:auto;">
+       <?php 
+     $n=1;
+       foreach($shipment as $_shipment)
+		{
+		if($n<10)	
+		{
+        $barcode ='http://www.craftsvilla.com/shipmentbarcode.php?shipment='.$_shipment['increment_id'];?>
+       <p style="margin-top: 2px;"><img width="200px" align="baseline" style="vertical-align:top;margin-left:9px;" src="<?php echo $barcode;?>"/></p><br>
+             <?php } $n++; }
+       ?></div></td></tr></table>
+       </form>
+       
+</body>
+</html>
+
+<script type="text/javascript">window.print();</script>
+<?php }?>

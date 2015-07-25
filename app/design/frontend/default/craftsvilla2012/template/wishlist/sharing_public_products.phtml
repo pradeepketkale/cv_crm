@@ -1,0 +1,154 @@
+<div id="wishthis">
+  <div id="welcome_img" class="popuphead"><span class="popuoheading">Add to Wishlist</span></div>
+    <div id="bg_welcome" class="shortpop">
+        <ul class="followshop">
+          <li>
+            <h2 class="greyheading">Already Member</h2>
+            <a href="#login" class="spriteimg bluesmallbtn fancybox">Login</a></li>
+          <li class="nobor">
+            <h2 class="greyheading">New Customer </h2>
+            <a class="spriteimg bluesmallbtn fancybox" href="#signUpForm">Sign Up</a></li>
+        </ul>
+        <p class="clr"></p>
+        <p align="center" class="clr margintoptwenty"><span class="required">Note:</span> To Wish this product You need to login or register.</p>
+  </div>
+</div>
+
+
+<?php $breadcrumbs = $this->getLayout()->getBlock('breadcrumbs');
+ 
+if($breadcrumbs)
+{
+	$breadcrumbs->addCrumb('Wish It Wall'  , array('label'=>Mage::helper('cms')->__('Wish It Wall'), 'title'=>Mage::helper('cms')->__('Wishlist Page'), 'link'=>Mage::getBaseUrl().'wishlist/publicshare/sharepublic'));
+ 
+	$breadcrumbs->addCrumb('cart', array('label'=>'Board', 'title'=>'Board'));
+ 
+	echo $this->getLayout()->getBlock('breadcrumbs')->toHtml();	
+}
+
+$wishlistId=$this->getRequest()->getParam('wishlistid');
+$updatedAt=Mage::getModel('wishlist/wishlist')->load($wishlistId)->getUpdatedAt();
+$updatedAt=date('d-m-Y',strtotime($updatedAt));
+
+$custId=$this->getRequest()->getParam('custId');
+
+$_itemCollection=Mage::getModel('wishlist/item')->getCollection()
+        ->addFieldToFilter('wishlist_id',$wishlistId);
+
+$customerData=Mage::getModel('customer/customer')->load($custId);
+
+$_custImgResize=$this->helper('craftsvillacustomer');
+
+if($customerData['customer_photo']!=''){
+    $_imageCustomer = $customerData['customer_photo'];
+    $url=Mage::getBaseUrl('media');
+    $imageCustomerImg=split($url,$_imageCustomer);//trim($_imageCustomer,$url);
+    $_image=$_custImgResize->getResizedUrl($imageCustomerImg[1],83);
+}
+else{
+    $_image=$this->getSkinUrl('img/messages/profile_pic.gif');
+}
+
+?>
+
+<div id="container" class="transitions-enabled clearfix">
+      <!-- These are our grid blocks -->
+     <div class="item wishlist_details">
+      
+      <!--Profile Detalis-->
+      <div class="wishlistbg">
+        <p class="wishlist_title"> <?php echo $customerData['firstname']."'s".' Board';  ?></p>
+        <div class="profile_css">
+          <p class="fleft"><img src="<?php echo $_image; ?>" alt="" border="0" /></p>
+          <div class="details_wishlist fleft">
+            <p>
+              <label>Total Items:</label>
+              <?php echo $_itemCollection->getSize(); ?></p>
+            <p>
+              <label>Last Update:</label>
+              <?php echo $updatedAt; ?></p>
+            <!--<p>
+              <label>Like:</label>
+              50 likes</p>
+            <p class="last_child">
+              <label>Share:</label>
+              20 Shares</p>-->
+          </div>
+        </div>
+      </div>
+      <!--Profile Detalis End-->
+    </div>
+     <div class="item wishlist_details"></div>
+        
+
+<?php $j=1; foreach($_itemCollection->getData() as $_item):
+    
+        $productId=$_item['product_id'];
+        $_productCollection=Mage::getModel('catalog/product')->load($productId);
+        $qtyStock = Mage::getModel('cataloginventory/stock_item')->loadByProduct($_productCollection)->getQty();
+?>
+ <!--loop will start from here-->
+     <div class="item">
+      <div class="prCnr">
+        <a href="<?php echo $_productCollection->getProductUrl(); ?>">
+            <div class="pro_image"><img src="<?php echo $this->helper('catalog/image')->init($_productCollection, 'small_image')->resize(170);?>" width="170"/></div>
+            <div class="productinfo">
+              <p class="productname"><?php echo $_productCollection->getName(); ?></p>
+             
+                  <?php if($_productCollection->getSpecialPrice()):?>
+                        <p class="old-price floatr">             
+                            <span id="old-price-27370" class="price"><?php echo 'Rs. '.number_format($_productCollection->getPrice(),0);?></span>
+                        </p>
+                        <p class="special-price">
+                            <span id="product-price-27370" class="price"><?php echo 'Rs. '. number_format($_productCollection->getSpecialPrice(),0);?></span>
+                        </p>
+                  <?php else: ?>
+                        <p>
+                            <span id="product-price-27370" class="price"><?php echo 'Rs. '. number_format($_productCollection->getPrice(),0);?></span>
+                        </p>
+                  <?php endif; ?>
+                  
+                  <?php if($qtyStock<1):?>        
+                        <p class="sold_icon spriteimg"></p>
+                  <?php elseif($_productCollection->getSpecialPrice()):?>  
+                        <p class="sell_icon spriteimg"></p>
+                  <?php endif; ?>
+            </div>
+        </a>
+          
+        <div id="socielicon">
+          <p class="wishit">
+              
+              <?php if(Mage::getSingleton('customer/session')->isLoggedIn()): ?>
+                    <input type="button" value="" title="Rewish" id="imgwish<?php echo $j;?>" class="wishit_buttons rewish_buttons" onclick="wishitval(<?php echo $_productCollection->getId(); ?>,this.id)" />
+              <?php else: ?>      
+                    <a href="#wishthis" class="fancybox"><input type="button" value="" title="Rewish" class="wishit_buttons rewish_buttons" /></a>
+              <?php endif; ?>
+              
+            <!--<input type="button" value="" title="Rewish" class="wishit_buttons rewish_buttons" />-->
+          </p>
+            <p><a href="http://pinterest.com/pin/create/button/?url=www.craftsvilla.com&media=<?php echo $this->helper('catalog/image')->init($_productCollection, 'small_image')->resize(500, 500); ?>" class="pin-it-button" count-layout="none" target="_blank"><img border="0" src="<?php echo $this->getSkinUrl('img/PinExt.png')?>"/></a></p>
+        </div>
+      </div>
+    </div>
+    <!-- End of grid blocks -->
+<?php $j++; endforeach; ?>
+ 
+</div>
+
+<script>
+     
+   
+  function wishitval(val,ival) {
+       
+       jQuery('#'+ival).addClass('wishit_hide');
+        var u = "<?php echo Mage::getBaseUrl().'wishlist/index/add/product/';?>"+val;
+                new Ajax.Request(u, {method:'post', parameters: {}, onSuccess: function(transport) {
+                                if(transport.responseText == 'wished')
+                                    var locate = "<?php echo $_SERVER['HTTP_REFERER']; ?>";
+                                window.location(locate);	
+                        }
+                });	
+        }
+  
+</script>

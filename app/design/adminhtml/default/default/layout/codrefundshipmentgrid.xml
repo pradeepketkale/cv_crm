@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+    <codrefundshipmentgrid_adminhtml_codrefundshipmentgrid_index>
+        <reference name="content">
+            <block type="codrefundshipmentgrid/adminhtml_codrefundshipmentgrid" name="codrefundshipmentgrid" />
+        </reference>
+    </codrefundshipmentgrid_adminhtml_codrefundshipmentgrid_index>
+</layout>
