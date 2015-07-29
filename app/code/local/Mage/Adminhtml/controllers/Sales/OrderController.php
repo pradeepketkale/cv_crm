@@ -1506,7 +1506,7 @@ public function suspectfraudAction()
 					$email = $_orderData[0]['customer_email'];
 					$currencyTotal = Mage::app()->getLocale()->currency($_orderData[0]['order_currency_code'])->getSymbol();
 					$currency = $_orderData[0]['order_currency_code'];
-					$grandtotal = $_orderData[0]['grand_total'];
+					$grandtotal = $_orderData[0]['base_grand_total'];
 					//$ebslinkurl =  $_orderData[0]['ebslinkurl'];
 					$entityid = $_orderData[0]['entity_id'];
 					$incrementid = $_orderData[0]['increment_id'];
