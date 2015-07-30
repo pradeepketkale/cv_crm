@@ -562,7 +562,7 @@ public function sendOrderpayulinkAction(){
 			$email = $_payOrderData['customer_email'];
 			$currencyTotal = Mage::app()->getLocale()->currency($_payOrderData['order_currency_code'])->getSymbol();
 			$currency = $_payOrderData['order_currency_code'];
-			$grandtotal = $_payOrderData['grand_total'];
+			$grandtotal = $_payOrderData['base_grand_total'];
 			$entityid = $_payOrderData['entity_id'];
 			$incrementid = $_payOrderData['increment_id'];
 			$_customerTelephone = str_replace('/','',substr($_payOrderData['telephone'],0,10));
