@@ -139,6 +139,11 @@ class Unirgy_Dropship_Adminhtml_ShipmentController extends Mage_Adminhtml_Contro
             if (empty($data['comment']) && $data['status']==$shipment->getUdropshipStatus()) {
                 Mage::throwException($this->__('Comment text field cannot be empty.'));
             }
+//mstart
+	    if (empty($data['refundamount']) && $data['status']==$shipment->getUdropshipStatus()) {
+                Mage::throwException($this->__('Please enter Refund Amount.'));
+            }
+//mend
 
             $hlp = Mage::helper('udropship');
             $status = $data['status'];
