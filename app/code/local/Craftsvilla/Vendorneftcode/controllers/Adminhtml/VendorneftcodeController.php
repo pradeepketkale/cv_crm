@@ -106,12 +106,11 @@ class Craftsvilla_Vendorneftcode_Adminhtml_VendorneftcodeController extends Mage
 		$vendorInfoCraftsQueryRes = $read->query($vendorInfoCraftsQuery)->fetch();
 		if($vendorInfoCraftsQueryRes) {
 		
-		//$vendorInfoUpdateQuery = "UPDATE `vendor_info_craftsvilla` SET `merchant_id_city`='".$merchantId."',`vendor_name`='".$vendorName."',`catalog_privileges`='".$catalog_privileges."', `logistics_privileges`='".$logistics_privileges."', `payment_privileges`='".$payment_privileges."' WHERE `vendor_id` = '".$vendorId."'"; 
-		$vendorInfoUpdateQuery = "UPDATE `vendor_info_craftsvilla` SET `merchant_id_city`='".$merchantId."',`vendor_name`='".$vendorName."',`catalog_privileges`='".$catalog_privileges."' WHERE `vendor_id` = '".$vendorId."'"; 
+		$vendorInfoUpdateQuery = "UPDATE `vendor_info_craftsvilla` SET `merchant_id_city`='".$merchantId."',`vendor_name`='".$vendorName."',`catalog_privileges`='".$catalog_privileges."', `logistics_privileges`='".$logistics_privileges."', `payment_privileges`='".$payment_privileges."' WHERE `vendor_id` = '".$vendorId."'"; 
 		$vendorInfoUpdateQueryRes = $write->query($vendorInfoUpdateQuery);
 		
 		} else {
-		$vendorInfoInsertQuery = "INSERT INTO `vendor_info_craftsvilla`(`vendor_id`, `vendor_name`, `international_order`,`merchant_id_city`,`catalog_privileges`) VALUES ($vendorId,'$vendorName',1,'$merchantId','$catalog_privileges')";   
+		$vendorInfoInsertQuery = "INSERT INTO `vendor_info_craftsvilla`(`vendor_id`, `vendor_name`, `international_order`,`merchant_id_city`,`catalog_privileges`,`logistics_privileges`,`payment_privileges`) VALUES ($vendorId,'$vendorName',1,'$merchantId','$catalog_privileges','$logistics_privileges','$payment_privileges')";   
 		$vendorInfoInsertQueryRes = $write->query($vendorInfoInsertQuery);
 		
 		}
@@ -215,8 +214,45 @@ class Craftsvilla_Vendorneftcode_Adminhtml_VendorneftcodeController extends Mage
         $this->_redirect('*/*/index');
     }
 
+   public function catalogprivilegesAction()
+	{
+        $vendorneftcodeIds = $this->getRequest()->getParam('vendorneftcode');
+        $model = Mage::getModel('vendorneftcode/vendorneftcode')->load($vendorneftcodeIds);
+        $vendor_id = $model->getVendorId();
+        $vendor_name = $model->getVendorName();
+        $catalogprivileges_remark = mysql_escape_string($this->getRequest()->getParam('catalog_privileges'));
+        $write = Mage::getSingleton('core/resource')->getConnection('core_write');
+        $remarkinsertQuery = "INSERT INTO `vendoractivityremark` SET `vendorid`='".$vendor_id."',`vendorname`='".$vendor_name."',`vendoractivity`='".$catalogprivileges_remark."'"; 
+        $remarkinsertrow = $write->query($remarkinsertQuery);
+        Mage::getSingleton('adminhtml/session')->addSuccess(Mage::helper('vendorneftcode')->__('Remark was successfully saved'));
+      $this->_redirect('*/*/index');
+        }
 
+    public function logisticsprivilegesAction()
+	{
+         $vendorneftcodeIds = $this->getRequest()->getParam('vendorneftcode');
+         $model = Mage::getModel('vendorneftcode/vendorneftcode')->load($vendorneftcodeIds);
+         $vendor_id = $model->getVendorId();
+         $vendor_name = $model->getVendorName();
+         $logisticsprivileges_remark = mysql_escape_string($this->getRequest()->getParam('logistics_privileges'));
+         $write = Mage::getSingleton('core/resource')->getConnection('core_write');
+         $remarkinsertQuery = "INSERT INTO `vendoractivityremark` SET `vendorid`='".$vendor_id."',`vendorname`='".$vendor_name."',`vendoractivity`='".$logisticsprivileges_remark."'"; 
+         $remarkinsertrow = $write->query($remarkinsertQuery);
+         Mage::getSingleton('adminhtml/session')->addSuccess(Mage::helper('vendorneftcode')->__('Remark was successfully saved'));
+      $this->_redirect('*/*/index');
+        }
 
-
-
+public function paymentprivilegesAction()
+	{
+          $vendorneftcodeIds = $this->getRequest()->getParam('vendorneftcode');
+          $model = Mage::getModel('vendorneftcode/vendorneftcode')->load($vendorneftcodeIds);
+          $vendor_id = $model->getVendorId();
+          $vendor_name = $model->getVendorName();
+          $paymentprivileges_remark = mysql_escape_string($this->getRequest()->getParam('payment_privileges'));
+          $write = Mage::getSingleton('core/resource')->getConnection('core_write');
+          $remarkinsertQuery = "INSERT INTO `vendoractivityremark` SET `vendorid`='".$vendor_id."',`vendorname`='".$vendor_name."',`vendoractivity`='".$paymentprivileges_remark."'"; 
+          $remarkinsertrow = $write->query($remarkinsertQuery);
+          Mage::getSingleton('adminhtml/session')->addSuccess(Mage::helper('vendorneftcode')->__('Remark was successfully saved'));
+      $this->_redirect('*/*/index');
+        }
 }

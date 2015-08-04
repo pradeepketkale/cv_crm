@@ -383,18 +383,19 @@ echo "</pre>";
 	/*		<!--Below Action added by dileswar on dated 15-10-2013----Start--->*/	
 	public function disableShopAction()
 	{
+          
 	$vendorId = $this->getRequest()->getParam('vendor');
-	$session = $this->_getSession();
+        $session = $this->_getSession();
 	$storeId = Mage::app()->getStore()->getId();
 	$vendorDetails = Mage::getModel('udropship/vendor')->load($vendorId);
 	$vendorEmail = $vendorDetails->getEmail();
 	$vendorName = $vendorDetails->getVendorName();
-	//print_r($vendorDetails->getData());exit;
+	
 	$templateId = 'disable_shop_email_template1';
 	$sender = Array('name'  => 'Craftsvilla',
-						'email' => $vendorEmail);
+						'email' => 'places@craftsvilla.com');
 	$_email = Mage::getModel('core/email_template');
-	//$vendorId = Mage::getSingleton('udropship/session')->getVendorId();		
+			
 			$product = Mage::getModel('catalog/product')->getCollection()
 				->addAttributeToSelect('*')
 				->addAttributeToFilter('udropship_vendor',$vendorId)			
@@ -403,7 +404,10 @@ echo "</pre>";
 			$fromPart = $product->getSelect()->getPart(Zend_Db_Select::FROM);
 			$fromPart['e']['tableName'] ='catalog_product_entity';
 			$product->getSelect()->setPart(Zend_Db_Select::FROM, $fromPart);
-			//echo $product->getSelect()->__toString()	;exit;
+			
+
+                       
+                        
 				
 			$write = Mage::getSingleton('core/resource')->getConnection('core_write');
 		   	foreach($product as $_productoutofstock)
@@ -414,8 +418,14 @@ echo "</pre>";
 			 
 			 $seller = "UPDATE `udropship_vendor` SET `fax` = 'vacation' WHERE `vendor_id`='".$vendorId[0]."'";
 			 $write->query($seller);
-			 
-			$vars = Array('vendorName' =>$vendorName,
+                        
+                         
+                         $remark = mysql_escape_string($this->getRequest()->getParam('disable_shop'));
+                         $write = Mage::getSingleton('core/resource')->getConnection('core_write');
+                         $remarkinsertQuery = "INSERT INTO `vendoractivityremark` SET `vendorid`='".$vendorId[0]."',`vendorname`='".$vendorName."',`vendoractivity`='".$remark."'"; 
+                         $remarkinsertrow = $write->query($remarkinsertQuery);
+      
+                          $vars = Array('vendorName' =>$vendorName,
 							'vendorEmail' =>$vendorEmail,
 							);
 			
@@ -423,7 +433,7 @@ echo "</pre>";
 			$_email->sendTransactional($templateId,$sender,'places@craftsvilla.com',$vendorName,$vars, $storeId);
 						 
 			 
-		$session->addSuccess($this->__('Shop '.$vendorName.' Has Been Disabled Successfully.'));
+		$session->addSuccess($this->__('Shop '.$vendorName.' Has Been Disabled Successfully And Remark Was Successfully Saved'));
 		$this->_redirect('*/*/');
 		
 	}

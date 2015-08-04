@@ -55,7 +55,7 @@ class Craftsvilla_Vendorneftcode_Block_Adminhtml_Vendorneftcode_Grid extends Mag
 			'index'     => 'catalog_privileges',
       ));
 
-    $this->addColumn('logistics_privileges', array(
+     $this->addColumn('logistics_privileges', array(
 			'header'    => Mage::helper('vendorneftcode')->__('Logistics Privileges'),
 			'width'     => '150px',
 			'index'     => 'logistics_privileges',
@@ -118,6 +118,47 @@ class Craftsvilla_Vendorneftcode_Block_Adminhtml_Vendorneftcode_Grid extends Mag
         ));
 
         
+        $this->getMassactionBlock()->addItem('catalogprivileges', array(
+             'label'=> Mage::helper('vendorneftcode')->__('Catalog Privileges'),
+             'url'  => $this->getUrl('*/*/catalogprivileges'),
+			 'additional' => array(
+             'visibility' =>array(
+								'name' => 'catalog_privileges',
+								'class' => 'required-entry',
+								'type'  => 'text',
+								'label' => Mage::helper('customerreturn')->__('Remark :Use only when catalog privileges is disable'),
+
+						 )
+             
+             )
+        ));
+
+        $this->getMassactionBlock()->addItem('logisticsprivileges', array(
+             'label'=> Mage::helper('vendorneftcode')->__('Logistics Privileges'),
+             'url'  => $this->getUrl('*/*/logisticsprivileges'),
+			 'additional' => array(
+             'visibility' =>array(
+								'name' => 'logistics_privileges',
+								'class' => 'required-entry',
+								'type'  => 'text',
+								'label' => Mage::helper('customerreturn')->__('Remark :Use only when logistics privileges is disable'),
+						 )
+             )
+        ));
+
+
+        $this->getMassactionBlock()->addItem('paymentprivileges', array(
+             'label'=> Mage::helper('vendorneftcode')->__('Payment Privileges'),
+             'url'  => $this->getUrl('*/*/paymentprivileges'),
+			 'additional' => array(
+             'visibility' =>array(
+								'name' => 'payment_privileges',
+								'class' => 'required-entry',
+								'type'  => 'text',
+								'label' => Mage::helper('customerreturn')->__('Remark :Use only when payment privileges is disable'),
+						 )
+             )
+        ));
 
         //$statuses = Mage::getSingleton('vendorneftcode/status')->getOptionArray();
 
