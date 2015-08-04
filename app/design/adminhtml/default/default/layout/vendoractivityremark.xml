@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+    <vendoractivityremark_adminhtml_vendoractivityremark_index>
+        <reference name="content">
+            <block type="vendoractivityremark/adminhtml_vendoractivityremark" name="vendoractivityremark" />
+        </reference>
+    </vendoractivityremark_adminhtml_vendoractivityremark_index>
+</layout>
+
+
