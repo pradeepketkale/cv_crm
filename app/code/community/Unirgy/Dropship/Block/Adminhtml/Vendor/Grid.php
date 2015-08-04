@@ -129,6 +129,9 @@ class Unirgy_Dropship_Block_Adminhtml_Vendor_Grid extends Mage_Adminhtml_Block_W
 			'currency_code' => Mage::getStoreConfig('currency/options/base'),
 			));
         
+       
+
+
        // $this->addColumn('carrier_code', array(
         //    'header'    => $hlp->__('Used Carrier'),
         //    'index'     => 'carrier_code',
@@ -177,13 +180,20 @@ class Unirgy_Dropship_Block_Adminhtml_Vendor_Grid extends Mage_Adminhtml_Block_W
                      )
              )
         ));
-		/*		<!--Below Lines added by dileswar on dated 15-10-2013----Start--->*/		
-		$this->getMassactionBlock()->addItem('disableShop', array(
+
+       $this->getMassactionBlock()->addItem('disableShop', array(
              'label'=> Mage::helper('udropship')->__('Disable Shop'),
              'url'  => $this->getUrl('*/*/disableShop'),
-             'confirm' => Mage::helper('udropship')->__('Are you sure?')
+			 'additional' => array(
+             'visibility' =>array(
+								'name' => 'disable_shop',
+								'class' => 'required-entry',
+								'type'  => 'text',
+								'label' => Mage::helper('customerreturn')->__('Remark :Use only when disable shop'),
+						 )
+             )
         ));
-/*		<!--Below lines template added by dileswar on dated 15-10-2013----END--->*/	
+                 
 
         return $this;
     }
