@@ -1537,7 +1537,7 @@ public function suspectfraudAction()
 				$myvar13 = $_customerTelephone;
 				$myvar14 = 'Craftsvilla Products';
 				$myvar15 = $total_qt_ordered;
-				$myvar16 = $grandTotal;
+				$myvar16 = $grandtotal;
 				$myvar17 = '0';
 				$payuref = $myvar4.'P';
 					
