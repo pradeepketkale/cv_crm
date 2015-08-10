@@ -62,7 +62,20 @@ foreach (Mage::getSingleton('udropship/source')->setPath('shipment_statuses')->t
         	  endforeach; 
 			  
         ?>
-        </select><br/><br/>
+        </select>
+
+<select name="disputeremarks" id="disputeremarks" style="display: none; margin-top:8px; width:203px; ">
+	<option value="">Choose option</option>
+	<option value="Bad Quality">Bad Quality</option>
+	<option value="Damaged/ Defective">Damaged/ Defective</option>
+	<option value="Not as per photo/ Description">Not as per photo/ Description</option>
+	<option value="Did not like">Did not like</option>
+	<option value="Late delivery">Late delivery</option>
+	<option value="Stitched/ Unstitched">Stitched/ Unstitched</option>
+	<option value="Multiple Quantity Ordered">Multiple Quantity Ordered</option>
+	<option value="Other">Others (Please add in remarks)</option>
+</select>    
+<br/> 
        <?php //echo $this->getUrl('udropshipadmin/adminhtml_qcreject/qcreject/', array('shipment_id'=>$_entity->getId()));exit; ?>
         
 
@@ -174,11 +187,15 @@ function showfield(name)
 		}
 		if(name==20)
 		{
-		document.getElementById('div2').innerHTML=  '<input type="checkbox" name ="disputeMail" value = "" onclick="sendDisputeRaisedEmailtoCustomer();"> Send return address to customer</input><br/>';
+		document.getElementById('div2').innerHTML= '<input type="checkbox" name ="disputeMail" value = "" onclick="sendDisputeRaisedEmailtoCustomer();"> Send return address to customer</input><br/>';
+		document.getElementById('disputeremarks').style.display = "block";
 		}
 		else
-		{ document.getElementById('div2').innerHTML='';
+		{ 
+			document.getElementById('div2').innerHTML='';
+			document.getElementById('disputeremarks').style.display = "none";
 		}
+
 		}
 
 

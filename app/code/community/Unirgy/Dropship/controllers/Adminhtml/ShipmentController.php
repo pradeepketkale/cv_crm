@@ -206,6 +206,10 @@ class Unirgy_Dropship_Adminhtml_ShipmentController extends Mage_Adminhtml_Contro
 						{
 							$this->sendDisputeRaisedEmailtoCustomer($shipment_id_value);
 						}
+						if(isset($_POST['disputeremarks'])) 
+						{
+							$this->disputeCustomerRemarks($shipment_id_value);
+						}
 					}
 					
                 $comment = Mage::getModel('sales/order_shipment_comment')
@@ -313,6 +317,13 @@ class Unirgy_Dropship_Adminhtml_ShipmentController extends Mage_Adminhtml_Contro
 						{
 
 							$this->sendDisputeRaisedEmailtoCustomer($shipment_id_value);
+
+						}
+						if(isset($_POST['disputeremarks'])) 
+
+						{
+
+							$this->disputeCustomerRemarks($shipment_id_value);
 
 						}
 
@@ -898,4 +909,44 @@ $vendoremail = $vendorDataaa->getEmail();
 
 
 	}
+
+public function disputeCustomerRemarks($shipment_id_value)
+	{		
+		$connread = Mage::getSingleton('core/resource')->getConnection('core_read');
+		$connwrite = Mage::getSingleton('core/resource')->getConnection('core_write');
+		
+		$shipmentId = $shipment_id_value;
+        $shipment = Mage::getModel('sales/order_shipment')->loadByIncrementId($shipment_id_value);
+		$vendorId = $shipment->getUdropshipVendor(); 
+		$vendorDetails = Mage::getModel('udropship/vendor')->load($vendorId); 
+		
+		$vendorName = mysql_escape_string($vendorDetails->getVendorName());
+		$disputeRemark = mysql_escape_string($this->getRequest()->getParam('disputeremarks')); 
+		
+		$duplicateDispute = "SELECT * FROM `disputecusremarks` WHERE `shipment_id` = '".$shipmentId."'"; 
+		$duplicateDisputeRes = $connread->query($duplicateDispute)->fetchAll(); 
+		$connread->closeConnection();
+		if(!($duplicateDisputeRes)) 
+		{
+		
+			$insertDisputeRemark = "INSERT INTO `disputecusremarks`(`shipment_id`, `vendor_id`, `vendor_name`, `remarks`) VALUES ($shipmentId,$vendorId,'".$vendorName."','".$disputeRemark."')"; 
+		   	$connwrite->query($insertDisputeRemark);
+		   	$connwrite->closeConnection();
+		   	
+		}
+		else 
+		{ 
+		
+			$updateDisputeRemark = "UPDATE `disputecusremarks` SET `remarks` = '".$disputeRemark."' WHERE `shipment_id` = '".$shipmentId."'"; 
+		   	$connwrite->query($updateDisputeRemark);
+		   	$connwrite->closeConnection();
+		   	
+       	}
+       	
+       	
+	}
+
+
+
+
 }

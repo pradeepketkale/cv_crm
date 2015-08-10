@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+    <disputecusremarks_adminhtml_disputecusremarks_index>
+        <reference name="content">
+            <block type="disputecusremarks/adminhtml_disputecusremarks" name="disputecusremarks" />
+        </reference>
+    </disputecusremarks_adminhtml_disputecusremarks_index>
+</layout>
+
+

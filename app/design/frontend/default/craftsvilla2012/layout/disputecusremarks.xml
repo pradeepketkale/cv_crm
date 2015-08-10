@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+    <default>
+    </default>
+    <disputecusremarks_index_index>
+        <reference name="content">
+            <block type="disputecusremarks/disputecusremarks" name="disputecusremarks" template="disputecusremarks/disputecusremarks.phtml" />
+        </reference>
+    </disputecusremarks_index_index>
+</layout> 
+
