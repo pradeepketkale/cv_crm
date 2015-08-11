@@ -63,9 +63,9 @@ foreach (Mage::getSingleton('udropship/source')->setPath('shipment_statuses')->t
 			  
         ?>
         </select>
-
-<select name="disputeremarks" id="disputeremarks" style="display: none; margin-top:8px; width:203px; ">
-	<option value="">Choose Reason</option>
+<!--mstart-->
+<select  id="disputeremarks"  name="disputeremarks"  style="display: none;margin-top:8px; width:203px; ">
+	<option value="" >Select Reason</option>
 	<option value="Bad Quality">Bad Quality</option>
 	<option value="Damaged/ Defective">Damaged/ Defective</option>
 	<option value="Not as per photo/ Description">Not as per photo/ Description</option>
@@ -74,14 +74,17 @@ foreach (Mage::getSingleton('udropship/source')->setPath('shipment_statuses')->t
 	<option value="Stitched/ Unstitched">Stitched/ Unstitched</option>
 	<option value="Multiple Quantity Ordered">Multiple Quantity Ordered</option>
 	<option value="Other">Others (Please add in remarks)</option>
-</select>    
+</select>
+<!--mend-->
 <br/> 
        <?php //echo $this->getUrl('udropshipadmin/adminhtml_qcreject/qcreject/', array('shipment_id'=>$_entity->getId()));exit; ?>
         
 
 
-	<!--Added By Dileswar on dated 30-03-2013 for add a extra text box to get the refund amount-->	 
-       <div id="div1" style="display: none" ><label for=''>Refund Amount of <font face="Tahoma" size="2" color="green"> Rs: <?php echo $autoRefundedamount?></label> </font><br><input type="text"  name="comment[refundamount]" value = "<?php echo $autoRefundedamount?>" id="refundamount" /></div>
+	<!--Added By Dileswar on dated 30-03-2013 for add a extra text box to get the refund amount-->
+<!--mstart-->	 
+       <div id="div1" style="display: none" ><label for=''>Refund Amount of <font face="Tahoma" size="2" color="green"> Rs: <?php echo $autoRefundedamount?></label> </font><br><input type="text"  name="refundamount" value = "<?php echo $autoRefundedamount?>" id="refundamount" /></div>
+<!--mend-->
          <div id="div2"></div>		
 		<script type="text/javascript">
 		    $('comment_status').origValue = $('comment_status').value
@@ -150,7 +153,6 @@ function submitComment() {
 }
 
 
-
 function validateShipmentStatusSubmit()
 {
     if (<?php echo (int)Mage::helper('udropship')->isUdpoActive()?> == 0) return true;
@@ -203,7 +205,19 @@ if ($('submit_comment_button')) {
     $('submit_comment_button').observe('click', submitComment);
 }
 
-
 </script>
+
+<script type="text/javascript">
+	window.onload=function()
+	{	
+	if(comment_status.value==23){
+		document.getElementById('div1').style.display = "block";
+	}
+	if(comment_status.value==20){
+		document.getElementById('disputeremarks').style.display = "block";
+	}
+	}
+</script>
+
 </div>
 <?php endif; ?>

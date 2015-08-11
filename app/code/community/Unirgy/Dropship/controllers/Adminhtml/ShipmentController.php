@@ -132,17 +132,27 @@ class Unirgy_Dropship_Adminhtml_ShipmentController extends Mage_Adminhtml_Contro
         *Added to get order id 
         *Added by Suresh on 04-06-2012
         */
-    			
+			
     	try {
             $data = $this->getRequest()->getPost('comment');
+	    $dataDispute = $this->getRequest()->getPost('disputeremarks');
+	    $dataRefund = $this->getRequest()->getPost('refundamount');
             $shipment = $this->_initShipment();
             if (empty($data['comment']) && $data['status']==$shipment->getUdropshipStatus()) {
                 Mage::throwException($this->__('Comment text field cannot be empty.'));
             }
+
 //mstart
-	    if (empty($data['refundamount']) && $data['status']==$shipment->getUdropshipStatus()) {
-                Mage::throwException($this->__('Please enter Refund Amount.'));
+	    if (empty($dataRefund) && $data['status']==23) {
+                Mage::throwException($this->__('Please Enter Refund Amount in Refund To Do Dropdown'));
             }
+	   if (!is_numeric($dataRefund) && $data['status']==23){
+		Mage::throwException($this->__('Only Numeric Value Allow in Refund To Do Dropdown'));
+	    }
+
+	    if (empty($dataDispute) && $data['status']==20) {
+                Mage::throwException($this->__('Please Select Reason For Dispute Raise'));
+            }	    
 //mend
 
             $hlp = Mage::helper('udropship');
@@ -206,10 +216,12 @@ class Unirgy_Dropship_Adminhtml_ShipmentController extends Mage_Adminhtml_Contro
 						{
 							$this->sendDisputeRaisedEmailtoCustomer($shipment_id_value);
 						}
+						//mstart
 						if(isset($_POST['disputeremarks'])) 
 						{
 							$this->disputeCustomerRemarks($shipment_id_value);
 						}
+						//msend
 					}
 					
                 $comment = Mage::getModel('sales/order_shipment_comment')
@@ -319,6 +331,7 @@ class Unirgy_Dropship_Adminhtml_ShipmentController extends Mage_Adminhtml_Contro
 							$this->sendDisputeRaisedEmailtoCustomer($shipment_id_value);
 
 						}
+						//mstart
 						if(isset($_POST['disputeremarks'])) 
 
 						{
@@ -326,7 +339,7 @@ class Unirgy_Dropship_Adminhtml_ShipmentController extends Mage_Adminhtml_Contro
 							$this->disputeCustomerRemarks($shipment_id_value);
 
 						}
-
+						//mend
 					}
 				
 				if (isset($data['is_vendor_notified'])) {
@@ -911,7 +924,8 @@ $vendoremail = $vendorDataaa->getEmail();
 	}
 
 public function disputeCustomerRemarks($shipment_id_value)
-	{		
+	{
+//mstart		
 		$connread = Mage::getSingleton('core/resource')->getConnection('core_read');
 		$connwrite = Mage::getSingleton('core/resource')->getConnection('core_write');
 		
@@ -943,7 +957,7 @@ public function disputeCustomerRemarks($shipment_id_value)
 		   	
        	}
        	
-       	
+  //mend     	
 	}
 
 
