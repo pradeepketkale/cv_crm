@@ -458,8 +458,11 @@ class Craftsvilla_Shipmentpayout_Adminhtml_ShipmentpayoutController extends Mage
 					
 					//Below lines for to update the value in shipmentpayout table ...
 					$write = Mage::getSingleton('core/resource')->getConnection('shipmentpayout_write');
-					$queryUpdateDiscount = "update shipmentpayout set `discount` ='".$discountAmountCoupon."',`couponcode` = '".$disCouponcode."' WHERE `shipment_id` = '".$shipmentpayout_report1_val['shipment_id']."'";
-					$write->query($queryUpdateDiscount);
+						if($disCouponcode){
+						$queryUpdateDiscount = "update shipmentpayout set `discount` ='".$discountAmountCoupon."',`couponcode` = '".$disCouponcode."' WHERE `shipment_id` = '".$shipmentpayout_report1_val['shipment_id']."'";
+					
+						$write->query($queryUpdateDiscount);
+						}	
 					$utr = $shipmentpayout_report1_val['citibank_utr'];
 					$neft = 'NEFT';
 						if(($vendor_amount+$closingbalance) <= 0)
@@ -1517,7 +1520,7 @@ class Craftsvilla_Shipmentpayout_Adminhtml_ShipmentpayoutController extends Mage
 				}
 				
 				//$gen_random_number = "K".$this->gen_rand();
-                       $vendor_amount = (($total_amount+$itemised_total_shippingcost+$discountAmountCoupon)*(1-($commission_amount/100)*(1+0.1236)));
+                       $vendor_amount = (($total_amount+$itemised_total_shippingcost+$discountAmountCoupon)*(1-($commission_amount/100)*(1+0.1400)));
 						
 						//$kribha_amount = (($total_amount1+$itemised_total_shippingcost) - $vendor_amount);
 						//change to accomodate 3% Payment gateway charges on dated 20-12-12
@@ -1531,9 +1534,12 @@ class Craftsvilla_Shipmentpayout_Adminhtml_ShipmentpayoutController extends Mage
 		    	$kribha_amount = ((($total_amount1+$base_shipping_amount+$discountAmountCoupon)) - $vendor_amount);
 				
 				//Below lines for to update the value in shipmentpayout table ...
+					
 					$write = Mage::getSingleton('core/resource')->getConnection('shipmentpayout_write');
+					if($disCouponcode){
 					$queryUpdateDiscount = "update shipmentpayout set `discount` ='".$discountAmountCoupon."',`couponcode` = '".$disCouponcode."' WHERE `shipment_id` = '".$shipmentpayout_report1_val['shipment_id']."'";
 					$write->query($queryUpdateDiscount);
+					}
 				
 					$utr = $shipmentpayout_report1_val['citibank_utr'];
 					$neft = 'EFT';
