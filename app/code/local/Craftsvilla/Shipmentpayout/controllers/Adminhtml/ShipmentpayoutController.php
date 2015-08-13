@@ -1693,11 +1693,18 @@ class Craftsvilla_Shipmentpayout_Adminhtml_ShipmentpayoutController extends Mage
 		
     	// Send the CSV file to the browser for download
 	
-		header("Content-type: text/x-csv");
-		header("Content-Disposition: attachment; filename=$filename.csv");
-		echo $output;
-		exit;
+		//header("Content-type: text/x-csv");
+		//header("Content-Disposition: attachment; filename=$filename.csv");
+		//echo $output;
+		$filePathOfCsv = Mage::getBaseDir('media').DS.'payoutreports'.DS.$filename.'.csv';
+		$fp=fopen($filePathOfCsv,'w');
+		fputs($fp, $output);
+    	fclose($fp);
+		
+		
     $i++;
+Mage::getSingleton('adminhtml/session')->addSuccess($this->__('Cod Download Done: Please Download from here:'));
+$this->_redirect('*/*/index');
 	}
 	
 	public function autorefundpayuAction()

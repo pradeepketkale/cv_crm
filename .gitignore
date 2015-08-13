@@ -12,3 +12,4 @@ downloader/
 *.swn
 solariumsearch/config.dist.php
 /nbproject/
+media/
