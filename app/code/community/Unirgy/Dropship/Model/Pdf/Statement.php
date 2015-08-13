@@ -123,7 +123,7 @@ class Unirgy_Dropship_Model_Pdf_Statement extends Unirgy_Dropship_Model_Pdf_Abst
 				    $this->insertOrder($order);
 				    $TotalSubTotal += number_format($order['orders']['amounts']['subtotal'],2);
 				    $TotalCommission += number_format($order['orders']['amounts']['com_amount'],2);
-					$TotalServiceTax += number_format($order['orders']['amounts']['com_amount']*0.1400,2);
+					$TotalServiceTax += number_format($order['orders']['amounts']['com_amount']*0.1236,2);
 					
 				}
 		    
@@ -269,10 +269,12 @@ class Unirgy_Dropship_Model_Pdf_Statement extends Unirgy_Dropship_Model_Pdf_Abst
         $this->move(4.25, 0.5)
             ->font('bold', 16)->setAlign('center')
 			//->text(Mage::getStoreConfig('udropship/admin/letterhead_info', $store));
-			->text(Mage::getStoreConfig('udropship/admin/letterhead_info', $store));
+			//->text(Mage::getStoreConfig('udropship/admin/letterhead_info', $store));
 			
-			$this->move(4.25, 0.35)
-			->font('normal', 20)->setAlign('center')
+			//$this->move(4.25, 0.35)
+			//->font('normal', 20)->setAlign('center')
+
+
             ->text('Craftsvilla Handicrafts Pvt Ltd');
             
 			
@@ -316,9 +318,10 @@ class Unirgy_Dropship_Model_Pdf_Statement extends Unirgy_Dropship_Model_Pdf_Abst
             if ($hlp->isUdpoActive()) {
                 $this->text($hlp->__("PO Type"), 'down');
             }
+		
             $this->move(7.9, 2)
                     ->text($statement->getStatementId(), 'down')
-                    ->text($core->formatDate($statement->getCreatedAt(), 'medium'), 'down');
+                    ->text($core->formatDate(date('Y-m-d',strtotime($statement->getOrderDateTo().'+5 days')), 'medium'), 'down');
             if ($hlp->isUdpoActive()) {
                 $this->text(Mage::getSingleton('udropship/source')->setPath('statement_po_type')->getOptionLabel($statement->getPoType()), 'down');
             }
@@ -385,14 +388,14 @@ class Unirgy_Dropship_Model_Pdf_Statement extends Unirgy_Dropship_Model_Pdf_Abst
                 ->font('bold', 12)
                 ->setAlign('left')
                 ->text($hlp->__("Date"));
-        if ($this->isInPayoutAmount('all', 'exclude_hide')) {
+        if ($this->isInPayoutAmount('all', 'exclude_hide')) {  
             $this->moveRel(2.2, 0)->text($hlp->__("Shipment#"))
             	//->moveRel(1.6, 0)->text($hlp->__("Product"))
 				->moveRel(2.6, 0)->text($hlp->__("Commission"))
                 ->moveRel(2.5, 0)->text($hlp->__("Service Tax"))
                 ->moveRel(2.6, 0)->text($hlp->__("Total"))
             ->movePop(0, .4);
-        } else {
+        } else { 
         	$this->moveRel(1.2, 0)->text($hlp->__("Shipment#"))
             	//->moveRel(1, 0)->text($hlp->__("Product"));
 				//->moveRel(1, 0)->text($hlp->__("Commission"));
@@ -514,22 +517,24 @@ class Unirgy_Dropship_Model_Pdf_Statement extends Unirgy_Dropship_Model_Pdf_Abst
             ->font('normal', 10)
             ->movePush()
                 ->setAlign('left')
-                    ->text($core->formatDate($order['po_created_at'], 'short'));
+                    ->text($core->formatDate($core->formatDate($order['orders']['po_created_at']), 'short'));
+			
 		if ($this->isInPayoutAmount('all', 'exclude_hide')) {
 			$this->moveRel(1.2, 0)->text($order['po_increment_id'])
                 ->moveRel(1.6, 0)->text($order['subtotal'])
                 ->moveRel(1.5, 0)->text("{$order['com_amount']} ({$order['com_percent']}%) / {$order['trans_fee']}")
             	->setAlign('right')
-                ->moveRel(3, 0)->text($order['total_payout']);
+                ->moveRel(3, 0)->text($order['total_payout']); 
 		} else {
 
-            $this->moveRel(1.2, 0)->text($order['orders']['po_increment_id']);
+            $this->moveRel(1.2, 0)->text($order['orders']['po_increment_id']); 
                 //->moveRel(1, 0)->text($order['subtotal']);
-			$serviceTax = "Rs. ".number_format($order['orders']['amounts']['com_amount']*0.1400,2); 
+			$serviceTax = "Rs. ".number_format($order['orders']['amounts']['com_amount']*0.1236,2); 
 			$comAmount = "Rs. ".number_format($order['orders']['amounts']['com_amount'],2);
 			$this->moveRel(1.5, 0)->text("{$comAmount}");
             $this->moveRel(1.7, 0)->text("{$serviceTax}");
-			$totalAmount =  "Rs. ".number_format($order['orders']['amounts']['com_amount']*1.1400,2);
+
+			$totalAmount =  "Rs. ".number_format($order['orders']['amounts']['com_amount']*1.1236,2);
 			$this->moveRel(1.6, 0)->text("{$totalAmount}");
 			
 			//$this->moveRel(1, 0)->text($serviceTax)

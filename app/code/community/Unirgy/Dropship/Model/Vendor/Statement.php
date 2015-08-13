@@ -348,8 +348,8 @@ class Unirgy_Dropship_Model_Vendor_Statement extends Unirgy_Dropship_Model_Vendo
 		    	$vendor_amount = (($total_amount+$base_shipping_amount+$discountAmountCoupon)*(1-($commission_amount/100)*(1+0.1400)));			 
 				$kribha_amount = ((($total_amount1+$base_shipping_amount+$discountAmountCoupon)*1.00) - $vendor_amount);
 					$order['com_percent'] *= 1;
-					$order['com_amount'] = $kribha_amount/1.1400;
-					
+					//$order['com_amount'] = $kribha_amount/1.1400;
+					$order['com_amount'] = $kribha_amount/1.1236;
 					return number_format($order['com_amount'],2);
 		
 	}
