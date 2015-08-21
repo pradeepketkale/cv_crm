@@ -41,6 +41,7 @@ class Mage_Adminhtml_Cms_WysiwygController extends Mage_Adminhtml_Controller_Act
      */
     public function directiveAction()
     {
+exit;
         $directive = $this->getRequest()->getParam('___directive');
         $directive = Mage::helper('core')->urlDecode($directive);
         $url = Mage::getModel('core/email_template_filter')->filter($directive);
