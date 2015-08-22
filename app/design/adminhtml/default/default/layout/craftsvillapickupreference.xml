@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+    <craftsvillapickupreference_adminhtml_craftsvillapickupreference_index>
+        <reference name="content">
+            <block type="craftsvillapickupreference/adminhtml_craftsvillapickupreference" name="craftsvillapickupreference" />
+        </reference>
+    </craftsvillapickupreference_adminhtml_craftsvillapickupreference_index>
+</layout>
+
+

@@ -1,0 +1,131 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Craftsvilla_Craftsvillapickupreference>
+            <version>0.1.0</version>
+        </Craftsvilla_Craftsvillapickupreference>
+    </modules>
+    <frontend>
+      <routers>
+            <craftsvillapickupreference>
+                <use>standard</use>
+                <args>
+                    <module>Craftsvilla_Craftsvillapickupreference</module>
+                    <frontName>craftsvillapickupreference</frontName>
+                </args>
+            </craftsvillapickupreference>
+        </routers>
+        <layout>
+            <updates>
+                <craftsvillapickupreference>
+                    <file>craftsvillapickupreference.xml</file>
+                </craftsvillapickupreference>
+            </updates>
+        </layout>
+    </frontend>
+    <admin>
+        <routers>
+			<craftsvillapickupreference>
+				<use>admin</use>
+				<args>
+					<module>Craftsvilla_Craftsvillapickupreference</module>
+					<frontName>craftsvillapickupreference</frontName>
+				</args>
+			</craftsvillapickupreference>
+        </routers>
+    </admin>
+    <adminhtml>
+		
+             <menu>
+	     <sales>
+		<children>
+			<craftsvillapickupreference module="craftsvillapickupreference">
+				<title>craftsvillapickupreference</title>
+				<sort_order>71</sort_order>               
+			        <action>craftsvillapickupreference/adminhtml_craftsvillapickupreference</action>
+			</craftsvillapickupreference>
+		</children>
+	   </sales>
+     </menu>
+
+
+		
+
+                <acl>
+			<resources>
+			<all>
+			<title>Allow Everything</title>
+			</all>
+			<admin>
+				<children>
+					<sales>
+						<children>
+							
+                      <craftsvillapickupreference translate="title" module="craftsvillapickupreference">
+		      <title>Craftsvillapickupreference Module</title>
+		      <sort_order>10</sort_order>
+		       </craftsvillapickupreference>
+
+						</children>
+					</sales>
+				</children>
+			</admin>
+			</resources>
+		</acl>
+
+
+		<layout>
+			<updates>
+				<craftsvillapickupreference>
+					<file>craftsvillapickupreference.xml</file>
+				</craftsvillapickupreference>
+			</updates>
+		</layout>
+    </adminhtml>   
+    <global>
+        <models>
+            <craftsvillapickupreference>
+                <class>Craftsvilla_Craftsvillapickupreference_Model</class>
+                <resourceModel>craftsvillapickupreference_mysql4</resourceModel>
+            </craftsvillapickupreference>
+            <craftsvillapickupreference_mysql4>
+                <class>Craftsvilla_Craftsvillapickupreference_Model_Mysql4</class>
+             <entities>
+                    <craftsvillapickupreference>
+                        <table>aramex_pickup_request_number</table>
+                    </craftsvillapickupreference>
+                </entities>
+            </craftsvillapickupreference_mysql4>
+        </models>
+        <resources>
+            <craftsvillapickupreference_setup>
+                <setup>
+                    <module>Craftsvilla_Craftsvillapickupreference</module>
+                </setup>
+                <connection>
+                    <use>core_setup</use>
+                </connection>
+            </craftsvillapickupreference_setup>
+            <craftsvillapickupreference_write>
+                <connection>
+                    <use>core_write</use>
+                </connection>
+            </craftsvillapickupreference_write>
+            <craftsvillapickupreference_read>
+                <connection>
+                    <use>core_read</use>
+                </connection>
+            </craftsvillapickupreference_read>
+        </resources>
+        <blocks>
+            <craftsvillapickupreference>
+                <class>Craftsvilla_Craftsvillapickupreference_Block</class>
+            </craftsvillapickupreference>
+        </blocks>
+        <helpers>
+            <craftsvillapickupreference>
+                <class>Craftsvilla_Craftsvillapickupreference_Helper</class>
+            </craftsvillapickupreference>
+        </helpers>
+    </global>
+</config>
