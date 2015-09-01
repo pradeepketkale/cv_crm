@@ -55,25 +55,35 @@
 			</children>
 		</sales>
 	</menu>
-		<acl>
-			<resources>
-				<all>
-					<title>Allow Everything</title>
-				</all>
-<admin>
-<children>
-<sales>
-<children>
-<codrefundshipmentgrid>
-<title>Codrefundshipmentgrid Module</title>
-<sort_order>10</sort_order>
-</codrefundshipmentgrid>
-</children>
-</sales>
-</children>
-</admin>
-			</resources>
-		</acl>
+		
+
+              <acl>
+                   <resources>
+			<all>
+			<title>Allow Everything</title>
+			</all>
+                        <admin>
+                           <children>
+			        <sales>
+				<children>
+				<codrefundshipmentgrid module="codrefundshipmentgrid">
+				<title>Codrefundshipmentgrid</title>
+				<sort_order>10</sort_order>   
+				<children>
+				     <codrefundshipmentimport translate="title">
+                                       <title>COD Shipment Refund Import</title>
+                                        <action>codrefundshipmentgrid/adminhtml_codrefundshipmentimport</action>
+                                        <sort_order>10</sort_order>
+                                          </codrefundshipmentimport>
+					</children>           
+				</codrefundshipmentgrid>
+			</children>
+		</sales>
+               </children>
+                </admin>
+           </resources>
+	</acl>
+
 		<layout>
 			<updates>
 				<codrefundshipmentgrid>
