@@ -37,10 +37,18 @@ class Craftsvilla_Craftsvillapickupreference_Block_Adminhtml_Craftsvillapickupre
           'index'     => 'Reference_Number',
       ));
 
+      //$this->addColumn('created_date', array(
+         // 'header'    => Mage::helper('craftsvillapickupreference')->__('Created Date'),
+         // 'align'     =>'left',
+        //  'index'     => 'created_date',
+      //));
+
       $this->addColumn('created_date', array(
           'header'    => Mage::helper('craftsvillapickupreference')->__('Created Date'),
           'align'     =>'left',
           'index'     => 'created_date',
+          'filter_index' => 'main_table.created_date',
+	  'type' 	  => 'datetime',
       ));
 
      $this->addColumn('Vendor_id', array(
