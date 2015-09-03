@@ -1450,39 +1450,36 @@ public function suspectfraudAction()
 	{
 		$user = Mage::getSingleton('admin/session');
 		$userEmail = $user->getUser()->getEmail();
-	if($userEmail == "monica@craftsvilla.com" || $userEmail == "manoj@craftsvilla.com" || $userEmail = "Rohit@craftsvilla.com")
+	if($userEmail == "monica@craftsvilla.com" || $userEmail == "manoj@craftsvilla.com" || $userEmail == "Rohit@craftsvilla.com")
 		{
 		$orderIds = $this->getRequest()->getPost('order_ids');
 		$order = Mage::getModel('sales/order')->load($orderIds); //load order             
 		//echo '<pre>';print_r($order);exit;
 		$entityIdSus = $order->getEntityId();
+		    if($entityIdSus == ''){
+		        Mage::getSingleton('adminhtml/session')->addError(Mage::helper('adminhtml')->__("Please select only suspected fraud Order"));
+					$this->_redirectUrl('/index.php/kribhasanvi/sales_order/index/');
+		    }
+
 		$incrementId = $order->getIncrementId();
 		$custemail = $order->getCustomerEmail();
 		$state = 'processing';
 		$status = $state;
-		$comment = "AWRP, status changes to  to $status Status ";
+		$comment = "AWRP, status changes to $status Status ";
 		$isCustomerNotified = false; //whether customer to be notified
-			if($entityIdSus != '')
-			{
-			$order->setState($state, $status, $comment, $isCustomerNotified);    
-			
-			$order->save();
-			$order->sendNewOrderEmail();
-			Mage::getSingleton('adminhtml/session')->addSuccess(Mage::helper('adminhtml')->__("This Order No:- ".$incrementId." Status has changes to processing.."));
-			
-			
-		}
-			else
-			{
-			
-				Mage::getSingleton('adminhtml/session')->addError(Mage::helper('adminhtml')->__("Please select only suspected fraud Order"));
-			}
+		$order->setState($state, $status, $comment, $isCustomerNotified);    
+		$order->save();
+		$order->sendNewOrderEmail();
+		Mage::getSingleton('adminhtml/session')->addSuccess(Mage::helper('adminhtml')->__("This Order No:- ".$incrementId." Status has changes to processing.."));
+		$this->_redirectUrl('/index.php/kribhasanvi/sales_order/index/');
 		}
 	else{
 			Mage::getSingleton('adminhtml/session')->addError(Mage::helper('adminhtml')->__("You are not authorised to do this action, Please contact technical team ! "));
+			$this->_redirectUrl('/index.php/kribhasanvi/sales_order/index/');
 		}		
 		//$this->_redirect('*/sales_order/view');
-		$this->_redirect('*/*/');
+		
+
 	}
 	
 	public function sentpayuInvoiceAction()
