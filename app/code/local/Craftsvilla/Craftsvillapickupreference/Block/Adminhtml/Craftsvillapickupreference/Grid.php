@@ -4,11 +4,12 @@ class Craftsvilla_Craftsvillapickupreference_Block_Adminhtml_Craftsvillapickupre
 {
   public function __construct()
   {
-      parent::__construct();
-      $this->setId('craftsvillapickupreferenceGrid');
-      $this->setDefaultSort('pickup_id');
-      $this->setDefaultDir('DESC');
-      $this->setSaveParametersInSession(true);
+	parent::__construct();
+	$this->setId('craftsvillapickupreferenceGrid');
+	$this->setDefaultSort('pickup_id');
+	$this->setDefaultDir('DESC');
+	$this->setSaveParametersInSession(true);
+	$this->setUseAjax(true);	
   }
 
   protected function _prepareCollection()
@@ -52,11 +53,16 @@ class Craftsvilla_Craftsvillapickupreference_Block_Adminhtml_Craftsvillapickupre
       ));
 
      $this->addColumn('Vendor_id', array(
-          'header'    => Mage::helper('craftsvillapickupreference')->__('Vendor Name'),
+          'header'    => Mage::helper('craftsvillapickupreference')->__('Vendor Id'),
           'align'     =>'left',
           'index'     => 'Vendor_id',
-	  'type'      => 'options',
-          'options'   => Mage::getSingleton('udropship/source')->setPath('vendors')->toOptionHash(),
+      ));
+
+     $this->addColumn('vendor_name', array(
+          'header'    => Mage::helper('craftsvillapickupreference')->__('Vendor Name'),
+          'align'     =>'left',
+          'index'     => 'vendor_name',
+	  
       ));
 
       $this->addColumn('courier_name', array(
@@ -64,86 +70,22 @@ class Craftsvilla_Craftsvillapickupreference_Block_Adminhtml_Craftsvillapickupre
           'align'     =>'left',
           'index'     => 'courier_name',
       ));
-
-      
-	  /*
-      $this->addColumn('content', array(
-			'header'    => Mage::helper('web')->__('Item Content'),
-			'width'     => '150px',
-			'index'     => 'content',
-      ));
-	  */
-
-      //$this->addColumn('status', array(
-        //  'header'    => Mage::helper('craftsvillapickupreference')->__('Status'),
-        //  'align'     => 'left',
-        //  'width'     => '80px',
-         // 'index'     => 'status',
-         // 'type'      => 'options',
-          //'options'   => array(
-          //    1 => 'Enabled',
-          //    2 => 'Disabled',
-          //),
-      //));
-	  
-        //$this->addColumn('action',
-         //   array(
-          //      'header'    =>  Mage::helper('craftsvillapickupreference')->__('Action'),
-           //     'width'     => '100',
-            //    'type'      => 'action',
-              //  'getter'    => 'getId',
-              //  'actions'   => array(
-               //     array(
-               //         'caption'   => Mage::helper('craftsvillapickupreference')->__('Edit'),
-                //        'url'       => array('base'=> '*/*/edit'),
-               //         'field'     => 'id'
-               //     )
-               // ),
-               // 'filter'    => false,
-               // 'sortable'  => false,
-                //'index'     => 'stores',
-                //'is_system' => true,
-       // ));
-		
-		//$this->addExportType('*/*/exportCsv', Mage::helper('craftsvillapickupreference')->__('CSV'));
-		//$this->addExportType('*/*/exportXml', Mage::helper('craftsvillapickupreference')->__('XML'));
-	  
+  
       return parent::_prepareColumns();
   }
 
-   // protected function _prepareMassaction()
-    //{
-     //   $this->setMassactionIdField('craftsvillapickupreference_id');
-      //  $this->getMassactionBlock()->setFormFieldName('craftsvillapickupreference');
-
-      //  $this->getMassactionBlock()->addItem('delete', array(
-        //     'label'    => Mage::helper('craftsvillapickupreference')->__('Delete'),
-         ///    'url'      => $this->getUrl('*/*/massDelete'),
-           //  'confirm'  => Mage::helper('craftsvillapickupreference')->__('Are you sure?')
-        //));
-
-       // $statuses = Mage::getSingleton('craftsvillapickupreference/status')->getOptionArray();
-
-       // array_unshift($statuses, array('label'=>'', 'value'=>''));
-       // $this->getMassactionBlock()->addItem('status', array(
-       //      'label'=> Mage::helper('craftsvillapickupreference')->__('Change status'),
-         //    'url'  => $this->getUrl('*/*/massStatus', array('_current'=>true)),
-             //'additional' => array(
-                  //  'visibility' => array(
-                   //      'name' => 'status',
-                   //      'type' => 'select',
-                    //     'class' => 'required-entry',
-                      //   'label' => Mage::helper('craftsvillapickupreference')->__('Status'),
-                      //   'values' => $statuses
-                     //)
-           //  )
-       // ));
-       // return $this;
-    //}
+   
 
   //public function getRowUrl($row)
   //{
    //   return $this->getUrl('*/*/edit', array('id' => $row->getId()));
   //}
-
+    public function getRowUrl($row)
+  {
+     // return $this->getUrl('*/*/edit', array('id' => $row->getId()));
+  }
+  public function getGridUrl()
+ 	{
+          return $this->getUrl('*/*/grid', array('_current' => true));
+  	}
 }

@@ -15,7 +15,13 @@ class Craftsvilla_Craftsvillapickupreference_Adminhtml_Craftsvillapickupreferenc
 		$this->_initAction()
 			->renderLayout();
 	}
-
+        public function gridAction()
+    {
+        $this->loadLayout();
+        $this->getResponse()->setBody(
+        $this->getLayout()->createBlock('craftsvillapickupreference/adminhtml_craftsvillapickupreference_grid')->toHtml()
+        );
+    }
 	public function editAction() {
 		$id     = $this->getRequest()->getParam('id');
 		$model  = Mage::getModel('craftsvillapickupreference/craftsvillapickupreference')->load($id);
