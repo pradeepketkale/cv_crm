@@ -549,6 +549,12 @@
             </email>
         </template>
         <resources>
+			<sales_read>
+	             <connection>
+		           <use>custom_db</use>     
+	             </connection>
+             </sales_read>
+
             <sales_setup>
                 <setup>
                     <module>Mage_Sales</module>
