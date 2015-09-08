@@ -271,7 +271,8 @@
             </catalog_resource_eav_mysql4>
         </models>
         <resources>
-            <catalog_read>
+            
+			<catalog_read>
 	             <connection>
 		           <use>custom_db</use>     
 	             </connection>
