@@ -65,12 +65,17 @@
                                                                     <action>shipmentpayout/adminhtml_importlogistic</action>
                                                                     <sort_order>20</sort_order>
                                                                 </importlogistic>
-																<importcod translate="title">
+							          <importcod translate="title">
                                                                     <title>Import UTR COD</title>
                                                                     <action>shipmentpayout/adminhtml_importcod</action>
                                                                     <sort_order>20</sort_order>
                                                                 </importcod>
-                                                            
+    							          <importcodutrtracking translate="title">
+                                                                    <title>Import COD UTR TRACKING</title>
+                                                                    <action>shipmentpayout/adminhtml_importcodutrtracking</action>
+                                                                    <sort_order>20</sort_order>
+                                                                </importcodutrtracking> 
+                                                  
                                                             	<importneft translate="title">
                                                                     <title>Import NEFT CODE</title>
                                                                     <action>shipmentpayout/adminhtml_importneft</action>
@@ -149,7 +154,15 @@
                                                                     <!--<action>shipmentpayout/adminhtml_importutr</action>-->
                                                                     <sort_order>20</sort_order>
                                                                 </importcod>
-                                                            
+
+                                                                <importcodutrtracking translate="title">
+                                                                    <title>Import COD UTR TRACKING</title>
+                                                                    <!--<action>shipmentpayout/adminhtml_importutr</action>-->
+                                                                    <sort_order>20</sort_order>
+                                                                </importcodutrtracking>
+
+
+                                                     
                                                             	<importneft translate="title">
                                                                     <title>Import NEFT CODE</title>
                                                                     <!--<action>shipmentpayout/adminhtml_importneft</action>-->
