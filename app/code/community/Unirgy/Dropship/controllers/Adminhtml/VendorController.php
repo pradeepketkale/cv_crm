@@ -390,6 +390,7 @@ echo "</pre>";
 	$vendorDetails = Mage::getModel('udropship/vendor')->load($vendorId);
 	$vendorEmail = $vendorDetails->getEmail();
 	$vendorName = $vendorDetails->getVendorName();
+        $created_at = now();
 	
 	$templateId = 'disable_shop_email_template1';
 	$sender = Array('name'  => 'Craftsvilla',
@@ -422,7 +423,7 @@ echo "</pre>";
                          
                          $remark = mysql_escape_string($this->getRequest()->getParam('disable_shop'));
                          $write = Mage::getSingleton('core/resource')->getConnection('core_write');
-                         $remarkinsertQuery = "INSERT INTO `vendoractivityremark` SET `vendorid`='".$vendorId[0]."',`vendorname`='".$vendorName."',`vendoractivity`='".$remark."'"; 
+                         $remarkinsertQuery = "INSERT INTO `vendoractivityremark` SET `vendorid`='".$vendorId[0]."',`vendorname`='".$vendorName."',`vendoractivity`='".$remark."', `created_at`='".$created_at."'"; 
                          $remarkinsertrow = $write->query($remarkinsertQuery);
       
                           $vars = Array('vendorName' =>$vendorName,

@@ -39,6 +39,14 @@ class Craftsvilla_Vendoractivityremark_Block_Adminhtml_Vendoractivityremark_Grid
           'align'     =>'right',
           'width'     => '50px',
           'index'     => 'vendorname',
+      ));
+
+    $this->addColumn('created_at', array(
+          'header'    => Mage::helper('vendoractivityremark')->__('Created Date'),
+          'align'     =>'right',
+          'index'     => 'created_at',
+          'filter_index' => 'main_table.created_at',
+	  'type' 	  => 'date',
       ));         
 
       $this->addColumn('vendoractivity', array(
