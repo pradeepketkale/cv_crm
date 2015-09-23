@@ -1851,7 +1851,7 @@ public function changePaymentMethodAction()
 	{
 		$user = Mage::getSingleton('admin/session');
 		$userEmail = $user->getUser()->getEmail();
-	if($userEmail == "monica@craftsvilla.com" || $userEmail == "manoj@craftsvilla.com" || $userEmail == "Rohit@craftsvilla.com")
+	if($userEmail == "monica@craftsvilla.com" || $userEmail == "manoj@craftsvilla.com" || $userEmail == "Rohit@craftsvilla.com" || $userEmail == "tribhuvan@craftsvilla.com" || $userEmail == "eulalia.fernandes@craftsvilla.com" || $userEmail == "gaurav@craftsvilla.com" || $userEmail == "niraj@craftsvilla.com")
 		{
 		$orderIds = $this->getRequest()->getPost('order_ids');
 		$order = Mage::getModel('sales/order')->load($orderIds); //load order  
