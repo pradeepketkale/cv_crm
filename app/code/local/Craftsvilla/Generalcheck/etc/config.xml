@@ -32,7 +32,22 @@
            <class>Craftsvilla_Generalcheck_Helper</class>
        </generalcheck>
       </helpers>   
-
+<models>
+            <generalcheck>
+                <class>Craftsvilla_Generalcheck_Model</class>
+            </generalcheck>
+        </models>
+		<events>
+           
+		 <catalog_product_save_after>
+		        <observers>
+		            <generalcheck>
+		                <class>Craftsvilla_Generalcheck_Model_Observer</class>
+		                <method>crmTogetProductEventafter</method>
+		            </generalcheck>
+		        </observers>
+		    </catalog_product_save_after>
+</events>
 	  <blocks><generalcheck><class>Craftsvilla_Generalcheck_Block</class></generalcheck></blocks>
    </global> 
    
