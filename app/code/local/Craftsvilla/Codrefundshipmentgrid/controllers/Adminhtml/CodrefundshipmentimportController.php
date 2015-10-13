@@ -72,7 +72,7 @@ class Craftsvilla_Codrefundshipmentgrid_Adminhtml_CodrefundshipmentimportControl
          * $k is line number
          * $v is line content array
          */
-        $write = Mage::getSingleton('core/resource')->getConnection('core_write');
+        //$write = Mage::getSingleton('core/resource')->getConnection('core_write');
         $read = Mage::getSingleton('core/resource')->getConnection('core_read');
         foreach ($csvData as $k => $v) {
 
@@ -111,14 +111,18 @@ class Craftsvilla_Codrefundshipmentgrid_Adminhtml_CodrefundshipmentimportControl
            if($shipmentId){
                $queryShipmentcod = "select `order_id`, `udropship_status` from `sales_flat_shipment` where `increment_id` = '".$shipmentId."'";
 				$result = $read->query($queryShipmentcod)->fetch();
+				
 				$orderid = $result['order_id'];
 				$udropshipstatus = $result['udropship_status'];
 				$method = "select `method` from `sales_flat_order_payment` where `parent_id` = '".$orderid."'";
 				$methodres = $read->query($method)->fetch();
+				$read->closeConnection();
 				$codmethod = $methodres['method'];
-				$codrefundshipment = "update sales_flat_shipment set udropship_status= 12 WHERE `increment_id` = '".$shipmentId."'";  
-               			$write->query($codrefundshipment);
+				$statusRefundInitiated = Unirgy_Dropship_Model_Source::SHIPMENT_STATUS_REFUND_INITIATED;
+				//$codrefundshipment = "update sales_flat_shipment set udropship_status= 12 WHERE `increment_id` = '".$shipmentId."'";  
+               		//	$write->query($codrefundshipment);
 		               	$shipment = Mage::getModel('sales/order_shipment')->loadByIncrementId($shipmentId);
+						$shipment->setUdropshipStatus($statusRefundInitiated);
                			Mage::helper('udropship')->addShipmentComment($shipment,$this->__('Refunded by System'));
 		               	$shipment->save();
 				if($codmethod=='cashondelivery')
