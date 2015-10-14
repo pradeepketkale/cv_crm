@@ -399,7 +399,7 @@ $updateCodQuery = "UPDATE `codrefundshipmentgrid` SET `shipment_id`= '".$lastShi
  		$shipmentpayout_report1 = Mage::getModel('codrefundshipmentgrid/codrefundshipmentgrid')->getCollection();      	
 		$shipmentpayout_report1->getSelect()
       			->join(array('a'=>'sales_flat_shipment'), 'a.increment_id=main_table.shipment_id')
-      			->where('a.udropship_status != "12"');      	
+      			->where('a.udropship_status = "23"');      	
       	//echo "Query:".$shipmentpayout_report1->getSelect()->__toString();
 		//exit();
 		$shipmentpayout_report1_arr = $shipmentpayout_report1->getData();
