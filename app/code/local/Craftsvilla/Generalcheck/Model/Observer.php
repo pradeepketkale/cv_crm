@@ -17,10 +17,11 @@ public function crmTogetProductEventafter($observer)
 	    'Content-Type: application/json',                                                                                
 	    'Content-Length: ' . strlen($data_string))
 	    );
-	$response=curl_exec($handle);
-	$msg=$url.'|'.$productId.'|'.$response;
+	curl_exec($handle);
+	$http_status_code = curl_getinfo($handle, CURLINFO_HTTP_CODE);	
+	$msg=$url.'|'.$productId.'|'.$http_status_code;
 	error_log($msg);
-	$http_status_code = curl_getinfo($handle, CURLINFO_HTTP_CODE);
+	
 
 	if($http_status_code == 200){
 
