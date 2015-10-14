@@ -19,10 +19,8 @@ public function crmTogetProductEventafter($observer)
 	    );
 	curl_exec($handle);
 	$http_status_code = curl_getinfo($handle, CURLINFO_HTTP_CODE);	
-	$msg=$url.'|'.$productId.'|'.$http_status_code;
-	error_log($msg);
-	
-
+	//$msg=$url.'|'.$productId.'|'.$http_status_code;
+	//error_log($msg);
 	if($http_status_code == 200){
 
 			return true;
