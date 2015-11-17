@@ -426,7 +426,7 @@ class Craftsvilla_Shipmentpayout_Adminhtml_ShipmentpayoutController extends Mage
 			    	else {
 						
 			    		//$vendor_amount = (($total_amount+$itemised_total_shippingcost+$discountAmountCoupon)*(1-($commission_amount/100)*(1+0.1236)));
-			    		$vendor_amount = (($total_amount+$base_shipping_amount+$discountAmountCoupon)*(1-($commission_amount/100)*(1+0.1400)));
+			    		$vendor_amount = (($total_amount+$base_shipping_amount+$discountAmountCoupon)*(1-($commission_amount/100)*(1+0.1450)));
 						//$kribha_amount = (($total_amount1+$itemised_total_shippingcost) - $vendor_amount);
 						//change to accomodate 3% Payment gateway charges on dated 20-12-12
 						
@@ -1446,7 +1446,7 @@ class Craftsvilla_Shipmentpayout_Adminhtml_ShipmentpayoutController extends Mage
       			->join(array('b'=>'sales_flat_shipment_grid'), 'b.increment_id=main_table.shipment_id', array('order_created_at'))
       			->joinLeft('sales_flat_order_payment', 'b.order_id = sales_flat_order_payment.parent_id','method')
 				->where('main_table.shipmentpayout_status=0 AND a.udropship_status IN (7) AND `sales_flat_order_payment`.method = "cashondelivery" AND main_table.citibank_utr != "" ');      	
-      	/*echo "Query:".$shipmentpayout_report1->getSelect()->__toString();
+      /*	echo "Query:".$shipmentpayout_report1->getSelect()->__toString();
 		exit();*/
       			
       	$shipmentpayout_report1_arr = $shipmentpayout_report1->getData();
@@ -1487,7 +1487,8 @@ class Craftsvilla_Shipmentpayout_Adminhtml_ShipmentpayoutController extends Mage
 		    
 				$total_amount1 = $shipmentpayout_report1_val['subtotal'];
 				$total_amount = $shipmentpayout_report1_val['subtotal'];
-				$logisticamount = $shipmentpayout_report1_val['intshipingcost'];
+				//$logisticamount = $shipmentpayout_report1_val['intshipingcost'];
+				$logisticamount = 125;
 				$_liveDate = "2012-08-21 00:00:00";
 		    	$order = Mage::getModel('sales/order')->loadByIncrementId($shipmentpayout_report1_val['order_id']);
 				
@@ -1520,7 +1521,7 @@ class Craftsvilla_Shipmentpayout_Adminhtml_ShipmentpayoutController extends Mage
 				}
 				
 				//$gen_random_number = "K".$this->gen_rand();
-                       $vendor_amount = (($total_amount+$itemised_total_shippingcost+$discountAmountCoupon)*(1-($commission_amount/100)*(1+0.1400)));
+                       $vendor_amount = (($total_amount+$itemised_total_shippingcost+$discountAmountCoupon)*(1-($commission_amount/100)*(1+0.1450)));
 						
 						//$kribha_amount = (($total_amount1+$itemised_total_shippingcost) - $vendor_amount);
 						//change to accomodate 3% Payment gateway charges on dated 20-12-12
@@ -1529,7 +1530,7 @@ class Craftsvilla_Shipmentpayout_Adminhtml_ShipmentpayoutController extends Mage
 						//$kribha_amount = ((($total_amount1+$itemised_total_shippingcost)*0.97) - $vendor_amount);
 						
 			    	
-					$vendor_amount = $vendor_amount - $logisticamount;
+					$vendor_amount = $vendor_amount - ($logisticamount*(1+0.1450));
 				
 		    	$kribha_amount = ((($total_amount1+$base_shipping_amount+$discountAmountCoupon)) - $vendor_amount);
 				
