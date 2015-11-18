@@ -1487,8 +1487,8 @@ class Craftsvilla_Shipmentpayout_Adminhtml_ShipmentpayoutController extends Mage
 		    
 				$total_amount1 = $shipmentpayout_report1_val['subtotal'];
 				$total_amount = $shipmentpayout_report1_val['subtotal'];
-				//$logisticamount = $shipmentpayout_report1_val['intshipingcost'];
-				$logisticamount = 125;
+				$logisticamount = $shipmentpayout_report1_val['intshipingcost'];
+				//$logisticamount = 125;
 				$_liveDate = "2012-08-21 00:00:00";
 		    	$order = Mage::getModel('sales/order')->loadByIncrementId($shipmentpayout_report1_val['order_id']);
 				
