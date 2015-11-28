@@ -156,7 +156,8 @@ class Craftsvilla_Shipmentpayout_Adminhtml_ImportpaytypeController extends Mage_
 			}
 			$shipmentlogisticcharge = "select * from shipmentpayout where shipment_id = '".$shipmentId."'";
 			$sqlred = $read->fetchAll($shipmentlogisticcharge);
-			$logisticcharge = $sqlred[0]['intshipingcost'].'<br>';
+			$logisticcharge1 = $sqlred[0]['intshipingcost'].'<br>';
+			$logisticcharge = $logisticcharge1*(1+0.1450);
 			//echo $commissionAmount = $sqlred[0]['intshipingcost'];
 			//$querysmsemail = "SELECT sfs.`increment_id` as shipment_id,uv.`email` as email,uv.`telephone`,uv.`vendor_name` as vendor_name FROM `udropship_vendor` as uv,sales_flat_shipment as sfs where sfs.`udropship_vendor` = uv.`vendor_id` and sfs.`increment_id` = '".$shipmentId."'";
 
@@ -166,11 +167,11 @@ class Craftsvilla_Shipmentpayout_Adminhtml_ImportpaytypeController extends Mage_
 			$smsTelephone = $sql[0]['telephone'];
 			$smsEmail = $sql[0]['email'];
 			$vendorName = $sql[0]['vendor_name'];
-			$servicetax = 1+0.1400;
-			$totalpayment = ($total_value + $itemised_total_shippingcost + $discountAmountCoupon)*(1-($commission_amount/100)*(1+0.1400));//- ($logisticcharge - $servicetax));
+			$servicetax = 1+0.1450;
+			$totalpayment = ($total_value + $itemised_total_shippingcost + $discountAmountCoupon)*(1-($commission_amount/100)*(1+0.1450));//- ($logisticcharge - $servicetax));
 			$totalpayment = $totalpayment-$logisticcharge;
 			$cvcommission = ($total_value + $itemised_total_shippingcost + $discountAmountCoupon)*(0.2);
-			$cvsttax = $cvcommission*0.1400;
+			$cvsttax = $cvcommission*0.1450;
 		
 			$shipmentvalue = "<table border='0' width='auto'><tr><td style='font-size: 13px;height: 26px;padding: 9px;vertical-align:top;background:#F2F2F2;color:#CE3D49;'>Shipment Value: </td><td style='font-size: 13px;height: 26px;padding: 9px;vertical-align:top;background:#F2F2F2;color:#CE3D49;'>Rs. ".floor($total_value)."</td></tr><tr><td style='font-size: 13px;height: 26px;padding: 9px;vertical-align:top;background:#F2F2F2;color:#CE3D49;'>Discount Amount: </td><td style='font-size: 13px;height: 26px;padding: 9px;vertical-align:top;background:#F2F2F2;color:#CE3D49;'>Rs. ".$discountAmountCoupon."</td></tr><tr><td style='font-size: 13px;height: 26px;padding: 9px;vertical-align:top;background:#F2F2F2;color:#CE3D49;'>ShippingCost: </td><td style='font-size: 13px;height: 26px;padding: 9px;vertical-align:top;background:#F2F2F2;color:#CE3D49;'>Rs. ".$itemised_total_shippingcost."</td></tr><td style='font-size: 13px;height: 26px;padding: 9px;vertical-align:top;background:#F2F2F2;color:#CE3D49;'>Logistic Charge: </td><td style='font-size: 13px;height: 26px;padding: 9px;vertical-align:top;background:#F2F2F2;color:#CE3D49;'>Rs. -".$logisticcharge."</td></tr><tr><td style='font-size: 13px;height: 26px;padding: 9px;vertical-align:top;background:#F2F2F2;color:#CE3D49;'>Service Tax: </td><td style='font-size: 13px;height: 26px;padding: 9px;vertical-align:top;background:#F2F2F2;color:#CE3D49;'>Rs. -".floor($cvsttax)."</td></tr><tr><td style='font-size: 13px;height: 26px;padding: 9px;vertical-align:top;background:#F2F2F2;color:#CE3D49;'>Commission Amount:</strong> </td><td style='font-size: 13px;height: 26px;padding: 9px;vertical-align:top;background:#F2F2F2;color:#CE3D49;'>Rs. -".floor($cvcommission)."</td></tr><tr><td style='font-size: 13px;height: 26px;padding: 9px;vertical-align:top;background:#F2F2F2;color:#CE3D49;'><strong>Total Payment:</strong> </td><td style='font-size: 13px;height: 26px;padding: 9px;vertical-align:top;background:#F2F2F2;color:#CE3D49;'><strong>Rs. ".floor($totalpayment)."</strong></td></tr></table>";
 			$storeId = Mage::app()->getStore()->getId();
