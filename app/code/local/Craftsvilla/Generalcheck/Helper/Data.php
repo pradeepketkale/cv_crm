@@ -201,6 +201,81 @@ $cvmobilehtml = $bodyhtml;
 return $cvmobilehtml;
 	}
 
+
+public function curlCall($productId){
+	$model= Mage::getStoreConfig('craftsvilla_config/service_api');
+	$url=$model['host'].':'.$model['port'].'/productUpdateNotification';
+	//$count=sizeof($productId);
+	//print_r($productId);
+	//echo $count;exit;
+	
+		//$productId=str_getcsv($productId,',','""');
+		//echo "arr".count($productId);exit;
+		
+		$data = array("productId"=>$productId,"apiVersionCode"=>"APIv2"); 
+		$data_string = json_encode($data);//print_r($data_string);exit;
+		$handle = curl_init($url); 
+		curl_setopt($handle, CURLOPT_POST, true);
+		curl_setopt($handle, CURLOPT_POSTFIELDS, $data_string); 
+		curl_setopt($handle, CURLOPT_RETURNTRANSFER, TRUE);
+		curl_setopt($handle, CURLOPT_HTTPHEADER, array('Content-Type: application/json','Content-Length: ' . strlen($data_string)));
+		curl_exec($handle);
+		//print_r($res);exit;
+		$http_status_code = curl_getinfo($handle, CURLINFO_HTTP_CODE);
+		curl_close($handle);
+		return $http_status_code;
+
+
+			
+	}
+public function productUpdateNotify_retry($productId)
+	{		
+			
+		$statusCode=$this->curlCall($productId);
+		$numRetry=3;
+					if($statusCode != 200)
+					{	
+						while($numRetry>0)
+						{
+							//echo $numRetry;
+								$numRetry--;
+								$this->curlCall($productId);
+						}
+									//echo	$numRetry;exit;
+									
+									// send email when product not updating on queue
+									$mailSubject="test";
+									$mailbody .="ProductId  not updatedin productUpdateNotification_q ";
+									$mail = Mage::getModel('core/email');
+									$mail->setToName('Craftsvilla');
+									$mail->setToEmail("shruti.pande@craftsvilla.com");
+									//$mail->setBcc("shruti.pande31@gmail.com");
+									$mail->setBody($mailbody);
+									$mail->setSubject($mailSubject);
+									$mail->setFromEmail('places@craftsvilla.com');
+									$mail->setFromName('Craftsvilla Places');
+									$mail->setType('html');
+									$mail->Send();
+									/*if($mail->Send())
+									{
+										echo "Message has been sent";
+										
+									}
+									else
+									{
+										echo "Mailer Error: " . $mail->ErrorInfo."<br>". $email;
+									}*/
+
+					}else
+					{	
+						return true;
+						//echo "Yess";exit;
+						 
+					}
+			
+			
+	}
+
 	
                             
 }
