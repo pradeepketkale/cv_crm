@@ -216,6 +216,7 @@ class Craftsvilla_Productmanagement_IndexController extends Mage_Core_Controller
 		//echo "Hello";
 
 			$productId=trim($_REQUEST['pid'],","); //exit;
+			$productId=str_getcsv($productId,',','""');
 			$hlp = Mage::helper('generalcheck');
 	   		$hlp->productUpdateNotify_retry($productId);
 	   		$write = Mage::getSingleton('core/resource')->getConnection('core_write');
