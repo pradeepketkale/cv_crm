@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+    <productmanagement_adminhtml_productmanagement_index>
+        <reference name="content">
+            <block type="productmanagement/adminhtml_productmanagement" name="productmanagement" />
+        </reference>
+    </productmanagement_adminhtml_productmanagement_index>
+</layout>
+
