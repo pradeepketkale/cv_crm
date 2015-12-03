@@ -48,6 +48,16 @@
 		        </observers>
 		    </catalog_product_save_after>
 </events>
+<events>
+<sales_order_shipment_save_after>
+				<observers>
+				    <generalcheck>
+				        <class>Craftsvilla_Generalcheck_Model_Observer</class>
+				        <method>crmTogetOrderCancelEventafter</method>
+				    </generalcheck>
+				</observers>
+			    </sales_order_shipment_save_after>
+</events>
 	  <blocks><generalcheck><class>Craftsvilla_Generalcheck_Block</class></generalcheck></blocks>
    </global> 
    

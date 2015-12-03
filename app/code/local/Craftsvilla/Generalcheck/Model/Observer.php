@@ -5,36 +5,35 @@ class Craftsvilla_Generalcheck_Model_Observer
 
 public function crmTogetProductEventafter($observer) 
 	{
-	$productId = $observer->getEvent()->getProduct()->getId();
-	$model= Mage::getStoreConfig('craftsvilla_config/service_api');
-	$url=$model['host'].':'.$model['port'].'/productUpdateNotification';
-    	$data = array("productId"=>$productId); 
-	$data_string = json_encode($data);//print_r($data_string);exit;
-	$handle = curl_init($url); 
-	curl_setopt($handle, CURLOPT_POST, true);
-	curl_setopt($handle, CURLOPT_POSTFIELDS, $data_string); 
-	curl_setopt($handle, CURLOPT_HTTPHEADER, array							(                                                                          
-	    'Content-Type: application/json',                                                                                
-	    'Content-Length: ' . strlen($data_string))
-	    );
-	curl_exec($handle);
-	$http_status_code = curl_getinfo($handle, CURLINFO_HTTP_CODE);	
-	//$msg=$url.'|'.$productId.'|'.$http_status_code;
-	//error_log($msg);
-	if($http_status_code == 200){
+		$productId = $observer->getEvent()->getProduct()->getId();
+		$hlp = Mage::helper('generalcheck');
+		$hlp->productUpdateNotify_retry($productId);
+	}  
 
-			return true;
+public function crmTogetOrderCancelEventafter($obs){
+		//echo "hello";exit;		
+		$shipment = $obs->getEvent()->getShipment();
+		$shipmentId = $shipment->getEntityId();
 
-	}else{
+		 $_shipmentUdropshipstatus = $shipment->getUdropshipStatus();
+		 $statusCanceled = Unirgy_Dropship_Model_Source::SHIPMENT_STATUS_CANCELED;//exit;
+		$pid=array();
+		if($_shipmentUdropshipstatus == $statusCanceled){
+			    $items = $shipment->getAllItems();
+		foreach ($items as $item) {
+                    $productsToUpdate = $item->getProductId();
+			array_push($pid,$productsToUpdate);
+	            		 }
+
+			   $hlp = Mage::helper('generalcheck');
+	     		   $hlp->productUpdateNotify_retry($pid);
 		
-			return false;
-			
-	}
 
-	
-	curl_close($handle);
+			}
 		
-	}         
+
+
+	}       
 
 }
 ?>

@@ -8,7 +8,7 @@ app/code/local/Craftsvilla/Config/etc/config.xml
 sitemap.xml
 downloader/
 *.*~
-/.htaccess
+
 *.swn
 solariumsearch/config.dist.php
 /nbproject/
