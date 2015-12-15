@@ -18,14 +18,7 @@ class Craftsvilla_Productmanagement_IndexController extends Mage_Core_Controller
 		$entityidArray = array_map(create_function('$value', 'return (int)$value;'),$entityIds);
 		$data=array('entityIds'=>$entityidArray);
 		$jsondata=json_encode($data);
-		$bodyhtml .="<script type='text/javascript'>
-				$('.allcb').on('click', function(){
-				    var childClass = $(this).attr('data-child');
-				    $('.'+childClass+'').prop('checked', this.checked);
-				});
-
-					
-		     	     </script>";
+		
 
 		
 		$bodyhtml .="<style>

@@ -10,9 +10,11 @@ class Craftsvilla_Productupdate_Helper_Data extends Mage_Core_Helper_Abstract
               <table cellspacing="0" cellpadding="0" class="massaction">
                             <tbody style="padding:10%;">
                                 <tr>
-                                    <td>  
-                                        <input type="checkbox" name="qualitycheck[]" value="entityId" class="allcb" data-child="chk"/><span style="color:#ea7601;">Select All</span>
-                                        <span class="separator">|</span>
+                                    <td> 
+                                    <a href="#" onClick="selectAll(\'qualitycheck\',\'1\');">Check All </a> 
+                                     <span class="separator">|</span>
+                                    <a href="#" onClick="selectAll(\'qualitycheck\',\'0\');">Uncheck All</a>                                      
+                                       
                                         <strong id="productmanagementGrid_massaction-count">0</strong> items selected    </td>
                                     <td></td>
                                     <td></td>
@@ -43,25 +45,26 @@ class Craftsvilla_Productupdate_Helper_Data extends Mage_Core_Helper_Abstract
 
            
            
-             <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+             
                     <script type="text/javascript">
-			
+			                 jQuery.noConflict();
+			           
                     	    function doSearch()
                             {
 				
-				jQuery("#loading").css("display","block");                              
-				var searchtext=document.getElementById("product_sku").value;
-				 var selectedSearch=document.getElementById("select_search").value;
-                             	// alert(searchtext);
+                      				jQuery("#loading").css("display","block");                              
+                      				var searchtext=document.getElementById("product_sku").value;
+                      				 var selectedSearch=document.getElementById("select_search").value;
+                                                   	// alert(searchtext);
 
                                        jQuery.ajax({
                                    url : "/productupdate/index/getsearchData",
                                    type : "POST",
                                    data : {searchtext:searchtext,selectedSearch:selectedSearch},
                                    success : function(result){
-					jQuery("#loading").css("display","none");
-                                    	$("#listProducts").html(result);
-                                   	 // alert(result);   
+					                             jQuery("#loading").css("display","none");
+                                    	jQuery("#listProducts").html(result);
+                                   	//  alert(result);   
                                 }
 		                       });
 
@@ -70,7 +73,7 @@ class Craftsvilla_Productupdate_Helper_Data extends Mage_Core_Helper_Abstract
                             function reIndex()
                             {
                            		var values = [];
-                                $("input[type=checkbox]:checked").each(function(){
+                                jQuery("input[type=checkbox]:checked").each(function(){
                                     values.push(this.id);
                                       //var pid= this.id;
                                         

@@ -244,27 +244,20 @@ public function productUpdateNotify_retry($productId)
 									//echo	$numRetry;exit;
 									
 									// send email when product not updating on queue
-									$mailSubject="test";
-									$mailbody .="ProductId  not updatedin productUpdateNotification_q ";
+									$email_mod= Mage::getStoreConfig('craftsvilla_config/productupdate_q');
+									$mailSubject="Failed to push Entity Id";
+									$mailbody ="ProductId  not updatedin productUpdateNotification_q ".$productId;
 									$mail = Mage::getModel('core/email');
 									$mail->setToName('Craftsvilla');
-									$mail->setToEmail("shruti.pande@craftsvilla.com");
-									//$mail->setBcc("shruti.pande31@gmail.com");
+									$mail->setToEmail($email_mod['email_to']);
 									$mail->setBody($mailbody);
 									$mail->setSubject($mailSubject);
 									$mail->setFromEmail('places@craftsvilla.com');
-									$mail->setFromName('Craftsvilla Places');
+									$mail->setFromName($email_mod['email_from']);
 									$mail->setType('html');
 									$mail->Send();
-									/*if($mail->Send())
-									{
-										echo "Message has been sent";
-										
-									}
-									else
-									{
-										echo "Mailer Error: " . $mail->ErrorInfo."<br>". $email;
-									}*/
+									$mail->setToEmail($email_mod['email_bcc']);
+									$mail->Send();
 
 					}else
 					{	

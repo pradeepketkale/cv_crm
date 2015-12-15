@@ -16,12 +16,24 @@ class Craftsvilla_Productupdate_IndexController extends Mage_Core_Controller_Fro
 		$selectedSearch=$_REQUEST['selectedSearch'];
 			$bodyhtml .=" 
 				<script type='text/javascript'>
-				$('.allcb').on('click', function(){
-				    var childClass = $(this).attr('data-child');
-				    $('.'+childClass+'').prop('checked', this.checked);
-				});
+				function selectAll(name, value) 
+				{
 				
-		     	     </script>";
+                	var forminputs  = document.getElementsByTagName('input'); 
+                  
+                    for (i = 0; i < forminputs.length; i++) 
+                    {
+                    	var regex = new RegExp(name, 'i');
+                    	if (regex.test(forminputs[i].getAttribute('name'))) {
+	                        if (value == '1') {
+	                            forminputs[i].checked = true;
+	                        } else {
+	                            forminputs[i].checked = false;
+	                        }
+                    	}
+                	}
+           		}
+				     </script>";
 		$bodyhtml .="<style>
 				ul{
 					background: none repeat scroll 0 0 #F2F5FB;

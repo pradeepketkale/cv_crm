@@ -5,20 +5,36 @@ class Craftsvilla_Productmanagement_Helper_Data extends Mage_Core_Helper_Abstrac
     public function searchBox()
         {         
 
-                $a .=   "<script type='text/javascript'>
-                            $('.allcb').on('click', function(){
-                                var childClass = $(this).attr('data-child');
-                                $('.'+childClass+'').prop('checked', this.checked);
-                            });
-                        </script>";
+                $a .=   "
+                           <script type='text/javascript'>
+        function selectAll(name, value) 
+        {
+        
+                  var forminputs  = document.getElementsByTagName('input'); 
+                  
+                    for (i = 0; i < forminputs.length; i++) 
+                    {
+                      var regex = new RegExp(name, 'i');
+                      if (regex.test(forminputs[i].getAttribute('name'))) {
+                          if (value == '1') {
+                              forminputs[i].checked = true;
+                          } else {
+                              forminputs[i].checked = false;
+                          }
+                      }
+                  }
+              }
+             </script>
+                      ";
         
                 $a .=  '<table cellspacing="0" cellpadding="0" class="massaction">
                             <tbody style="padding:10%;">
                                 <tr>
                                     <td>  
-                                        <input type="checkbox" name="qualitycheck[]" value="entityId" class="allcb" data-child="chk"/><span style="color:#ea7601;">Select All</span>
-                                        <span class="separator">|</span>
-                                        <strong id="productmanagementGrid_massaction-count"></strong> items selected    </td>
+                                        <a href="#" onClick="selectAll(\'qualitycheck\',\'1\');">Check All </a> 
+                                     <span class="separator">|</span>
+                                    <a href="#" onClick="selectAll(\'qualitycheck\',\'0\');">Uncheck All</a>                                      
+                                       </td>
                                     <td></td>
                                     <td></td>
                                     <td> 
@@ -45,8 +61,9 @@ class Craftsvilla_Productmanagement_Helper_Data extends Mage_Core_Helper_Abstrac
                         <input type="button" name="search" onclick="doSearch();" value="Search">
                     </form>
                     <br>
-                    <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+                  
                     <script type="text/javascript">
+                     jQuery.noConflict();
                             function doSearch()
                             {
                                 jQuery("#loading").css("display","block");
@@ -59,7 +76,7 @@ class Craftsvilla_Productmanagement_Helper_Data extends Mage_Core_Helper_Abstrac
                                       data : {searchtext:searchtext,selectedSearch:selectedSearch},
                                       success : function(result){
                                         jQuery("#loading").css("display","none");
-                                        $("#listProducts").html(result);
+                                        jQuery("#listProducts").html(result);
                                         // alert(result);  
 
                                       }
@@ -70,18 +87,18 @@ class Craftsvilla_Productmanagement_Helper_Data extends Mage_Core_Helper_Abstrac
                             {
                               
                                 var values = [];
-                                $("input[type=checkbox]:checked").each(function(){
+                                jQuery("input[type=checkbox]:checked").each(function(){
                                     values.push(this.id);
                                       var pid= this.id;
                                 
                                 });
-                                  var count=$(".chk:checked").size();
+                                 // var count=$(".chk:checked").size();
                                 var pid = values.join();
                                 //alert(count);
                                  jQuery.ajax({
                                    url : "/productmanagement/index/disableSelected",
                                    type : "POST",
-                                   data : {pid:pid,count:count},
+                                   data : {pid:pid},
                                    success : function(result){
                                    // $("#listProducts").html(result);
                                        // $("#count").html(result); 
