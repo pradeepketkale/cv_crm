@@ -252,7 +252,6 @@ public function productUpdateNotify_retry($productId)
 									$mail->setToEmail($email_mod['email_to']);
 									$mail->setBody($mailbody);
 									$mail->setSubject($mailSubject);
-									$mail->setFromEmail('places@craftsvilla.com');
 									$mail->setFromName($email_mod['email_from']);
 									$mail->setType('html');
 									$mail->Send();

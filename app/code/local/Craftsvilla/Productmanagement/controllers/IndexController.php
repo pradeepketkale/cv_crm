@@ -64,8 +64,8 @@ class Craftsvilla_Productmanagement_IndexController extends Mage_Core_Controller
 	    if($selectedSearch == 'productId'){
 
 			$bodyhtml .='<div class="grid_box" style="display: inline-block;width:100%">';
-			
-				$urlProduct = '192.168.1.2:9000/productLite';
+				$model= Mage::getStoreConfig('craftsvilla_config/service_api');
+				$urlProduct = $model['host'].':'.$model['port'].'/productLite';
 				$ch = curl_init();
 				curl_setopt($ch, CURLOPT_URL, $urlProduct);
 				curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
