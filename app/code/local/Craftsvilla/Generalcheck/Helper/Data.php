@@ -212,7 +212,7 @@ public function curlCall($productId){
 		//$productId=str_getcsv($productId,',','""');
 		//echo "arr".count($productId);exit;
 		
-		$data = array("productId"=>$productId,"apiVersionCode"=>"APIv2"); 
+		$data = array("productId"=>$productId,"apiVersionCode"=>"2"); 
 		$data_string = json_encode($data);//print_r($data_string);exit;
 		$handle = curl_init($url); 
 		curl_setopt($handle, CURLOPT_POST, true);
