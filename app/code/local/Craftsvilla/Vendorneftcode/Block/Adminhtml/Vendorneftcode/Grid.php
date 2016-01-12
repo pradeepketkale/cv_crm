@@ -66,6 +66,11 @@ class Craftsvilla_Vendorneftcode_Block_Adminhtml_Vendorneftcode_Grid extends Mag
 			'width'     => '150px',
 			'index'     => 'payment_privileges',
       ));
+      $this->addColumn('bulk_privileges', array(
+      'header'    => Mage::helper('vendorneftcode')->__('Bulk Privileges'),
+      'width'     => '150px',
+      'index'     => 'bulk_privileges',
+      ));
 
      
 
