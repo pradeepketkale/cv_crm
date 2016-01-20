@@ -202,7 +202,7 @@ return $cvmobilehtml;
 	}
 
 
-public function curlCall($productId){
+public function productUpdateCurlCall($productId){
 	$model= Mage::getStoreConfig('craftsvilla_config/service_api');
 	$url=$model['host'].':'.$model['port'].'/productUpdateNotification';
 	//$count=sizeof($productId);
@@ -229,35 +229,48 @@ public function curlCall($productId){
 			
 	}
 public function productUpdateNotify_retry($productId)
-	{		
-			
-		$statusCode=$this->curlCall($productId);
-		$numRetry=3;
-					if($statusCode != 200)
+	{	
+	$statusCode=$this->productUpdateCurlCall($productId);	
+	if($statusCode != 200)
 					{	
+						$numRetry=3;
 						while($numRetry>0)
-						{
-							//echo $numRetry;
-								$numRetry--;
-								$this->curlCall($productId);
-						}
-									//echo	$numRetry;exit;
+						{	
+								
 									
-									// send email when product not updating on queue
+									$statusCode=$this->productUpdateCurlCall($productId);
+									if($statusCode == 200)
+									{	
+										break;
+									
+									}
+								$numRetry--;
+						}
+								//echo	$numRetry;exit;
+						if($numRetry==0)
+							{
 									$email_mod= Mage::getStoreConfig('craftsvilla_config/productupdate_q');
-									$mailSubject="Failed to push Entity Id";
-									$mailbody ="ProductId  not updatedin productUpdateNotification_q ".$productId;
-									$mail = Mage::getModel('core/email');
-									$mail->setToName('Craftsvilla');
-									$mail->setToEmail($email_mod['email_to']);
-									$mail->setBody($mailbody);
-									$mail->setSubject($mailSubject);
-									$mail->setFromName($email_mod['email_from']);
-									$mail->setType('html');
-									$mail->Send();
-									$mail->setToEmail($email_mod['email_bcc']);
-									$mail->Send();
+									$templateId='productupdate_notify';
+									
+									$toEmail = $email_mod['email_to'];
+									$toEmailCC = $email_mod['email_bcc'];
+									$emailFrom= $email_mod['email_from'];
+									
+									$vars = array();
+									$sender = Array('name'  => 'Craftsvilla',
+											'email' =>$emailFrom);
+									$storeId = 1;
 
+									$transactionalEmail = Mage::getModel('core/email_template')
+									            ->setDesignConfig(array('area' => 'frontend', 'store' => $storeId));                 
+									$transactionalEmail
+									        ->getMail();
+									$transactionalEmail->setTemplateSubject('Product Notifiaction');
+									$transactionalEmail->sendTransactional($templateId, $sender, $toEmail,  $vars);
+									$transactionalEmail->sendTransactional($templateId, $sender, $toEmailCC, $vars);
+									
+							}
+									
 					}else
 					{	
 						return true;

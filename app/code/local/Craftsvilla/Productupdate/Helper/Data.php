@@ -72,6 +72,7 @@ class Craftsvilla_Productupdate_Helper_Data extends Mage_Core_Helper_Abstract
 
                             function reIndex()
                             {
+				jQuery("#loading").css("display","block"); 
                            		var values = [];
                                 jQuery("input[type=checkbox]:checked").each(function(){
                                     values.push(this.id);
@@ -86,6 +87,7 @@ class Craftsvilla_Productupdate_Helper_Data extends Mage_Core_Helper_Abstract
                                    data : {pid:pid},
                                    success : function(result){
                                    // $("#listProducts").html(result);
+					 jQuery("#loading").css("display","none");
                                     alert(result);   
                                 }
                                });
