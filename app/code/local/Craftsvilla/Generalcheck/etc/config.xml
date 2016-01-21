@@ -48,7 +48,6 @@
 		        </observers>
 		    </catalog_product_save_after>
 </events>
-
 <template>
      <email>
 		<productupdate_notify>
