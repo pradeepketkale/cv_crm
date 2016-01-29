@@ -30,7 +30,7 @@ class Unirgy_Dropship_Model_Source extends Unirgy_Dropship_Model_Source_Abstract
     *Added one extra status const SHIPMENT_STATUS_SHIPPED_CRAFTSVILLA = 15; 
     *Added by Suresh on 31-05-2012
     */
-	const SHIPMENT_STATUS_BLANK    = '';
+    const SHIPMENT_STATUS_BLANK    = '';
     const SHIPMENT_STATUS_PENDING    = 0;
     const SHIPMENT_STATUS_EXPORTED   = 10;
     const SHIPMENT_STATUS_ACK        = 9;
@@ -42,34 +42,35 @@ class Unirgy_Dropship_Model_Source extends Unirgy_Dropship_Model_Source_Abstract
     const SHIPMENT_STATUS_SHIPPED    = 1;
     const SHIPMENT_STATUS_CANCELED   = 6;
     const SHIPMENT_STATUS_DELIVERED  = 7;
-    const SHIPMENT_STATUS_PROCESSING 		= 11;
-    const SHIPMENT_STATUS_REFUND_INITIATED 	= 12;
-    const SHIPMENT_STATUS_NOT_DELIVERED 	= 13;
-    const SHIPMENT_STATUS_CHARGE_BACK 		= 14;
+    const SHIPMENT_STATUS_PROCESSING        = 11;
+    const SHIPMENT_STATUS_REFUND_INITIATED  = 12;
+    const SHIPMENT_STATUS_NOT_DELIVERED     = 13;
+    const SHIPMENT_STATUS_CHARGE_BACK       = 14;
     const SHIPMENT_STATUS_SHIPPED_CRAFTSVILLA = 15;
     const SHIPMENT_STATUS_QC_REJECTED_CRAFTSVILLA = 16;
     const SHIPMENT_STATUS_RECEIVED_CRAFTSVILLA = 17;
-	
+    
    // dileswar added "Product Out Of Stock" coulmn to shipment status  on date 12-10-2012     
     const SHIPMENT_STATUS_OUTOFSTOCK_CRAFTSVILLA = 18;
-	const SHIPMENT_STATUS_PARTIALLY_REFUND_INITIATED = 19;  //added on 20-11-2012
-	const SHIPMENT_STATUS_DISPUTE_RAISED = 20;  //added on 29-11-2012
-	const SHIPMENT_STATUS_SHIPMENT_DELAYED = 21;  //added on 29-11-2012
-	const SHIPMENT_STATUS_PARTIALLY_SHIPPED = 22;  //added on 13-12-2012
-	const SHIPMENT_STATUS_REFUND_TODO = 23;  //added on 29-03-2013
-	const SHIPMENT_STATUS_ACCEPTED = 24;  //added on 29-10-2013
-	const SHIPMENT_STATUS_COD_RTO = 25; //added on 02-12-2013
-	const SHIPMENT_STATUS_RETURNED_BY_CUSTOMER = 26; //added on 02-12-2013
-	const SHIPMENT_STATUS_COD_MANIFEST_SHARED = 27;//added on 15-01-2014
-	const SHIPMENT_STATUS_COD_SHIPMENT_PICKED_UP = 28;//added on 15-01-2014
-	const SHIPMENT_STATUS_PACKINGSLIP_PRINTED = 30;
-	const SHIPMENT_STATUS_HANDEDTO_COURIER = 31;
-	const SHIPMENT_STATUS_RETURN_RECIEVED_FROM_CUSTOMER = 32;
-	const SHIPMENT_STATUS_PARTIALLY_RECIEVED = 33;
-	const SHIPMENT_STATUS_REFUND_VOUCHER_REQUESTED = 34;
-	const SHIPMENT_STATUS_REFUND_VOUCHER_SENT = 35;
-	
-	const TRACK_STATUS_PENDING   = 'P';
+    const SHIPMENT_STATUS_PARTIALLY_REFUND_INITIATED = 19;  //added on 20-11-2012
+    const SHIPMENT_STATUS_DISPUTE_RAISED = 20;  //added on 29-11-2012
+    const SHIPMENT_STATUS_SHIPMENT_DELAYED = 21;  //added on 29-11-2012
+    const SHIPMENT_STATUS_PARTIALLY_SHIPPED = 22;  //added on 13-12-2012
+    const SHIPMENT_STATUS_REFUND_TODO = 23;  //added on 29-03-2013
+    const SHIPMENT_STATUS_ACCEPTED = 24;  //added on 29-10-2013
+    const SHIPMENT_STATUS_COD_RTO = 25; //added on 02-12-2013
+    const SHIPMENT_STATUS_RETURNED_BY_CUSTOMER = 26; //added on 02-12-2013
+    const SHIPMENT_STATUS_COD_MANIFEST_SHARED = 27;//added on 15-01-2014
+    const SHIPMENT_STATUS_COD_SHIPMENT_PICKED_UP = 28;//added on 15-01-2014
+    const SHIPMENT_STATUS_PACKINGSLIP_PRINTED = 30;
+    const SHIPMENT_STATUS_HANDEDTO_COURIER = 31;
+    const SHIPMENT_STATUS_RETURN_RECIEVED_FROM_CUSTOMER = 32;
+    const SHIPMENT_STATUS_PARTIALLY_RECIEVED = 33;
+    const SHIPMENT_STATUS_REFUND_VOUCHER_REQUESTED = 34;
+    const SHIPMENT_STATUS_REFUND_VOUCHER_SENT = 35;
+    const SHIPMENT_STATUS_DAMAGE_LOST_IN_TRANSIT = 36; 
+    
+    const TRACK_STATUS_PENDING   = 'P';
     const TRACK_STATUS_CANCELED  = 'C';
     const TRACK_STATUS_READY     = 'R';
     const TRACK_STATUS_SHIPPED   = 'S';
@@ -95,7 +96,7 @@ class Unirgy_Dropship_Model_Source extends Unirgy_Dropship_Model_Source_Abstract
     protected $_vendors = array();
     protected $_taxRegions = array();
     protected $_visiblePreferences = array();
-	
+    
     public function toOptionHash($selector=false)
     {
         $hlp = Mage::helper('udropship');
@@ -177,11 +178,11 @@ class Unirgy_Dropship_Model_Source extends Unirgy_Dropship_Model_Source_Abstract
             $options = $this->getVendorVisiblePreferences();
             break;
 
-		/*
-		*Craftsvilla Comment
-		*Changed status "Shipped" To "Shipped To Customer" and added one more status Shipped To Craftsvilla
-		*Added by Suresh 31-05-2012
-		*/
+        /*
+        *Craftsvilla Comment
+        *Changed status "Shipped" To "Shipped To Customer" and added one more status Shipped To Craftsvilla
+        *Added by Suresh 31-05-2012
+        */
 
         case 'udropship/batch/export_on_po_status':
         case 'udropship/vendor/default_shipment_status':
@@ -193,7 +194,7 @@ class Unirgy_Dropship_Model_Source extends Unirgy_Dropship_Model_Source_Abstract
         case 'initial_shipment_status':
         case 'vendor_po_grid_status_filter':
             $options = array(
-				self::SHIPMENT_STATUS_BLANK   => $hlp->__(''),
+                self::SHIPMENT_STATUS_BLANK   => $hlp->__(''),
                 self::SHIPMENT_STATUS_PENDING   => $hlp->__('Pending'),
                 self::SHIPMENT_STATUS_EXPORTED  => $hlp->__('Exported'),
                 self::SHIPMENT_STATUS_ACK       => $hlp->__('Acknowledged'),
@@ -206,35 +207,36 @@ class Unirgy_Dropship_Model_Source extends Unirgy_Dropship_Model_Source_Abstract
                 //self::SHIPMENT_STATUS_SHIPPED   => $hlp->__('Shipped'),
                 self::SHIPMENT_STATUS_DELIVERED => $hlp->__('Delivered'),
                 self::SHIPMENT_STATUS_CANCELED  => $hlp->__('Canceled'),
-            	self::SHIPMENT_STATUS_PROCESSING   => $hlp->__('Processing'),
+                self::SHIPMENT_STATUS_PROCESSING   => $hlp->__('Processing'),
                 self::SHIPMENT_STATUS_REFUND_INITIATED  => $hlp->__('Refund Initiated'),
                 self::SHIPMENT_STATUS_NOT_DELIVERED  => $hlp->__('Not Delivered'),
                 self::SHIPMENT_STATUS_CHARGE_BACK  => $hlp->__('Charge Back'),
                 self::SHIPMENT_STATUS_SHIPPED_CRAFTSVILLA   => $hlp->__('Shipped To Craftsvilla'),
                 self::SHIPMENT_STATUS_QC_REJECTED_CRAFTSVILLA   => $hlp->__('QC Rejected by Craftsvilla'),
                 self::SHIPMENT_STATUS_RECEIVED_CRAFTSVILLA   => $hlp->__('Received in Craftsvilla'),
-				//added By Dileswar 
-				self::SHIPMENT_STATUS_OUTOFSTOCK_CRAFTSVILLA => $hlp->__('Product Out Of Stock'),
-				self::SHIPMENT_STATUS_PARTIALLY_REFUND_INITIATED  => $hlp->__('Partially Refund Initiated'),// dated 20-11-2012
-				self::SHIPMENT_STATUS_DISPUTE_RAISED  => $hlp->__('Dispute Raised'),// dated 20-11-2012
-				self::SHIPMENT_STATUS_SHIPMENT_DELAYED  => $hlp->__('Shipment Delayed'),// dated 20-11-2012
-				self::SHIPMENT_STATUS_PARTIALLY_SHIPPED  => $hlp->__('Partially Shipped'),// dated 20-11-2012
-				self::SHIPMENT_STATUS_REFUND_TODO  => $hlp->__('Refund To Do'),// dated 29-03-2013
-				self::SHIPMENT_STATUS_ACCEPTED  => $hlp->__('Accepted'),// dated 29-03-2013
-				self::SHIPMENT_STATUS_COD_RTO  => $hlp->__('COD RTO'), //added on 02-12-2013
-	            self::SHIPMENT_STATUS_RETURNED_BY_CUSTOMER  => $hlp->__('Returned By Customer'), //added on 02-12-2013
-				self::SHIPMENT_STATUS_COD_MANIFEST_SHARED  => $hlp->__('COD Manifest Shared'),//added on 15-01-2014
-				self::SHIPMENT_STATUS_COD_SHIPMENT_PICKED_UP => $hlp->__('COD Shipment Picked Up'),//added on 15-01-2014
-				self::SHIPMENT_STATUS_PACKINGSLIP_PRINTED => $hlp->__('Packing Slip Printed'),
-				self::SHIPMENT_STATUS_HANDEDTO_COURIER => $hlp->__('Handed To Courier'),
-				self::SHIPMENT_STATUS_RETURN_RECIEVED_FROM_CUSTOMER => $hlp->__('Return Recieved From Customer'),
-				self::SHIPMENT_STATUS_PARTIALLY_RECIEVED => $hlp->__('Partially Recieved'),
-				self::SHIPMENT_STATUS_REFUND_VOUCHER_REQUESTED => $hlp->__('Refund Voucher Requested'),
-				self::SHIPMENT_STATUS_REFUND_VOUCHER_SENT => $hlp->__('Refund Voucher Sent'),
+                //added By Dileswar 
+                self::SHIPMENT_STATUS_OUTOFSTOCK_CRAFTSVILLA => $hlp->__('Product Out Of Stock'),
+                self::SHIPMENT_STATUS_PARTIALLY_REFUND_INITIATED  => $hlp->__('Partially Refund Initiated'),// dated 20-11-2012
+                self::SHIPMENT_STATUS_DISPUTE_RAISED  => $hlp->__('Dispute Raised'),// dated 20-11-2012
+                self::SHIPMENT_STATUS_SHIPMENT_DELAYED  => $hlp->__('Shipment Delayed'),// dated 20-11-2012
+                self::SHIPMENT_STATUS_PARTIALLY_SHIPPED  => $hlp->__('Partially Shipped'),// dated 20-11-2012
+                self::SHIPMENT_STATUS_REFUND_TODO  => $hlp->__('Refund To Do'),// dated 29-03-2013
+                self::SHIPMENT_STATUS_ACCEPTED  => $hlp->__('Accepted'),// dated 29-03-2013
+                self::SHIPMENT_STATUS_COD_RTO  => $hlp->__('COD RTO'), //added on 02-12-2013
+                self::SHIPMENT_STATUS_RETURNED_BY_CUSTOMER  => $hlp->__('Returned By Customer'), //added on 02-12-2013
+                self::SHIPMENT_STATUS_COD_MANIFEST_SHARED  => $hlp->__('COD Manifest Shared'),//added on 15-01-2014
+                self::SHIPMENT_STATUS_COD_SHIPMENT_PICKED_UP => $hlp->__('COD Shipment Picked Up'),//added on 15-01-2014
+                self::SHIPMENT_STATUS_PACKINGSLIP_PRINTED => $hlp->__('Packing Slip Printed'),
+                self::SHIPMENT_STATUS_HANDEDTO_COURIER => $hlp->__('Handed To Courier'),
+                self::SHIPMENT_STATUS_RETURN_RECIEVED_FROM_CUSTOMER => $hlp->__('Return Recieved From Customer'),
+                self::SHIPMENT_STATUS_PARTIALLY_RECIEVED => $hlp->__('Partially Recieved'),
+                self::SHIPMENT_STATUS_REFUND_VOUCHER_REQUESTED => $hlp->__('Refund Voucher Requested'),
+                self::SHIPMENT_STATUS_REFUND_VOUCHER_SENT => $hlp->__('Refund Voucher Sent'),
+                self::SHIPMENT_STATUS_DAMAGE_LOST_IN_TRANSIT => $hlp->__('Damage/Lost in transit'),
             );
-			
-			
-	
+            
+            
+    
             if ($this->getPath() == 'initial_shipment_status') {
                 $options = array('999' => $hlp->__('* Default (global setting)')) + $options;
             }
@@ -309,7 +311,7 @@ class Unirgy_Dropship_Model_Source extends Unirgy_Dropship_Model_Source_Abstract
 
         case 'statement_shipping_in_payout':
         case 'statement_tax_in_payout':
-        	$options = array(
+            $options = array(
                 'include' => 'Include',
                 'exclude_show' => 'Exclude but Show',
                 'exclude_hide' => 'Exclude and Hide',
@@ -624,7 +626,7 @@ class Unirgy_Dropship_Model_Source extends Unirgy_Dropship_Model_Source_Abstract
         case 'statement_subtotal_base':
             $options = array(
                 'price' => $hlp->__('Price'),
-            	'cost'  => $hlp->__('Cost'),
+                'cost'  => $hlp->__('Cost'),
             );
             break;
 
@@ -639,7 +641,7 @@ class Unirgy_Dropship_Model_Source extends Unirgy_Dropship_Model_Source_Abstract
         case 'vendor_po_grid_sortdir':
             $options = array(
                 'desc' => $hlp->__('Descending'),
-				'asc' => $hlp->__('Ascending'),
+                'asc' => $hlp->__('Ascending'),
             );
             break;
 
@@ -693,18 +695,18 @@ class Unirgy_Dropship_Model_Source extends Unirgy_Dropship_Model_Source_Abstract
             );
             break;
        //Added by Gayatri to display primary categories of all sellers list
-	     case 'primary_category':
-		 $options = array(
-		 '0' => '',
-		 '4' => 'Clothing',
-		 '5' => 'Home Decor',
-		 '6' => 'Jewellery',
-		 '9' => 'Bags',
-		 '74' => 'Sarees',		 
-		 '1070' => 'Home Furnishing',
-		 '2' => 'Other'
-		 );
-		 break;
+         case 'primary_category':
+         $options = array(
+         '0' => '',
+         '4' => 'Clothing',
+         '5' => 'Home Decor',
+         '6' => 'Jewellery',
+         '9' => 'Bags',
+         '74' => 'Sarees',       
+         '1070' => 'Home Furnishing',
+         '2' => 'Other'
+         );
+         break;
         default:
             Mage::throwException($hlp->__('Invalid request for source options: '.$this->getPath()));
         }
@@ -718,11 +720,11 @@ class Unirgy_Dropship_Model_Source extends Unirgy_Dropship_Model_Source_Abstract
 
     public function toOptionArray($selector=false)
     {
-		switch ($this->getPath()) {
+        switch ($this->getPath()) {
         case 'udropship/vendor/vendor_notification_field':
         case 'udropship/vendor/visible_preferences':
             
-			return $this->toOptionHash($selector);
+            return $this->toOptionHash($selector);
         }
         return parent::toOptionArray($selector);
     }
