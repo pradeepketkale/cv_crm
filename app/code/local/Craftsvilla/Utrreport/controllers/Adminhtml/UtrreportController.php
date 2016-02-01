@@ -185,14 +185,16 @@ public function assignAction()
 				$utrNum = $utrreport->getUtrno();
 				$utrBalance = $utrreport->getBalance();
 				$strTest = "";
+				$readOrderCntry = Mage::getSingleton('core/resource')->getConnection('core_read');
 				foreach($shipmentpayout_report1_arr as $shipmentpayout_report1_val)
 				{
 					$merchantIdnew = $this->getMerchantIdCv($shipmentpayout_report1_val['udropship_vendor']);
 					$vendors = Mage::helper('udropship')->getVendor($shipmentpayout_report1_val['udropship_vendor']);
 					$vendorId = $shipmentpayout_report1_val['udropship_vendor'];
 					$adjustmentAmount = $shipmentpayout_report1_val['adjustment'];
-					$collectionVendor = Mage::getModel('udropship/vendor')->load($vendorId);
-					$closingbalance = $collectionVendor->getClosingBalance();
+					$collectionVendorQuery = "select `closing_balance` FROM `udropship_vendor` WHERE `vendor_id` = '".$vendorId."'";//Mage::getModel('udropship/vendor')->load($vendorId);
+					$collectionVendor = $readOrderCntry->query($collectionVendorQuery)->fetch();
+					$closingbalance = $collectionVendor['closing_balance'];
 
 					if(($shipmentpayout_report1_val['udropship_vendor'] != '') && ($merchantIdnew != ''))
 					{	
@@ -205,7 +207,7 @@ public function assignAction()
 						$disCouponcode = '';
 						$discountAmountCoupon = 0;
 						//$lastFinalbaseshipamt = $this->baseShippngAmountByOrderUtr($shipmentpayout_report1_val['order_entid'],$orderBaseShippingAmount);
-						$readOrderCntry = Mage::getSingleton('core/resource')->getConnection('core_read');
+						
 						$getCountryOf = $readOrderCntry->query("SELECT `country_id` FROM `sales_flat_order_address` WHERE `parent_id` = '".$shipmentpayout_report1_val['order_entid']."' AND `address_type` = 'shipping'")->fetch();
 						$getCountryResult = $getCountryOf['country_id'];
 						$vendorId = $shipmentpayout_report1_val['udropship_vendor'];
@@ -255,9 +257,9 @@ public function assignAction()
 							}
 
 						}
-							if($total_amount == 0){///////////////////////////////////////////////
-								continue;
-							}
+							// if($total_amount == 0){///////////////////////////////////////////////
+							// 	continue;
+							// }
 							$strTest= "UTRAmout:$utrBalance TotalAmout:$total_amount VendorAmount:$vendor_amount ClosingBalance:$closingbalance AdjustmentAmt:$adjustmentAmount";////////////////////
 							if( (($vendor_amount+$closingbalance) <= 0) &&  $utrBalance >= $vendor_amount )
 							{
@@ -282,7 +284,6 @@ public function assignAction()
 									$this->_getSession()->addSuccess($this->__($strTest.'Total of %d record(s) UTR successfully Assigned'.$shipmentpayout_report1_val['shipment_id']));
 
 							} else if ($utrBalance >= $total_amount) {	
-
 								$utrBalance = $utrBalance - $total_amount;
 								$write = Mage::getSingleton('core/resource')->getConnection('shipmentpayout_write');	
 								$queryUpdate = "update shipmentpayout set `citibank_utr` = '".$utrNum."' WHERE shipment_id = '".$shipmentpayout_report1_val['shipment_id']."'";
@@ -423,9 +424,10 @@ public function assignAction()
 
       public function baseDiscountAmountByOrderUtr($orderId,$actualDiscountamount)
       {
-      	$readOrderR = Mage::getSingleton('core/resource')->getConnection('core_read');
+      	$readOrderR = Mage::getSingleton('core/resource')->getConnection('custom_db');
 			//echo $query = "select count(*) from `sales_flat_shipment`  where  sfs.`order_id` = '".$orderId."'";exit;
       	$adjustqueryR = $readOrderR->query("select count(*) as cntshipments from `sales_flat_shipment`  where `order_id` = '".$orderId."'")->fetch();
+      	$readOrderR->closeConnection();
       	$shipcnt = $adjustqueryR['cntshipments'];
       	$lastFinaldiscountamt = $actualDiscountamount/$shipcnt;
       	return $lastFinaldiscountamt;
