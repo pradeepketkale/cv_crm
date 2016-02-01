@@ -260,9 +260,10 @@ public function assignAction()
 							// if($total_amount == 0){///////////////////////////////////////////////
 							// 	continue;
 							// }
-							$strTest= "UTRAmout:$utrBalance TotalAmout:$total_amount VendorAmount:$vendor_amount ClosingBalance:$closingbalance AdjustmentAmt:$adjustmentAmount";////////////////////
+							
 							if( (($vendor_amount+$closingbalance) <= 0) &&  $utrBalance >= $vendor_amount )
 							{
+								$strTest.= "\nUTRAmout:$utrBalance\tTotalAmout:$total_amount\tVendorAmount:$vendor_amount\tClosingBalance:$closingbalance\tAdjustmentAmt:$adjustmentAmount";////////////////////
 								if($shipmentpayout_report1_val['type'] == 'Adjusted Against Refund'){
 									//$utrBalance = $utrBalance - $vendor_amount;
 									$vendor_amount = 0;
@@ -281,9 +282,10 @@ public function assignAction()
 									$writeUtr = Mage::getSingleton('core/resource')->getConnection('utrreport_write');	
 									$queryUtrupdate = "update utrreport set `balance` = '".$utrBalance."' WHERE `utrno` = '".$utrNum."'";
 									$writeUtr->query($queryUtrupdate);
-									$this->_getSession()->addSuccess($this->__($strTest.'Total of %d record(s) UTR successfully Assigned'.$shipmentpayout_report1_val['shipment_id']));
+									$this->_getSession()->addSuccess($this->__('Total of %d record(s) UTR successfully Assigned'.$shipmentpayout_report1_val['shipment_id']));
 
-							} else if ($utrBalance >= $total_amount) {	
+							} else if ($utrBalance >= $total_amount) {
+								$strTest.= "\nUTRAmout:$utrBalance\tTotalAmout:$total_amount\tVendorAmount:$vendor_amount\tClosingBalance:$closingbalance\tAdjustmentAmt:$adjustmentAmount";////////////////////	
 								$utrBalance = $utrBalance - $total_amount;
 								$write = Mage::getSingleton('core/resource')->getConnection('shipmentpayout_write');	
 								$queryUpdate = "update shipmentpayout set `citibank_utr` = '".$utrNum."' WHERE shipment_id = '".$shipmentpayout_report1_val['shipment_id']."'";
@@ -291,14 +293,21 @@ public function assignAction()
 								$writeUtr = Mage::getSingleton('core/resource')->getConnection('utrreport_write');	
 								$queryUtrupdate = "update utrreport set `balance` = '".$utrBalance."' WHERE `utrno` = '".$utrNum."'";
 								$writeUtr->query($queryUtrupdate);
-								$this->_getSession()->addSuccess($this->__($strTest.'Total of %d record(s) UTR successfully Assigned'.$shipmentpayout_report1_val['shipment_id']));
+								$this->_getSession()->addSuccess($this->__('Total of %d record(s) UTR successfully Assigned'.$shipmentpayout_report1_val['shipment_id']));
 							}else{
-								$this->_getSession()->addError($this->__($strTest.'Total Amount is greater than Utr Balance,So UTR Not Updated'.$shipmentpayout_report1_val['shipment_id']));
+								$this->_getSession()->addError($this->__('Total Amount is greater than Utr Balance,So UTR Not Updated'.$shipmentpayout_report1_val['shipment_id']));
 							}
 					}
 				}
+				$filename = "UtrReport_".date("Ymd");
+				$filePathOfCsv = Mage::getBaseDir('media').DS.'misreport'.DS.$filename.'.txt';
+			    $fp=fopen($filePathOfCsv,'a');
+			    fputs($fp, "\n\n**********************************************************************");
+			    fputs($fp, $strTest);
+			    fclose($fp);
 				$this->_redirect('*/*/index');
 			}
+
 			public function calculatePaidAction()
 			{
 				$utrreportIds = $this->getRequest()->getParam('utrreport');
