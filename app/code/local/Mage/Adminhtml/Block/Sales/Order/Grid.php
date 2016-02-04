@@ -91,7 +91,7 @@ class Mage_Adminhtml_Block_Sales_Order_Grid extends Mage_Adminhtml_Block_Widget_
             'header'    => Mage::helper('sales')->__('Payment Method Name'),
             'index'     => 'method',
 			'type'		=> 'options',
-			'options'   => array('checkmo' => 'Cash On Delivery Old', 'secureebs_standard' => 'EBS', 'paypal_standard'=>'PayPal Website Payments Standard', 'purchaseorder' =>'EBS-B', 'gharpay_standard' => 'Cash In Advance','cashondelivery' => 'Cash On Delivery','avenues_standard' => 'Ccavenue Payment','m2epropayment' => 'E-Bay Payment','payucheckout_shared' => 'PayU Checkout'),
+			'options'   => array('checkmo' => 'Cash On Delivery Old', 'secureebs_standard' => 'EBS', 'paypal_standard'=>'PayPal Website Payments Standard', 'purchaseorder' =>'EBS-B', 'gharpay_standard' => 'Cash In Advance','cashondelivery' => 'Cash On Delivery','avenues_standard' => 'Ccavenue Payment','m2epropayment' => 'E-Bay Payment','payucheckout_shared' => 'PayU Checkout' ,'retailpay' => 'Retail Pay'),
         ));
 		
 		/*$this->addColumn('base_grand_total', array(

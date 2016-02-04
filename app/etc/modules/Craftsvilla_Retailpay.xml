@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Craftsvilla_Retailpay>
+            <active>true</active>
+            <codePool>local</codePool>
+              <depends>
+                <Mage_Payment />
+              </depends>
+        </Craftsvilla_Retailpay>
+    </modules>
+</config>
