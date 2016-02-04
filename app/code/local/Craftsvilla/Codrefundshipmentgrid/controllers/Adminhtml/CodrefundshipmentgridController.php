@@ -77,7 +77,7 @@ class Craftsvilla_Codrefundshipmentgrid_Adminhtml_CodrefundshipmentgridControlle
  		$getaccountno = mysql_escape_string($codrefundshipmentgridData['accountno']);
  		$getifsccode = mysql_escape_string($codrefundshipmentgridData['ifsccode']);
  		$getpaymentamount1 = $codrefundshipmentgridData['paymentamount'];
- 		$getpaymentamount = $getpaymentamount1+100;
+ 		$getpaymentamount = $getpaymentamount1;
  		
  		$duplicateQuery = "SELECT * FROM `codrefundshipmentgrid` WHERE `shipment_id` = '".$setShipmentId."'";
  		$duplicateQueryRes = $connread->query($duplicateQuery)->fetch();
@@ -428,7 +428,8 @@ $updateCodQuery = "UPDATE `codrefundshipmentgrid` SET `shipment_id`= '".$lastShi
 		
     	foreach($shipmentpayout_report1_arr as $shipmentpayout_report1_val)
 	    {
-			$total_amount = $shipmentpayout_report1_val['paymentamount'];
+			$total_amount1 = $shipmentpayout_report1_val['paymentamount'];
+			$total_amount = $total_amount1 + 100;
 			$shipmentId = $shipmentpayout_report1_val['shipment_id'];
 			$accountNo = "'".$shipmentpayout_report1_val['accountno'];
 			$beneficiaryName = $shipmentpayout_report1_val['cust_name'];
