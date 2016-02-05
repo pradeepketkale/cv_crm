@@ -346,7 +346,7 @@ var normalizeDate = function (dateString) {
 										<th>Shipment Id</th>
 										<th>Udropship Status</th>
 										<th>Payout Status</th>
-										<th>shipment_datec</th>
+										<th>Shipment Date</th>
 										<th>Awb Number</th>
 										<th>Shipment Update</th>
 										<th>Payment Created Date</th>
@@ -355,6 +355,7 @@ var normalizeDate = function (dateString) {
 										<th>SubTotal</th>
 										<th>Payment Amount</th>
 										<th>Comission Amount</th>
+										<th>Courier Name</th>
 									</tr>
 
 								</thead>
@@ -365,7 +366,7 @@ var normalizeDate = function (dateString) {
 										<th>Shipment Id</th>
 										<th>Udropship Status</th>
 										<th>Payout Status</th>
-										<th>shipment_datec</th>
+										<th>Shipment Date</th>
 										<th>Awb Number</th>
 										<th>Shipment Update</th>
 										<th>Payment Created Date</th>
@@ -374,6 +375,7 @@ var normalizeDate = function (dateString) {
 										<th>SubTotal</th>
 										<th>Payment Amount</th>
 										<th>Comission Amount</th>
+										<th>Courier Name</th>
 									</tr>
 
 								</tfoot>
