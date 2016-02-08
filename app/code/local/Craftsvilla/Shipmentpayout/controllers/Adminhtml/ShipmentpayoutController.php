@@ -1493,6 +1493,15 @@ class Craftsvilla_Shipmentpayout_Adminhtml_ShipmentpayoutController extends Mage
     	foreach($shipmentpayout_report1_arr as $shipmentpayout_report1_val)
 	    {
 			$vendors = Mage::helper('udropship')->getVendor($shipmentpayout_report1_val['udropship_vendor']);
+			//var_dump($vendors);exit;
+	    	//Checking Valid Account number
+	    	$accountnumber = $vendors->getBankAcNumber();
+
+			$bankaccountno = $this->checkbanknumber($accountnumber);
+			if($bankaccountno === false){
+				continue;
+			}
+
 			//if(($shipmentpayout_report1_val['udropship_vendor'] != '') && ($vendors->getMerchantIdCity() != ''))
 			if($shipmentpayout_report1_val['udropship_vendor'] != '')
     		{
@@ -1609,7 +1618,7 @@ class Craftsvilla_Shipmentpayout_Adminhtml_ShipmentpayoutController extends Mage
 		    			$output .= $neft;
 		    		}
 		    			
-		    		if($fieldvalue == "Bene Account Number")
+		    		if($fieldvalue == "Bank Account Number")
 		    		{
 		    			$output .= "'".$vendors->getBankAcNumber();
 		    		}
@@ -2074,5 +2083,15 @@ public function getMerchantIdCv($vendorIdc)
 	$resultMerchant = $readVd->query($MerchantIdQuery)->fetch();
 	$readVd->closeConnection();	
 	return $resultMerchant['merchant_id_city']; 
+	}
+
+public function checkbanknumber($bannknumber){
+
+			if (!preg_match('/^([A-Za-z0-9]+)$/', $bannknumber)) {
+            		return false;
+            }
+            else{
+            	return true; 
+           	}    
 	}
 }
