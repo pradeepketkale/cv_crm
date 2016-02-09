@@ -529,12 +529,12 @@ class Unirgy_Dropship_Model_Pdf_Statement extends Unirgy_Dropship_Model_Pdf_Abst
 
             $this->moveRel(1.2, 0)->text($order['orders']['po_increment_id']); 
                 //->moveRel(1, 0)->text($order['subtotal']);
-			$serviceTax = "Rs. ".number_format($order['orders']['amounts']['com_amount']*0.1236,2); 
+			$serviceTax = "Rs. ".number_format($order['orders']['amounts']['com_amount']*0.1400,2); 
 			$comAmount = "Rs. ".number_format($order['orders']['amounts']['com_amount'],2);
 			$this->moveRel(1.5, 0)->text("{$comAmount}");
             $this->moveRel(1.7, 0)->text("{$serviceTax}");
 
-			$totalAmount =  "Rs. ".number_format($order['orders']['amounts']['com_amount']*1.1236,2);
+			$totalAmount =  "Rs. ".number_format($order['orders']['amounts']['com_amount']*1.1400,2);
 			$this->moveRel(1.6, 0)->text("{$totalAmount}");
 			
 			//$this->moveRel(1, 0)->text($serviceTax)
