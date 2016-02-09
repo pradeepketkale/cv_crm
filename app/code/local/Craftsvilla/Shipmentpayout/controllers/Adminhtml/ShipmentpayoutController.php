@@ -1438,16 +1438,16 @@ class Craftsvilla_Shipmentpayout_Adminhtml_ShipmentpayoutController extends Mage
 		{
 			
 		$selected_date_val = $this->getRequest()->getParam('selected_date'); //Get Selected date
-		$selected_date_val = new DateTime($selected_date_val); //Convert to date time object
+		$selected_date_val1 = new DateTime($selected_date_val); //Convert to date time object
 		$datetemp =  date('Y-m-d');//date_create("2016-01-30"); //Create Today Temp date
 		$datetemp = new DateTime($datetemp);
-		$diff = date_diff($selected_date_val,$datetemp ); //Calulate date difference
+		$diff = date_diff($selected_date_val1,$datetemp ); //Calulate date difference
 		$date_diff  = $diff->days;
 		$finaldate = '';
 
 		if($date_diff >=30){
 			//echo ">30";
-			$finaldate = date_format($selected_date_val,'Y-m-d') ;
+			$finaldate = date_format($selected_date_val1,'Y-m-d') ;
 		}else {
 			//echo "<30";
 			$finaldate = date_sub($datetemp, date_interval_create_from_date_string('30 days')); //30 Days difference
@@ -1464,7 +1464,8 @@ class Craftsvilla_Shipmentpayout_Adminhtml_ShipmentpayoutController extends Mage
       			->join(array('b'=>'sales_flat_shipment_grid'), 'b.increment_id=main_table.shipment_id', array('order_created_at'))
       			->joinLeft('sales_flat_order_payment', 'b.order_id = sales_flat_order_payment.parent_id','method')
 				->where('main_table.shipmentpayout_status=0 AND a.udropship_status IN (7) AND `sales_flat_order_payment`.method = "cashondelivery" AND main_table.citibank_utr != "" and a.updated_at <= \''. $finaldate.'\'');      	
-      	/*echo "Query:".$shipmentpayout_report1->getSelect()->__toString();
+      /*	echo "Query:".$shipmentpayout_report1->getSelect()->__toString();
+      	echo ($selected_date_val);
 		exit();*/
       			
       	$shipmentpayout_report1_arr = $shipmentpayout_report1->getData();
@@ -1495,12 +1496,12 @@ class Craftsvilla_Shipmentpayout_Adminhtml_ShipmentpayoutController extends Mage
 			$vendors = Mage::helper('udropship')->getVendor($shipmentpayout_report1_val['udropship_vendor']);
 			//var_dump($vendors);exit;
 	    	//Checking Valid Account number
-	    	$accountnumber = $vendors->getBankAcNumber();
+	    	//$accountnumber = $vendors->getBankAcNumber();
 
-			$bankaccountno = $this->checkbanknumber($accountnumber);
-			if($bankaccountno === false){
-				continue;
-			}
+			//$bankaccountno = $this->checkbanknumber($accountnumber);
+			//if($bankaccountno === false){
+			//	continue;
+			//}
 
 			//if(($shipmentpayout_report1_val['udropship_vendor'] != '') && ($vendors->getMerchantIdCity() != ''))
 			if($shipmentpayout_report1_val['udropship_vendor'] != '')

@@ -123,7 +123,7 @@ class Unirgy_Dropship_Model_Pdf_Statement extends Unirgy_Dropship_Model_Pdf_Abst
 				    $this->insertOrder($order);
 				    $TotalSubTotal += number_format($order['orders']['amounts']['subtotal'],2);
 				    $TotalCommission += number_format($order['orders']['amounts']['com_amount'],2);
-					$TotalServiceTax += number_format($order['orders']['amounts']['com_amount']*0.1236,2);
+					$TotalServiceTax += number_format($order['orders']['amounts']['com_amount']*0.1400,2);
 					
 				}
 		    
@@ -321,7 +321,7 @@ class Unirgy_Dropship_Model_Pdf_Statement extends Unirgy_Dropship_Model_Pdf_Abst
 		
             $this->move(7.9, 2)
                     ->text($statement->getStatementId(), 'down')
-                    ->text($core->formatDate(date('Y-m-d',strtotime($statement->getOrderDateTo().'+5 days')), 'medium'), 'down');
+                    ->text($core->formatDate(date('Y-m-d',strtotime($statement->getOrderDateTo().'+10 days')), 'medium'), 'down');
             if ($hlp->isUdpoActive()) {
                 $this->text(Mage::getSingleton('udropship/source')->setPath('statement_po_type')->getOptionLabel($statement->getPoType()), 'down');
             }
