@@ -33,7 +33,8 @@ class Craftsvilla_Productmanagement_Helper_Data extends Mage_Core_Helper_Abstrac
                                     <td>  
                                         <a href="#" onClick="selectAll(\'qualitycheck\',\'1\');">Check All </a> 
                                      <span class="separator">|</span>
-                                    <a href="#" onClick="selectAll(\'qualitycheck\',\'0\');">Uncheck All</a>                                      
+                                    <a href="#" onClick="selectAll(\'qualitycheck\',\'0\');">Uncheck All</a>
+                                                                 
                                        </td>
                                     <td></td>
                                     <td></td>
@@ -49,13 +50,13 @@ class Craftsvilla_Productmanagement_Helper_Data extends Mage_Core_Helper_Abstrac
                         <select  name="select_search" id="select_search" required="required">
                             <option value="none">Select</option>
                             <option value="productId">Product Id</option>
-                            <!--<option value="productName">Product Name</option>-->
+                            <option value="productName">Product Name</option>
                             <option value="vendorName">Vendor Name</option>
                              
                         </select>
                         <br><br>
                         <div class="field">
-                            <input type="text" name="product_sku" id="product_sku" placeholder=" SKU, ID, Keyword "  value="" style="width:100%;">
+                            <input type="text" name="product_sku" id="product_sku" placeholder="Product ID, Vendor Name,Product Name "  value="" style="width:100%;">
                         </div>
                         <br>
                         <input type="button" name="search" onclick="doSearch();" value="Search">
@@ -85,23 +86,25 @@ class Craftsvilla_Productmanagement_Helper_Data extends Mage_Core_Helper_Abstrac
                             }
                             function disableSelected()
                             {
-                              
+                              jQuery("#loading").css("display","block");
                                 var values = [];
                                 jQuery("input[type=checkbox]:checked").each(function(){
                                     values.push(this.id);
                                       var pid= this.id;
                                 
                                 });
-                                 // var count=$(".chk:checked").size();
+                                var count=jQuery("input[type=checkbox]:checked").length;
                                 var pid = values.join();
+                                //$("#count").html("+count+");
                                 //alert(count);
                                  jQuery.ajax({
                                    url : "/productmanagement/index/disableSelected",
                                    type : "POST",
                                    data : {pid:pid},
                                    success : function(result){
+				                           jQuery("#loading").css("display","none");
                                    // $("#listProducts").html(result);
-                                       // $("#count").html(result); 
+                                   //     $("#count").html(result); 
                                     alert(result);   
                                 }
                                });

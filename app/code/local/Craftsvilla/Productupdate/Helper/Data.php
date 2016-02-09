@@ -30,14 +30,14 @@ class Craftsvilla_Productupdate_Helper_Data extends Mage_Core_Helper_Abstract
 			<select  name="select_search" id="select_search" required="required">
 					 <option value="none">Select</option>
 					<option value="productId">Product Id</option>
-					<!--<option value="productName">Product Name</option>-->
+					<option value="productName">Product Name</option>
 					 <option value="vendorName">Vendor Name</option>
 					 
 				</select>
 	
 				<br><br>
                         <div class="field">
-                            <input type="text" name="product_sku" id="product_sku" placeholder="ID, Name, Vendor Id"  value="" style="width:100%;">
+                            <input type="text" name="product_sku" id="product_sku" placeholder="ID, Name, Vendor Name"  value="" style="width:100%;">
                         </div>
                          <br>
                             <input type="button" name="search" onclick="doSearch();" value="Search" >
