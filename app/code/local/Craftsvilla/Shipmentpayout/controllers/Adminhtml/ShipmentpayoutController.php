@@ -1619,7 +1619,7 @@ class Craftsvilla_Shipmentpayout_Adminhtml_ShipmentpayoutController extends Mage
 		    			$output .= $neft;
 		    		}
 		    			
-		    		if($fieldvalue == "Bank Account Number")
+		    		if($fieldvalue == "Bene Account Number")
 		    		{
 		    			$output .= "'".$vendors->getBankAcNumber();
 		    		}
