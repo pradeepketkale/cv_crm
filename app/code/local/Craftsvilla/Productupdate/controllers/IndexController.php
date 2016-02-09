@@ -208,7 +208,63 @@ class Craftsvilla_Productupdate_IndexController extends Mage_Core_Controller_Fro
 			$bodyhtml .='</div>';
 
 			echo $bodyhtml;
-			}else{ echo "Please ";}
+			}else{ echo "Please enter productId ";}
+			}elseif($selectedSearch=='productName'){
+					$readcon = Mage::getSingleton('core/resource')->getConnection('core_read');
+					$sqlpidquery ="SELECT `entity_id` FROM `catalog_product_entity_varchar` WHERE `value` Like '%".$str ."%'";
+					$res = $readcon->query($sqlpidquery)->fetchAll();
+					$readcon->closeConnection();
+					//echo '<pre>';print_r($res[0]['entity_id']);exit;
+					$bodyhtml .='<div class="grid_box" style="display: inline-block;width:100%">';
+							for($i=0;$i<count($res);$i++){ 
+
+								$bodyhtml .='<div style="display: inline-block;width:20%"><ul >';
+								//echo '<pre>';print_r($vendorRes[$i]['entity_id']);		
+								$model = Mage::helper('catalog/product'); 
+								 $entyid=$res[$i]['entity_id'];
+								 $_product = $model->loadnew($entyid);
+								 $productName=$_product->getName();
+								 $productPrice =$_product->getPrice();
+								 $productDisPrice=$_product->getSpecialPrice(); 
+								// $productImage=$_product->getThumbnailUrl();
+								$productImage="http://img1.craftsvilla.com/thumb/166x166".$_product->getImage();
+					 			
+								$bodyhtml .=	'
+										<li style="list-style-type: none;border: 1px solid #DEDEDE;margin-right: 15px;margin-bottom: 15px;">
+											<div style="display: flex;">
+											<input type="checkbox" name="qualitycheck[]"  value="'.$entyid.'" id="'.$entyid.'"  class="chk" >
+											<div class="product_image">
+											<img src="'.$productImage.'" alt="" title=""></div></div>
+													<p class="shopbrief">'.$productName.'</p>
+													<p class="vendorname">By:<a href="'.$shopUrl.'" target="_Blank"> '.$vendorName.'</a></p>
+											<div class="price-box">
+														      
+											<p class="special-price">
+												<span class="price-label"></span>
+												<span class="price" id="product-price-2484240">'.$productDisPrice.'</span>
+											 </p>
+											<p class="old-price">
+												<span class="price-label"></span>
+												<span class="price" id="old-price-2484240"> '.$productPrice.'</span>
+											 </p>
+
+											</div>
+										</li>';
+		
+								$bodyhtml .='</ul></div>';
+		
+							}
+
+
+
+
+				
+								$bodyhtml .='</div>';
+								echo $bodyhtml;exit;
+
+
+
+
 			}else{
 				echo "Please select options";
 
