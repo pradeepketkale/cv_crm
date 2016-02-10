@@ -212,6 +212,7 @@ public function assignAction()
 						$getCountryResult = $getCountryOf['country_id'];
 						$vendorId = $shipmentpayout_report1_val['udropship_vendor'];
 						$base_shipping_amount = $shipmentpayout_report1_val['base_shipping_amount'];
+						$itemised_total_shippingcost = $shipmentpayout_report1_val['itemised_total_shippingcost'];
 						$couponCodeId = Mage::getModel('salesrule/coupon')->load($order->getCouponCode(), 'code');
 						$_resultCoupon = Mage::getModel('salesrule/rule')->load($couponCodeId->getRuleId());
 						$couponVendorId = $_resultCoupon->getVendorid();
@@ -240,30 +241,35 @@ public function assignAction()
 						{
 							if($vendors->getManageShipping() == "imanage")
 							{
-								$vendor_amount = ($total_amount*(1-$commission_amount/100));								
+								$vendor_amount = ($total_amount*(1-$commission_amount/100));
+								$kribha_amount = ($shipmentpayout_report1_val['subtotal'] - $vendor_amount)+$itemised_total_shippingcost+$shipmentpayout_report1_val['cod_fee'];								
 							}
 							else {
-								$vendor_amount = (($total_amount+$itemised_total_shippingcost)*(1-$commission_amount/100));								
+								$vendor_amount = (($total_amount+$itemised_total_shippingcost)*(1-$commission_amount/100));
+								$kribha_amount = (($shipmentpayout_report1_val['subtotal']+$itemised_total_shippingcost) - $vendor_amount);								
 							}
 						}
 						else {
 							if($vendors->getManageShipping() == "imanage")
 							{
-								$vendor_amount = ($total_amount*(1-($commission_amount/100)*(1+0.1236)));							
+								$vendor_amount = ($total_amount*(1-($commission_amount/100)*(1+0.1236)));
+								$kribha_amount = ($total_amount+$itemised_total_shippingcost+$shipmentpayout_report1_val['cod_fee'])*1.00 - $vendor_amount;							
 							}
 							else {
 								//$vendor_amount = (($total_amount+$base_shipping_amount+$discountAmountCoupon)*(1-($commission_amount/100)*(1+0.1450)));
 								$vendor_amount = (($total_amount)*(1-($commission_amount/100)*(1+0.1450)));
+								$kribha_amount = ((($total_amount)*1.00) - $vendor_amount);
 							}
 
 						}
 							// if($total_amount == 0){///////////////////////////////////////////////
 							// 	continue;
 							// }
+							$strHead = "Shipment Id,Utr Balance,Total Amount,Vendor Amount,Closing Balance, Adjustment Amount,Comment";
 							
 							if( (($vendor_amount+$closingbalance) <= 0) &&  $utrBalance >= $vendor_amount )
 							{
-								$strTest.= $shipmentpayout_report1_val['shipment_id'].",".$utrBalance.",".$total_amount.",".$vendor_amount.",".$closingbalance.",";////////////////////
+								$strTest.= $shipmentpayout_report1_val['shipment_id'].",".$utrBalance.",".$total_amount.",".$vendor_amount.",".$kribha_amount.",".$closingbalance.",";////////////////////
 								if($shipmentpayout_report1_val['type'] == 'Adjusted Against Refund'){
 									//$utrBalance = $utrBalance - $vendor_amount;
 									$vendor_amount = 0;
@@ -274,36 +280,63 @@ public function assignAction()
 									//$vendor_amount = 0;
 									$strTest.= "$adjustmentAmount\n";
 									$neft = 'Adjusted Against Refund';
-									$queryUpdate = "update shipmentpayout set `shipmentpayout_update_time` = NOW(),`payment_amount`= '".$adjustmentAmount."',`adjustment` ='".$adjustmentAmount."',`shipmentpayout_status` = '1',`type` = '".$neft."',`comment` = 'Adjusted Against Refund By System' WHERE shipment_id = '".$shipmentpayout_report1_val['shipment_id']."'";
+									$queryUpdate = "update shipmentpayout set `shipmentpayout_update_time` = NOW(),`todo_payment_amount`= '".$adjustmentAmount."',`todo_commission_amount`= '".$kribha_amount."',`adjustment` ='".$adjustmentAmount."',`shipmentpayout_status` = '1',`type` = '".$neft."',`comment` = 'Adjusted Against Refund By System' WHERE shipment_id = '".$shipmentpayout_report1_val['shipment_id']."'";
 									$write = Mage::getSingleton('core/resource')->getConnection('shipmentpayout_write');	
 									$write->query($queryUpdate);
 									$queyVendor = "update `udropship_vendor` set `closing_balance` = '".$closingbalance."' WHERE `vendor_id` = '".$vendorId."'";
-									$write->query($queyVendor);	
+									$write->query($queyVendor);
+									$write->closeConnection();	
 
 									$writeUtr = Mage::getSingleton('core/resource')->getConnection('utrreport_write');	
 									$queryUtrupdate = "update utrreport set `balance` = '".$utrBalance."' WHERE `utrno` = '".$utrNum."'";
 									$writeUtr->query($queryUtrupdate);
+									$writeUtr->closeConnection();
 									$this->_getSession()->addSuccess($this->__('Total of %d record(s) UTR successfully Assigned'.$shipmentpayout_report1_val['shipment_id']));
 
 							} else if ($utrBalance >= $total_amount) {
-								$strTest.= $shipmentpayout_report1_val['shipment_id'].",".$utrBalance.",".$total_amount.",".$vendor_amount.",".$closingbalance.",nill\n";////////////////////
+								$strTest.= $shipmentpayout_report1_val['shipment_id'].",".$utrBalance.",".$total_amount.",".$vendor_amount.",".$kribha_amount.",".$closingbalance.",nill\n";////////////////////
 								$utrBalance = $utrBalance - $total_amount;
 								$write = Mage::getSingleton('core/resource')->getConnection('shipmentpayout_write');	
-								$queryUpdate = "update shipmentpayout set `citibank_utr` = '".$utrNum."' WHERE shipment_id = '".$shipmentpayout_report1_val['shipment_id']."'";
+								$queryUpdate = "update shipmentpayout set `citibank_utr` = '".$utrNum."', `todo_payment_amount`= '".$vendor_amount."',`todo_commission_amount`= '".$kribha_amount."' WHERE shipment_id = '".$shipmentpayout_report1_val['shipment_id']."'";
 								$write->query($queryUpdate);
+								$write->closeConnection();	
 								$writeUtr = Mage::getSingleton('core/resource')->getConnection('utrreport_write');	
 								$queryUtrupdate = "update utrreport set `balance` = '".$utrBalance."' WHERE `utrno` = '".$utrNum."'";
 								$writeUtr->query($queryUtrupdate);
+								$writeUtr->closeConnection();
 								$this->_getSession()->addSuccess($this->__('Total of %d record(s) UTR successfully Assigned'.$shipmentpayout_report1_val['shipment_id']));
 							}else{
 								$this->_getSession()->addError($this->__('Total Amount is greater than Utr Balance,So UTR Not Updated'.$shipmentpayout_report1_val['shipment_id']));
 							}
 					}
 				}
+
+				/************Functionality to Adjust Small balance Amount*********************/
+				$readQuery = Mage::getSingleton('core/resource')->getConnection('custom_db');
+				$queryUtrShipmentCount = "select shipment_id , todo_commission_amount from shipmentpayout where citibank_utr = '".$utrNum."'";
+				$resultUtrShipment = $readQuery->query($queryUtrShipmentCount)->fetchAll();
+				$readQuery->closeConnection();
+				$unitCommissionAmount = $utrBalance / count($resultUtrShipment);
+				foreach ($resultUtrShipment as $value) {
+					$tempShipmentId = $value['shipment_id'];
+					$originalTodoCommissionAmount = $value['todo_commission_amount'] ;
+					$finalTodoCommissionAmount = $originalTodoCommissionAmount + $unitCommissionAmount;
+					$write = Mage::getSingleton('core/resource')->getConnection('shipmentpayout_write');	
+					$queryUpdate = "update shipmentpayout set `todo_commission_amount`= '".$finalTodoCommissionAmount."' WHERE shipment_id = '".$tempShipmentId."'";
+					$write->query($queryUpdate);
+					$write->closeConnection();
+					$utrBalance = $utrBalance - $unitCommissionAmount;
+					$writeUtr = Mage::getSingleton('core/resource')->getConnection('utrreport_write');	
+					$queryUtrupdate = "update utrreport set `balance` = '".$utrBalance."' WHERE `utrno` = '".$utrNum."'";
+					$writeUtr->query($queryUtrupdate);
+					$writeUtr->closeConnection();	
+				}
+				/********************END***********************************************************/
+
 				$filename = "UtrReport_".date("Ymd");
 				$filePathOfCsv = Mage::getBaseDir('media').DS.'misreport'.DS.$filename.'.txt';
 			    $fp=fopen($filePathOfCsv,'a');
-			    $strHead = "Shipment Id,Utr Balance,Total Amount,Vendor Amount,Closing Balance, Adjustment Amount\n";
+			    $strHead = "Shipment Id,Utr Balance,Total Amount,Vendor Amount,Commission Amount,Closing Balance, Adjustment Amount\n";
 			    fputs($fp, $strHead);
 			    fputs($fp, $strTest);
 			    fputs($fp, $strHead);
