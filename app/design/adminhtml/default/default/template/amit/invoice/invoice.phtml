@@ -1,9 +1,11 @@
 <?php 
 	$order = $this->getOrder();
+
 	$invoice = $this->getInvoice();	
 	$invoice_items = $invoice->getOrder()->getAllVisibleItems();
 	$shipping_tracking=Mage::getResourceModel('sales/order_shipment_track_collection')->setOrderFilter($order->getId())->getData();
-	$r = Mage::getSingleton('core/resource')->getConnection('core_read');
+	$actual_total = $order->formatPriceTxt($order->getGrandTotal() + $order->getTaxAmount() + $order->getDiscountAmount() + $order->getShippingAmount());
+  $r = Mage::getSingleton('core/resource')->getConnection('core_read');
 ?>
  
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -157,6 +159,9 @@
               </tr>
 		<?php
 			$total_qty+=number_format($_item->getQtyOrdered(), 0);
+      $amt = $order->formatPriceTxt($_item->getOriginalPrice()* number_format($_item->getQtyOrdered(), 0)+$_item->getShippingcost()-$_item->getDiscountAmount()); 
+      $a += str_replace('Rs.', '', $amt);
+
 			
 			}
 			$paymentmethod = $order->getPayment()->getMethodInstance()->getTitle();
@@ -179,7 +184,13 @@
 <td></td>
                 <td>AMT</td>
 		
-                <td><?php echo $order->formatPriceTxt($order->getGrandTotal()) ?>
+                <!--<td><?php //echo $order->formatPriceTxt($order->getGrandTotal()) ?>-->
+                <td><?php if($order->getTotalItemCount()>1)
+                  echo "Rs.".$a;
+                else
+                  echo $amt;
+                  ?>
+                </td>
 </td>
               </tr>
               </table></td>
@@ -205,17 +216,18 @@
 		            <td height="40" class="totals">COD Fee:</td>
 		            <td class="totals2"><?php echo $order->formatPriceTxt($order->getCodFee()) ?></td>
               	</tr>
-                <?php } ?>
-                <tr>
+              <?php } ?>
+        <tr>
                 <td height="40" class="totals3">Grand Total</td>
-                <td class="totals4"><?php echo $order->formatPriceTxt($order->getGrandTotal()) ?></td>
+                <!--<td class="totals4"><?php //echo $order->formatPriceTxt($order->getGrandTotal()) ?></td>-->
+                <td class="totals4"><?php echo $actual_total; ?></td>
               </tr>
               </table></td>
           </tr>
          <?php
 					
 					//echo $paymentmethod;
-					$actual_total = $order->formatPriceTxt($order->getSubtotal() + $order->getTaxAmount() + $order->getDiscountAmount() + $order->getShippingAmount());
+         //$actual_total = $order->formatPriceTxt($order->getSubtotal() + $order->getTaxAmount() + $order->getDiscountAmount() + $order->getShippingAmount());
 					//echo $actual_total ;exit;
 					if($paymentmethod == 'Cash On Delivery')
 					{
