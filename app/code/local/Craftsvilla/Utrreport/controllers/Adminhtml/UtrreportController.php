@@ -221,11 +221,11 @@ public function assignAction()
 							$discountAmountCoupon = $actualDiscountamount;
 							$disCouponcode = $order->getCouponCode();
 						}
-						else
-						{
-							$lastFinaldiscountamt = $this->baseDiscountAmountByOrderUtr($shipmentpayout_report1_val['order_entid'],$actualDiscountamount);
-							$discountAmountCoupon = $lastFinaldiscountamt; 
-						}
+						// else
+						// {
+						// 	$lastFinaldiscountamt = $this->baseDiscountAmountByOrderUtr($shipmentpayout_report1_val['order_entid'],$actualDiscountamount);
+						// 	$discountAmountCoupon = $lastFinaldiscountamt; 
+						// }
 						// Modifying By Ankit due to latest shipping amount policy
 						// if($getCountryResult == 'IN')
 						// {
@@ -263,7 +263,7 @@ public function assignAction()
 							
 							if( (($vendor_amount+$closingbalance) <= 0) &&  $utrBalance >= $vendor_amount )
 							{
-								$strTest.= "\nUTRAmout:$utrBalance\tTotalAmout:$total_amount\tVendorAmount:$vendor_amount\tClosingBalance:$closingbalance\tAdjustmentAmt:$adjustmentAmount";////////////////////
+								$strTest.= $shipmentpayout_report1_val['shipment_id'].",".$utrBalance.",".$total_amount.",".$vendor_amount.",".$closingbalance.",";////////////////////
 								if($shipmentpayout_report1_val['type'] == 'Adjusted Against Refund'){
 									//$utrBalance = $utrBalance - $vendor_amount;
 									$vendor_amount = 0;
@@ -272,6 +272,7 @@ public function assignAction()
 									$closingbalance = $closingbalance + $vendor_amount;
 									//$utrBalance = $utrBalance - $vendor_amount;
 									//$vendor_amount = 0;
+									$strTest.= "$adjustmentAmount\n";
 									$neft = 'Adjusted Against Refund';
 									$queryUpdate = "update shipmentpayout set `shipmentpayout_update_time` = NOW(),`payment_amount`= '".$adjustmentAmount."',`adjustment` ='".$adjustmentAmount."',`shipmentpayout_status` = '1',`type` = '".$neft."',`comment` = 'Adjusted Against Refund By System' WHERE shipment_id = '".$shipmentpayout_report1_val['shipment_id']."'";
 									$write = Mage::getSingleton('core/resource')->getConnection('shipmentpayout_write');	
@@ -285,7 +286,7 @@ public function assignAction()
 									$this->_getSession()->addSuccess($this->__('Total of %d record(s) UTR successfully Assigned'.$shipmentpayout_report1_val['shipment_id']));
 
 							} else if ($utrBalance >= $total_amount) {
-								$strTest.= "\nUTRAmout:$utrBalance\tTotalAmout:$total_amount\tVendorAmount:$vendor_amount\tClosingBalance:$closingbalance\tAdjustmentAmt:$adjustmentAmount";////////////////////	
+								$strTest.= $shipmentpayout_report1_val['shipment_id'].",".$utrBalance.",".$total_amount.",".$vendor_amount.",".$closingbalance.",nill\n";////////////////////
 								$utrBalance = $utrBalance - $total_amount;
 								$write = Mage::getSingleton('core/resource')->getConnection('shipmentpayout_write');	
 								$queryUpdate = "update shipmentpayout set `citibank_utr` = '".$utrNum."' WHERE shipment_id = '".$shipmentpayout_report1_val['shipment_id']."'";
@@ -302,8 +303,10 @@ public function assignAction()
 				$filename = "UtrReport_".date("Ymd");
 				$filePathOfCsv = Mage::getBaseDir('media').DS.'misreport'.DS.$filename.'.txt';
 			    $fp=fopen($filePathOfCsv,'a');
-			    fputs($fp, "\n\n**********************************************************************");
+			    $strHead = "Shipment Id,Utr Balance,Total Amount,Vendor Amount,Closing Balance, Adjustment Amount\n";
+			    fputs($fp, $strHead);
 			    fputs($fp, $strTest);
+			    fputs($fp, $strHead);
 			    fclose($fp);
 				$this->_redirect('*/*/index');
 			}
