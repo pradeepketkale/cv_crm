@@ -14,8 +14,7 @@ class Craftsvilla_Productupdate_Helper_Data extends Mage_Core_Helper_Abstract
                                     <a href="#" onClick="selectAll(\'qualitycheck\',\'1\');">Check All </a> 
                                      <span class="separator">|</span>
                                     <a href="#" onClick="selectAll(\'qualitycheck\',\'0\');">Uncheck All</a>                                      
-                                       
-                                        <strong id="productmanagementGrid_massaction-count">0</strong> items selected    </td>
+                                    </td>
                                     <td></td>
                                     <td></td>
                                     <td> 

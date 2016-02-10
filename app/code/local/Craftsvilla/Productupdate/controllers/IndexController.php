@@ -121,14 +121,14 @@ class Craftsvilla_Productupdate_IndexController extends Mage_Core_Controller_Fro
 			 $productDisPrice=$_product->getSpecialPrice(); 
 			// $productImage=$_product->getThumbnailUrl();
 			$productImage="http://img1.craftsvilla.com/thumb/166x166".$_product->getImage();
- 			
+ 			$url=Mage::getBaseUrl()."catalog/product/view/id/".$entyid;
 			$bodyhtml .=	'
 					<li style="list-style-type: none;border: 1px solid #DEDEDE;margin-right: 15px;margin-bottom: 15px;">
 						<div style="display: flex;">
 						<input type="checkbox" name="qualitycheck[]"  value="'.$entyid.'" id="'.$entyid.'"  class="chk" >
 						<div class="product_image">
 						<img src="'.$productImage.'" alt="" title=""></div></div>
-								<p class="shopbrief">'.$productName.'</p>
+								<p class="shopbrief"><a href="'.$url.'" target="_blank">'.$productName.'</a></p>
 								<p class="vendorname">By:<a href="'.$shopUrl.'" target="_Blank"> '.$vendorName.'</a></p>
 						<div class="price-box">
 									      
@@ -167,13 +167,20 @@ class Craftsvilla_Productupdate_IndexController extends Mage_Core_Controller_Fro
 
 		$model = Mage::helper('catalog/product'); 
  		$_product = $model->loadnew($searchtxt);
-		$productName=$_product->getName();
+ 		$productName=$_product->getName();
 		$pid=$_product->getId();
 		$productSku =$_product->getSku();
+		$vendorId=$_product->getUdropshipVendor();
+		$url=Mage::getBaseUrl()."catalog/product/view/id/".$pid;
+		$vendorinfo= Mage::helper('udropship')->getVendor($vendorId);
+		$vendorName=$vendorinfo->getVendorName();
+	    $shopUrl = Mage::getBaseUrl().$vendorinfo->getUrlKey();
+		
 		if($productSku !=''){
 		$productPrice =$_product->getPrice();
 		$productDisPrice=$_product->getSpecialPrice(); 
 		$productImage="http://img1.craftsvilla.com/thumb/166x166".$_product->getImage();
+		
 
 		
 		$bodyhtml .='<div class="grid_box" style="display: inline-block;width:100%">';
@@ -187,8 +194,8 @@ class Craftsvilla_Productupdate_IndexController extends Mage_Core_Controller_Fro
 		<input type="checkbox" name="qualitycheck[]"  value="'.$pid.'" id="'.$pid.'"  class="chk" >
 		<div class="product_image">
 		<img src="'.$productImage.'" alt="" title=""></div></div>
-				<p class="shopbrief">'.$productName.'</p>
-				<p class="vendorname">By:<a href="#"> '.$vendorName.'</a></p>
+				<p class="shopbrief"><a href="'.$url.'" target="_blank">'.$productName.'</a></p>
+				<p class="vendorname">By:<a href="'.$shopUrl.'" target="_blank"> '.$vendorName.'</a></p>
 				<div class="price-box">
 					      
 		        <p class="special-price">
@@ -211,7 +218,7 @@ class Craftsvilla_Productupdate_IndexController extends Mage_Core_Controller_Fro
 			}else{ echo "Please enter productId ";}
 			}elseif($selectedSearch=='productName'){
 					$readcon = Mage::getSingleton('core/resource')->getConnection('core_read');
-					$sqlpidquery ="SELECT `entity_id` FROM `catalog_product_entity_varchar` WHERE `value` Like '%".$str ."%'";
+					$sqlpidquery ="SELECT `entity_id` FROM `catalog_product_entity_varchar` WHERE `value` Like '%".$searchtxt ."%'";
 					$res = $readcon->query($sqlpidquery)->fetchAll();
 					$readcon->closeConnection();
 					//echo '<pre>';print_r($res[0]['entity_id']);exit;
@@ -226,7 +233,12 @@ class Craftsvilla_Productupdate_IndexController extends Mage_Core_Controller_Fro
 								 $productName=$_product->getName();
 								 $productPrice =$_product->getPrice();
 								 $productDisPrice=$_product->getSpecialPrice(); 
-								// $productImage=$_product->getThumbnailUrl();
+								 $vendorId=$_product->getUdropshipVendor();
+								 $vendorinfo= Mage::helper('udropship')->getVendor($vendorId);
+								 $vendorName=$vendorinfo->getVendorName();
+							     $shopUrl = Mage::getBaseUrl().$vendorinfo->getUrlKey();
+
+								$url=Mage::getBaseUrl()."catalog/product/view/id/".$entyid;
 								$productImage="http://img1.craftsvilla.com/thumb/166x166".$_product->getImage();
 					 			
 								$bodyhtml .=	'
@@ -235,7 +247,7 @@ class Craftsvilla_Productupdate_IndexController extends Mage_Core_Controller_Fro
 											<input type="checkbox" name="qualitycheck[]"  value="'.$entyid.'" id="'.$entyid.'"  class="chk" >
 											<div class="product_image">
 											<img src="'.$productImage.'" alt="" title=""></div></div>
-													<p class="shopbrief">'.$productName.'</p>
+													<p class="shopbrief"><a href="'.$url.'" target="_blank">'.$productName.'</a></p>
 													<p class="vendorname">By:<a href="'.$shopUrl.'" target="_Blank"> '.$vendorName.'</a></p>
 											<div class="price-box">
 														      
