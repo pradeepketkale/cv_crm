@@ -367,6 +367,8 @@ class Craftsvilla_Shipmentpayout_Adminhtml_ShipmentpayoutController extends Mage
 		    	$base_shipping_amount = $shipmentpayout_report1_val['base_shipping_amount'];
 				$vendorId = $shipmentpayout_report1_val['udropship_vendor'];
 				$adjustmentAmount = $shipmentpayout_report1_val['adjustment'];
+				$vendor_amount = $shipmentpayout_report1_val['todo_payment_amount'];
+				$kribha_amount = $shipmentpayout_report1_val['todo_commission_amount'];
 				$shipmentpayoutStatus = $shipmentpayout_report1_val['shipmentpayout_status'];
 				//Below line is for get closingBalance
 				$collectionVendor = Mage::getModel('udropship/vendor')->load($vendorId);
@@ -402,47 +404,47 @@ class Craftsvilla_Shipmentpayout_Adminhtml_ShipmentpayoutController extends Mage
 		    		
 		    	$gen_random_number = "K".$this->gen_rand();
 
-    			if($shipmentpayout_report1_val['order_created_at']<='2012-07-02 23:59:59')
-		    	{
-		    		if($vendors->getManageShipping() == "imanage")
-			    	{
-			    		$vendor_amount = ($total_amount*(1-$commission_amount/100));
-						$kribha_amount = ($total_amount1 - $vendor_amount)+$itemised_total_shippingcost+$shipmentpayout_report1_val['cod_fee'];
-			    	}
-			    	else {
-			    		$vendor_amount = (($total_amount+$itemised_total_shippingcost)*(1-$commission_amount/100));
-						$kribha_amount = (($total_amount1+$itemised_total_shippingcost) - $vendor_amount);
-			    	}
-		    	}
-		    	else {
-		    		if($vendors->getManageShipping() == "imanage")
-			    	{
+    	// 		if($shipmentpayout_report1_val['order_created_at']<='2012-07-02 23:59:59')
+		   //  	{
+		   //  		if($vendors->getManageShipping() == "imanage")
+			  //   	{
+			  //   		$vendor_amount = ($total_amount*(1-$commission_amount/100));
+					// 	$kribha_amount = ($total_amount1 - $vendor_amount)+$itemised_total_shippingcost+$shipmentpayout_report1_val['cod_fee'];
+			  //   	}
+			  //   	else {
+			  //   		$vendor_amount = (($total_amount+$itemised_total_shippingcost)*(1-$commission_amount/100));
+					// 	$kribha_amount = (($total_amount1+$itemised_total_shippingcost) - $vendor_amount);
+			  //   	}
+		   //  	}
+		   //  	else {
+		   //  		if($vendors->getManageShipping() == "imanage")
+			  //   	{
 
-			    		$vendor_amount = ($total_amount*(1-($commission_amount/100)*(1+0.1236)));
-						//$kribha_amount = ($total_amount1 - $vendor_amount)+$itemised_total_shippingcost+$shipmentpayout_report1_val['cod_fee'];
-						//change to accomodate 3% Payment gateway charges on dated 20-12-12
-						$kribha_amount = ($total_amount1+$itemised_total_shippingcost+$shipmentpayout_report1_val['cod_fee'])*1.00 - $vendor_amount;
-			    	}
-			    	else {
+			  //   		$vendor_amount = ($total_amount*(1-($commission_amount/100)*(1+0.1236)));
+					// 	//$kribha_amount = ($total_amount1 - $vendor_amount)+$itemised_total_shippingcost+$shipmentpayout_report1_val['cod_fee'];
+					// 	//change to accomodate 3% Payment gateway charges on dated 20-12-12
+					// 	$kribha_amount = ($total_amount1+$itemised_total_shippingcost+$shipmentpayout_report1_val['cod_fee'])*1.00 - $vendor_amount;
+			  //   	}
+			  //   	else {
 						
-			    		//$vendor_amount = (($total_amount+$itemised_total_shippingcost+$discountAmountCoupon)*(1-($commission_amount/100)*(1+0.1236)));
-			    		$vendor_amount = (($total_amount+$base_shipping_amount+$discountAmountCoupon)*(1-($commission_amount/100)*(1+0.1450)));
-						//$kribha_amount = (($total_amount1+$itemised_total_shippingcost) - $vendor_amount);
-						//change to accomodate 3% Payment gateway charges on dated 20-12-12
+			  //   		//$vendor_amount = (($total_amount+$itemised_total_shippingcost+$discountAmountCoupon)*(1-($commission_amount/100)*(1+0.1236)));
+			  //   		$vendor_amount = (($total_amount+$base_shipping_amount+$discountAmountCoupon)*(1-($commission_amount/100)*(1+0.1450)));
+					// 	//$kribha_amount = (($total_amount1+$itemised_total_shippingcost) - $vendor_amount);
+					// 	//change to accomodate 3% Payment gateway charges on dated 20-12-12
 						
-					// Below line commented by dileswar on dated 18-02-2013 from $itemised_total_shippingcost To $base_shipping_amount***/////////////	
-						//$kribha_amount = ((($total_amount1+$itemised_total_shippingcost)*0.97) - $vendor_amount);
-						//if($getCountryResult == 'IN')
-					//	{	
-							$kribha_amount = ((($total_amount1+$base_shipping_amount+$discountAmountCoupon)*1.00) - $vendor_amount);
-					//	}
-					//	else
-					//	{
-					//		$kribha_amount = ((($total_amount1+$lastFinalbaseshipamt+$discountAmountCoupon)*1.00) - $vendor_amount);
-					//	}
-			    	}
+					// // Below line commented by dileswar on dated 18-02-2013 from $itemised_total_shippingcost To $base_shipping_amount***/////////////	
+					// 	//$kribha_amount = ((($total_amount1+$itemised_total_shippingcost)*0.97) - $vendor_amount);
+					// 	//if($getCountryResult == 'IN')
+					// //	{	
+					// 		$kribha_amount = ((($total_amount1+$base_shipping_amount+$discountAmountCoupon)*1.00) - $vendor_amount);
+					// //	}
+					// //	else
+					// //	{
+					// //		$kribha_amount = ((($total_amount1+$lastFinalbaseshipamt+$discountAmountCoupon)*1.00) - $vendor_amount);
+					// //	}
+			  //   	}
 					
-		    	}
+		   //  	}
 				
 				/*if(($vendor_amount+$closingbalance) > 0)
 						{
