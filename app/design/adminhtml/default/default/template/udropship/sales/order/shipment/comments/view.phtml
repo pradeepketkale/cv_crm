@@ -21,6 +21,8 @@
 	$_shippingAddress_value = $_order_id->getShippingAddress();
 	$country_id_value = $_shippingAddress_value->getCountry_id();
 	$autoRefundedamount = Mage::helper('udropship')->getrefundCv($_entity->getId());	
+    $user = Mage::getSingleton('admin/session')->getUser(); //Added by Ankit for restriction on Damage/Lost in Transit
+    $user = $user->email; //Added by Ankit for restriction on Damage/Lost in Transit
 ?>
 <div id="comments_block">
     <span class="field-row">
@@ -38,8 +40,7 @@ foreach (Mage::getSingleton('udropship/source')->setPath('shipment_statuses')->t
         		//if($_label == 'Processing' || $_label == 'Shipped' || $_label == 'Delivered' || $_label == 'Refund Initiated' || $_label == 'Not Delivered' || $_label == 'Charge Back' || $_label == 'Canceled'):
         		/*if($country_id_value != 'IN')
         		{*/
-        			
-					if($_label == '' || $_label == 'Processing' || $_label == 'Shipped To Customer' || $_label == 'Delivered' || $_label == 'Refund Initiated' || $_label == 'Partially Refund Initiated' || $_label == 'Not Delivered' || $_label == 'Charge Back' || $_label == 'Canceled' || $_label == 'Shipped To Craftsvilla' || $_label == 'QC Rejected by Craftsvilla' || $_label == 'Received in Craftsvilla' || $_label == 'Product Out Of Stock' || $_label == 'Dispute Raised' || $_label == 'Shipment Delayed' || $_label == 'Partially Shipped' || $_label == 'Refund To Do' || $_label == 'Accepted' || $_label == 'COD RTO' || $_label == 'Returned By Customer' || $_label == 'COD Manifest Shared' || $_label == 'COD Shipment Picked Up'|| $_label == 'Accept To Ship Directly To Customer'|| $_label == 'Pending Pickup' || $_label == 'Packing Slip Printed' || $_label == 'Handed To Courier' || $_label == 'Return Recieved From Customer' || $_label == 'Partially Recieved' || $_label == 'Refund Voucher Requested' || $_label == 'Refund Voucher Sent' || $_label=='Damage/Lost in transit'):
+					if($_label == '' || $_label == 'Processing' || $_label == 'Shipped To Customer' || $_label == 'Delivered' || $_label == 'Refund Initiated' || $_label == 'Partially Refund Initiated' || $_label == 'Not Delivered' || $_label == 'Charge Back' || $_label == 'Canceled' || $_label == 'Shipped To Craftsvilla' || $_label == 'QC Rejected by Craftsvilla' || $_label == 'Received in Craftsvilla' || $_label == 'Product Out Of Stock' || $_label == 'Dispute Raised' || $_label == 'Shipment Delayed' || $_label == 'Partially Shipped' || $_label == 'Refund To Do' || $_label == 'Accepted' || $_label == 'COD RTO' || $_label == 'Returned By Customer' || $_label == 'COD Manifest Shared' || $_label == 'COD Shipment Picked Up'|| $_label == 'Accept To Ship Directly To Customer'|| $_label == 'Pending Pickup' || $_label == 'Packing Slip Printed' || $_label == 'Handed To Courier' || $_label == 'Return Recieved From Customer' || $_label == 'Partially Recieved' || $_label == 'Refund Voucher Requested' || $_label == 'Refund Voucher Sent' || ($_label=='Damage/Lost in transit' && $user == "pravin@craftsvilla.com" || $user == "tarun@craftsvilla.com" || $user == "ayesha.bichu@craftsvilla.com" || $user == "roshan@craftsvilla.com")): //Modifed by Ankit for restriction on Damage/Lost in Transit
         ?>
             <option value="<?php echo $_code ?>"<?php if($_code==$this->getEntity()->getUdropshipStatus()): ?> selected="selected" <?php endif; ?>><?php echo $_label ?></option>
 
