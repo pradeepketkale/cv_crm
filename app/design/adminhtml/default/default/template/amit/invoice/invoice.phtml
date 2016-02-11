@@ -155,11 +155,13 @@
                 <td valign="top"><?php echo $order->formatPriceTxt($_item->getOriginalPrice()); ?></td>
                 <td valign="top"><?php echo $order->formatPriceTxt($_item->getTaxAmount()); ?></td>
 		  		<td valign="top"><?php echo $order->formatPriceTxt($_item->getDiscountAmount()) ?></td>
-                <td valign="top"><?php echo $order->formatPriceTxt($_item->getOriginalPrice()*number_format($_item->getQtyOrdered(), 0)+$_item->getShippingcost()-$_item->getDiscountAmount()) ?></td>
+                <!--<td valign="top"><?php //echo $order->formatPriceTxt($_item->getOriginalPrice()*number_format($_item->getQtyOrdered(), 0)+$_item->getShippingcost()-$_item->getDiscountAmount()) ?></td>-->
+                <td valign="top"><?php echo $order->formatPriceTxt($_item->getOriginalPrice()*number_format($_item->getQtyOrdered(), 0)) ?></td>
               </tr>
 		<?php
 			$total_qty+=number_format($_item->getQtyOrdered(), 0);
-      $amt = $order->formatPriceTxt($_item->getOriginalPrice()* number_format($_item->getQtyOrdered(), 0)+$_item->getShippingcost()-$_item->getDiscountAmount()); 
+      //$amt = $order->formatPriceTxt($_item->getOriginalPrice()* number_format($_item->getQtyOrdered(), 0)+$_item->getShippingcost()-$_item->getDiscountAmount()); 
+      $amt = $order->formatPriceTxt($_item->getOriginalPrice()* number_format($_item->getQtyOrdered(), 0)); 
       $a += str_replace('Rs.', '', $amt);
 
 			
@@ -200,7 +202,7 @@
             <td colspan="2"><table width="800" border="0" cellspacing="0" cellpadding="0">
                 <tr class="bottumborder">
                 <td width="400" height="40" class="totals">Sub Total:</td>
-                <td width="400" class="totals2"><?php echo $order->formatPriceTxt($order->getGrandTotal()) ?>
+                <td width="400" class="totals2"><?php echo $order->formatPriceTxt($order->getSubtotal()) ?>
 </td>
               </tr>
                 <tr class="bottumborder">
