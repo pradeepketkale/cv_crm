@@ -46,7 +46,7 @@ class Unirgy_Dropship_Model_Pdf_Statement extends Unirgy_Dropship_Model_Pdf_Abst
         
         $this->setStatement($statement); 
         
-        $orderFrom = $statement->getOrderDateFrom(); 
+        $orderFrom = $statement->getOrderDateFrom();
         $orderTo = $statement->getOrderDateTo(); 
         $orderVendor = $statement->getVendorId(); 
         $orderStatementId = $statement->getStatementId(); 
@@ -55,17 +55,19 @@ class Unirgy_Dropship_Model_Pdf_Statement extends Unirgy_Dropship_Model_Pdf_Abst
         
        
     $statementQuery = "SELECT `t`.entity_id, `t`.increment_id FROM `sales_flat_shipment_grid` AS `main_table` INNER JOIN `sales_flat_shipment` AS `t` ON t.entity_id=main_table.entity_id INNER JOIN `sales_flat_order_payment` AS `b` ON b.parent_id=main_table.order_id WHERE ((t.udropship_status = 1 AND b.method!='cashondelivery') OR (t.udropship_status = 7 AND b.method='cashondelivery')) AND (t.udropship_vendor='".$orderVendor."') AND (t.created_at IS NOT NULL) AND (t.created_at!='0000-00-00 00:00:00') AND (t.created_at>='".$orderFrom."') AND (t.created_at<='".$orderTo."') AND ((main_table.statement_id='".$orderStatementId."' OR main_table.statement_id IS NULL OR main_table.statement_id='')) ORDER BY `main_table`.`entity_id` asc";
+    //echo $statementQuery = "SELECT `t`.entity_id, `t`.increment_id FROM `sales_flat_shipment_grid` AS `main_table` INNER JOIN `sales_flat_shipment` AS `t` ON t.entity_id=main_table.entity_id INNER JOIN `sales_flat_order_payment` AS `b` ON b.parent_id=main_table.order_id WHERE ((t.udropship_status = 1 AND b.method!='cashondelivery') OR (t.udropship_status = 7 AND b.method='cashondelivery')) AND (t.udropship_vendor='".$vendorId."') AND (t.updated_at IS NOT NULL) AND (t.updated_at!='0000-00-00 00:00:00') AND (t.updated_at>='".$dateFrom."') AND (t.updated_at<='".$dateTo."') ORDER BY `main_table`.`entity_id` asc";
+
     $readCon = Mage::getSingleton('core/resource')->getConnection('core_read');
     $writeCon = Mage::getSingleton('core/resource')->getConnection('core_write');
         
         $statementQueryRes = $readCon->query($statementQuery)->fetchAll();
-        //print_r($statementQueryRes); exit;
+        
         foreach($statementQueryRes as $_po)
         {
 		    
 		    $po = Mage::getModel('sales/order_shipment')->load($_po['entity_id']);
 		    //echo '<pre>'; print_r($po); exit; 
-		   
+	       	$actualServiceTax = $this->getServicetaxCv($po->getUpdatedAt()); 
 		    $shipmentId = $_po['increment_id']; 
 		    //echo '<pre>'; print_r($_po); exit;
 		    $order = array(
@@ -80,6 +82,7 @@ class Unirgy_Dropship_Model_Pdf_Statement extends Unirgy_Dropship_Model_Pdf_Abst
 		        'order_increment_id' => $hlp->getPoOrderIncrementId($po),
 		        'po_increment_id' => $shipmentId,
 		        'po_created_at' => $po->getCreatedAt(),
+                'po_updated_at' => $po->getUpdatedAt(),
 		        'base_shipping_amount' => $po->getBaseShippingAmount(),
 				'itemised_total_shippingcost' => $po->getItemisedTotalShippingcost(),
 		        'udropship_vendor' => $po->getUdropshipVendor (),
@@ -123,7 +126,7 @@ class Unirgy_Dropship_Model_Pdf_Statement extends Unirgy_Dropship_Model_Pdf_Abst
 				    $this->insertOrder($order);
 				    $TotalSubTotal += number_format($order['orders']['amounts']['subtotal'],2);
 				    $TotalCommission += number_format($order['orders']['amounts']['com_amount'],2);
-					$TotalServiceTax += number_format($order['orders']['amounts']['com_amount']*0.1400,2);
+					$TotalServiceTax += number_format(($order['orders']['amounts']['com_amount']*$actualServiceTax),2);
 					
 				}
 		    
@@ -177,7 +180,18 @@ class Unirgy_Dropship_Model_Pdf_Statement extends Unirgy_Dropship_Model_Pdf_Abst
 		
     
     }
-    
+    public function getServicetaxCv($updatedDate)
+    {
+        if($updatedDate >= '2015-11-15 23:59:59')
+           { 
+            $exServicetax = (14.5/100);
+            }
+         else{
+
+            $exServicetax = (14/100);
+         }  
+         return  $exServicetax;
+    }
     
     public function addStatement($statement)
     {
@@ -503,6 +517,8 @@ class Unirgy_Dropship_Model_Pdf_Statement extends Unirgy_Dropship_Model_Pdf_Abst
 
     public function insertOrder($order)
     {
+
+        //echo '<pre>';print_r($order);exit;
         $core = Mage::helper('core');
 
         foreach (array('trans_fee','com_percent','com_amount') as $_k) {
@@ -511,7 +527,7 @@ class Unirgy_Dropship_Model_Pdf_Statement extends Unirgy_Dropship_Model_Pdf_Abst
                 : '-'.$order[$_k];
  
         }
-
+        $actualServiceTax = $this->getServicetaxCv($order['orders']['po_updated_at']); 
         $this->checkPageOverflow()
             ->setMaxHeight(0)
             ->font('normal', 10)
@@ -529,12 +545,12 @@ class Unirgy_Dropship_Model_Pdf_Statement extends Unirgy_Dropship_Model_Pdf_Abst
 
             $this->moveRel(1.2, 0)->text($order['orders']['po_increment_id']); 
                 //->moveRel(1, 0)->text($order['subtotal']);
-			$serviceTax = "Rs. ".number_format($order['orders']['amounts']['com_amount']*0.1400,2); 
+			$serviceTax = "Rs. ".number_format($order['orders']['amounts']['com_amount']*$actualServiceTax,2); 
 			$comAmount = "Rs. ".number_format($order['orders']['amounts']['com_amount'],2);
 			$this->moveRel(1.5, 0)->text("{$comAmount}");
             $this->moveRel(1.7, 0)->text("{$serviceTax}");
 
-			$totalAmount =  "Rs. ".number_format($order['orders']['amounts']['com_amount']*1.1400,2);
+			$totalAmount =  "Rs. ".number_format($order['orders']['amounts']['com_amount']*(1+$actualServiceTax),2);
 			$this->moveRel(1.6, 0)->text("{$totalAmount}");
 			
 			//$this->moveRel(1, 0)->text($serviceTax)
