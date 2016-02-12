@@ -299,7 +299,7 @@ class Craftsvilla_Shipmentpayout_Adminhtml_ShipmentpayoutController extends Mage
 				//->joinLeft('salesrule_coupon', 'salesrule.rule_id = salesrule_coupon.rule_id','code')
 				
 				//->where('main_table.type = "Adjusted Against Refund"');
-				->where('main_table.citibank_utr != "" AND main_table.shipmentpayout_status=0 AND a.udropship_status IN (1,17) AND sales_flat_order_payment.method IN ("secureebs_standard","purchaseorder","ccavenue_standard","avenues_standard","payucheckout_shared","gharpay_standard","paypal_standard","free")');// a.udropship_status IN (1,15,17)
+				->where('main_table.citibank_utr != "" AND main_table.shipmentpayout_status=0 AND a.udropship_status IN (1,17) AND sales_flat_order_payment.method IN ("secureebs_standard","purchaseorder","ccavenue_standard","avenues_standard","payucheckout_shared","gharpay_standard","free")');// a.udropship_status IN (1,15,17)
 				//->where('main_table.shipmentpayout_update_time <= "'.$selected_date_val.' 23:59:59" AND main_table.citibank_utr != "" AND main_table.shipmentpayout_status=0 AND a.udropship_status = 1 AND sales_flat_order_payment.method IN ("secureebs_standard","purchaseorder","ccavenue_standard")');// a.udropship_status IN (1,15,17)
       	
       	/*echo "Query:".$shipmentpayout_report1->getSelect()->__toString();
@@ -1742,6 +1742,314 @@ class Craftsvilla_Shipmentpayout_Adminhtml_ShipmentpayoutController extends Mage
     $i++;
 Mage::getSingleton('adminhtml/session')->addSuccess($this->__('Cod Download Done: Please Download from here:'));
 $this->_redirect('*/*/index');
+	}
+
+	public function paypalreportAction()
+		{
+			
+		$selected_date_val = $this->getRequest()->getParam('selected_date'); //Get Selected date
+		$selected_date_val1 = new DateTime($selected_date_val); //Convert to date time object
+		$datetemp =  date('Y-m-d');//date_create("2016-01-30"); //Create Today Temp date
+		$datetemp = new DateTime($datetemp);
+		$diff = date_diff($selected_date_val1,$datetemp ); //Calulate date difference
+		$date_diff  = $diff->days;
+		$finaldate = '';
+
+		if($date_diff >=7){
+			//echo ">30";
+			$finaldate = date_format($selected_date_val1,'Y-m-d') ;
+		}else {
+			//echo "<30";
+			$finaldate = date_sub($datetemp, date_interval_create_from_date_string('7 days')); //30 Days difference
+			$finaldate = date_format($finaldate,'Y-m-d');
+		}
+		//echo( "Difference :".$date_diff . " Finale Date: ". $finaldate); exit;
+		
+
+		$dateOpen = date('Ymd',strtotime($selected_date_val));
+ 
+    	$shipmentpayout_report1 = Mage::getModel('shipmentpayout/shipmentpayout')->getCollection();
+      	$shipmentpayout_report1->getSelect()
+      			->join(array('a'=>'sales_flat_shipment'), 'a.increment_id=main_table.shipment_id', array('udropship_vendor', 'subtotal'=>'base_total_value', 'commission_percent'=>'commission_percent', 'itemised_total_shippingcost'=>'itemised_total_shippingcost','cod_fee'=>'cod_fee','base_shipping_amount'=>'base_shipping_amount'))
+      			->join(array('b'=>'sales_flat_shipment_grid'), 'b.increment_id=main_table.shipment_id', array('order_created_at'))
+      			->joinLeft('sales_flat_order_payment', 'b.order_id = sales_flat_order_payment.parent_id','method')
+				->where('main_table.shipmentpayout_status=0 AND a.udropship_status IN (1) AND `sales_flat_order_payment`.method = "paypal_standard" AND main_table.citibank_utr != "" and a.updated_at <= \''. $finaldate.'\'');      	
+      /*	echo "Query:".$shipmentpayout_report1->getSelect()->__toString();
+      	echo ($selected_date_val);
+		exit();*/
+      			
+      	$shipmentpayout_report1_arr = $shipmentpayout_report1->getData();
+    	$filename = "PaypalReport"."_".$selected_date_val;
+		$output = "";
+	
+		$fieldlist = array("Debit Account Number","Value Date","Customer Reference No","Beneficiary Name","Payment Type","Bene Account Number","Bank Code","Account type","Amount","Payment Details 1","Payment Details 2","Payment Details 3","Payment Details 4","Payable Location Code *","Payable Location Name *","Print Location Code *","Print Location Name *","Beneficiary Address 1","Beneficiary Address 2","Beneficiary Address 3","Beneficiary Address 4","Delivery Method","Cheque Number","Bene E-mail ID","Instrument Detail 1","Instrument Detail 2","Craftsvilla Commission");
+    	
+		$numfields = sizeof($fieldlist);
+		$i = 1;
+	
+		// *********************   NOW START BUILDING THE CSV
+	
+		// Create the column headers
+	
+		for($k =0; $k < $numfields;  $k++) { 
+			$output .= $fieldlist[$k];
+			if ($k < ($numfields-1)) $output .= ", ";
+		}
+		$output .= "\n";
+		
+		/*echo "<pre>";
+		print_r($shipmentpayout_report1_arr);
+		exit();*/
+		
+    	foreach($shipmentpayout_report1_arr as $shipmentpayout_report1_val)
+	    {
+			$vendors = Mage::helper('udropship')->getVendor($shipmentpayout_report1_val['udropship_vendor']);
+			//var_dump($vendors);exit;
+	    	//Checking Valid Account number
+	    	//$accountnumber = $vendors->getBankAcNumber();
+
+			//$bankaccountno = $this->checkbanknumber($accountnumber);
+			//if($bankaccountno === false){
+			//	continue;
+			//}
+
+			//if(($shipmentpayout_report1_val['udropship_vendor'] != '') && ($vendors->getMerchantIdCity() != ''))
+			if($shipmentpayout_report1_val['udropship_vendor'] != '')
+    		{
+		    	unset($total_amount);
+		    	unset($commission_amount);
+		    	unset($vendor_amount);
+		    	unset($kribha_amount);
+		    	unset($gen_random_number);
+		    	unset($itemised_total_shippingcost);
+		    
+				$total_amount1 = $shipmentpayout_report1_val['subtotal'];
+				$total_amount = $shipmentpayout_report1_val['subtotal'];
+				//$logisticamount = $shipmentpayout_report1_val['intshipingcost'];
+				//$logisticamount = 125;
+				$_liveDate = "2012-08-21 00:00:00";
+		    	$order = Mage::getModel('sales/order')->loadByIncrementId($shipmentpayout_report1_val['order_id']);
+				
+				// Below Two lines added By Dileswar for Adding Discount coupon on dated 25-07-2013
+				$disCouponcode = '';
+				$discountAmountCoupon = 0;
+				$_orderCurrencyCode = $order->getOrderCurrencyCode();
+				if(($_orderCurrencyCode != 'INR') && (strtotime($shipmentpayout_report1_val['order_created_at']) >= strtotime($_liveDate)))
+					$total_amount = $shipmentpayout_report1_val['subtotal']/1.5;
+
+		    	//$commission_amount = $shipmentpayout_report1_val['commission_percent'];
+				$commission_amount = 20;
+		    	$itemised_total_shippingcost = $shipmentpayout_report1_val['itemised_total_shippingcost'];
+		    	$base_shipping_amount = $shipmentpayout_report1_val['base_shipping_amount'];
+				$vendorId = $shipmentpayout_report1_val['udropship_vendor'];
+				$adjustmentAmount = $shipmentpayout_report1_val['adjustment'];
+				$shipmentpayoutStatus = $shipmentpayout_report1_val['shipmentpayout_status'];
+				//Below line is for get closingBalance
+				$collectionVendor = Mage::getModel('udropship/vendor')->load($vendorId);
+				$closingbalance = $collectionVendor->getClosingBalance();
+		    	
+				// Added By Dileswar On dated 25-07-2013 For get the Value of coupon id & vendorid
+				$couponCodeId = Mage::getModel('salesrule/coupon')->load($order->getCouponCode(), 'code');
+				$_resultCoupon = Mage::getModel('salesrule/rule')->load($couponCodeId->getRuleId());
+				$couponVendorId = $_resultCoupon->getVendorid();
+				if($couponVendorId == $vendorId)
+				{
+					$discountAmountCoupon = $order->getBaseDiscountAmount();
+					$disCouponcode = $order->getCouponCode();
+				}
+				
+				//$gen_random_number = "K".$this->gen_rand();
+                       $vendor_amount = (($total_amount+$itemised_total_shippingcost+$discountAmountCoupon)*(1-($commission_amount/100)*(1+0.1450)));
+						
+						//$kribha_amount = (($total_amount1+$itemised_total_shippingcost) - $vendor_amount);
+						//change to accomodate 3% Payment gateway charges on dated 20-12-12
+						
+					// Below line commented by dileswar on dated 18-02-2013 from $itemised_total_shippingcost To $base_shipping_amount***/////////////	
+						//$kribha_amount = ((($total_amount1+$itemised_total_shippingcost)*0.97) - $vendor_amount);
+						
+			    	
+					//$vendor_amount = $vendor_amount - ($logisticamount*(1+0.1450));
+				
+		    	$kribha_amount = ((($total_amount1+$base_shipping_amount+$discountAmountCoupon)) - $vendor_amount);
+				
+				//Below lines for to update the value in shipmentpayout table ...
+					
+					$write = Mage::getSingleton('core/resource')->getConnection('shipmentpayout_write');
+					if($disCouponcode){
+					$queryUpdateDiscount = "update shipmentpayout set `discount` ='".$discountAmountCoupon."',`couponcode` = '".$disCouponcode."' WHERE `shipment_id` = '".$shipmentpayout_report1_val['shipment_id']."'";
+					$write->query($queryUpdateDiscount);
+					}
+				
+					$utr = $shipmentpayout_report1_val['citibank_utr'];
+					$neft = 'EFT';
+						if(($vendor_amount+$closingbalance) <= 0)
+							{
+								if($shipmentpayout_report1_val['type'] == 'Adjusted Against Refund'){$vendor_amount = 0;}
+								
+								else{	
+									$adjustmentAmount = $adjustmentAmount + $vendor_amount; 
+									$closingbalance = $closingbalance + $vendor_amount;
+									$vendor_amount = 0;
+									$neft = 'Adjusted Against Refund';
+									//$write = Mage::getSingleton('core/resource')->getConnection('shipmentpayout_write');	
+									//$queryUpdate = "update shipmentpayout set `adjustment` ='".$adjustmentAmount."',`type` = '".$neft."' WHERE shipment_id = '".$shipmentpayout_report1_val['shipment_id']."'";
+									$queryUpdate = "update shipmentpayout set `shipmentpayout_update_time` = NOW(),`payment_amount`= '".$adjustmentAmount."',`adjustment` ='".$adjustmentAmount."',`shipmentpayout_status` = '1',`type` = '".$neft."',`comment` = 'Adjusted Against Refund By System' WHERE shipment_id = '".$shipmentpayout_report1_val['shipment_id']."'";
+									$write->query($queryUpdate);
+									$queyVendor = "update `udropship_vendor` set `closing_balance` = '".$closingbalance."' WHERE `vendor_id` = '".$vendorId."'";
+									$write->query($queyVendor);	
+								
+								}
+							}	
+							
+				for($m =0; $m < sizeof($fieldlist); $m++) {
+					$fieldvalue = $fieldlist[$m];
+		    		if($fieldvalue == "Debit Account Number")
+		    		{
+		    			//$output .= '710607028';
+		    			$output .= '712097019';
+		    		}
+		    		
+		    		if($fieldvalue == "Value Date")
+		    		{
+		    			$output .= $dateOpen;
+		    		}
+		    		
+		    		if($fieldvalue == "Customer Reference No")
+		    		{
+		    			$output .= $shipmentpayout_report1_val['shipment_id'];
+		    		}
+		    		
+		    		if($fieldvalue == "Beneficiary Name")
+		    		{
+		    			$output .= $vendors->getCheckPayTo();
+		    		}
+		    			
+		    		if($fieldvalue == "Payment Type")
+		    		{
+		    			$output .= $neft;
+		    		}
+		    			
+		    		if($fieldvalue == "Bene Account Number")
+		    		{
+		    			$output .= "'".$vendors->getBankAcNumber();
+		    		}
+		    			
+		    		if($fieldvalue == "Bank Code")
+		    		{
+		    			$output .= strtoupper($vendors->getBankIfscCode()); 
+		    		}
+		    			
+		    		if($fieldvalue == "Account type")
+		    		{
+		    			$output .= '2';
+		    		}
+		    			
+		    		if($fieldvalue == "Amount")
+		    		{
+		    			$output .= str_replace(',','',number_format($vendor_amount,2));
+		    		}
+		    			
+		    		if($fieldvalue == "Payment Details 1")
+		    		{
+		    			$output .= $shipmentpayout_report1_val['shipment_id'];
+		    		}
+		    		
+		    		if($fieldvalue == "Payment Details 2")
+		    		{
+		    			$output .= preg_replace('/[^a-zA-Z0-9]/s','',str_replace(' ','',substr(strtoupper($vendors->getVendorName()),0,30)));		    		}
+		    		
+		    		if($fieldvalue == "Payment Details 3")
+		    		{
+		    			$output .= "";
+		    		}
+		    			
+		    		if($fieldvalue == "Payment Details 4")
+		    		{
+		    			$output .= "";
+		    		}
+					if($fieldvalue == "Payable Location Code *")
+		    		{
+		    			$output .= "";
+		    		}
+					if($fieldvalue == "Payable Location Name *")
+		    		{
+		    			$output .= "";
+		    		}
+					if($fieldvalue == "Print Location Code *")
+		    		{
+		    			$output .= "";
+		    		}
+					if($fieldvalue == "Print Location Name *")
+		    		{
+		    			$output .= "";
+		    		}
+					if($fieldvalue == "Beneficiary Address 1")
+		    		{
+		    			$output .= "";
+		    		}
+					if($fieldvalue == "Beneficiary Address 2")
+		    		{
+		    			$output .= "";
+		    		}
+					if($fieldvalue == "Beneficiary Address 3")
+		    		{
+		    			$output .= "";
+		    		}
+					if($fieldvalue == "Beneficiary Address 4")
+		    		{
+		    			$output .= "";
+		    		}
+					if($fieldvalue == "Delivery Method")
+		    		{
+		    				$output .= "";
+		    		}
+					if($fieldvalue == "Cheque Number")
+		    		{
+		    			$output .= "";
+		    		}
+					if($fieldvalue == "Bene E-mail ID")
+		    		{
+		    			$output .= $vendors->getEmail();
+		    		}
+					if($fieldvalue == "Instrument Detail 1")
+		    		{
+		    			$output .= "";
+		    		}
+					if($fieldvalue == "Instrument Detail 2")
+		    		{
+		    			$output .= "";
+		    		}
+					if($fieldvalue == "Craftsvilla Commission")
+		    		{
+		    			$output .= $kribha_amount;
+		    		}
+					
+		    			
+		    		if ($m < ($numfields-1))
+		    		{
+		    			$output .= ",";
+		    		}
+		    	
+				}
+		    	$output .= "\n";
+				
+    		}
+	    }
+		
+    	// Send the CSV file to the browser for download
+	
+		//header("Content-type: text/x-csv");
+		//header("Content-Disposition: attachment; filename=$filename.csv");
+		//echo $output;
+		$filePathOfCsv = Mage::getBaseDir('media').DS.'misreport'.DS.$filename.'.csv';
+		$fp=fopen($filePathOfCsv,'w');
+		fputs($fp, $output);
+    	fclose($fp);
+		
+		
+	    $i++;
+		Mage::getSingleton('adminhtml/session')->addSuccess($this->__('PayPal Report Done: Please Download from  <a target="_blank" href =\'http://cadmin.craftsvilla.com/media/misreport/'.$filename.'.csv\'><b>here</b></a>'));
+		$this->_redirect('*/*/index');
 	}
 	
 	public function autorefundpayuAction()
