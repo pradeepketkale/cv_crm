@@ -39,6 +39,11 @@ class Craftsvilla_Vendorneftcode_Block_Adminhtml_Vendorneftcode_Edit_Tab_Form ex
           'label'     => Mage::helper('vendorneftcode')->__('Bulk Privileges'),
           'name'      => 'bulk_privileges',
     ));
+
+          $fieldset->addField('commission_percentage', 'text', array(
+          'label'     => Mage::helper('vendorneftcode')->__('Commission Percent'),
+          'name'      => 'commission_percentage',
+    ));
 		
       /*$fieldset->addField('status', 'select', array(
           'label'     => Mage::helper('vendorneftcode')->__('Status'),

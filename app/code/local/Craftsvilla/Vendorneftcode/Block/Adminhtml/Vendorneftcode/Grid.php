@@ -71,6 +71,11 @@ class Craftsvilla_Vendorneftcode_Block_Adminhtml_Vendorneftcode_Grid extends Mag
       'width'     => '150px',
       'index'     => 'bulk_privileges',
       ));
+      $this->addColumn('commission_percentage', array(
+      'header'    => Mage::helper('vendorneftcode')->__('Commission Percent'),
+      'width'     => '150px',
+      'index'     => 'commission_percentage',
+      ));
 
      
 
