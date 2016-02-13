@@ -64,6 +64,7 @@ class Craftsvilla_Vendorneftcode_Adminhtml_VendorneftcodeController extends Mage
  
 	public function saveAction() {
 		if ($data = $this->getRequest()->getPost()) {
+			
 			/*if(isset($_FILES['filename']['name']) && $_FILES['filename']['name'] != '') {
 				try {	
 					/* Starting upload */	
@@ -98,18 +99,7 @@ class Craftsvilla_Vendorneftcode_Adminhtml_VendorneftcodeController extends Mage
             $logistics_privileges = mysql_escape_string($this->getRequest()->getParam('logistics_privileges'));
             $payment_privileges = mysql_escape_string($this->getRequest()->getParam('payment_privileges'));
             $bulk_privileges = mysql_escape_string($this->getRequest()->getParam('bulk_privileges'));
-            $commission_percentage = mysql_escape_string($this->getRequest()->getParam('commission_percentage'));
-            /*To protect value change in Vendor NEFT dashboard*/
-            $catalog_privileges_string = '';
-            $bulk_privileges_string = '';
-            if(!$catalog_privileges == ''){
-            	$catalog_privileges_string = "`catalog_privileges`='".$catalog_privileges."',";
-            }
-            if (!$bulk_privileges == ''){
-            	$bulk_privileges_string = "`bulk_privileges`='".$bulk_privileges."',";
-            }
-            /*To protect value change in Vendor NEFT dashboard*/
-            
+
 		$read = Mage::getSingleton('core/resource')->getConnection('custom_db');
         $write = Mage::getSingleton('core/resource')->getConnection('core_write');
         
@@ -117,7 +107,7 @@ class Craftsvilla_Vendorneftcode_Adminhtml_VendorneftcodeController extends Mage
 		$vendorInfoCraftsQueryRes = $read->query($vendorInfoCraftsQuery)->fetch();
 		if($vendorInfoCraftsQueryRes) {
 		
-		$vendorInfoUpdateQuery = "UPDATE `vendor_info_craftsvilla` SET `merchant_id_city`='".$merchantId."',`vendor_name`='".$vendorName."',".$catalog_privileges_string." `logistics_privileges`='".$logistics_privileges."', `payment_privileges`='".$payment_privileges."',".$bulk_privileges_string."`commission_percentage`='".$commission_percentage."' WHERE `vendor_id` = '".$vendorId."'"; 
+		$vendorInfoUpdateQuery = "UPDATE `vendor_info_craftsvilla` SET `merchant_id_city`='".$merchantId."',`vendor_name`='".$vendorName."',`catalog_privileges`='".$catalog_privileges."', `logistics_privileges`='".$logistics_privileges."', `payment_privileges`='".$payment_privileges."',`bulk_privileges`='".$bulk_privileges."' WHERE `vendor_id` = '".$vendorId."'"; 
 		$vendorInfoUpdateQueryRes = $write->query($vendorInfoUpdateQuery);
 		
 		} else {
