@@ -710,7 +710,9 @@ class Unirgy_Dropship_Model_Pdf_Statement extends Unirgy_Dropship_Model_Pdf_Abst
         
    
         $core = Mage::helper('core');
-        $hlp = Mage::helper('udropship'); 
+        $hlp = Mage::helper('udropship');
+
+        //$actualServiceTax = $hlp->getServicetaxCv($totals['orders']['po_increment_id']); 
         $totals = $totals['orders']['amounts'];
         $totalPayout = $totals['total_payout'];
    
@@ -721,7 +723,8 @@ class Unirgy_Dropship_Model_Pdf_Statement extends Unirgy_Dropship_Model_Pdf_Abst
 		//$education_tax          = round($service_tax*2/100,2);
         //$highereducation_tax    = round($service_tax*1/100,2);
 //        $totals['total_payout'] = round(str_replace(",", "", $data2[1])-round($service_tax+$education_tax+$highereducation_tax,0),2);
-		$totals['total_payout'] = number_format(str_replace(",", "", $data[1])+$service_tax,2);
+		//$totals['total_payout'] = number_format(str_replace(",", "", $data[1])+$service_tax,2);
+        $totals['total_payout'] = number_format(str_replace(",", "", $data[1])+$service_tax,2);
         /************************************************/
        		$this->checkPageOverflow(1.5)
             ->moveRel(-.1, 0)
@@ -750,7 +753,7 @@ class Unirgy_Dropship_Model_Pdf_Statement extends Unirgy_Dropship_Model_Pdf_Abst
         $stTotalHeightOut = $stTotalHeight+$stTotalRectPad*2;
         $this->rectangle(3.6, $stTotalHeightOut, .8, .8)
             ->movePop(-1.7, .35)
-                ->text($hlp->__("Total"))
+                ->text($hlp->__("Totaldfdfdf"))
             ->moveRel(1.7, 0)->text('Rs. '.$totalPayout, 'down');
 		 $this->moveRel(-8,-0.8)
             ->moveRel(1,0)
@@ -1230,6 +1233,7 @@ class Unirgy_Dropship_Model_Pdf_Statement extends Unirgy_Dropship_Model_Pdf_Abst
 	        return $order1;					
 		
 	}
+
 	
 	public function getVendor()
     {
@@ -1250,6 +1254,312 @@ class Unirgy_Dropship_Model_Pdf_Statement extends Unirgy_Dropship_Model_Pdf_Abst
         return Mage::helper('udropship')->getStatementEmptyTotalsAmount($format);
     }
     
+    public function addStatementCraftsvillaLogistic($statement)
+    {
+        $hlp = Mage::helper('udropship');
+        
+        $this->setStatement($statement); 
+        
+        $orderFrom = $statement->getOrderDateFrom();
+        $orderTo = $statement->getOrderDateTo(); 
+        $orderVendor = $statement->getVendorId(); 
+        $orderStatementId = $statement->getStatementId(); 
+        
+        $ordersData = array();
+        
+       
+    $statementQuery = "SELECT `t`.entity_id, `t`.increment_id FROM `sales_flat_shipment_grid` AS `main_table` INNER JOIN `sales_flat_shipment` AS `t` ON t.entity_id=main_table.entity_id INNER JOIN `sales_flat_order_payment` AS `b` ON b.parent_id=main_table.order_id WHERE ((t.udropship_status = 1 AND b.method!='cashondelivery') OR (t.udropship_status = 7 AND b.method='cashondelivery')) AND (t.udropship_vendor='".$orderVendor."') AND (t.created_at IS NOT NULL) AND (t.created_at!='0000-00-00 00:00:00') AND (t.updated_at>='".$orderFrom."') AND (t.updated_at<='".$orderTo."') AND ((main_table.statement_id='".$orderStatementId."' OR main_table.statement_id IS NULL OR main_table.statement_id='')) ORDER BY `main_table`.`entity_id` asc";
+    //echo $statementQuery = "SELECT `t`.entity_id, `t`.increment_id FROM `sales_flat_shipment_grid` AS `main_table` INNER JOIN `sales_flat_shipment` AS `t` ON t.entity_id=main_table.entity_id INNER JOIN `sales_flat_order_payment` AS `b` ON b.parent_id=main_table.order_id WHERE ((t.udropship_status = 1 AND b.method!='cashondelivery') OR (t.udropship_status = 7 AND b.method='cashondelivery')) AND (t.udropship_vendor='".$vendorId."') AND (t.updated_at IS NOT NULL) AND (t.updated_at!='0000-00-00 00:00:00') AND (t.updated_at>='".$dateFrom."') AND (t.updated_at<='".$dateTo."') ORDER BY `main_table`.`entity_id` asc";
+
+    $readCon = Mage::getSingleton('core/resource')->getConnection('core_read');
+    $writeCon = Mage::getSingleton('core/resource')->getConnection('core_write');
+        
+        $statementQueryRes = $readCon->query($statementQuery)->fetchAll();
+        
+        foreach($statementQueryRes as $_po)
+        {
+            
+            $po = Mage::getModel('sales/order_shipment')->load($_po['entity_id']);
+            //echo '<pre>'; print_r($po); exit; 
+            $actualServiceTax = $this->getServicetaxCv($po->getUpdatedAt()); 
+            $shipmentId = $_po['increment_id']; 
+            //echo '<pre>'; print_r($_po); exit;
+            $order = array(
+                'po_id' => $po->getId(),
+                'date' => $hlp->getPoOrderCreatedAt($po),
+                'id' => $hlp->getPoOrderIncrementId($po),
+                'com_percent' => '20',
+                'adjustments' => $po->getAdjustments(),
+                'order_id' => $po->getOrderId(),
+                'po_id' => $po->getId(),
+                'order_created_at' => $hlp->getPoOrderCreatedAt($po),
+                'order_increment_id' => $hlp->getPoOrderIncrementId($po),
+                'po_increment_id' => $shipmentId,
+                'po_created_at' => $po->getCreatedAt(),
+                'po_updated_at' => $po->getUpdatedAt(),
+                'base_shipping_amount' => $po->getBaseShippingAmount(),
+                'itemised_total_shippingcost' => $po->getItemisedTotalShippingcost(),
+                'udropship_vendor' => $po->getUdropshipVendor (),
+                'po_statement_date' => $po->getStatementDate(),
+                'cod_fee' => $codFee,
+                'po_type' => $po instanceof Unirgy_DropshipPo_Model_Po ? 'po' : 'shipment'
+                );
+                
+                $order['amounts'] = array_merge($this->_getEmptyTotals(), array(
+                'subtotal' =>  $po->getBaseTotalValue(),
+                'shipping' => $po->getShippingAmount(),
+                'tax' => $po->getBaseTaxAmount(),
+                'handling' => $po->getBaseHandlingFee(),
+                'trans_fee' => $po->getTransactionFee(),
+                'adj_amount' => $po->getAdjustmentAmount(),
+            ));
+                 
+                 $order1 = $this->calculateOrderLogistic($order);
+              //echo '<pre>';print_r($order1);exit;   
+
+             $ordersData[]['orders']=$order1;
+
+                 
+            }
+  
+            $this->_curPageNum = 0;
+            $this->addPage()->insertPageHeaderLogistic(array('first'=>true, 'data'=>$ordersData));
+        
+            $TotalCommission = 0;
+            $TotalServiceTax = 0;
+            $TotalSubTotal = 0;
+            $totalOrdersCount = 0;
+            
+            if (!empty($ordersData)) 
+            { 
+                // iterate through orders
+                foreach ($ordersData as $order) 
+                {
+                    
+                    $stmtId = $statement->getStatementId(); 
+                    $incId = $order['orders']['po_increment_id'];
+                    $totalOrdersCount++;
+                    $this->insertOrder($order);
+                    //$TotalSubTotal += number_format($order['orders']['amounts']['subtotal'],2);
+                    $TotalCommission += number_format($order['orders']['amounts']['com_amount'],2);
+                    $TotalServiceTax += number_format(($order['orders']['amounts']['com_amount']*$actualServiceTax),2);
+                    
+                }
+            
+            } else { 
+                $this->text($hlp->__('No orders found for this period.'), 'down')
+                    ->moveRel(0, .5);
+            }
+            
+            //$order['orders']['amounts']['subtotal'] = $TotalSubTotal;
+            $order['orders']['amounts']['com_amount'] = $TotalCommission;
+            $order['orders']['amounts']['tax'] = $TotalServiceTax;
+            $Totalamount = number_format($TotalCommission+$TotalServiceTax,0);
+            $order['orders']['amounts']['total_payout'] =  $Totalamount;
+            $this->setAlign('left')->font('normal', 10);
+            $this->insertTotals($order); 
+            
+            //$statement->setSubtotal($TotalSubTotal); 
+            $statement->setComAmount($TotalCommission); 
+            $statement->settax($TotalServiceTax);
+            $statement->setTotalOrders($totalOrdersCount);
+            $statement->setTotalPayout($Totalamount);
+            $statement->save();
+            $writeCon->closeConnection();
+             $readCon->closeConnection();
+            
+            $this->insertAdjustmentsPage(/*array('first'=>true, 'data'=>$ordersData)*/);
+            if ($hlp->isUdpayoutActive()) {
+                $this->insertPayoutsPage(/*array('first'=>true, 'data'=>$ordersData)*/);
+            }
+            
+            $this->setAlign('left')->font('normal', 10);
+            foreach ($this->_pageFooter as $k=>&$p) 
+            {
+                if (!empty($p['done'])) {
+                    continue;
+                }
+                $p['done'] = true;
+                
+            
+                $str = $hlp->__('%s for %s - Page %s of %s',
+                    $statement->getVendor()->getVendorName(),
+                    $statement->getStatementPeriod(),
+                    $p['page_num'],
+                    $this->_curPageNum
+                );
+                $this->setPage($this->getPdf()->pages[$k])->move(.5, 10.6)->text($str);
+            }
+            
+            unset($p);
+            return $this;
+        
     
+    }
+    public function calculateOrderLogistic($order1)
+    {  
+    
+      $order1['amounts']['com_amount'] = Mage::getModel('udropship/vendor_statement')->getCommissionLogistic($order1['po_increment_id']);
+      return $order1;                 
+        
+    }
+    public function insertPageHeaderLogistic($params=array())
+    {
+        $core = Mage::helper('core');
+        $hlp = Mage::helper('udropship');
+        $store = null;
+
+        $this->_insertPageHeaderLogistic($params);
+        // grid titles
+        $this->insertGridHeaderLogistic();
+
+        $this->_curPageNum++;
+        $this->_pageFooter[] = array('page_num'=>$this->_curPageNum);
+
+        return $this;
+    }
+    protected function _insertPageHeaderLogistic($params=array())
+    {
+        
+        $core = Mage::helper('core');
+        $hlp = Mage::helper('udropship');
+        $store = null;
+
+        // letterhead info
+        $this->move(4.25, 0.5)
+            ->font('bold', 16)->setAlign('center')
+            //->text(Mage::getStoreConfig('udropship/admin/letterhead_info', $store));
+            //->text(Mage::getStoreConfig('udropship/admin/letterhead_info', $store));
+            
+            //$this->move(4.25, 0.35)
+            //->font('normal', 20)->setAlign('center')
+
+
+            ->text('Craftsvilla Handicrafts Pvt Ltd');
+            
+            
+            $this->move(4.25, 0.75)
+            ->font('normal', 10)->setAlign('center')    
+            ->text('1502 G Wing, 15th Floor, Lotus Corporate Park, Goregaon (East), Mumbai - 400063, Maharashtra'); 
+            
+            $this->move(1,1)->line(6);
+            
+            $this->move(4.25, 1.1)
+            ->font('bold', 12)->setAlign('center')
+            ->text('Service Invoice');      
+        
+
+        //$this->rectangle(0.75,0.95,0.75,0.95);
+        // only for first page
+        
+        if (!empty($params['first'])) {
+            $this->move(1.1, 1.6)->font('bold',10)->text('To');            
+            $statement = $this->getStatement();
+            
+            $vendor = $statement->getVendor(); 
+            $vendor1 = Zend_Json::decode($statement->getVendor()->getData('custom_vars_combined'));   
+            $this->setAlign('left')->move(1.1, 1.8)->font('normal',9)->text($vendor1['check_pay_to']);
+            // vendor info
+            $this->setAlign('left')->move(1.1,2)->font('normal', 9)
+                ->text($vendor->getBillingInfo());
+            // statement info
+            $stInfoHeight = $this->getTextHeight()*2;
+            if ($hlp->isUdpoActive()) {
+                $stInfoHeight += $this->getTextHeight();
+            }
+            $stTotalHeight = $this->getTextHeight()*6;
+            if ($hlp->isUdpayoutActive()) {
+                $stTotalHeight += $this->getTextHeight()*2;
+            }
+            $this->setAlign('right')
+                ->move(6, 2)
+                    ->text($hlp->__("Invoice #"), 'down')
+                    ->text($hlp->__("Invoice Date"), 'down');
+            if ($hlp->isUdpoActive()) {
+                $this->text($hlp->__("PO Type"), 'down');
+            }
+        
+            $this->move(7.9, 2)
+                    ->text($statement->getStatementId(), 'down')
+                    ->text($core->formatDate(date('Y-m-d',strtotime($statement->getOrderDateTo().'+10 days')), 'medium'), 'down');
+            if ($hlp->isUdpoActive()) {
+                $this->text(Mage::getSingleton('udropship/source')->setPath('statement_po_type')->getOptionLabel($statement->getPoType()), 'down');
+            }
+            $stTotalRectMargin = $this->getTextHeight()*.4;
+            $stTotalRectPad = $this->getTextHeight()*.3;
+            $stTotalRectY = 2+$stInfoHeight+$stTotalRectMargin;
+            $stTotalTxtY = 2+$stInfoHeight+$stTotalRectMargin+$stTotalRectPad;
+            $stTotalHeightOut = $stTotalHeight+$stTotalRectPad*2;
+            // statement total
+            /* commented by mandar ******/ /*
+            $this->move(4.5, $stTotalRectY)
+                ->rectangle(3.5, $stTotalHeightOut, .8, .8)
+                ->font('bold')
+                ->move(6, $stTotalTxtY)
+                    ->text($hlp->__("Total Payment"), 'down');
+             */
+             
+            if ($hlp->isUdpayoutActive()) {
+                $this->text($hlp->__("Total Paid"), 'down')
+                    ->text($hlp->__("Total Due"), 'down');
+            }
+            /*$this->move(7.9, $stTotalTxtY)
+                    ->text($params['data']['totals']['total_payout'], 'down');*/
+            if ($hlp->isUdpayoutActive()) {
+                $this->text($params['data']['totals']['total_paid'], 'down')
+                    ->text($params['data']['totals']['total_due'], 'down');
+            }
+            
+            $this->move(.5, $stTotalRectY+$stTotalHeightOut+$stTotalRectMargin);
+        }
+        else
+            {
+                $this->move(0.5, 1.8);
+            }
+        
+        return $this;
+    }
+    public function insertGridHeaderLogistic()
+    {
+        $hideTax = $this->getStatement()->getVendor()->getData('statement_tax_in_payout') == 'exclude_hide';
+        $hideShipping = $this->getStatement()->getVendor()->getData('statement_shipping_in_payout') == 'exclude_hide';
+        $hideBoth = $hideTax && $hideShipping;
+        $hlp = Mage::helper('udropship');
+        $this->rectangle(7.5, .4, .8, .8, .8)
+            ->moveRel(.1, .1)
+            ->movePush()
+                ->font('bold', 12)
+                ->setAlign('left')
+                ->text($hlp->__("Date"));
+        if ($this->isInPayoutAmount('all', 'exclude_hide')) {  
+            $this->moveRel(2.2, 0)->text($hlp->__("Shipment#"))
+                //->moveRel(1.6, 0)->text($hlp->__("Product"))
+                ->moveRel(2.6, 0)->text($hlp->__("Handling Charges"))
+                ->moveRel(2.5, 0)->text($hlp->__("Service Tax"))
+                ->moveRel(2.6, 0)->text($hlp->__("Total"))
+            ->movePop(0, .4);
+        } else { 
+            $this->moveRel(1.2, 0)->text($hlp->__("Shipment#"))
+                //->moveRel(1, 0)->text($hlp->__("Product"));
+                //->moveRel(1, 0)->text($hlp->__("Commission"));
+              ->moveRel(1.6, 0)->text($hlp->__("Handling Charges"));
+            //$this->moveRel(1, 0)->text($hlp->__("Service Tax"));
+            //if ($this->isInPayoutAmount('tax', 'exclude_hide')) {
+              //  $this->moveRel(1, 0)->text($hlp->__("Service Tax"));
+            //} //elseif ($this->isInPayoutAmount('shipping', 'exclude_hide')) {
+                //$this->moveRel(1, 0)->text($hlp->__("Tax"));
+            //}
+             //else {
+                //if(Mage::getSingleton("udropship/session")->getImanage() == 1):
+                    $this->moveRel(1.5, 0)->text($hlp->__("Service Tax"));
+                //endif;
+            //}
+            
+            $this->moveRel(1.6, 0)->text($hlp->__("Total"))
+            ->movePop(0,.4);            ;
+        }
+        
+        return $this;
+    }
     
 }

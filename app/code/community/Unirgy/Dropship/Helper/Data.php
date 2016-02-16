@@ -4488,11 +4488,26 @@ $drawing->finish($filetypes[$default_valuetwo['filetype']]);
 
 // In order to increase or decrease  barcode image or change its width / height  or whatever make changes to this file by muzaffar : 115-05-2015 : END:
 
- 
-
-
-
 }
+
+public function getServicetaxCv($shipmentId)
+    {
+
+     $readCon = Mage::getSingleton('core/resource')->getConnection('custom_db'); 
+     $queryGet = "SELECT `updated_at` FROM `sales_flat_shipment` WHERE `increment_id` = '".$shipmentId."'";
+     $resDate = $readCon->query($queryGet)->fetch();
+     $updatedDate = $resDate['updated_at'];
+        
+        if($updatedDate >= '2015-11-15 23:59:59')
+           { 
+            $exServicetax = (14.5/100);
+            }
+         else{
+
+            $exServicetax = (14/100);
+         }  
+         return  $exServicetax;
+    }
 
 
 
