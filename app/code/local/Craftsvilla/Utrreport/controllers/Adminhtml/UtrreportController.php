@@ -267,7 +267,7 @@ public function assignAction()
 							// }
 							$strHead = "Shipment Id,Utr Balance,Total Amount,Vendor Amount,Closing Balance, Adjustment Amount,Comment";
 							
-							if( (($vendor_amount+$closingbalance) <= 0) &&  $utrBalance >= $vendor_amount )
+							if( (($vendor_amount+$closingbalance) < 0) &&  $utrBalance >= $vendor_amount )
 							{
 								$strTest.= $shipmentpayout_report1_val['shipment_id'].",".$utrBalance.",".$total_amount.",".$vendor_amount.",".$kribha_amount.",".$closingbalance.",";////////////////////
 								if($shipmentpayout_report1_val['type'] == 'Adjusted Against Refund'){
