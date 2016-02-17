@@ -460,14 +460,14 @@ class Craftsvilla_Shipmentpayout_Adminhtml_ShipmentpayoutController extends Mage
 					
 					//Below lines for to update the value in shipmentpayout table ...
 					$write = Mage::getSingleton('core/resource')->getConnection('shipmentpayout_write');
-						if($disCouponcode){
+					if($disCouponcode){
 						$queryUpdateDiscount = "update shipmentpayout set `discount` ='".$discountAmountCoupon."',`couponcode` = '".$disCouponcode."' WHERE `shipment_id` = '".$shipmentpayout_report1_val['shipment_id']."'";
 					
 						$write->query($queryUpdateDiscount);
-						}	
+					}	
 					$utr = $shipmentpayout_report1_val['citibank_utr'];
 					$neft = 'NEFT';
-						if(($vendor_amount+$closingbalance) <= 0)
+						/*if(($vendor_amount+$closingbalance) <= 0)
 							{
 								if($shipmentpayout_report1_val['type'] == 'Adjusted Against Refund'){$vendor_amount = 0;}
 								
@@ -482,7 +482,7 @@ class Craftsvilla_Shipmentpayout_Adminhtml_ShipmentpayoutController extends Mage
 									$write->query($queyVendor);	
 								
 								}
-							}	
+							}*/	
 							
 							
 						
