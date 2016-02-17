@@ -182,14 +182,17 @@ class Unirgy_Dropship_Model_Pdf_Statement extends Unirgy_Dropship_Model_Pdf_Abst
     }
     public function getServicetaxCv($updatedDate)
     {
-        if($updatedDate >= '2015-11-15 23:59:59')
-           { 
+        if($updatedDate >= '2015-11-15 00:00:00')
+        { 
             $exServicetax = (14.5/100);
-            }
-         else{
+        }
+        elseif($updatedDate >= '2015-06-01 00:00:00' && $updatedDate < '2015-11-15 00:00:00'){
 
             $exServicetax = (14/100);
-         }  
+        }
+        else{
+            $exServicetax = (12.36/100);    
+        }  
          return  $exServicetax;
     }
     
@@ -762,7 +765,7 @@ class Unirgy_Dropship_Model_Pdf_Statement extends Unirgy_Dropship_Model_Pdf_Abst
             ->setAlign('left')
             ->text("Service Tax No:")
             ->movePop(1,0)
-            ->text( 'AAECK2096HSD002','down')
+            ->text( 'AAFCC8726PSD002','down')
             //
             ->movePush()
             ->moveRel(-3.5,0);  
@@ -1268,7 +1271,7 @@ class Unirgy_Dropship_Model_Pdf_Statement extends Unirgy_Dropship_Model_Pdf_Abst
         $ordersData = array();
         
        
-    $statementQuery = "SELECT `t`.entity_id, `t`.increment_id FROM `sales_flat_shipment_grid` AS `main_table` INNER JOIN `sales_flat_shipment` AS `t` ON t.entity_id=main_table.entity_id INNER JOIN `sales_flat_order_payment` AS `b` ON b.parent_id=main_table.order_id WHERE ((t.udropship_status = 1 AND b.method!='cashondelivery') OR (t.udropship_status = 7 AND b.method='cashondelivery')) AND (t.udropship_vendor='".$orderVendor."') AND (t.created_at IS NOT NULL) AND (t.created_at!='0000-00-00 00:00:00') AND (t.updated_at>='".$orderFrom."') AND (t.updated_at<='".$orderTo."') AND ((main_table.statement_id='".$orderStatementId."' OR main_table.statement_id IS NULL OR main_table.statement_id='')) ORDER BY `main_table`.`entity_id` asc";
+    $statementQuery = "SELECT `t`.entity_id, `t`.increment_id FROM `sales_flat_shipment_grid` AS `main_table` INNER JOIN `sales_flat_shipment` AS `t` ON t.entity_id=main_table.entity_id INNER JOIN `sales_flat_order_payment` AS `b` ON b.parent_id=main_table.order_id WHERE (t.udropship_status = 7 AND b.method='cashondelivery') AND (t.udropship_vendor='".$orderVendor."') AND (t.created_at IS NOT NULL) AND (t.created_at!='0000-00-00 00:00:00') AND (t.updated_at>='".$orderFrom."') AND (t.updated_at<='".$orderTo."') AND ((main_table.statement_id='".$orderStatementId."' OR main_table.statement_id IS NULL OR main_table.statement_id='')) ORDER BY `main_table`.`entity_id` asc";
     //echo $statementQuery = "SELECT `t`.entity_id, `t`.increment_id FROM `sales_flat_shipment_grid` AS `main_table` INNER JOIN `sales_flat_shipment` AS `t` ON t.entity_id=main_table.entity_id INNER JOIN `sales_flat_order_payment` AS `b` ON b.parent_id=main_table.order_id WHERE ((t.udropship_status = 1 AND b.method!='cashondelivery') OR (t.udropship_status = 7 AND b.method='cashondelivery')) AND (t.udropship_vendor='".$vendorId."') AND (t.updated_at IS NOT NULL) AND (t.updated_at!='0000-00-00 00:00:00') AND (t.updated_at>='".$dateFrom."') AND (t.updated_at<='".$dateTo."') ORDER BY `main_table`.`entity_id` asc";
 
     $readCon = Mage::getSingleton('core/resource')->getConnection('core_read');
