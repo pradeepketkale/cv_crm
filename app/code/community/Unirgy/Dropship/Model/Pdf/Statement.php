@@ -535,8 +535,8 @@ class Unirgy_Dropship_Model_Pdf_Statement extends Unirgy_Dropship_Model_Pdf_Abst
             ->setMaxHeight(0)
             ->font('normal', 10)
             ->movePush()
-                ->setAlign('left')
-                    ->text($core->formatDate($core->formatDate($order['orders']['po_created_at']), 'short'));
+            ->setAlign('left')
+            ->text($core->formatDate($core->formatDate($order['orders']['po_updated_at']), 'short'));
 			
 		if ($this->isInPayoutAmount('all', 'exclude_hide')) {
 			$this->moveRel(1.2, 0)->text($order['po_increment_id'])
@@ -756,7 +756,7 @@ class Unirgy_Dropship_Model_Pdf_Statement extends Unirgy_Dropship_Model_Pdf_Abst
         $stTotalHeightOut = $stTotalHeight+$stTotalRectPad*2;
         $this->rectangle(3.6, $stTotalHeightOut, .8, .8)
             ->movePop(-1.7, .35)
-                ->text($hlp->__("Totaldfdfdf"))
+                ->text($hlp->__("Total"))
             ->moveRel(1.7, 0)->text('Rs. '.$totalPayout, 'down');
 		 $this->moveRel(-8,-0.8)
             ->moveRel(1,0)
@@ -1531,9 +1531,9 @@ class Unirgy_Dropship_Model_Pdf_Statement extends Unirgy_Dropship_Model_Pdf_Abst
         $this->rectangle(7.5, .4, .8, .8, .8)
             ->moveRel(.1, .1)
             ->movePush()
-                ->font('bold', 12)
-                ->setAlign('left')
-                ->text($hlp->__("Date"));
+            ->font('bold', 12)
+            ->setAlign('left')
+            ->text($hlp->__("Date"));
         if ($this->isInPayoutAmount('all', 'exclude_hide')) {  
             $this->moveRel(2.2, 0)->text($hlp->__("Shipment#"))
                 //->moveRel(1.6, 0)->text($hlp->__("Product"))
