@@ -31,9 +31,6 @@
 		var table;
 		$(document).ready(function(){
 
-
-		
-
 			$( "#start" ).datepicker({
 				showOn: "button",
 				changeMonth: true,
@@ -68,12 +65,26 @@ $('#csv').on('click', function () {
 	document.location.href="/financereport/financereport/reportcod/?"+ jQuery.param( data );
 } );
 
+$('#downloadcsv').on('click', function () {
+	//console.log(jQuery.param( data1 ));
+	var data1 = [];
+	data1['startdate'] = $( "#start" ).val();// "2014-01-01";
+	data1['enddate'] = $( "#end" ).val();//"2016-01-01";
+	data1['exportcsv'] = true;
+	data1['ustatus'] = $( "#ustatus" ).val();
+	data1['paymentstatus'] = $( "#paymentstatus" ).val();
+	data1['couriername'] = $( "#couriername" ).val();
+	// console.log(data1);
+	 /*alert("/financereport/financereport/downloadcod/?startdate="+$( "#start" ).val() + "&enddate="+$( "#end" ).val() +"&ustatus="+$( "#ustatus" ).val() +"&paymentstatus="+$( "#paymentstatus" ).val() +"&couriername="+$( "#couriername" ).val());*/
+	document.location.href="/financereport/financereport/downloadcod/?startdate="+$( "#start" ).val() + "&enddate="+$( "#end" ).val() +"&ustatus="+$( "#ustatus" ).val() +"&paymentstatus="+$( "#paymentstatus" ).val() +"&couriername="+$( "#couriername" ).val();
+} );
+
 $('.btnhdsh').hide();
 
 $('#filter').on('click', function (e) {
 		
 		//validation pradeep
-			console.log('working')  
+			//console.log('working')  
 				var startdate=document.myForm.startdate.value;  
 				var enddates=document.myForm.enddates.value;  
   
@@ -103,6 +114,9 @@ $('#filter').on('click', function (e) {
 					"data": function ( d ) {
 						d.startdate = $( "#start" ).val();// "2014-01-01";
 						d.enddate = $( "#end" ).val();//"2016-01-01";
+						d.ustatus = $( "#ustatus" ).val();
+						d.paymentstatus = $( "#paymentstatus" ).val();
+						d.couriername = $( "#couriername" ).val();
 						d.exportcsv = false;
             		}
 
@@ -302,7 +316,7 @@ var normalizeDate = function (dateString) {
 			<div class="container-wrapper2">
 				<div style="width:100%; height:auto;padding:10px;border:1px solid #e1e1e1;border-radius:5px;">
 				<h2>COD Report </h2>
-					<form action='#' method='POST' onsubmit="return validateform()" name="myForm">						
+					<form action='#' method='POST' onsubmit="return validateform()" name="myForm" id="myForm">						
 						<table  width="100%" border="0" cellspacing="0" cellpadding="0" class="tbl_rptjen">
 
 							<tr>
@@ -318,19 +332,74 @@ var normalizeDate = function (dateString) {
 							</tr>
 
 								
-							<tr>
+							<!-- <tr>
 										
-										<td colspan="2" align="center">
-											<button id="filter" class="btn btn-submit" type='submit' style='margin-right:15px;' > Submit </button>
-											
-											
-											</td>
-										
+								<td colspan="2" align="center">
+									<button id="filter" class="btn btn-submit" type='submit' style='margin-right:15px;' > Submit </button>
+								</td>
+							</tr> -->
+					</table>
+					</form>
+					
+						<b>Udropship Status:</b>
+						<select id="ustatus" form="myForm" style="margin-right:3em; width:10em">
+						  <option value="all">ALL</option>
+						  <option value="pending">pending</option>
+						  <option value="shipped to customer">shipped to customer</option>
+						  <option value="partial">partial</option>
+						  <option value="pendingpickup">pendingpickup</option>
+						  <option value="ack">ack</option>
+						  <option value="exported">exported</option>
+						  <option value="ready">ready</option>
+						  <option value="onhold">onhold</option>
+						  <option value="backorder">backorder</option>
+						  <option value="cancelled">cancelled</option>
+						  <option value="delivered">delivered</option>
+						  <option value="processing">processing</option>
+						  <option value="refundintiated">refundintiated</option>
+						  <option value="not delivered">not delivered</option>
+						  <option value="charge_back">charge_back</option>
+						  <option value="shipped craftsvilla">shipped craftsvilla</option>
+						  <option value="qc_rejected">qc_rejected</option>
+						  <option value="received">received</option>
+						  <option value="out of stock">out of stock</option>
+						  <option value="partial refund initiated">partial refund initiated</option>
+						  <option value="dispute raised">dispute raised</option>
+						  <option value="shipment delayed">shipment delayed</option>
+						  <option value="partially shipped">partially shipped</option>
+						  <option value="refund to do">refund to do</option>
+						  <option value="Accepted">Accepted</option>
+						  <option value="Returned By Customer">Returned By Customer</option>
+						  <option value="Returned To Seller">Returned To Seller</option>
+						  <option value="Mainfest Shared">Mainfest Shared</option>
+						  <option value="COD SHIPMENT PICKED UP">COD SHIPMENT PICKED UP</option>
+						  <option value="Packing slip printed">Packing slip printed</option>
+						  <option value="Handed to courier">Handed to courier</option>
+						  <option value="Returned Recieved from customer">Returned Recieved from customer</option>
+						  <option value="partially recieved">partially recieved</option>
+						  <option value="Damage/Lost in Transit">Damage/Lost in Transit</option>
+						</select>
+					
+						<b>Payment Status:</b>
+						<select id="paymentstatus" form="myForm" style="margin-right:3em; width:6em">
+						  <option value="all">ALL</option>
+						  <option value="0">Unpaid</option>
+						  <option value="1">Paid</option>
+						  <option value="2">Refunded</option>
+						</select>
 
-									</tr>
-</table>
-</form>
-</div>
+						<b>Courier name:</b>
+						<select id="couriername" form="myForm" style="margin-right:3em; width:10em">
+						  <option value="all">ALL</option>
+						  <option value="Aramex">Aramex</option>
+						  <option value="Fedex">Fedex</option>
+						  <option value="Dtdc">Dtdc</option>
+						</select>
+					<div><button id="filter" class="btn btn-submit" type='submit' form="myForm"  style='margin-right:15px;margin-left:30%;margin-top:1em;' > Show Data </button>
+					<button id="downloadcsv" class="btn btn-submit" type='submit' style='margin-right:15px;margin-left:20%;margin-top:1em;' > Download CSV </button>
+					</div>
+
+				</div>
 </div>
 <div class="clear"></div> 
 </div>
@@ -349,7 +418,7 @@ var normalizeDate = function (dateString) {
 										<th>Shipment Date</th>
 										<th>Awb Number</th>
 										<th>Shipment Update</th>
-										<th>Payment Created Date</th>
+										<th>UTR Number</th>
 										<th>Payment Updated Date</th>
 										<th>Vendor Name</th>
 										<th>SubTotal</th>
@@ -369,7 +438,7 @@ var normalizeDate = function (dateString) {
 										<th>Shipment Date</th>
 										<th>Awb Number</th>
 										<th>Shipment Update</th>
-										<th>Payment Created Date</th>
+										<th>UTR Number</th>
 										<th>Payment Updated Date</th>
 										<th>Vendor Name</th>
 										<th>SubTotal</th>
