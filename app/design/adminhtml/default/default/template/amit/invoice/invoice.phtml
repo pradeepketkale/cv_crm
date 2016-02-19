@@ -152,24 +152,26 @@
 				</td>
                 <td valign="top"><?php echo $_item->getSku(); ?></td>
                 <td valign="top"><?php echo number_format($_item->getQtyOrdered(), 0); ?></td>
-                <td valign="top"><?php echo $order->formatPriceTxt($_item->getOriginalPrice()); ?></td>
+                <td valign="top"><?php echo $order->formatPriceTxt($_item->getBasePrice()); ?></td>
                 <td valign="top"><?php echo $order->formatPriceTxt($_item->getTaxAmount()); ?></td>
 		  		<td valign="top"><?php echo $order->formatPriceTxt($_item->getDiscountAmount()) ?></td>
 
                 <!--<td valign="top"><?php //echo $order->formatPriceTxt($_item->getOriginalPrice()*number_format($_item->getQtyOrdered(), 0)+$_item->getShippingcost()-$_item->getDiscountAmount()) ?></td>-->
               
-    <!--   //$amt = $order->formatPriceTxt($_item->getOriginalPrice()* number_format($_item->getQtyOrdered(), 0)+$_item->getShippingcost()-$_item->getDiscountAmount()); 
-      $amt = $order->formatPriceTxt($_item->getOriginalPrice()* number_format($_item->getQtyOrdered(), 0)); 
-      $a += str_replace('Rs.', '', $amt); -->
+       //$amt = $order->formatPriceTxt($_item->getBasePrice()* number_format($_item->getQtyOrdered(), 0)+$_item->getShippingcost()-$_item->getDiscountAmount()); 
+       $amt = $order->formatPriceTxt($_item->getBasePrice()* number_format($_item->getQtyOrdered(), 0)-$_item->getDiscountAmount()); 
+      //$amt = $order->formatPriceTxt($_item->getOriginalPrice()* number_format($_item->getQtyOrdered(), 0)); 
+      //$a += str_replace('Rs.', '', $amt); 
 
 			
 
-                <td valign="top"><?php echo $order->formatPriceTxt($_item->getOriginalPrice()*number_format($_item->getQtyOrdered(), 0) ) ?></td>
+                <!--<td valign="top"><?php //echo $order->formatPriceTxt($_item->getBasePrice()*number_format($_item->getQtyOrdered(), 0) ) ?></td>-->
+<td valign="top"><?php echo $amt; ?></td>
               </tr>
 		<?php
 		   	$total_qty+=number_format($_item->getQtyOrdered(), 0);
         
-           $amt = $order->formatPriceTxt($_item->getOriginalPrice()* number_format($_item->getQtyOrdered(), 0)); 
+           //$amt = $order->formatPriceTxt($_item->getBasePrice()* number_format($_item->getQtyOrdered(), 0)); 
                 $a = str_replace(',', '', $amt);
                 $b +=str_replace('Rs.', ' ', $a);
        
