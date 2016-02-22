@@ -1,3 +1,6 @@
+<?php
+include('session.php');
+?>
 <!DOCTYPE HTML>
 <html lang="en-US">
 <head>
@@ -7,8 +10,6 @@
 	<link rel="stylesheet" href="css/grid.css"/>
 	<link rel="stylesheet" href="css/jquery-ui.css" />
 	<link rel="stylesheet" href="css/jquery.dataTables.min.css" />
-
-
 	<script src="js/jquery.min.js"></script>
 	<script src="js/jquery-1.11.3.min.js"></script>
 	<script src="js/jquery-ui.min.js"></script>
@@ -243,7 +244,9 @@ var normalizeDate = function (dateString) {
 
 							<div class="page-heading">            
 								<h1>Finance Report Dashboard</h1>
-
+								<div class="clear" style="align="right";"><a href="dashboard.php" ><b>Dashboard</b></a>||
+		                       		 <a href="logout.php" ><b>Logout</b> </a>
+		                       	</div> 
 							</div>
 
 							<div class="clear"></div> 

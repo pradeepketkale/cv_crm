@@ -48,6 +48,10 @@ div#example_filter {
     margin-right: 15px;
 }
 .clear{
+  font-size: 18px;
+  display: block;
+  margin-left: 80%;
+  font-family: sans-serif;
 	clear:both;
 }
 .left{float:left;}
