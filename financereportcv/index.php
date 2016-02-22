@@ -23,7 +23,7 @@
 				<div class="page-breadcrumb">
 					
 					<div class="page-heading">            
-                                <h1>Finance Report Dashboard</h1>
+                                <h1>Finance Dashboard</h1>
                                 
                             </div>
                            
@@ -77,6 +77,18 @@
 						<a href="ReportforDamage_LostTransit.php">	
 						<div class="container_inner1 bg2">
 						<h3>Report For Damage/Lost in Transit</h3>
+						
+						</div>
+						</a>
+						
+						
+						<div class="clear"></div> 
+					</div>
+
+					<div class="col-1-3 padding_top" >
+						<a href="VendorCommissionUpdate.php">	
+						<div class="container_inner1 bg2">
+						<h3>Update Vendor Commission</h3>
 						
 						</div>
 						</a>

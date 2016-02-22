@@ -887,7 +887,7 @@ public function reportDamageLostAction(){
 				}
 				
 				//$gen_random_number = "K".$this->gen_rand();
-                       $vendor_amount = (($total_amount+$itemised_total_shippingcost+$discountAmountCoupon)*(1-($commission_amount/100)*(1+0.1236)));
+                       $vendor_amount = $shipmentpayout_report1_val['todo_payment_amount'];;
 						
 						//$kribha_amount = (($total_amount1+$itemised_total_shippingcost) - $vendor_amount);
 						//change to accomodate 3% Payment gateway charges on dated 20-12-12
@@ -898,7 +898,7 @@ public function reportDamageLostAction(){
 			    	
 					$vendor_amount = $vendor_amount - $logisticamount;
 				
-		    	$kribha_amount = ((($total_amount1+$base_shipping_amount+$discountAmountCoupon)) - $vendor_amount);
+		    	$kribha_amount = $shipmentpayout_report1_val['todo_commission_amount'];
 				
 				//Below lines for to update the value in shipmentpayout table ...
 					$write = Mage::getSingleton('core/resource')->getConnection('shipmentpayout_write');
@@ -907,7 +907,7 @@ public function reportDamageLostAction(){
 				
 					$utr = $shipmentpayout_report1_val['citibank_utr'];
 					$neft = 'EFT';
-						if(($vendor_amount+$closingbalance) <= 0)
+						/*if(($vendor_amount+$closingbalance) <= 0)
 							{
 								if($shipmentpayout_report1_val['type'] == 'Adjusted Against Refund'){$vendor_amount = 0;}
 								
@@ -924,7 +924,7 @@ public function reportDamageLostAction(){
 									$write->query($queyVendor);	
 								
 								}
-							}	
+							}	*/
 							
 				for($m =0; $m < sizeof($fieldlist); $m++) {
 					$fieldvalue = $fieldlist[$m];
@@ -1069,4 +1069,25 @@ public function reportDamageLostAction(){
 		exit;
     $i++;
 }
+
+	public function setCommissionPercentAction(){
+		$vendorid = $_GET['vendorid'];
+		$commission_percent = $_GET['vendorcommission'];
+		$startdate = $_GET['startdate'];
+
+		$readQuery = Mage::getSingleton('core/resource')->getConnection('custom_db');
+		$write = Mage::getSingleton('core/resource')->getConnection('core_write');
+
+		$getLastCreatedDateSql = "select max(date_created) as last_created_date from finance_vendor_commission where vendor_id = ".$vendorid;
+		$result = $readQuery->query($getLastCreatedDateSql)->fetchAll();
+		$getLastCreatedDate = $result[0]['last_created_date'];
+
+		$sqlUpdate = "UPDATE `finance_vendor_commission` SET `end_date`='".date('Y-m-d',(strtotime ( '-1 day' , strtotime ( $startdate) ) ))."' WHERE `vendor_id`=". $vendorid . " and `date_created` = '".$getLastCreatedDate."'";
+		$result = $write->query($sqlUpdate);
+
+		$sqlInsert = "INSERT INTO `finance_vendor_commission`(`s_no`, `vendor_id`, `commission_percent`, `start_date`,`changed_by`) VALUES ('DEFAULT',".$vendorid.",'".$commission_percent."','".$startdate."','Ankit')";		
+		$result = $write->query($sqlInsert);
+
+		echo "Successful";
+	}
 }
