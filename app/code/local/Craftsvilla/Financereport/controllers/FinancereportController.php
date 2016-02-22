@@ -1074,6 +1074,7 @@ public function reportDamageLostAction(){
 		$vendorid = $_GET['vendorid'];
 		$commission_percent = $_GET['vendorcommission'];
 		$startdate = $_GET['startdate'];
+		$login_id = $_GET['login_id'];
 
 		$readQuery = Mage::getSingleton('core/resource')->getConnection('custom_db');
 		$write = Mage::getSingleton('core/resource')->getConnection('core_write');
@@ -1085,9 +1086,9 @@ public function reportDamageLostAction(){
 		$sqlUpdate = "UPDATE `finance_vendor_commission` SET `end_date`='".date('Y-m-d',(strtotime ( '-1 day' , strtotime ( $startdate) ) ))."' WHERE `vendor_id`=". $vendorid . " and `date_created` = '".$getLastCreatedDate."'";
 		$result = $write->query($sqlUpdate);
 
-		$sqlInsert = "INSERT INTO `finance_vendor_commission`(`s_no`, `vendor_id`, `commission_percent`, `start_date`,`changed_by`) VALUES ('DEFAULT',".$vendorid.",'".$commission_percent."','".$startdate."','Ankit')";		
+		$sqlInsert = "INSERT INTO `finance_vendor_commission`(`s_no`, `vendor_id`, `commission_percent`, `start_date`,`changed_by`) VALUES ('DEFAULT',".$vendorid.",'".$commission_percent."','".$startdate."','".$login_id."')";		
 		$result = $write->query($sqlInsert);
 
-		echo "Successful";
+		echo "<center>Successful </br> <a href='/financereportcv/dashboard.php'>Dashboard </a></center>";
 	}
 }

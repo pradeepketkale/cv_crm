@@ -92,9 +92,9 @@ include('session.php');
 		exit;
 	}
 	$readQuery = Mage::getSingleton('core/resource')->getConnection('custom_db');
-	$sqlVendorComm = "SELECT `vendor_id`,`commission_percent` FROM `finance_vendor_commission` WHERE `vendor_id` = 100";
+	$sqlVendorComm = "SELECT `vendor_id`,`commission_percent`, `date_created` FROM `finance_vendor_commission` WHERE `vendor_id` = 100 order by `date_created` desc ";
 	$rVendor = $readQuery->query($sqlVendorComm)->fetchAll();
-	print_r($rVendor);
+	// /print_r($rVendor);
 
 	$uvstatus = Mage::getSingleton('udropship/source')->setPath('shipment_statuses')->toOptionHash();	
 	?>
@@ -141,18 +141,21 @@ include('session.php');
 						<table  width="100%" border="0" cellspacing="0" cellpadding="0" class="tbl_rptjen">
 
 							<tr>						
-								<td style="text-align:left;width: 40%;" >
+								<td style="text-align:left;width: 45%;" >
 									<b>Current Commission (%) : </b><input type="text"  tabindex="15" maxlength="4" size="9" value="<?php echo $rVendor[0]['commission_percent'] ?>" class="field text datpik" name="vendorcommission" id="vendorcommission">
 								</td>
 								<td style="text-align:left;">
+									
 									<b>Start Date :</b>
 									<input type="text"  tabindex="15" maxlength="4" size="9" value="" class="field text datpik" name="startdate" id="start" required>
 									<input type="text" value="<?php echo $rVendor[0]['vendor_id'] ?>" name="vendorid" id="vendorid" style = "visibility: collapse;">
+									
 								</td>	
 							</tr>
 							<tr>
 								<td>
 									<button id="save" class="btn btn-submit" type='submit' style='margin:7%;' > Save </button>
+									<input type="text" value="<?php echo $_SESSION['login_user'] ?>" name="login_id" id="login_id" style = "visibility: collapse;">
 								</td>
 							</tr>
 						</table>
