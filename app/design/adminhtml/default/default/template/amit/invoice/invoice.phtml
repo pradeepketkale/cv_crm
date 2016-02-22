@@ -157,12 +157,12 @@
 		  		<td valign="top"><?php echo $order->formatPriceTxt($_item->getDiscountAmount()) ?></td>
 
                 <!--<td valign="top"><?php //echo $order->formatPriceTxt($_item->getOriginalPrice()*number_format($_item->getQtyOrdered(), 0)+$_item->getShippingcost()-$_item->getDiscountAmount()) ?></td>-->
-              
+      <?php 
        //$amt = $order->formatPriceTxt($_item->getBasePrice()* number_format($_item->getQtyOrdered(), 0)+$_item->getShippingcost()-$_item->getDiscountAmount()); 
        $amt = $order->formatPriceTxt($_item->getBasePrice()* number_format($_item->getQtyOrdered(), 0)-$_item->getDiscountAmount()); 
       //$amt = $order->formatPriceTxt($_item->getOriginalPrice()* number_format($_item->getQtyOrdered(), 0)); 
       //$a += str_replace('Rs.', '', $amt); 
-
+?>
 			
 
                 <!--<td valign="top"><?php //echo $order->formatPriceTxt($_item->getBasePrice()*number_format($_item->getQtyOrdered(), 0) ) ?></td>-->
