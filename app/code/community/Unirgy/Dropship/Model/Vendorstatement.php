@@ -209,7 +209,10 @@ class Unirgy_Dropship_Model_Vendorstatement extends Unirgy_Dropship_Model_Abstra
 	public function commissionamount($_shipmentBaseTotal,$_shipmentItemsedShipping,$ship)
 	{
 		    $_liveDate = "2012-08-21 00:00:00";
-			$commission_amount = 20;
+            $hlp = Mage::helper('udropship');
+            $commission_amount = $hlp->getVendorCommission($ship->getUdropshipVendor(), $ship->getIncrementId());
+            $service_tax = $hlp->getServicetaxCv($ship->getIncrementId());
+			//$commission_amount = 20;
      	   	$discountAmountCoupon = 0;
 			$shipment = Mage::getModel('sales/order_shipment')->loadByIncrementId($ship->getIncrementId());
 			$orderid = $shipment->getOrderId();
@@ -236,7 +239,7 @@ class Unirgy_Dropship_Model_Vendorstatement extends Unirgy_Dropship_Model_Abstra
 				if(($_orderCurrencyCode != 'INR') && (strtotime($order->getOrderCreatedAt()) >= strtotime($_liveDate)))
 					$total_amount = $ship->getBaseTotalValue()/1.5;
 					
-	     		$vendor_amount = (($total_amount+$_shipmentItemsedShipping+$discountAmountCoupon)*(1-($commission_amount/100)*(1+0.1236)));
+	     		$vendor_amount = (($total_amount+$_shipmentItemsedShipping+$discountAmountCoupon)*(1-($commission_amount/100)*(1+$service_tax)));
        		   if($getCountryResult == 'IN')
 						{	
 							$kribha_amount = ((($total_amount1+$orderBaseShippingAmount+$discountAmountCoupon)*1.00) - $vendor_amount);

@@ -92,7 +92,7 @@ include('session.php');
 		exit;
 	}
 	$readQuery = Mage::getSingleton('core/resource')->getConnection('custom_db');
-	$sqlVendorComm = "SELECT `vendor_id`,`commission_percent`, `date_created` FROM `finance_vendor_commission` WHERE `vendor_id` = 100 order by `date_created` desc ";
+	$sqlVendorComm = "SELECT `vendor_id`,`commission_percent`, `date_created` FROM `finance_vendor_commission` WHERE `vendor_id` = ".$vendor_id." order by `date_created` desc ";
 	$rVendor = $readQuery->query($sqlVendorComm)->fetchAll();
 	// /print_r($rVendor);
 
@@ -148,7 +148,7 @@ include('session.php');
 									
 									<b>Start Date :</b>
 									<input type="text"  tabindex="15" maxlength="4" size="9" value="" class="field text datpik" name="startdate" id="start" required>
-									<input type="text" value="<?php echo $rVendor[0]['vendor_id'] ?>" name="vendorid" id="vendorid" style = "visibility: collapse;">
+									<input type="text" value="<?php echo $vendor_id ?>" name="vendorid" id="vendorid" style = "visibility: collapse;">
 									
 								</td>	
 							</tr>

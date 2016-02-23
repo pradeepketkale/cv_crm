@@ -865,11 +865,10 @@ public function reportDamageLostAction(){
 				if(($_orderCurrencyCode != 'INR') && (strtotime($shipmentpayout_report1_val['order_created_at']) >= strtotime($_liveDate)))
 					$total_amount = $shipmentpayout_report1_val['subtotal']/1.5;
 
-		    	//$commission_amount = $shipmentpayout_report1_val['commission_percent'];
-				$commission_amount = 20;
+				$vendorId = $shipmentpayout_report1_val['udropship_vendor'];  	
 		    	$itemised_total_shippingcost = $shipmentpayout_report1_val['itemised_total_shippingcost'];
 		    	$base_shipping_amount = $shipmentpayout_report1_val['base_shipping_amount'];
-				$vendorId = $shipmentpayout_report1_val['udropship_vendor'];
+				
 				$adjustmentAmount = $shipmentpayout_report1_val['adjustment'];
 				$shipmentpayoutStatus = $shipmentpayout_report1_val['shipmentpayout_status'];
 				//Below line is for get closingBalance
@@ -1071,24 +1070,30 @@ public function reportDamageLostAction(){
 }
 
 	public function setCommissionPercentAction(){
-		$vendorid = $_GET['vendorid'];
-		$commission_percent = $_GET['vendorcommission'];
-		$startdate = $_GET['startdate'];
-		$login_id = $_GET['login_id'];
+		if ( isset( $_GET['vendorid'] ) && isset( $_GET['vendorcommission'] ) && isset( $_GET['startdate'] )  && isset( $_GET['login_id'] )  ){   
+			$vendorid = $_GET['vendorid'];
+			$commission_percent = $_GET['vendorcommission'];
+			$startdate = $_GET['startdate'];
+			$login_id = $_GET['login_id'];
 
-		$readQuery = Mage::getSingleton('core/resource')->getConnection('custom_db');
-		$write = Mage::getSingleton('core/resource')->getConnection('core_write');
+			$readQuery = Mage::getSingleton('core/resource')->getConnection('custom_db');
+			$write = Mage::getSingleton('core/resource')->getConnection('core_write');
 
-		$getLastCreatedDateSql = "select max(date_created) as last_created_date from finance_vendor_commission where vendor_id = ".$vendorid;
-		$result = $readQuery->query($getLastCreatedDateSql)->fetchAll();
-		$getLastCreatedDate = $result[0]['last_created_date'];
+			$getLastCreatedDateSql = "select max(date_created) as last_created_date from finance_vendor_commission where vendor_id = ".$vendorid;
+			//echo $getLastCreatedDateSql;exit;
+			$result = $readQuery->query($getLastCreatedDateSql)->fetchAll();
+			$getLastCreatedDate = $result[0]['last_created_date'];
 
-		$sqlUpdate = "UPDATE `finance_vendor_commission` SET `end_date`='".date('Y-m-d',(strtotime ( '-1 day' , strtotime ( $startdate) ) ))."' WHERE `vendor_id`=". $vendorid . " and `date_created` = '".$getLastCreatedDate."'";
-		$result = $write->query($sqlUpdate);
+			$sqlUpdate = "UPDATE `finance_vendor_commission` SET `end_date`='".date('Y-m-d',(strtotime ( '-1 day' , strtotime ( $startdate) ) ))."' WHERE `vendor_id`=". $vendorid . " and `date_created` = '".$getLastCreatedDate."'";
 
-		$sqlInsert = "INSERT INTO `finance_vendor_commission`(`s_no`, `vendor_id`, `commission_percent`, `start_date`,`changed_by`) VALUES ('DEFAULT',".$vendorid.",'".$commission_percent."','".$startdate."','".$login_id."')";		
-		$result = $write->query($sqlInsert);
+			$result = $write->query($sqlUpdate);
 
-		echo "<center>Successful </br> <a href='/financereportcv/dashboard.php'>Dashboard </a></center>";
+			$sqlInsert = "INSERT INTO `finance_vendor_commission`(`s_no`, `vendor_id`, `commission_percent`, `start_date`,`changed_by`) VALUES ('DEFAULT',".$vendorid.",'".$commission_percent."','".$startdate."','".$login_id."')";		
+			$result = $write->query($sqlInsert);
+
+			echo "<center>Successful </br> <a href='/financereportcv/dashboard.php'>Dashboard </a></center>";
+		} else {
+			echo "<center>Unsuccessful Please check your Inputs </br> <a href='/financereportcv/dashboard.php'>Dashboard </a></center>";
+		}
 	}
 }

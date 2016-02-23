@@ -386,11 +386,11 @@ class Unirgy_Dropship_Adminhtml_Vendor_StatementController extends Mage_Adminhtm
 		$hlp = Mage::helper('udropship');
 		
 		$po = Mage::getModel('sales/order_shipment')->loadByIncrementId($shipmentId);
-	
+        $service_tax = $hlp->getServicetaxCv($shipmentId);
 		$order = array(
             'id' => $hlp->getPoOrderIncrementId($po),
             //'com_percent' => $po->getCommissionPercent(),
-			'com_percent' => 20,//set as static to 20 percentage by dileswar on dated 25-02-2014 for get invoice correct
+			'com_percent' => $hlp->getVendorCommission($po->getUdropshipVendor(), $shipmentId),//set as static to 20 percentage by dileswar on dated 25-02-2014 for get invoice correct
             'order_id' => $po->getOrderId(),
             'po_id' => $po->getId(),
             'order_created_at' => $hlp->getPoOrderCreatedAt($po),
@@ -403,8 +403,8 @@ class Unirgy_Dropship_Adminhtml_Vendor_StatementController extends Mage_Adminhtm
         	'subtotal' =>  $po->getBaseTotalValue(),
         );
       //print_r($order);exit;
-	   $base_shipping_amount = $order['base_shipping_amount'];
-	  	$total_amount1 = $order['subtotal'];
+		   $base_shipping_amount = $order['base_shipping_amount'];
+		  	$total_amount1 = $order['subtotal'];
 			$total_amount = $order['subtotal'];
 			$_liveDate = "2012-08-21 00:00:00";
 			$_order = Mage::getModel('sales/order')->loadByIncrementId($order['id']);
@@ -458,7 +458,7 @@ class Unirgy_Dropship_Adminhtml_Vendor_StatementController extends Mage_Adminhtm
 			    	}
 			    	else {
 						
-						$vendor_amount = (($total_amount+$itemised_total_shippingcost+$discountAmountCoupon)*(1-($commission_amount/100)*(1+0.1236)));
+						$vendor_amount = (($total_amount+$itemised_total_shippingcost+$discountAmountCoupon)*(1-($commission_amount/100)*(1+$service_tax)));
 						//$kribha_amount = (($total_amount1+$itemised_total_shippingcost) - $vendor_amount);
 						//change to accomodate 3% Payment gateway charges on dated 20-12-12
 				    	// Below line commented by dileswar on dated 18-02-2013 from $itemised_total_shippingcost To $base_shipping_amount***/////////////	
