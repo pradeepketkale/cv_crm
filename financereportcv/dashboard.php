@@ -77,7 +77,7 @@ include('session.php');
 
 					<div class="col-1-3 padding_top" >
 						<a href="ReportforDamage_LostTransit.php">	
-						<div class="container_inner1 bg2">
+						<div class="container_inner1 bg3">
 						<h3>Report For Damage/Lost in Transit</h3>
 						
 						</div>
@@ -91,6 +91,18 @@ include('session.php');
 						<a href="VendorCommissionGet.php">	
 						<div class="container_inner1 bg2">
 						<h3>Update Vendor Commission</h3>
+						
+						</div>
+						</a>
+						
+						
+						<div class="clear"></div> 
+					</div>
+
+					<div class="col-1-3 padding_top" >
+						<a href="VendorCommissionGet.php">	
+						<div class="container_inner1 bg4 ">
+						<h3>Report for Prepaid</h3>
 						
 						</div>
 						</a>

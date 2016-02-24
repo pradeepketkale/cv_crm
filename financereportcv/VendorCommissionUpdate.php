@@ -87,14 +87,41 @@ include('session.php');
 	require_once '../app/Mage.php';
 	Mage::app();
 	$vendor_id = $_GET['vendorid'];
+	$vendor_commission = '';
+	//var_dump($vendor_id);exit;
+	$error = '';
+	//echo $vendor_id;exit;
 	if($vendor_id == ''){
-		echo "Vendor ID not Entered";
+		echo "<center>Error: Vendor ID not Entered</center>";
+		exit;
+	}else if (!is_numeric($vendor_id)){
+		echo "<center>Error: Please enter numeric Vendor Id</center>";
 		exit;
 	}
 	$readQuery = Mage::getSingleton('core/resource')->getConnection('custom_db');
-	$sqlVendorComm = "SELECT `vendor_id`,`commission_percent`, `date_created` FROM `finance_vendor_commission` WHERE `vendor_id` = ".$vendor_id." order by `date_created` desc ";
-	$rVendor = $readQuery->query($sqlVendorComm)->fetchAll();
-	// /print_r($rVendor);
+	$sqlCheckVendor = "SELECT `vendor_id` FROM `udropship_vendor` WHERE `vendor_id` = '".$vendor_id."'";
+	try{
+		$rCheckVendor = $readQuery->query($sqlCheckVendor)->fetchAll();
+		if (count($rCheckVendor) == 0 ){
+			echo "<center>Error: Vendor Id not present in database</center>";
+			exit;
+		}
+	} catch (Exception $e){
+		echo 'Caught exception: ',  $e->getMessage(), "\n";
+		exit;
+	}
+
+	$sqlVendorComm = "SELECT `vendor_id`,`commission_percent`, `date_created` FROM `finance_vendor_commission` WHERE `vendor_id` = '".$vendor_id."' order by `date_created` desc ";
+	try{
+		$rVendor = $readQuery->query($sqlVendorComm)->fetchAll();
+		if(count($rVendor) == 0){
+			$vendor_commission = 20;
+		} else {
+			$vendor_commission = $rVendor[0]['commission_percent'];
+		}
+	} catch (Exception $e){
+		echo 'Caught exception: ',  $e->getMessage(), "\n";
+	}
 
 	$uvstatus = Mage::getSingleton('udropship/source')->setPath('shipment_statuses')->toOptionHash();	
 	?>
@@ -142,7 +169,7 @@ include('session.php');
 
 							<tr>						
 								<td style="text-align:left;width: 45%;" >
-									<b>Current Commission (%) : </b><input type="text"  tabindex="15" maxlength="4" size="9" value="<?php echo $rVendor[0]['commission_percent'] ?>" class="field text datpik" name="vendorcommission" id="vendorcommission">
+									<b>Current Commission (%) : </b><input type="text"  tabindex="15" maxlength="4" size="9" value="<?php echo $vendor_commission ?>" class="field text datpik" name="vendorcommission" id="vendorcommission">
 								</td>
 								<td style="text-align:left;">
 									
@@ -166,13 +193,6 @@ include('session.php');
 
 		</div>
 	</div>
-
-			<div class="dataloaddiv">
-
-				<h3>Please wait while your CSV gets Prepared. <br> Please Reload the page After file gets Download. </h3>	
-				<div class="loader"></div>
-			</div>
-
 
 </body>
 </html>
