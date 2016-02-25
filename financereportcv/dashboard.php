@@ -100,7 +100,7 @@ include('session.php');
 					</div>
 
 					<div class="col-1-3 padding_top" >
-						<a href="VendorCommissionGet.php">	
+						<a href="ReportPrepaid.php">	
 						<div class="container_inner1 bg4 ">
 						<h3>Report for Prepaid</h3>
 						

@@ -1129,4 +1129,102 @@ public function reportDamageLostAction(){
 			unlink ( $filePathOfCsv );
 			exit ;
 	}
+
+	public function downloadprepaidAction(){
+
+		$ustatus = array(	'pending' =>0,
+			'shipped to customer'=>1,
+			'partial'=>2,
+			'pendingpickup'=>8,
+			'ack'=>9,
+			'exported'=>10,
+			'ready'=>3,
+			'onhold'=>4,
+			'backorder'=>5,
+			'cancelled'=>6,
+			'delivered'=>7,
+			'processing'=>11,
+			'refundintiated'=>12,
+			'not delivered'=>13,
+			'charge_back'=>14,
+			'shipped craftsvilla'=>15,
+			'qc_rejected'=>16,
+			'received'=>17,
+			'out of stock'=>18,
+			'partial refund initiated'=>19,
+			'dispute raised'=>20,
+			'shipment delayed'=>21,
+			'partially shipped'=>22,
+			'refund to do'=>23,
+			'Accepted'=>24,
+			'Returned By Customer'=>25,
+			'Returned To Seller'=>26,
+			'Mainfest Shared'=>27,
+			'COD SHIPMENT PICKED UP'=>28,
+			'Packing slip printed'=>30,
+			'Handed to courier'=>31,
+			'Returned Recieved from customer'=>32,
+			'partially recieved'=>33,
+			'Damage/Lost in Transit'=>36);
+		$ustatusCond = ($_GET['ustatus'] != 'all' ? "AND sfs.udropship_status=".$ustatus[$_GET['ustatus']] : '');
+		$paymentCond = ($_GET['paymentstatus'] != 'all' ? "AND sp.shipmentpayout_status =".$_GET['paymentstatus'] : '');
+		$CourierCond = ($_GET['couriername'] != 'all' ? "AND sfst.courier_name='".$_GET['couriername']."' " : '');
+
+		$sWhere = "sfop.`method` != 'cashondelivery' ". $ustatusCond .' ' .$paymentCond . ' ' . $CourierCond. ' ';
+		if ( isset( $_GET['startdate'] ) && isset( $_GET['enddate'] ) )
+		{
+			$sWhere .= "and sfo.created_at >= '".$_GET['startdate'] . "' and sfo.created_at <= '".$_GET['enddate'] . "'";
+		}
+
+		$sQuery = "SELECT sfo.`increment_id` AS order_id, sfo.`created_at` AS order_date, sfs.`increment_id` AS shipment_id,
+		case sfs.`udropship_status` 
+		when 0 then 'pending'
+		when 1 then 'shipped to customer'
+		when 2 then 'partial'
+		when 8 then 'pendingpickup'
+		when 9 then 'ack'
+		when 10 then 'exported'
+		when 3 then 'ready'
+		when 4 then 'onhold'
+		when 5 then 'backorder'
+		when 6 then 'cancelled'
+		when 7 then 'delivered'
+		when 11 then 'processing'
+		when 12 then 'refundintiated'
+		when 13 then 'not delivered'
+		when 14 then 'charge_back'
+		when 15 then 'shipped craftsvilla'
+		when 16 then 'qc_rejected'
+		when 17 then 'received'
+		when 18 then 'out of stock'
+		when 19 then 'partial refund initiated'
+		when 20 then 'dispute raised'
+		when 21 then 'shipment delayed'
+		when 22 then 'partially shipped'
+		when 23 then 'refund to do'
+		when 24 then 'Accepted'
+		when 25 then 'Returned By Customer'
+		when 26 then 'Returned To Seller'
+		when 27 then 'Mainfest Shared'
+		when 28 then 'COD SHIPMENT PICKED UP'
+		when 30 then 'Packing slip printed'
+		when 31 then 'Handed to courier'
+		when 32 then 'Returned Recieved from customer'
+		when 33 then 'partially recieved'
+		when 36 then 'Damage/Lost in Transit'
+		end as ustatus,
+		case sp.`shipmentpayout_status` when 0 then 'Unpaid'when 1 then 'Paid' when 2 then 'Refunded' end as payoutstatus,sfs.`created_at` AS shipment_datec, sfst.`number` AS awb_number, sfs.`updated_at` AS shipment_update, `sp`.`citibank_utr`, sp.`shipmentpayout_update_time` AS payment_updated_date, `sfs`.`udropship_vendor` AS vendor_name, sfs.`base_total_value` as SubTotal, sp.`payment_amount` AS payment_amount, sp.`commission_amount` AS comission_amount,sfst.`courier_name`
+		FROM `sales_flat_shipment` as sfs
+		LEFT JOIN `sales_flat_order` AS sfo ON `sfs`.`order_id` = `sfo`.`entity_id`
+		LEFT JOIN `sales_flat_shipment_track` AS sfst ON `sfs`.`entity_id` = `sfst`.`parent_id`
+		LEFT JOIN `shipmentpayout` AS sp ON `sfs`.`increment_id` = `sp`.`shipment_id`		
+		LEFT JOIN `sales_flat_order_payment` AS sfop ON `sfs`.`order_id` = `sfop`.`parent_id`
+		WHERE ". $sWhere;
+//LEFT JOIN `udropship_vendor` AS uv ON `sfs`.`udropship_vendor` = `uv`.`vendor_id`
+		//echo $sQuery;exit;
+			$head = array( 'Order Id', 'Order Date', 'Shipment Id', 'Udropship Status', 'Payout Status', 'Shipment Date', 'Awb Number', 'Shipment Update', 'UTR Number', 'Payment Updated Date', 'Vendor Name', 'SubTotal', 'Payment Amount', 'Comission Amount','Courier Name' );
+			$filename = "Prepaid_report_". $_GET['startdate'] ."_to_" . $_GET['enddate'];
+			Craftsvilla_Financereport_FinancereportController::downloadCSV($filename, $sQuery, $head, true);
+
+		}
 }

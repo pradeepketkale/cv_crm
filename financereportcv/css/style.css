@@ -360,7 +360,7 @@ Buttons
 	height:auto;
 	box-shadow:0px 1px 27px 1px #E1E1E1;
 	border-bottom:3px solid #a1a1a1;
-	
+	font-size: 12px;
 	
 }
 
@@ -426,6 +426,9 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f7fbfc', end
     font-family: Verdana, sans-serif;
     text-shadow: -2px -2px rgba(127, 127, 127, 0.66);
 	
+}
+.container_inner2 {
+    font-size: 11px;  
 }
 .container_inner1:hover{
 	box-shadow: 0px -3px 12px -3px #000;
