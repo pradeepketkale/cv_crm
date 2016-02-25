@@ -121,16 +121,15 @@ include('session.php');
 								</td>
 							</tr>
 							<tr>
-
-								<td  >
+								<td>
 									<button id="search" class="btn btn-submit" type='submit' style='margin-left:30%;' > Search </button>
 								</td>
-
 							</tr>
 						</table>
 					</form>
-
+					<button id="getVendorList" class="btn btn-submit" type='button' style='margin-left:80%;' onclick="document.location.href='/financereport/financereport/getCommissionPercent';" > Gell All Vendor csv </button>
 				</div>
+
 			</div>
 
 		</div>

@@ -1096,4 +1096,37 @@ public function reportDamageLostAction(){
 			echo "<center>Unsuccessful Please check your Inputs </br> <a href='/financereportcv/dashboard.php'>Dashboard </a></center>";
 		}
 	}
+
+	public function getCommissionPercentAction(){
+
+			$readQuery = Mage::getSingleton('core/resource')->getConnection('custom_db');
+			$write = Mage::getSingleton('core/resource')->getConnection('core_write');
+			$finalArray = array();
+			$vendorString = '';
+			$getLastCreatedDateSql = "SELECT fvc.vendor_id, uv.vendor_name, fvc.commission_percent FROM finance_vendor_commission as fvc, udropship_vendor as uv WHERE fvc.end_date = '0000-00-00' and fvc.vendor_id = uv.vendor_id order by 1 ";
+			$result = $readQuery->query($getLastCreatedDateSql)->fetchAll();
+			foreach ($result as $key => $value) {
+				$vendorString .= $value['vendor_id'].',';
+			}
+			$vendorString = rtrim($vendorString, ',');
+			$sqlGetVendors = "SELECT `vendor_id`,`vendor_name`, '20' as commission_percent  FROM `udropship_vendor` where vendor_id not in (".$vendorString.") order by 1 ";
+			$resultAllVendors = $readQuery->query($sqlGetVendors)->fetchAll();
+			$filename = "VendorCommission";
+			$filePathOfCsv = Mage::getBaseDir('media').DS.$filename.'.csv';
+			$head = array( 'Vendor ID', 'Vendor Name', 'Vendor Commission' );
+			$fp=fopen($filePathOfCsv,'a');
+			fputcsv($fp, $head);
+			foreach ($result as $key => $value) {
+				fputcsv($fp, array_values($value));
+			}
+			foreach ($resultAllVendors as $key => $value) {
+				fputcsv($fp, array_values($value));
+			}
+			header( 'Content-Type: text/csv' );
+			header( 'Content-Disposition: attachment;filename=VendorCommission.csv');
+			fclose($fp);
+			readfile($filePathOfCsv,false);
+			unlink ( $filePathOfCsv );
+			exit ;
+	}
 }
