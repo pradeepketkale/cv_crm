@@ -399,11 +399,11 @@ public function downloadCSV($filename, $sqlQuery, $headerArray, $reportCod = fal
 	
 	$filePathOfCsv = Mage::getBaseDir('media').DS.$filename.'.csv';
 	unlink ( $filePathOfCsv );
-	$fp=fopen($filePathOfCsv,'a');
+	$fp=fopen($filePathOfCsv,'w+');
 	fputcsv($fp, $headerArray);
 	fclose($fp);
 	while ($flag){
-		
+		unset($rResult);
 		$readQuery = Mage::getSingleton('core/resource')->getConnection('custom_db');
 		$sqlLimit = " LIMIT ". $lower_limit . ",". $upper_limit;
 		$sqlFinalQuery = $sqlQuery .$sqlLimit;
@@ -1111,10 +1111,12 @@ public function reportDamageLostAction(){
 			$vendorString = rtrim($vendorString, ',');
 			$sqlGetVendors = "SELECT `vendor_id`,`vendor_name`, '20' as commission_percent  FROM `udropship_vendor` where vendor_id not in (".$vendorString.") order by 1 ";
 			$resultAllVendors = $readQuery->query($sqlGetVendors)->fetchAll();
-			$filename = "VendorCommission";
+			$nowDate = date("Y-m-d") ;
+			$filename = "VendorCommission_".$nowDate.'.csv';
 			$filePathOfCsv = Mage::getBaseDir('media').DS.$filename.'.csv';
 			$head = array( 'Vendor ID', 'Vendor Name', 'Vendor Commission' );
-			$fp=fopen($filePathOfCsv,'a');
+			unlink ( $filePathOfCsv );
+			$fp=fopen($filePathOfCsv,'w');
 			fputcsv($fp, $head);
 			foreach ($result as $key => $value) {
 				fputcsv($fp, array_values($value));
@@ -1123,7 +1125,7 @@ public function reportDamageLostAction(){
 				fputcsv($fp, array_values($value));
 			}
 			header( 'Content-Type: text/csv' );
-			header( 'Content-Disposition: attachment;filename=VendorCommission.csv');
+			header( 'Content-Disposition: attachment;filename='.$filename);
 			fclose($fp);
 			readfile($filePathOfCsv,false);
 			unlink ( $filePathOfCsv );
