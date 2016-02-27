@@ -265,19 +265,37 @@ class Craftsvilla_Productmanagement_IndexController extends Mage_Core_Controller
       
      public function disableSelectedAction()
 	{
-		//echo "Hello";
+		
 
-			$productId=trim($_REQUEST['pid'],","); //exit;
+			$productId=trim($_REQUEST['pid'],","); 
 			$productId=str_getcsv($productId,',','""');
-			$hlp = Mage::helper('generalcheck');
-	   		$hlp->productUpdateNotify_retry($productId);
 	   		$write = Mage::getSingleton('core/resource')->getConnection('core_write');
-	   		$sql= "UPDATE `catalog_product_entity_int` SET  `value` = '2' WHERE `entity_id` ='".$productId."'";
+	   		foreach($productId as $_productId){
+		    $sql= "UPDATE `catalog_product_entity_int` SET  `value` = '2' WHERE `attribute_id`='80' AND `entity_id` ='".$_productId."'";
 	   		$executeQuery=$write->query($sql);//exit;
 	   		if($executeQuery){
 	   			echo "Product Disabled Successfully";
+	   			$model= Mage::getStoreConfig('craftsvilla_config/service_api');
+				$url=$model['host'].':'.$model['port'].'/productUpdateNotification';
+				$data = array("productId"=>$_productId,"apiVersionCode"=>"2"); 
+				$data_string = json_encode($data);//print_r($data_string);exit;
+				$handle = curl_init($url); 
+				curl_setopt($handle, CURLOPT_POST, true);
+				curl_setopt($handle, CURLOPT_POSTFIELDS, $data_string); 
+				curl_setopt($handle, CURLOPT_RETURNTRANSFER, TRUE);
+				curl_setopt($handle, CURLOPT_HTTPHEADER, array('Content-Type: application/json','Content-Length: ' . strlen($data_string)));
+				curl_exec($handle);
+				//print_r($res);exit;
+				$http_status_code = curl_getinfo($handle, CURLINFO_HTTP_CODE);
+				if($http_status_code == '200'){
+					return true;
+				}else{
+					return false;
+				}
+				curl_close($handle);
 
-	   		}
+		   		}
+	   	}
 
 	}	
 

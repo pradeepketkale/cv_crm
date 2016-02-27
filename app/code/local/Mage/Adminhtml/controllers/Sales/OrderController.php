@@ -1450,12 +1450,15 @@ public function suspectfraudAction()
 	{
 		$user = Mage::getSingleton('admin/session');
 		$userEmail = $user->getUser()->getEmail();
+        $userName = $user->getUser()->getName();
 	if($userEmail == "santoshc@craftsvilla.com" || $userEmail == "bhimraj@craftsvilla.com" || $userEmail == "Seemag@craftsvilla.com" || $userEmail == "monica@craftsvilla.com" || $userEmail == "manoj@craftsvilla.com" || $userEmail == "Rohit@craftsvilla.com" || $userEmail == "tribhuvan@craftsvilla.com" || $userEmail == "dilipcscare@craftsvilla.com" || $userEmail == "eulalia.fernandes@craftsvilla.com" || $userEmail == "gaurav@craftsvilla.com" || $userEmail == "niraj@craftsvilla.com")
 		{
 		$orderIds = $this->getRequest()->getPost('order_ids');
 		$order = Mage::getModel('sales/order')->load($orderIds); //load order             
 		//echo '<pre>';print_r($order);exit;
 		$entityIdSus = $order->getEntityId();
+        $createdAt=now();
+        $amount=$order->getBaseGrandTotal();
 		    if($entityIdSus == ''){
 		        Mage::getSingleton('adminhtml/session')->addError(Mage::helper('adminhtml')->__("Please select only suspected fraud Order"));
 					$this->_redirectUrl('/index.php/kribhasanvi/sales_order/index/');
@@ -1470,6 +1473,12 @@ public function suspectfraudAction()
 		$order->setState($state, $status, $comment, $isCustomerNotified);    
 		$order->save();
 		$order->sendNewOrderEmail();
+        
+        $statsconn=Mage::getSingleton('core/resource')->getConnection('core_write');
+        $insertAgentProcessingOrdersCv="INSERT INTO agent_processing_orders_cv (`order_id`,`agent_name`,`created_at`,`amount`,`payment_method`) VALUES('".$incrementId."','".$userName."','".$createdAt."','".$amount."','".$payment_method."');";
+        $resAgentProcessingOrdersCv= $statsconn->query($insertAgentProcessingOrdersCv);
+        $statsconn->closeConnection();
+
 		Mage::getSingleton('adminhtml/session')->addSuccess(Mage::helper('adminhtml')->__("This Order No:- ".$incrementId." Status has changes to processing.."));
 		$this->_redirectUrl('/index.php/kribhasanvi/sales_order/index/');
 		}
