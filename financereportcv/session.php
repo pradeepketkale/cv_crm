@@ -5,12 +5,11 @@ $readcon = Mage::getSingleton('core/resource')->getConnection('core_read');
 $writeCon = Mage::getSingleton('core/resource')->getConnection('core_write');
 session_start();
 $user_check=$_SESSION['login_user'];
-
-$ses_sql = "SELECT `user_email` FROM `finance_login` WHERE `user_email` = '".$user_check."'";
+$ses_sql = "SELECT `user_id` FROM `finance_login` WHERE `user_id` = '".$user_check."'";
 //var_dump($ses_sql);exit;
 $row = $readcon->query($ses_sql)->fetchAll();
 
-$login_session =$row[0]['user_email'];
+$login_session =$row[0]['user_id'];
 //var_dump($row);exit;
 if(!isset($login_session)){
 	$writeCon->closeConnection();
