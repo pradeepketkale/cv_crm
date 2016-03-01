@@ -48,6 +48,15 @@
 		        </observers>
 		    </catalog_product_save_after>
 </events>
+<template>
+     <email>
+		<productupdate_notify>
+		          <label>Product Notification Email</label>
+		          <file>productupdate_notify.html</file>
+		          <type>html</type>
+		   </productupdate_notify>
+	</email>
+	</template>
 	  <blocks><generalcheck><class>Craftsvilla_Generalcheck_Block</class></generalcheck></blocks>
    </global> 
    

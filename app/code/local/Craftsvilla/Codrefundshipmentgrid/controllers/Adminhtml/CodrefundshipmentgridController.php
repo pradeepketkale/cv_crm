@@ -76,7 +76,8 @@ class Craftsvilla_Codrefundshipmentgrid_Adminhtml_CodrefundshipmentgridControlle
  		$getCustName = mysql_escape_string($codrefundshipmentgridData['cust_name']);
  		$getaccountno = mysql_escape_string($codrefundshipmentgridData['accountno']);
  		$getifsccode = mysql_escape_string($codrefundshipmentgridData['ifsccode']);
- 		$getpaymentamount = $codrefundshipmentgridData['paymentamount'];
+ 		$getpaymentamount1 = $codrefundshipmentgridData['paymentamount'];
+ 		$getpaymentamount = $getpaymentamount1;
  		
  		$duplicateQuery = "SELECT * FROM `codrefundshipmentgrid` WHERE `shipment_id` = '".$setShipmentId."'";
  		$duplicateQueryRes = $connread->query($duplicateQuery)->fetch();
@@ -399,7 +400,7 @@ $updateCodQuery = "UPDATE `codrefundshipmentgrid` SET `shipment_id`= '".$lastShi
  		$shipmentpayout_report1 = Mage::getModel('codrefundshipmentgrid/codrefundshipmentgrid')->getCollection();      	
 		$shipmentpayout_report1->getSelect()
       			->join(array('a'=>'sales_flat_shipment'), 'a.increment_id=main_table.shipment_id')
-      			->where('a.udropship_status != "12"');      	
+      			->where('a.udropship_status = "23"');      	
       	//echo "Query:".$shipmentpayout_report1->getSelect()->__toString();
 		//exit();
 		$shipmentpayout_report1_arr = $shipmentpayout_report1->getData();
@@ -427,7 +428,8 @@ $updateCodQuery = "UPDATE `codrefundshipmentgrid` SET `shipment_id`= '".$lastShi
 		
     	foreach($shipmentpayout_report1_arr as $shipmentpayout_report1_val)
 	    {
-			$total_amount = $shipmentpayout_report1_val['paymentamount'];
+			$total_amount1 = $shipmentpayout_report1_val['paymentamount'];
+			$total_amount = $total_amount1 + 100;
 			$shipmentId = $shipmentpayout_report1_val['shipment_id'];
 			$accountNo = "'".$shipmentpayout_report1_val['accountno'];
 			$beneficiaryName = $shipmentpayout_report1_val['cust_name'];

@@ -201,6 +201,86 @@ $cvmobilehtml = $bodyhtml;
 return $cvmobilehtml;
 	}
 
+
+public function productUpdateCurlCall($productId){
+	$model= Mage::getStoreConfig('craftsvilla_config/service_api');
+	$url=$model['host'].':'.$model['port'].'/productUpdateNotification';
+	//$count=sizeof($productId);
+	//print_r($productId);
+	//echo $count;exit;
+	
+		//$productId=str_getcsv($productId,',','""');
+		//echo "arr".count($productId);exit;
+		
+		$data = array("productId"=>$productId,"apiVersionCode"=>"2"); 
+		$data_string = json_encode($data);//print_r($data_string);exit;
+		$handle = curl_init($url); 
+		curl_setopt($handle, CURLOPT_POST, true);
+		curl_setopt($handle, CURLOPT_POSTFIELDS, $data_string); 
+		curl_setopt($handle, CURLOPT_RETURNTRANSFER, TRUE);
+		curl_setopt($handle, CURLOPT_HTTPHEADER, array('Content-Type: application/json','Content-Length: ' . strlen($data_string)));
+		curl_exec($handle);
+		//print_r($res);exit;
+		$http_status_code = curl_getinfo($handle, CURLINFO_HTTP_CODE);
+		curl_close($handle);
+		return $http_status_code;
+
+
+			
+	}
+public function productUpdateNotify_retry($productId)
+	{	
+	$statusCode=$this->productUpdateCurlCall($productId);	
+	if($statusCode != 200)
+					{	
+						$numRetry=3;
+						while($numRetry>0)
+						{	
+								
+									
+									$statusCode=$this->productUpdateCurlCall($productId);
+									if($statusCode == 200)
+									{	
+										break;
+									
+									}
+								$numRetry--;
+						}
+								//echo	$numRetry;exit;
+						if($numRetry==0)
+							{
+									$email_mod= Mage::getStoreConfig('craftsvilla_config/productupdate_q');
+									$templateId='productupdate_notify';
+									
+									$toEmail = $email_mod['email_to'];
+									$toEmailCC = $email_mod['email_bcc'];
+									$emailFrom= $email_mod['email_from'];
+									
+									$vars = array();
+									$sender = Array('name'  => 'Craftsvilla',
+											'email' =>$emailFrom);
+									$storeId = 1;
+
+									$transactionalEmail = Mage::getModel('core/email_template')
+									            ->setDesignConfig(array('area' => 'frontend', 'store' => $storeId));                 
+									$transactionalEmail
+									        ->getMail();
+									$transactionalEmail->setTemplateSubject('Product Notifiaction');
+									$transactionalEmail->sendTransactional($templateId, $sender, $toEmail,  $vars);
+									$transactionalEmail->sendTransactional($templateId, $sender, $toEmailCC, $vars);
+									
+							}
+									
+					}else
+					{	
+						return true;
+						//echo "Yess";exit;
+						 
+					}
+			
+			
+	}
+
 	
                             
 }

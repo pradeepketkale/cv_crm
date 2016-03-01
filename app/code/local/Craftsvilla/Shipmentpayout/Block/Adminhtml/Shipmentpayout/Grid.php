@@ -355,6 +355,22 @@ class Craftsvilla_Shipmentpayout_Block_Adminhtml_Shipmentpayout_Grid extends Mag
                      )
              )
         ));
+
+    $this->getMassactionBlock()->addItem('paypalreport', array(
+             'label'=> Mage::helper('shipmentpayout')->__('PayPal Report'),
+             'url'  => $this->getUrl('*/*/paypalreport', array('_current'=>true)),
+             'additional' => array(
+                    'visibility' => array(
+                         'name' => 'selected_date',
+                         'type' => 'date',
+                         'class' => 'required-entry',
+                         'format'     => 'yyyy-MM-dd',
+                   'image'    => $this->getSkinUrl('images/grid-cal.gif'), 
+               'input_format' => Varien_Date::DATE_INTERNAL_FORMAT, 
+                         'label' => Mage::helper('shipmentpayout')->__('Date')
+                     )
+             )
+      ));
         //$this->getMassactionBlock()->addItem('updateshipmentpayout', array(
         //     'label'=> Mage::helper('shipmentpayout')->__('Change Date'),
         //     'url'  => $this->getUrl('*/*/massDate', array('_current'=>true)),

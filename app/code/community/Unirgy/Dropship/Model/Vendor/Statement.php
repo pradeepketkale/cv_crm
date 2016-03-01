@@ -301,10 +301,12 @@ class Unirgy_Dropship_Model_Vendor_Statement extends Unirgy_Dropship_Model_Vendo
         return $this;
     }
     
+    
     public function getCommission($shipmentId)
 	{ 
 		
 		$hlp = Mage::helper('udropship');
+        $actualServiceTax = $hlp->getServicetaxCv($shipmentId);
 		$po = Mage::getModel('sales/order_shipment')->loadByIncrementId($shipmentId);
 		$order = array(
             'id' => $hlp->getPoOrderIncrementId($po),
@@ -345,14 +347,25 @@ class Unirgy_Dropship_Model_Vendor_Statement extends Unirgy_Dropship_Model_Vendo
 					$disCouponcode = $_order->getCouponCode();
 				}
 		    		
-		    	$vendor_amount = (($total_amount+$base_shipping_amount+$discountAmountCoupon)*(1-($commission_amount/100)*(1+0.1236)));			 
+		    	$vendor_amount = (($total_amount+$base_shipping_amount+$discountAmountCoupon)*(1-($commission_amount/100)*(1+$actualServiceTax)));			 
 				$kribha_amount = ((($total_amount1+$base_shipping_amount+$discountAmountCoupon)*1.00) - $vendor_amount);
 					$order['com_percent'] *= 1;
 					//$order['com_amount'] = $kribha_amount/1.1400;
-					$order['com_amount'] = $kribha_amount/1.1236;
+					$order['com_amount'] = $kribha_amount/(1+$actualServiceTax);
 					return number_format($order['com_amount'],2);
 		
 	}
-    
+    public function getCommissionLogistic($shipmentId){
+
+        $actualServiceTax = Mage::helper('udropship')->getServicetaxCv($shipmentId);
+        $idreadcon = Mage::getSingleton('core/resource')->getConnection('custom_db');
+        $shipmentlogistic = "SELECT `intshipingcost` as logisticcharge FROM `shipmentpayout`  WHERE `shipment_id` = '".$shipmentId."'";
+        $resultLogistic = $idreadcon->query($shipmentlogistic)->fetch();
+        $actuallogisticcharge = number_format(($resultLogistic['logisticcharge']),2);
+        return $actuallogisticcharge;
+
+
+
+    }
     
 }

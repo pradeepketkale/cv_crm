@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Craftsvilla_Financereport>
+            <version>0.1.0</version>
+        </Craftsvilla_Financereport>
+    </modules>
+    <frontend>
+      <routers>
+            <financereport>
+                <use>standard</use>
+                <args>
+                    <module>Craftsvilla_Financereport</module>
+                    <frontName>financereport</frontName>
+                </args>
+            </financereport>
+        </routers>
+        <layout>
+            <updates>
+                <financereport>
+                    <file>financereport.xml</file>
+                </financereport>
+            </updates>
+        </layout>
+    </frontend>
+
+     <global>
+        <models>
+            <financereport>
+                <class>Craftsvilla_Financereport_Model</class>
+            </financereport>
+        </models>
+        <blocks>
+            <financereport>
+                <class>Craftsvilla_Financereport_Block</class>
+            </financereport>
+        </blocks>
+        <helpers>
+            <financereport>
+                <class>Craftsvilla_Financereport_Helper</class>
+            </financereport>
+        </helpers>
+    </global>
+</config>

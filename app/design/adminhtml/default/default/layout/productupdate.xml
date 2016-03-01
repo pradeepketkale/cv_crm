@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+
+
+    <productupdate_adminhtml_productupdate_index>
+
+ <reference name="head">
+     <!-- <action method="removeItem"><type>js</type><name>prototype/prototype.js</name></action>-->
+      <action method="addJs"><script>jquery-1.3.2.min.js</script></action>
+
+    <!--  <action method="addJs"><script>prototype/prototype.js</script></action>-->
+    </reference>
+<!--		<reference name="head">
+			<action method="addJs" name="jquery" as="jquery">
+				
+				<script>jquery-1.3.2.min.js</script>
+			</action>
+			<block type="core/text" name="jquery.noconflict">
+                <action method="setText">
+                    <text><![CDATA[<script type="text/javascript">var $j = jQuery.noConflict();</script>]]>
+                    </text>
+                </action>
+            </block>
+		</reference>-->
+
+
+        <reference name="content">
+            <block type="productupdate/adminhtml_productupdate" name="productupdate" />
+        </reference>
+    </productupdate_adminhtml_productupdate_index>
+</layout>
