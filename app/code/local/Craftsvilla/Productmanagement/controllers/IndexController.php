@@ -271,14 +271,17 @@ class Craftsvilla_Productmanagement_IndexController extends Mage_Core_Controller
 			$productId=str_getcsv($productId,',','""');
 	   		$write = Mage::getSingleton('core/resource')->getConnection('core_write');
 	   		foreach($productId as $_productId){
-		    $sql= "UPDATE `catalog_product_entity_int` SET  `value` = '2' WHERE `attribute_id`='80' AND `entity_id` ='".$_productId."'";
-	   		$executeQuery=$write->query($sql);//exit;
+		    	$sql= "UPDATE `catalog_product_entity_int` SET  `value` = '2' WHERE `attribute_id`='80' AND `entity_id` ='".$_productId."'";
+	   			$executeQuery=$write->query($sql);//exit;
+	   		
+	   		}
 	   		if($executeQuery){
 	   			echo "Product Disabled Successfully";
+		   		
 	   			$model= Mage::getStoreConfig('craftsvilla_config/service_api');
 				$url=$model['host'].':'.$model['port'].'/productUpdateNotification';
-				$data = array("productId"=>$_productId,"apiVersionCode"=>"2"); 
-				$data_string = json_encode($data);//print_r($data_string);exit;
+				$data = array("productId"=>$productId,"apiVersionCode"=>"2"); 
+				$data_string = json_encode($data);print_r($data_string);//exit;
 				$handle = curl_init($url); 
 				curl_setopt($handle, CURLOPT_POST, true);
 				curl_setopt($handle, CURLOPT_POSTFIELDS, $data_string); 
@@ -293,10 +296,7 @@ class Craftsvilla_Productmanagement_IndexController extends Mage_Core_Controller
 					return false;
 				}
 				curl_close($handle);
-
-		   		}
-	   	}
-
+				}	
 	}	
 
 }
