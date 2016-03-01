@@ -1,5 +1,5 @@
 <?php
-require_once '/var/www/html/app/Mage.php';
+require_once '../app/Mage.php';
 Mage::app();
 $readcon = Mage::getSingleton('core/resource')->getConnection('core_read');
 $writeCon = Mage::getSingleton('core/resource')->getConnection('core_write');
