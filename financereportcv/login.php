@@ -23,7 +23,7 @@ if (isset($_POST['submit'])) {
 	$password = stripslashes($password);
 	$username = mysql_real_escape_string($username);
 	$password = mysql_real_escape_string($password);*/
-	$password = md5("craftsvilla".$password);
+	$password = md5("craftskufin2017".$password);
 	$ses_sql = "SELECT * FROM `finance_login` WHERE `user_email` = '".$username."' AND `user_password` = '".$password."'";
 
 	$rows = $readcon->query($ses_sql)->fetchAll();
