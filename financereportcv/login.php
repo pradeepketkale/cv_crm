@@ -1,5 +1,5 @@
 <?php
-require_once '../app/Mage.php';
+require_once __DIR__.'/../app/Mage.php';
 Mage::app();
 session_start(); // Starting Session
 
@@ -24,17 +24,17 @@ if (isset($_POST['submit'])) {
 	$username = mysql_real_escape_string($username);
 	$password = mysql_real_escape_string($password);*/
 	$password = md5("craftskufin2017".$password);
-	$ses_sql = "SELECT * FROM `finance_login` WHERE `user_email` = '".$username."' AND `user_password` = '".$password."'";
+	$ses_sql = "SELECT `user_id` FROM `finance_login` WHERE `user_email` = '".$username."' AND `user_password` = '".$password."'";
 
-	$rows = $readcon->query($ses_sql)->fetchAll();
-	//var_dump($rows[0]['user_id']);exit;
+	$rows = $readcon->query($ses_sql)->fetch();
+	//var_dump($rows['user_id']);exit;
 	/*// Selecting Database
 	$db = mysql_select_db("company", $connection);
 	// SQL query to fetch information of registerd users and finds user match.
 	$query = mysql_query("select * from login where password='$password' AND username='$username'", $connection);
 	$rows = mysql_num_rows($query);*/
 	if (count($rows) == 1) {
-		$_SESSION['login_user']=$rows[0]['user_id']; // Initializing Session
+		$_SESSION['login_user']=$rows['user_id']; // Initializing Session
 		header("location: dashboard.php"); // Redirecting To Other Page
 	} else {
 		$error = "Username or Password is invalid";

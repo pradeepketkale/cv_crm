@@ -1,19 +1,19 @@
 <?php
-require_once '../app/Mage.php';
+/*require_once __DIR__.'../app/Mage.php';
 Mage::app();
 $readcon = Mage::getSingleton('core/resource')->getConnection('core_read');
-$writeCon = Mage::getSingleton('core/resource')->getConnection('core_write');
+$writeCon = Mage::getSingleton('core/resource')->getConnection('core_write');*/
 session_start();
 $user_check=$_SESSION['login_user'];
-$ses_sql = "SELECT `user_id` FROM `finance_login` WHERE `user_id` = '".$user_check."'";
+/*$ses_sql = "SELECT `user_id` FROM `finance_login` WHERE `user_id` = '".$user_check."'";
 //var_dump($ses_sql);exit;
-$row = $readcon->query($ses_sql)->fetchAll();
+$row = $readcon->query($ses_sql)->fetch();*/
 
-$login_session =$row[0]['user_id'];
+//$login_session =$row['user_id'];
 //var_dump($row);exit;
-if(!isset($login_session)){
-	$writeCon->closeConnection();
-	$readcon->closeConnection(); // Closing Connection
+if(!isset($user_check)){
+/*	$writeCon->closeConnection();
+	$readcon->closeConnection();*/ // Closing Connection
 	header('Location: index.php'); // Redirecting To Home Page
 }
 
