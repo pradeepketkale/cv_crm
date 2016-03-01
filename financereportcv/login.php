@@ -1,5 +1,5 @@
 <?php
-require_once '../app/Mage.php';
+require_once '/var/www/html/app/Mage.php';
 Mage::app();
 session_start(); // Starting Session
 
