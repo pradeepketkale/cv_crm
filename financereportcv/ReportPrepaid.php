@@ -146,14 +146,6 @@ var normalizeDate = function (dateString) {
 </style>
 </head>
 <body>
-	<?php
-	error_reporting(E_ALL ^ E_NOTICE);
-	require_once '../app/Mage.php';
-	Mage::app();
-
-	$uvstatus = Mage::getSingleton('udropship/source')->setPath('shipment_statuses')->toOptionHash();	
-	?>
-	
 	<div class="grid Page-container">
 		<div class="col-1-1">
 

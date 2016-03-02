@@ -83,9 +83,7 @@ include('session.php');
 </head>
 <body>
 	<?php
-	error_reporting(E_ALL ^ E_NOTICE);
-	require_once '../app/Mage.php';
-	Mage::app();
+	require_once __DIR__.'/../dbConnectionRead.php';
 	$vendor_id = $_GET['vendorid'];
 	$vendor_commission = '';
 	//var_dump($vendor_id);exit;
@@ -98,11 +96,11 @@ include('session.php');
 		echo "<center>Error: Please enter numeric Vendor Id</center>";
 		exit;
 	}
-	$readQuery = Mage::getSingleton('core/resource')->getConnection('custom_db');
 	$sqlCheckVendor = "SELECT `vendor_id` FROM `udropship_vendor` WHERE `vendor_id` = '".$vendor_id."'";
 	try{
-		$rCheckVendor = $readQuery->query($sqlCheckVendor)->fetchAll();
-		if (count($rCheckVendor) == 0 ){
+		$rCheckVendor = mysql_query($sqlCheckVendor,$mainConnection);
+		$rows = mysql_num_rows($rCheckVendor);
+		if ($rows == 0 ){
 			echo "<center>Error: Vendor Id not present in database</center>";
 			exit;
 		}
@@ -113,17 +111,19 @@ include('session.php');
 
 	$sqlVendorComm = "SELECT `vendor_id`,`commission_percent`, `date_created` FROM `finance_vendor_commission` WHERE `vendor_id` = '".$vendor_id."' order by `date_created` desc ";
 	try{
-		$rVendor = $readQuery->query($sqlVendorComm)->fetchAll();
-		if(count($rVendor) == 0){
+		$rVendor = mysql_query($sqlVendorComm,$mainConnection);
+		$rowCount = mysql_num_rows($rCheckVendor);
+		$row = mysql_fetch_assoc($rVendor);
+		//var_dump($row['commission_percent']);
+		if($rowCount == 0){
 			$vendor_commission = 20;
 		} else {
-			$vendor_commission = $rVendor[0]['commission_percent'];
+			$vendor_commission = $row['commission_percent'];
 		}
 	} catch (Exception $e){
 		echo 'Caught exception: ',  $e->getMessage(), "\n";
 	}
-
-	$uvstatus = Mage::getSingleton('udropship/source')->setPath('shipment_statuses')->toOptionHash();	
+	mysql_close($mainConnection); 
 	?>
 	
 	<div class="grid Page-container">

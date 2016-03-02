@@ -272,15 +272,7 @@ var normalizeDate = function (dateString) {
 	.dt-button{padding: :10px;}
 </style>
 </head>
-<body>
-	<?php
-	error_reporting(E_ALL ^ E_NOTICE);
-	require_once '../app/Mage.php';
-	Mage::app();
-
-	$uvstatus = Mage::getSingleton('udropship/source')->setPath('shipment_statuses')->toOptionHash();	
-	?>
-	
+<body>	
 	<div class="grid Page-container">
 		<div class="col-1-1">
 
