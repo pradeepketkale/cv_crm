@@ -59,7 +59,7 @@ class Craftsvilla_Shipmentpayout_Adminhtml_ImportcodutrtrackingController extend
         ini_set('auto_detect_line_endings', true);
         $csvObject = new Varien_File_Csv();
         $csvData = $csvObject->getData($fileName);
-
+        //var_dump($csvData);exit;
         /**
          * File expected fields
          */
@@ -75,7 +75,15 @@ class Craftsvilla_Shipmentpayout_Adminhtml_ImportcodutrtrackingController extend
          * $v is line content array
          */
         $write = Mage::getSingleton('core/resource')->getConnection('core_write');
-	$read  = Mage::getSingleton('core/resource')->getConnection('core_read');
+	    $read  = Mage::getSingleton('core/resource')->getConnection('core_read');
+
+        $filename = "shipementcodupload_".date("Ymd");
+        $filePathOfCsv = Mage::getBaseDir('media').DS.'misreport'.DS.$filename.'.txt';
+        $fp=fopen($filePathOfCsv,'a');
+        $strHead = "Tracking Id,Shipment Id\n";
+        fputs($fp, $strHead);
+        fclose($fp);
+
         foreach ($csvData as $k => $v) {
 
             /**
@@ -121,6 +129,12 @@ class Craftsvilla_Shipmentpayout_Adminhtml_ImportcodutrtrackingController extend
            //$shipmentData=Mage::getModel('sales/order_shipment')->loadByIncrementId($shipmentId);
            
            //$shipmentStatus= $shipmentData->getUdropshipStatus();
+           /*Test for Debugging Shipment Id's */
+           
+           $fp=fopen($filePathOfCsv,'a');
+           fputs($fp, $trackingId.",".$shipmentResult."\n");
+           fclose($fp);
+
            if($shipmentResult){
                 $queryShipmentUtr = "update shipmentpayout set citibank_utr='".$utrNumber."',shipmentpayout_update_time='".$date."'  , intshipingcost='".$logistic."' WHERE shipment_id = '".$shipmentResult."'";		  
                 $write->query($queryShipmentUtr);
