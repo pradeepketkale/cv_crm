@@ -4497,7 +4497,7 @@ public function getServicetaxCv($shipmentId)
      $queryGet = "SELECT `updated_at` FROM `sales_flat_shipment` WHERE `increment_id` = '".$shipmentId."'";
      $resDate = $readCon->query($queryGet)->fetch();
      $updatedDate = $resDate['updated_at'];
-        
+     $readCon->closeConnection();   
         if($updatedDate >= '2015-11-15 23:59:59')
            { 
             $exServicetax = (14.5/100);
@@ -4517,8 +4517,13 @@ public function getServicetaxCv($shipmentId)
         $created_date = date("Y-m-d", strtotime($resGetCreatedDate['created_at']));
         $queryGet = "select `commission_percent` from finance_vendor_commission where `vendor_id` = ".$vendorid." and (`start_date` <= '".$created_date."' and `end_date` >= '".$created_date."') or (`start_date` <= '".$created_date."' and `end_date` = '0000-00-00')";
         $resCommission = $readCon->query($queryGet)->fetch();
+        $readCon->closeConnection();
         if($resCommission){
-            $commission_percent = $resCommission['commission_percent'];
+            if(is_numeric($resCommission['commission_percent'])){
+                $commission_percent = $resCommission['commission_percent'];        
+            } else {
+                $commission_percent = 20;
+            }
         }
          else {
             $commission_percent = 20;

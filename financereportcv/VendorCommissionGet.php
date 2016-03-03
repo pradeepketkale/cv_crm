@@ -109,12 +109,12 @@ include('session.php');
 
 							<tr>							
 								<td style="text-align:left;" >
-									<b>Search Vendor ID: </b><input type="text"  tabindex="15" maxlength="4" size="9" value="" class="field text datpik" name="vendorid" id="vendorid">
+									<b>Search Vendor ID: </b><input type="text"  tabindex="1" size="9" value="" class="field text datpik" name="vendorid" id="vendorid">
 								</td>
 							</tr>
 							<tr>
 								<td>
-									<button id="search" class="btn btn-submit" type='submit' style='margin-left:30%;' > Search </button>
+									<button id="search" class="btn btn-submit" type='submit' tabindex="2" style='margin-left:30%;' > Search </button>
 								</td>
 							</tr>
 						</table>
