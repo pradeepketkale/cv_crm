@@ -281,7 +281,7 @@ class Craftsvilla_Productmanagement_IndexController extends Mage_Core_Controller
 	   			$model= Mage::getStoreConfig('craftsvilla_config/service_api');
 				$url=$model['host'].':'.$model['port'].'/productUpdateNotification';
 				$data = array("productId"=>$productId,"apiVersionCode"=>"2"); 
-				$data_string = json_encode($data);print_r($data_string);//exit;
+				$data_string = json_encode($data);//print_r($data_string);//exit;
 				$handle = curl_init($url); 
 				curl_setopt($handle, CURLOPT_POST, true);
 				curl_setopt($handle, CURLOPT_POSTFIELDS, $data_string); 
@@ -296,6 +296,8 @@ class Craftsvilla_Productmanagement_IndexController extends Mage_Core_Controller
 					return false;
 				}
 				curl_close($handle);
+				//$hlp = Mage::helper('generalcheck');
+	   			//$hlp->productUpdateNotify_retry($productId);
 				}	
 	}	
 
