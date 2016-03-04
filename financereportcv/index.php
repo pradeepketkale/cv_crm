@@ -47,11 +47,18 @@ if (isset($_POST['submit'])) {
 			<div class="login-form">
 				  <form action="" method='post'>
 					
-						<div class="logo-wrapper">
+					<!---	<div class="logo-wrapper">
 						
 							<div class="logo"></div>
 							
-						</div>
+						</div> -->
+
+							<div style="border-bottom: 1px solid #e1e1e1;">
+							
+							<div class="logo"></div>
+
+						</div>	
+
 							<div class="form-area">
 						
 								<div class="group">

@@ -27,9 +27,12 @@ include('session.php');
 					
 					<div class="page-heading">            
                         <h1>Finance Dashboard</h1>
-                       	 <div class="clear" style="align="right";"><a href="dashboard.php" ><b>Dashboard</b></a>||
+                       	 <!-- <div class="clear" style="align="right";"><a href="dashboard.php" ><b>Dashboard</b></a>||
                        		 <a href="logout.php" ><b>Logout</b> </a>
-                       	 </div>                                
+                       	 </div> -->
+                       	 <div class="FRnavigation" style="align="right";"><a href="dashboard.php" ><b>Dashboard</b></a>
+                       		 <a href="logout.php" ><b>Logout</b> </a>
+                       	 </div>                                         
                      </div>
                            
                     </div>		

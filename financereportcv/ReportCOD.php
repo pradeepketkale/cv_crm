@@ -289,9 +289,12 @@ var normalizeDate = function (dateString) {
 
 							<div class="page-heading">            
 								<h1>Finance Report Dashboard</h1>
-								<div class="clear" style="align="right";"><a href="dashboard.php" ><b>Dashboard</b></a>||
+								<!--<div class="clear" style="align="right";"><a href="dashboard.php" ><b>Dashboard</b></a>||
 		                       		 <a href="logout.php" ><b>Logout</b> </a>
-		                       	</div> 
+		                       	</div> -->
+		                       	<div class="FRnavigation" style="align="right";"><a href="dashboard.php" ><b>Dashboard</b></a>
+                       		 <a href="logout.php" ><b>Logout</b> </a>
+                       	 </div>          
 							</div>
 
 							<div class="clear"></div> 
@@ -335,9 +338,14 @@ var normalizeDate = function (dateString) {
 							</tr> -->
 					</table>
 					</form>
-					
-						<b>Udropship Status:</b>
-						<select id="ustatus" form="myForm" style="margin-right:3em; width:10em">
+
+					<!----pradeep -->
+
+					<table border="0" width="100%" cellspacing="0" cellpadding="0" style="width:90%;padding:0px; margin:0 auto;">
+<tr>
+	<td><b>Udropship Status:</b></td>
+	<td>
+		<select id="ustatus" form="myForm" style="margin-right:3em; width:15em">
 						  <option value="all">ALL</option>
 						  <option value="pending">pending</option>
 						  <option value="shipped to customer">shipped to customer</option>
@@ -374,25 +382,48 @@ var normalizeDate = function (dateString) {
 						  <option value="partially recieved">partially recieved</option>
 						  <option value="Damage/Lost in Transit">Damage/Lost in Transit</option>
 						</select>
-					
-						<b>Payment Status:</b>
-						<select id="paymentstatus" form="myForm" style="margin-right:3em; width:6em">
+
+	</td>
+	<td><b>Payment Status:</b></td>
+	<td>
+		<select id="paymentstatus" form="myForm" style="margin-right:3em; width:6em">
 						  <option value="all">ALL</option>
 						  <option value="0">Unpaid</option>
 						  <option value="1">Paid</option>
 						  <option value="2">Refunded</option>
 						</select>
 
-						<b>Courier name:</b>
-						<select id="couriername" form="myForm" style="margin-right:3em; width:10em">
+	</td>
+	<td><b>Courier name:</b></td>
+	<td>
+		<select id="couriername" form="myForm" style="margin-right:3em; width:10em">
 						  <option value="all">ALL</option>
 						  <option value="Aramex">Aramex</option>
 						  <option value="Fedex">Fedex</option>
 						  <option value="Dtdc">Dtdc</option>
 						</select>
-					<div><button id="filter" class="btn btn-submit" type='submit' form="myForm"  style='margin-right:15px;margin-left:30%;margin-top:1em;' > Show Data </button>
-					<button id="downloadcsv" class="btn btn-submit" type='submit' style='margin-right:15px;margin-left:20%;margin-top:1em;' > Download CSV </button>
-					</div>
+
+	</td>
+</tr>
+
+<tr>
+
+<td colspan="2" align="right">
+
+<button id="filter" class="btn btn-submit" type='submit' form="myForm"  style='margin-right:15px;margin-left:30%;margin-top:1em;' > Show Data </button>
+
+</td>
+<td colspan="4" align="left">
+	<button id="downloadcsv" class="btn btn-submit" type='submit' style='margin-right:15px;margin-left:20%;margin-top:1em;' > Download CSV </button>
+</td>
+
+
+
+</tr>
+</table>
+					<!---pradeep -->
+
+
 
 				</div>
 </div>

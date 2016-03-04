@@ -82,9 +82,12 @@ include('session.php');
 
 							<div class="page-heading">            
 								<h1>Finance Dashboard</h1>
-								<div class="clear" style="align="right";"><a href="dashboard.php" ><b>Dashboard</b></a>||
+								<!--<div class="clear" style="align="right";"><a href="dashboard.php" ><b>Dashboard</b></a>||
 		                       		 <a href="logout.php" ><b>Logout</b> </a>
-		                       	</div> 
+		                       	</div> -->
+		                       	<div class="FRnavigation" style="align="right";"><a href="dashboard.php" ><b>Dashboard</b></a>
+                       		 <a href="logout.php" ><b>Logout</b> </a>
+                       	 </div> 
 							</div>
 
 							<div class="clear"></div> 
@@ -108,12 +111,12 @@ include('session.php');
 						<table  width="100%" border="0" cellspacing="0" cellpadding="0" class="tbl_rptjen">
 
 							<tr>							
-								<td style="text-align:left;" >
+								<td style="text-align:center;" >
 									<b>Search Vendor ID: </b><input type="text"  tabindex="1" size="9" value="" class="field text datpik" name="vendorid" id="vendorid">
 								</td>
 							</tr>
 							<tr>
-								<td>
+								<td style="text-align:center;" >
 									<button id="search" class="btn btn-submit" type='submit' tabindex="2" style='margin-left:30%;' > Search </button>
 								</td>
 							</tr>
