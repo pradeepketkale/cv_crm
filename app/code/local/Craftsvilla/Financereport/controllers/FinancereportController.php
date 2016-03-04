@@ -808,8 +808,8 @@ public function reportDamageLostAction(){
       			->join(array('b'=>'sales_flat_shipment_grid'), 'b.increment_id=main_table.shipment_id', array('order_created_at'))
       			->joinLeft('sales_flat_order_payment', 'b.order_id = sales_flat_order_payment.parent_id','method')
 				->where('main_table.shipmentpayout_status=0 AND a.udropship_status IN (7) AND `sales_flat_order_payment`.method = "cashondelivery" AND main_table.citibank_utr != "" ') ;      	*/
-      	echo "Query:".$shipmentpayout_report1->getSelect()->__toString();
-		exit();
+      	/*echo "Query:".$shipmentpayout_report1->getSelect()->__toString();
+		exit();*/
       			
       	$shipmentpayout_report1_arr = $shipmentpayout_report1->getData();
       	//Check if we got any data
