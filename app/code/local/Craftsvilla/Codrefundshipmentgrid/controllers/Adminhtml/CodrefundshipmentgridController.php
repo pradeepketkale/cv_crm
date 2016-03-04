@@ -400,6 +400,7 @@ $updateCodQuery = "UPDATE `codrefundshipmentgrid` SET `shipment_id`= '".$lastShi
  		$shipmentpayout_report1 = Mage::getModel('codrefundshipmentgrid/codrefundshipmentgrid')->getCollection();      	
 		$shipmentpayout_report1->getSelect()
       			->join(array('a'=>'sales_flat_shipment'), 'a.increment_id=main_table.shipment_id')
+      			->joinLeft(array('b'=>'sales_flat_order'), 'a.order_id= b.entity_id','customer_email')
       			->where('a.udropship_status = "23"');      	
       	//echo "Query:".$shipmentpayout_report1->getSelect()->__toString();
 		//exit();
@@ -407,7 +408,7 @@ $updateCodQuery = "UPDATE `codrefundshipmentgrid` SET `shipment_id`= '".$lastShi
     	$filename = "CODshipmentReport"."_".$selected_date_val;
 		$output = "";
 	
-		$fieldlist = array("Debit Account Number","Value Date","Customer Reference No","Beneficiary Name","Payment Type","Bene Account Number","Bank Code","Account type","Amount","Payment Details 1","Payment Details 2","Payment Details 3","Payment Details 4","Payable Location Code *","Payable Location Name *","Print Location Code *","Print Location Name *","Beneficiary Address 1","Beneficiary Address 2","Beneficiary Address 3","Beneficiary Address 4","Delivery Method","Cheque Number","Bene E-mail ID","Instrument Detail 1","Instrument Detail 2");
+		$fieldlist = array("Debit Account Number","Value Date","Customer Reference No","Beneficiary Name","Payment Type","Bene Account Number","Bank Code","Account type","Amount","Payment Details 1","Payment Details 2","Payment Details 3","Payment Details 4","Payable Location Code *","Payable Location Name *","Print Location Code *","Print Location Name *","Beneficiary Address 1","Beneficiary Address 2","Beneficiary Address 3","Beneficiary Address 4","Delivery Method","Cheque Number","Bene E-mail ID","Instrument Detail 1","Instrument Detail 2","CV Customer EmaiID");
     	
 		$numfields = sizeof($fieldlist);
 		$i = 1;
@@ -433,6 +434,7 @@ $updateCodQuery = "UPDATE `codrefundshipmentgrid` SET `shipment_id`= '".$lastShi
 			$shipmentId = $shipmentpayout_report1_val['shipment_id'];
 			$accountNo = "'".$shipmentpayout_report1_val['accountno'];
 			$beneficiaryName = $shipmentpayout_report1_val['cust_name'];
+			$custEmailID = $shipmentpayout_report1_val['customer_email'];
 			$ifsccode = $shipmentpayout_report1_val['ifsccode'];
 				for($m =0; $m < sizeof($fieldlist); $m++) {
 					$fieldvalue = $fieldlist[$m];
@@ -551,6 +553,10 @@ $updateCodQuery = "UPDATE `codrefundshipmentgrid` SET `shipment_id`= '".$lastShi
 					if($fieldvalue == "Instrument Detail 2")
 		    		{
 		    			$output .= "";
+		    		}
+		    		if($fieldvalue == "CV Customer EmaiID")
+		    		{
+		    			$output .= $custEmailID;
 		    		}
 					
 					
