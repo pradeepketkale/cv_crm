@@ -38,7 +38,11 @@ class Craftsvilla_Vendorneftcode_Block_Adminhtml_Vendorneftcode_Edit_Tab_Form ex
           $fieldset->addField('bulk_privileges', 'text', array(
           'label'     => Mage::helper('vendorneftcode')->__('Bulk Privileges'),
           'name'      => 'bulk_privileges',
-    ));
+          ));
+          $fieldset->addField('kyc_approved', 'text', array(
+          'label'     => Mage::helper('vendorneftcode')->__('Kyc Privileges'),
+          'name'      => 'kyc_approved',
+          ));
 		
       /*$fieldset->addField('status', 'select', array(
           'label'     => Mage::helper('vendorneftcode')->__('Status'),

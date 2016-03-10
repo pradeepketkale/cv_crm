@@ -99,7 +99,7 @@ class Craftsvilla_Vendorneftcode_Adminhtml_VendorneftcodeController extends Mage
             $logistics_privileges = mysql_escape_string($this->getRequest()->getParam('logistics_privileges'));
             $payment_privileges = mysql_escape_string($this->getRequest()->getParam('payment_privileges'));
             $bulk_privileges = mysql_escape_string($this->getRequest()->getParam('bulk_privileges'));
-
+	     $kyc_approved = mysql_escape_string($this->getRequest()->getParam('kyc_approved'));
 		$read = Mage::getSingleton('core/resource')->getConnection('custom_db');
         $write = Mage::getSingleton('core/resource')->getConnection('core_write');
         
@@ -107,11 +107,11 @@ class Craftsvilla_Vendorneftcode_Adminhtml_VendorneftcodeController extends Mage
 		$vendorInfoCraftsQueryRes = $read->query($vendorInfoCraftsQuery)->fetch();
 		if($vendorInfoCraftsQueryRes) {
 		
-		$vendorInfoUpdateQuery = "UPDATE `vendor_info_craftsvilla` SET `merchant_id_city`='".$merchantId."',`vendor_name`='".$vendorName."',`catalog_privileges`='".$catalog_privileges."', `logistics_privileges`='".$logistics_privileges."', `payment_privileges`='".$payment_privileges."',`bulk_privileges`='".$bulk_privileges."' WHERE `vendor_id` = '".$vendorId."'"; 
+		$vendorInfoUpdateQuery = "UPDATE `vendor_info_craftsvilla` SET `merchant_id_city`='".$merchantId."',`vendor_name`='".$vendorName."',`catalog_privileges`='".$catalog_privileges."', `logistics_privileges`='".$logistics_privileges."', `payment_privileges`='".$payment_privileges."',`bulk_privileges`='".$bulk_privileges."',`kyc_approved`='".$kyc_approved."' WHERE `vendor_id` = '".$vendorId."'"; 
 		$vendorInfoUpdateQueryRes = $write->query($vendorInfoUpdateQuery);
 		
 		} else {
-		$vendorInfoInsertQuery = "INSERT INTO `vendor_info_craftsvilla`(`vendor_id`, `vendor_name`, `international_order`,`merchant_id_city`,`catalog_privileges`,`logistics_privileges`,`payment_privileges`,`bulk_privileges`) VALUES ($vendorId,'$vendorName',1,'$merchantId','$catalog_privileges','$logistics_privileges','$payment_privileges',0)";   
+		$vendorInfoInsertQuery = "INSERT INTO `vendor_info_craftsvilla`(`vendor_id`, `vendor_name`, `international_order`,`merchant_id_city`,`catalog_privileges`,`logistics_privileges`,`payment_privileges`,`bulk_privileges`, `kyc_approved`) VALUES ($vendorId,'$vendorName',1,'$merchantId','$catalog_privileges','$logistics_privileges','$payment_privileges',0,0)";   
 		$vendorInfoInsertQueryRes = $write->query($vendorInfoInsertQuery);
 		
 		}
