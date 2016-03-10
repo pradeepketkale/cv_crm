@@ -399,11 +399,11 @@ public function downloadCSV($filename, $sqlQuery, $headerArray, $reportCod = fal
 	
 	$filePathOfCsv = Mage::getBaseDir('media').DS.$filename.'.csv';
 	unlink ( $filePathOfCsv );
-	$fp=fopen($filePathOfCsv,'a');
+	$fp=fopen($filePathOfCsv,'w+');
 	fputcsv($fp, $headerArray);
 	fclose($fp);
 	while ($flag){
-		
+		unset($rResult);
 		$readQuery = Mage::getSingleton('core/resource')->getConnection('custom_db');
 		$sqlLimit = " LIMIT ". $lower_limit . ",". $upper_limit;
 		$sqlFinalQuery = $sqlQuery .$sqlLimit;
@@ -801,14 +801,15 @@ public function reportDamageLostAction(){
       			->join(array('a'=>'sales_flat_shipment'), 'a.increment_id=main_table.shipment_id', array('udropship_vendor', 'subtotal'=>'base_total_value', 'commission_percent'=>'commission_percent', 'itemised_total_shippingcost'=>'itemised_total_shippingcost','cod_fee'=>'cod_fee','base_shipping_amount'=>'base_shipping_amount'))
       			->join(array('b'=>'sales_flat_shipment_grid'), 'b.increment_id=main_table.shipment_id', array('order_created_at'))
       			->joinLeft('sales_flat_order_payment', 'b.order_id = sales_flat_order_payment.parent_id','method')
-				->where('main_table.shipmentpayout_status= '.$status.' AND a.udropship_status IN (36) AND main_table.citibank_utr != "" ') ;	
+      			->joinLeft('sales_flat_shipment_track', 'a.entity_id = sales_flat_shipment_track.parent_id',array('courier_name','number'))
+      			->where('main_table.shipmentpayout_status= '.$status.' AND a.udropship_status IN (36)') ;	
       	/*$shipmentpayout_report1->getSelect()
       			->join(array('a'=>'sales_flat_shipment'), 'a.increment_id=main_table.shipment_id', array('udropship_vendor', 'subtotal'=>'base_total_value', 'commission_percent'=>'commission_percent', 'itemised_total_shippingcost'=>'itemised_total_shippingcost','cod_fee'=>'cod_fee','base_shipping_amount'=>'base_shipping_amount'))
       			->join(array('b'=>'sales_flat_shipment_grid'), 'b.increment_id=main_table.shipment_id', array('order_created_at'))
       			->joinLeft('sales_flat_order_payment', 'b.order_id = sales_flat_order_payment.parent_id','method')
 				->where('main_table.shipmentpayout_status=0 AND a.udropship_status IN (7) AND `sales_flat_order_payment`.method = "cashondelivery" AND main_table.citibank_utr != "" ') ;      	*/
-  //     	echo "Query:".$shipmentpayout_report1->getSelect()->__toString();
-		// exit();
+      	/*echo "Query:".$shipmentpayout_report1->getSelect()->__toString();
+		exit();*/
       			
       	$shipmentpayout_report1_arr = $shipmentpayout_report1->getData();
       	//Check if we got any data
@@ -820,7 +821,7 @@ public function reportDamageLostAction(){
     	$filename = "Report_DamageLost"."_".$selected_date_val;
 		$output = "";
 	
-		$fieldlist = array("Debit Account Number","Value Date","Customer Reference No","Beneficiary Name","Payment Type","Bene Account Number","Bank Code","Account type","Amount","Payment Details 1","Payment Details 2","Payment Details 3","Payment Details 4","Payable Location Code *","Payable Location Name *","Print Location Code *","Print Location Name *","Beneficiary Address 1","Beneficiary Address 2","Beneficiary Address 3","Beneficiary Address 4","Delivery Method","Cheque Number","Bene E-mail ID","Instrument Detail 1","Instrument Detail 2","Craftsvilla Commission");
+		$fieldlist = array("Debit Account Number","Value Date","Customer Reference No","Beneficiary Name","Payment Type","Bene Account Number","Bank Code","Account type","Amount","Payment Details 1","Payment Details 2","Payment Details 3","Payment Details 4","Payable Location Code *","Payable Location Name *","Print Location Code *","Print Location Name *","Beneficiary Address 1","Beneficiary Address 2","Beneficiary Address 3","Beneficiary Address 4","Delivery Method","Cheque Number","Bene E-mail ID","Instrument Detail 1","Instrument Detail 2","Craftsvilla Commission","Courier Name","AWB Number");
     	
 		$numfields = sizeof($fieldlist);
 		$i = 1;
@@ -840,7 +841,7 @@ public function reportDamageLostAction(){
 		exit();*/
 		
     	foreach($shipmentpayout_report1_arr as $shipmentpayout_report1_val)
-	    {
+	    {	
 			$vendors = Mage::helper('udropship')->getVendor($shipmentpayout_report1_val['udropship_vendor']);
 			//if(($shipmentpayout_report1_val['udropship_vendor'] != '') && ($vendors->getMerchantIdCity() != ''))
 			if($shipmentpayout_report1_val['udropship_vendor'] != '')
@@ -865,11 +866,10 @@ public function reportDamageLostAction(){
 				if(($_orderCurrencyCode != 'INR') && (strtotime($shipmentpayout_report1_val['order_created_at']) >= strtotime($_liveDate)))
 					$total_amount = $shipmentpayout_report1_val['subtotal']/1.5;
 
-		    	//$commission_amount = $shipmentpayout_report1_val['commission_percent'];
-				$commission_amount = 20;
+				$vendorId = $shipmentpayout_report1_val['udropship_vendor'];  	
 		    	$itemised_total_shippingcost = $shipmentpayout_report1_val['itemised_total_shippingcost'];
 		    	$base_shipping_amount = $shipmentpayout_report1_val['base_shipping_amount'];
-				$vendorId = $shipmentpayout_report1_val['udropship_vendor'];
+				
 				$adjustmentAmount = $shipmentpayout_report1_val['adjustment'];
 				$shipmentpayoutStatus = $shipmentpayout_report1_val['shipmentpayout_status'];
 				//Below line is for get closingBalance
@@ -887,7 +887,7 @@ public function reportDamageLostAction(){
 				}
 				
 				//$gen_random_number = "K".$this->gen_rand();
-                       $vendor_amount = (($total_amount+$itemised_total_shippingcost+$discountAmountCoupon)*(1-($commission_amount/100)*(1+0.1236)));
+                       $vendor_amount = $shipmentpayout_report1_val['todo_payment_amount'];;
 						
 						//$kribha_amount = (($total_amount1+$itemised_total_shippingcost) - $vendor_amount);
 						//change to accomodate 3% Payment gateway charges on dated 20-12-12
@@ -898,7 +898,7 @@ public function reportDamageLostAction(){
 			    	
 					$vendor_amount = $vendor_amount - $logisticamount;
 				
-		    	$kribha_amount = ((($total_amount1+$base_shipping_amount+$discountAmountCoupon)) - $vendor_amount);
+		    	$kribha_amount = $shipmentpayout_report1_val['todo_commission_amount'];
 				
 				//Below lines for to update the value in shipmentpayout table ...
 					$write = Mage::getSingleton('core/resource')->getConnection('shipmentpayout_write');
@@ -907,7 +907,7 @@ public function reportDamageLostAction(){
 				
 					$utr = $shipmentpayout_report1_val['citibank_utr'];
 					$neft = 'EFT';
-						if(($vendor_amount+$closingbalance) <= 0)
+						/*if(($vendor_amount+$closingbalance) <= 0)
 							{
 								if($shipmentpayout_report1_val['type'] == 'Adjusted Against Refund'){$vendor_amount = 0;}
 								
@@ -924,7 +924,7 @@ public function reportDamageLostAction(){
 									$write->query($queyVendor);	
 								
 								}
-							}	
+							}	*/
 							
 				for($m =0; $m < sizeof($fieldlist); $m++) {
 					$fieldvalue = $fieldlist[$m];
@@ -1048,6 +1048,14 @@ public function reportDamageLostAction(){
 		    		{
 		    			$output .= $kribha_amount;
 		    		}
+		    		if($fieldvalue == "Courier Name")
+		    		{
+		    			$output .= $shipmentpayout_report1_val['courier_name'];
+		    		}
+		    		if($fieldvalue == "AWB Number")
+		    		{
+		    			$output .= $shipmentpayout_report1_val['number'];
+		    		}
 					
 		    			
 		    		if ($m < ($numfields-1))
@@ -1069,4 +1077,164 @@ public function reportDamageLostAction(){
 		exit;
     $i++;
 }
+
+	public function setCommissionPercentAction(){
+		if ( isset( $_GET['vendorid'] ) && isset( $_GET['vendorcommission'] ) && isset( $_GET['startdate'] )  && isset( $_GET['login_id'] )  ){   
+			$vendorid = $_GET['vendorid'];
+			$commission_percent = $_GET['vendorcommission'];
+			$startdate = $_GET['startdate'];
+			$login_id = $_GET['login_id'];
+			$readQuery = Mage::getSingleton('core/resource')->getConnection('custom_db');
+			$write = Mage::getSingleton('core/resource')->getConnection('core_write');
+
+			$getLastCreatedDateSql = "select max(date_created) as last_created_date from finance_vendor_commission where vendor_id = ".$vendorid;
+			//echo $getLastCreatedDateSql;exit;
+			$result = $readQuery->query($getLastCreatedDateSql)->fetchAll();
+			$getLastCreatedDate = $result[0]['last_created_date'];
+
+			$sqlUpdate = "UPDATE `finance_vendor_commission` SET `end_date`='".date('Y-m-d',(strtotime ( '-1 day' , strtotime ( $startdate) ) ))."' WHERE `vendor_id`=". $vendorid . " and `date_created` = '".$getLastCreatedDate."'";
+
+			$result = $write->query($sqlUpdate);
+			$datetime = date('Y-m-d H:i:s');
+			$sqlInsert = "INSERT INTO `finance_vendor_commission`(`s_no`, `vendor_id`, `commission_percent`, `start_date`,`changed_by`, `date_created`) VALUES ('DEFAULT',".$vendorid.",'".$commission_percent."','".$startdate."','".$login_id."','".$datetime."')";		
+			$result = $write->query($sqlInsert);
+
+			echo "<center>Successful </br> <a href='/financereportcv/dashboard.php'>Dashboard </a></center>";
+		} else {
+			echo "<center>Unsuccessful Please check your Inputs </br> <a href='/financereportcv/dashboard.php'>Dashboard </a></center>";
+		}
+	}
+
+	public function getCommissionPercentAction(){
+
+			$readQuery = Mage::getSingleton('core/resource')->getConnection('custom_db');
+			$write = Mage::getSingleton('core/resource')->getConnection('core_write');
+			$finalArray = array();
+			$vendorString = '';
+			$getLastCreatedDateSql = "SELECT fvc.vendor_id, uv.vendor_name, fvc.commission_percent FROM finance_vendor_commission as fvc, udropship_vendor as uv WHERE fvc.end_date = '0000-00-00' and fvc.vendor_id = uv.vendor_id order by 1 ";
+			$result = $readQuery->query($getLastCreatedDateSql)->fetchAll();
+			foreach ($result as $key => $value) {
+				$vendorString .= $value['vendor_id'].',';
+			}
+			$vendorString = rtrim($vendorString, ',');
+			$sqlGetVendors = "SELECT `vendor_id`,`vendor_name`, '20' as commission_percent  FROM `udropship_vendor` where vendor_id not in (".$vendorString.") order by 1 ";
+			$resultAllVendors = $readQuery->query($sqlGetVendors)->fetchAll();
+			$nowDate = date("Y-m-d") ;
+			$filename = "VendorCommission_".$nowDate.'.csv';
+			$filePathOfCsv = Mage::getBaseDir('media').DS.$filename.'.csv';
+			$head = array( 'Vendor ID', 'Vendor Name', 'Vendor Commission' );
+			unlink ( $filePathOfCsv );
+			$fp=fopen($filePathOfCsv,'w');
+			fputcsv($fp, $head);
+			foreach ($result as $key => $value) {
+				fputcsv($fp, array_values($value));
+			}
+			foreach ($resultAllVendors as $key => $value) {
+				fputcsv($fp, array_values($value));
+			}
+			header( 'Content-Type: text/csv' );
+			header( 'Content-Disposition: attachment;filename='.$filename);
+			fclose($fp);
+			readfile($filePathOfCsv,false);
+			unlink ( $filePathOfCsv );
+			exit ;
+	}
+
+	public function downloadprepaidAction(){
+
+		$ustatus = array(	'pending' =>0,
+			'shipped to customer'=>1,
+			'partial'=>2,
+			'pendingpickup'=>8,
+			'ack'=>9,
+			'exported'=>10,
+			'ready'=>3,
+			'onhold'=>4,
+			'backorder'=>5,
+			'cancelled'=>6,
+			'delivered'=>7,
+			'processing'=>11,
+			'refundintiated'=>12,
+			'not delivered'=>13,
+			'charge_back'=>14,
+			'shipped craftsvilla'=>15,
+			'qc_rejected'=>16,
+			'received'=>17,
+			'out of stock'=>18,
+			'partial refund initiated'=>19,
+			'dispute raised'=>20,
+			'shipment delayed'=>21,
+			'partially shipped'=>22,
+			'refund to do'=>23,
+			'Accepted'=>24,
+			'Returned By Customer'=>25,
+			'Returned To Seller'=>26,
+			'Mainfest Shared'=>27,
+			'COD SHIPMENT PICKED UP'=>28,
+			'Packing slip printed'=>30,
+			'Handed to courier'=>31,
+			'Returned Recieved from customer'=>32,
+			'partially recieved'=>33,
+			'Damage/Lost in Transit'=>36);
+		$ustatusCond = ($_GET['ustatus'] != 'all' ? "AND sfs.udropship_status=".$ustatus[$_GET['ustatus']] : '');
+		$paymentCond = ($_GET['paymentstatus'] != 'all' ? "AND sp.shipmentpayout_status =".$_GET['paymentstatus'] : '');
+		$CourierCond = ($_GET['couriername'] != 'all' ? "AND sfst.courier_name='".$_GET['couriername']."' " : '');
+
+		$sWhere = "sfop.`method` != 'cashondelivery' ". $ustatusCond .' ' .$paymentCond . ' ' . $CourierCond. ' ';
+		if ( isset( $_GET['startdate'] ) && isset( $_GET['enddate'] ) )
+		{
+			$sWhere .= "and sfo.created_at >= '".$_GET['startdate'] . "' and sfo.created_at <= '".$_GET['enddate'] . "'";
+		}
+
+		$sQuery = "SELECT sfo.`increment_id` AS order_id, sfo.`created_at` AS order_date, sfs.`increment_id` AS shipment_id,
+		case sfs.`udropship_status` 
+		when 0 then 'pending'
+		when 1 then 'shipped to customer'
+		when 2 then 'partial'
+		when 8 then 'pendingpickup'
+		when 9 then 'ack'
+		when 10 then 'exported'
+		when 3 then 'ready'
+		when 4 then 'onhold'
+		when 5 then 'backorder'
+		when 6 then 'cancelled'
+		when 7 then 'delivered'
+		when 11 then 'processing'
+		when 12 then 'refundintiated'
+		when 13 then 'not delivered'
+		when 14 then 'charge_back'
+		when 15 then 'shipped craftsvilla'
+		when 16 then 'qc_rejected'
+		when 17 then 'received'
+		when 18 then 'out of stock'
+		when 19 then 'partial refund initiated'
+		when 20 then 'dispute raised'
+		when 21 then 'shipment delayed'
+		when 22 then 'partially shipped'
+		when 23 then 'refund to do'
+		when 24 then 'Accepted'
+		when 25 then 'Returned By Customer'
+		when 26 then 'Returned To Seller'
+		when 27 then 'Mainfest Shared'
+		when 28 then 'COD SHIPMENT PICKED UP'
+		when 30 then 'Packing slip printed'
+		when 31 then 'Handed to courier'
+		when 32 then 'Returned Recieved from customer'
+		when 33 then 'partially recieved'
+		when 36 then 'Damage/Lost in Transit'
+		end as ustatus,
+		case sp.`shipmentpayout_status` when 0 then 'Unpaid'when 1 then 'Paid' when 2 then 'Refunded' end as payoutstatus,sfs.`created_at` AS shipment_datec, sfst.`number` AS awb_number, sfs.`updated_at` AS shipment_update, `sp`.`citibank_utr`, sp.`shipmentpayout_update_time` AS payment_updated_date, `sfs`.`udropship_vendor` AS vendor_name, sfs.`base_total_value` as SubTotal, sp.`payment_amount` AS payment_amount, sp.`commission_amount` AS comission_amount,sfst.`courier_name`
+		FROM `sales_flat_shipment` as sfs
+		LEFT JOIN `sales_flat_order` AS sfo ON `sfs`.`order_id` = `sfo`.`entity_id`
+		LEFT JOIN `sales_flat_shipment_track` AS sfst ON `sfs`.`entity_id` = `sfst`.`parent_id`
+		LEFT JOIN `shipmentpayout` AS sp ON `sfs`.`increment_id` = `sp`.`shipment_id`		
+		LEFT JOIN `sales_flat_order_payment` AS sfop ON `sfs`.`order_id` = `sfop`.`parent_id`
+		WHERE ". $sWhere;
+//LEFT JOIN `udropship_vendor` AS uv ON `sfs`.`udropship_vendor` = `uv`.`vendor_id`
+		//echo $sQuery;exit;
+			$head = array( 'Order Id', 'Order Date', 'Shipment Id', 'Udropship Status', 'Payout Status', 'Shipment Date', 'Awb Number', 'Shipment Update', 'UTR Number', 'Payment Updated Date', 'Vendor Name', 'SubTotal', 'Payment Amount', 'Comission Amount','Courier Name' );
+			$filename = "Prepaid_report_". $_GET['startdate'] ."_to_" . $_GET['enddate'];
+			Craftsvilla_Financereport_FinancereportController::downloadCSV($filename, $sQuery, $head, true);
+
+		}
 }

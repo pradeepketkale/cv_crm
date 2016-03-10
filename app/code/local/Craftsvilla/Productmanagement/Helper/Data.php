@@ -103,9 +103,10 @@ class Craftsvilla_Productmanagement_Helper_Data extends Mage_Core_Helper_Abstrac
                                    data : {pid:pid},
                                    success : function(result){
 				                           jQuery("#loading").css("display","none");
-                                   // $("#listProducts").html(result);
+                                   // jQuery("#listProducts").html(result);
                                    //     $("#count").html(result); 
                                     alert(result);   
+                                   
                                 }
                                });
                            }

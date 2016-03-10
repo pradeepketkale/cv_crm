@@ -310,7 +310,7 @@ class Unirgy_Dropship_Model_Vendor_Statement extends Unirgy_Dropship_Model_Vendo
 		$po = Mage::getModel('sales/order_shipment')->loadByIncrementId($shipmentId);
 		$order = array(
             'id' => $hlp->getPoOrderIncrementId($po),
-			'com_percent' => 20,
+			'com_percent' => $hlp->getVendorCommission($po->getUdropshipVendor(),$shipmentId),
             'order_id' => $po->getOrderId(),
             'po_id' => $po->getId(),
             'order_created_at' => $hlp->getPoOrderCreatedAt($po),

@@ -4491,25 +4491,43 @@ $drawing->finish($filetypes[$default_valuetwo['filetype']]);
 }
 
 public function getServicetaxCv($shipmentId)
-    {
+{
 
      $readCon = Mage::getSingleton('core/resource')->getConnection('custom_db'); 
      $queryGet = "SELECT `updated_at` FROM `sales_flat_shipment` WHERE `increment_id` = '".$shipmentId."'";
      $resDate = $readCon->query($queryGet)->fetch();
      $updatedDate = $resDate['updated_at'];
-        
+     $readCon->closeConnection();   
         if($updatedDate >= '2015-11-15 23:59:59')
            { 
             $exServicetax = (14.5/100);
-            }
+        }
          else{
 
             $exServicetax = (14/100);
          }  
          return  $exServicetax;
+}
+
+    public function getVendorCommission($vendorid, $shipment_id)
+    {
+        $readCon = Mage::getSingleton('core/resource')->getConnection('custom_db'); 
+        $sqlGetCreatedDate = "SELECT `created_at` FROM `sales_flat_shipment` WHERE `increment_id` = '".$shipment_id."'";
+        $resGetCreatedDate = $readCon->query($sqlGetCreatedDate)->fetch();
+        $created_date = date("Y-m-d", strtotime($resGetCreatedDate['created_at']));
+        $queryGet = "select `commission_percent` from finance_vendor_commission where `vendor_id` = ".$vendorid." and (`start_date` <= '".$created_date."' and `end_date` >= '".$created_date."') or (`start_date` <= '".$created_date."' and `end_date` = '0000-00-00')";
+        $resCommission = $readCon->query($queryGet)->fetch();
+        $readCon->closeConnection();
+        if($resCommission){
+            if(is_numeric($resCommission['commission_percent'])){
+                $commission_percent = $resCommission['commission_percent'];        
+            } else {
+                $commission_percent = 20;
+            }
+        }
+         else {
+            $commission_percent = 20;
+        }
+        return  $commission_percent;
     }
-
-
-
-
 }

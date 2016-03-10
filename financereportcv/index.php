@@ -1,100 +1,81 @@
+
+<?php
+if(isset($_SESSION['login_user'])){
+	header("location: dashboard.php");
+}
+require_once __DIR__.'/../dbConnectionRead.php';
+session_start(); // Starting Session
+$error=''; // Variable To Store Error Message
+if (isset($_POST['submit'])) {
+
+	if (empty($_POST['username']) || empty($_POST['password'])) {
+	$error = "Username or Password is invalid";
+	}
+	else
+	{
+	$username=$_POST['username'];
+	$password=$_POST['password'];
+	$password = md5("craftskufin2017".$password);
+	$ses_sql = "SELECT `user_id` FROM `finance_login` WHERE `user_email` = '".$username."' AND `user_password` = '".$password."'";
+	$query = mysql_query($ses_sql,$mainConnection);
+	$rows = mysql_num_rows($query);
+	if ($rows == 1) {
+		$user_id = mysql_fetch_assoc($query);
+		$_SESSION['login_user']= $user_id['user_id']; // Initializing Session
+		header("location: dashboard.php"); // Redirecting To Other Page
+	} else {
+		$error = "Username or Password is invalid";
+	}
+		mysql_close($mainConnection); // Closing Connection
+	}
+} // Includes Login Script
+
+
+?>
 <!DOCTYPE HTML>
 <html lang="en-US">
 <head>
 	<meta charset="UTF-8">
 	<title></title>
-	<link rel="stylesheet" href="css/style.css"/>
-	<link rel="stylesheet" href="css/grid.css"/>
 </head>
+<link rel="stylesheet" href="css/style.css"/>
 <body>
 	
-	<div class="grid Page-container">
-			<div class="col-1-1">
-	
-	<div class="grid">
-       			<div class="col-2-12">
-            <div class="container" style="width: 247px;height: 58px;background-color: #e1e1e1;">
-				<div class="logo_h"></div>
-			</div>
-            </div>
-            	
-       		<div class="col-10-12">
-            <div class="container">
-				<div class="page-breadcrumb">
-					
-					<div class="page-heading">            
-                                <h1>Finance Report Dashboard</h1>
-                                
-                            </div>
-                           
-							<div class="clear"></div> 
-                    </div>
-					
-			
-			</div>
-            </div>
-            
-       </div>
-	</div>
-</div>	
-
- <div class="grid grid-pad">
-			<div class="col-1-1">
-				<div class="container-wrapper1">
-					<div class="col-1-3" >
-						<a href="ReportCOD.php">						
-							<div class="container_inner1">
-								<h3>Report For COD</h3>
-							</div>
-						</a>						
-					<div class="clear"></div> 
-				</div>
-					
-					<div class="col-1-3" >
-						<a href="RecordForPayment.php">	
-						<div class="container_inner1 bg">
-						<h3>Record For Payment</h3>
-						
-						</div>
-						</a>
-						
-						<div class="clear"></div> 
-					</div>
-					
-					<div class="col-1-3" >
-						<a href="PaymentInvoice.php">	
-						<div class="container_inner1 bg1">
-						<h3>Payment Invoice</h3>
-						
-						</div>
-						</a>
-						
-						
-						<div class="clear"></div> 
-					</div>
-
-					<div class="col-1-3 padding_top" >
-						<a href="ReportforDamage_LostTransit.php">	
-						<div class="container_inner1 bg2">
-						<h3>Report For Damage/Lost in Transit</h3>
-						
-						</div>
-						</a>
-						
-						
-						<div class="clear"></div> 
-					</div>
+	<div class="wrapper_body">
+		<div class="login_body">
 				
+			<div class="login-form">
+				  <form action="" method='post'>
 					
-				</div>
-				<div class="clear"></div> 
-			</div>
-	  </div>
+					<!---	<div class="logo-wrapper">
+						
+							<div class="logo"></div>
+							
+						</div> -->
 
+							<div style="border-bottom: 1px solid #e1e1e1;">
+							
+							<div class="logo"></div>
 
-	
-	
-	
+						</div>	
+
+							<div class="form-area">
+						
+								<div class="group">
+									<input type="text" name='username' class="form-control" placeholder="Username">
+								</div>
+							<div class="group">
+								<input type="password" name='password' class="form-control" placeholder="Password">
+						  </div>
+						  
+						  <button type="submit" name='submit' class="btn btn-default btn-block btn_wdt">LOGIN</button>
+						</div>
+						<span style = "color:red";> <?php echo $error; ?></span>
+				  </form>
+		 
+			</div>	
+		</div>
+	</div>
 	
 </body>
 </html>

@@ -23,32 +23,9 @@ include('session.php');
 	<script src="js/buttons.html5.min.js"></script>
 	<script src="js/buttons.print.min.js"></script>
 
-
-
-	<script type="text/javascript">
-
-		$(document).ready(function(){
-
-			$('#filter').click(function(){
-
-
-		//validation pradeep
-			console.log('working')  
-				var startdate=document.myForm.startdate.value;  
-				var enddate=document.myForm.enddate.value;  
-  
-				if (startdate==null || startdate==""){  
-	 				 alert("Start Date can't be blank");  
-	  				 return false;  
-					 }else if(enddate==null || enddate==""){  
-	  				 alert("End date can't be blank");  
-	  				 return false;  
-					}
-		//validation end
-
-
-				$('.dataloaddiv').show();
-			})
+<script type="text/javascript">
+	
+	$(document).ready(function(){
 
 			$( "#start" ).datepicker({
 				showOn: "button",
@@ -57,21 +34,12 @@ include('session.php');
 				buttonImage: "img/cal.png",
 				buttonImageOnly: true,
 				dateFormat: 'yy-mm-dd',
+
 			});
-			
-			$( "#end" ).datepicker({
-				showOn: "button",
-				changeMonth: true,
-				changeYear: true,
-				buttonImage: "img/cal.png",
-				buttonImageOnly: true,
-				dateFormat: 'yy-mm-dd',
-			}); 
-			
-		});
+
+	});
 
 </script>
-
 <script type="text/javascript">
 	$(document).ready(function() {
 		var matched, browser;
@@ -115,11 +83,46 @@ include('session.php');
 </head>
 <body>
 	<?php
-	error_reporting(E_ALL ^ E_NOTICE);
-	require_once '../app/Mage.php';
-	Mage::app();
+	require_once __DIR__.'/../dbConnectionRead.php';
+	$vendor_id = $_GET['vendorid'];
+	$vendor_commission = '';
+	//var_dump($vendor_id);exit;
+	$error = '';
+	//echo $vendor_id;exit;
+	if($vendor_id == ''){
+		echo "<center>Error: Vendor ID not Entered</center>";
+		exit;
+	}else if (!is_numeric($vendor_id)){
+		echo "<center>Error: Please enter numeric Vendor Id</center>";
+		exit;
+	}
+	$sqlCheckVendor = "SELECT `vendor_id` FROM `udropship_vendor` WHERE `vendor_id` = '".$vendor_id."'";
+	try{
+		$rCheckVendor = mysql_query($sqlCheckVendor,$mainConnection);
+		$rows = mysql_num_rows($rCheckVendor);
+		if ($rows == 0 ){
+			echo "<center>Error: Vendor Id not present in database</center>";
+			exit;
+		}
+	} catch (Exception $e){
+		echo 'Caught exception: ',  $e->getMessage(), "\n";
+		exit;
+	}
 
-	$uvstatus = Mage::getSingleton('udropship/source')->setPath('shipment_statuses')->toOptionHash();	
+	$sqlVendorComm = "SELECT `vendor_id`,`commission_percent`, `date_created` FROM `finance_vendor_commission` WHERE `vendor_id` = '".$vendor_id."' order by `date_created` desc ";
+	try{
+		$rVendor = mysql_query($sqlVendorComm,$mainConnection);
+		$rowCount = mysql_num_rows($sqlVendorComm);
+		$row = mysql_fetch_assoc($rVendor);
+		if($rowCount == 0){
+			$vendor_commission = 20;
+		} else {
+			$vendor_commission = $row['commission_percent'];
+		}
+	} catch (Exception $e){
+		echo 'Caught exception: ',  $e->getMessage(), "\n";
+	}
+	mysql_close($mainConnection); 
 	?>
 	
 	<div class="grid Page-container">
@@ -137,7 +140,7 @@ include('session.php');
 						<div class="page-breadcrumb">
 
 							<div class="page-heading">            
-								<h1>Finance Report Dashboard</h1>
+								<h1>Finance Dashboard</h1>
 								<!--<div class="clear" style="align="right";"><a href="dashboard.php" ><b>Dashboard</b></a>||
 		                       		 <a href="logout.php" ><b>Logout</b> </a>
 		                       	</div> -->
@@ -162,29 +165,27 @@ include('session.php');
 		<div class="col-1-1">
 			<div class="container-wrapper2">
 				<div style="width:100%; height:auto;padding:10px;border:1px solid #e1e1e1;border-radius:5px;">
-				<h2>Payment Invoice</h2>
-					<form action='/financereport/financereport/paymentInvoice/' method='get' name="myForm">						
+				<h2>Vendor Commission Update</h2>
+					<form action='/financereport/financereport/setCommissionPercent/' method='get' name="myForm">						
 						<table  width="100%" border="0" cellspacing="0" cellpadding="0" class="tbl_rptjen">
 
-							<tr>
-								
-								<td style="text-align:left;">
-									<b>Start Date :</b><input type="text"  tabindex="15" maxlength="4" size="9" value="" class="field text datpik" name="startdate" id="start">
+							<tr>						
+								<td style="text-align:left;width: 45%;" >
+									<b>Current Commission (%) : </b><input type="text"  tabindex="15" maxlength="4" size="9" value="<?php echo $vendor_commission ?>" class="field text datpik" name="vendorcommission" id="vendorcommission">
 								</td>
-								
 								<td style="text-align:left;">
-									<b>End Date : </b><input type="text"  tabindex="15" maxlength="4" size="9" value="" class="field text datpik" name="enddate" id="end">
-								</td>
+									
+									<b>Start Date :</b>
+									<input type="text"  tabindex="15" maxlength="4" size="9" value="" class="field text datpik" name="startdate" id="start" required>
+									<input type="text" value="<?php echo $vendor_id ?>" name="vendorid" id="vendorid" style = "visibility: collapse;">
+									
+								</td>	
 							</tr>
 							<tr>
-
-								<td colspan="2" align="center">
-									<button id="filter" class="btn btn-submit" type='submit' style='margin-right:15px;' > Submit </button>
-
-
+								<td>
+									<button id="save" class="btn btn-submit" type='submit' style='margin:7%;' > Save </button>
+									<input type="text" value="<?php echo $_SESSION['login_user'] ?>" name="login_id" id="login_id" style = "visibility: collapse;">
 								</td>
-
-
 							</tr>
 						</table>
 					</form>
@@ -194,13 +195,6 @@ include('session.php');
 
 		</div>
 	</div>
-
-			<div class="dataloaddiv">
-
-				<h3>Please wait while your CSV gets Prepared. <br> Please Reload the page After file gets Download. </h3>	
-				<div class="loader"></div>
-			</div>
-
 
 </body>
 </html>

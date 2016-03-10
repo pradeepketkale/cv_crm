@@ -1,3 +1,6 @@
+<?php
+include('session.php');
+?>
 <!DOCTYPE HTML>
 <html lang="en-US">
 <head>
@@ -105,14 +108,6 @@
 </style>
 </head>
 <body>
-	<?php
-	error_reporting(E_ALL ^ E_NOTICE);
-	require_once '../app/Mage.php';
-	Mage::app();
-
-	$uvstatus = Mage::getSingleton('udropship/source')->setPath('shipment_statuses')->toOptionHash();	
-	?>
-	
 	<div class="grid Page-container">
 		<div class="col-1-1">
 
@@ -129,7 +124,12 @@
 
 							<div class="page-heading">            
 								<h1>Finance Report Dashboard</h1>
-
+							<!--<div class="clear" style="align="right";"><a href="dashboard.php" ><b>Dashboard</b></a>||
+		                       		 <a href="logout.php" ><b>Logout</b> </a>
+		                       	</div> -->
+		                       	<div class="FRnavigation" style="align="right";"><a href="dashboard.php" ><b>Dashboard</b></a>
+                       		 <a href="logout.php" ><b>Logout</b> </a>
+                       	 </div> 
 							</div>
 
 							<div class="clear"></div> 

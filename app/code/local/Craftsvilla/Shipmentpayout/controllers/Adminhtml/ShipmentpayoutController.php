@@ -329,13 +329,12 @@ class Craftsvilla_Shipmentpayout_Adminhtml_ShipmentpayoutController extends Mage
     	foreach($shipmentpayout_report1_arr as $shipmentpayout_report1_val)
 	    {
 			
-	$merchantIdnew = $this->getMerchantIdCv($shipmentpayout_report1_val['udropship_vendor']);		
+			$merchantIdnew = $this->getMerchantIdCv($shipmentpayout_report1_val['udropship_vendor']);		
 			$vendors = Mage::helper('udropship')->getVendor($shipmentpayout_report1_val['udropship_vendor']);
 	    	if(($shipmentpayout_report1_val['udropship_vendor'] != '' && ($merchantIdnew!= '')) )
     		{
 		    
 				unset($total_amount);
-		    	unset($commission_amount);
 		    	unset($vendor_amount);
 		    	unset($kribha_amount);
 		    	unset($gen_random_number);
@@ -354,8 +353,6 @@ class Craftsvilla_Shipmentpayout_Adminhtml_ShipmentpayoutController extends Mage
 				if(($_orderCurrencyCode != 'INR') && (strtotime($shipmentpayout_report1_val['order_created_at']) >= strtotime($_liveDate)))
 					$total_amount = $shipmentpayout_report1_val['subtotal']/1.5;
 
-		    	//	$commission_amount = $shipmentpayout_report1_val['commission_percent'];
-		    	$commission_amount = 20;
 				$lastFinalbaseshipamt = $this->baseShippngAmountByOrder($shipmentpayout_report1_val['order_entid'],$orderBaseShippingAmount);
 				
 				$readOrderCntry = Mage::getSingleton('core/resource')->getConnection('core_read');
@@ -1528,12 +1525,14 @@ class Craftsvilla_Shipmentpayout_Adminhtml_ShipmentpayoutController extends Mage
 				$_orderCurrencyCode = $order->getOrderCurrencyCode();
 				if(($_orderCurrencyCode != 'INR') && (strtotime($shipmentpayout_report1_val['order_created_at']) >= strtotime($_liveDate)))
 					$total_amount = $shipmentpayout_report1_val['subtotal']/1.5;
-
-		    	//$commission_amount = $shipmentpayout_report1_val['commission_percent'];
-				$commission_amount = 20;
+				$vendorId = $shipmentpayout_report1_val['udropship_vendor'];
+		    	$hlp = Mage::helper('udropship');
+		        $commission_amount = $hlp->getVendorCommission($vendorId,$shipmentpayout_report1_val['shipment_id']);
+		        $service_tax = $hlp->getServicetaxCv($shipmentpayout_report1_val['shipment_id']);
+				//$commission_amount = 20;
 		    	$itemised_total_shippingcost = $shipmentpayout_report1_val['itemised_total_shippingcost'];
 		    	$base_shipping_amount = $shipmentpayout_report1_val['base_shipping_amount'];
-				$vendorId = $shipmentpayout_report1_val['udropship_vendor'];
+				
 				$adjustmentAmount = $shipmentpayout_report1_val['adjustment'];
 				$shipmentpayoutStatus = $shipmentpayout_report1_val['shipmentpayout_status'];
 				//Below line is for get closingBalance
@@ -1551,7 +1550,7 @@ class Craftsvilla_Shipmentpayout_Adminhtml_ShipmentpayoutController extends Mage
 				}
 				
 				//$gen_random_number = "K".$this->gen_rand();
-                       $vendor_amount = (($total_amount+$itemised_total_shippingcost+$discountAmountCoupon)*(1-($commission_amount/100)*(1+0.1450)));
+                       $vendor_amount = (($total_amount+$itemised_total_shippingcost+$discountAmountCoupon)*(1-($commission_amount/100)*(1+$service_tax)));
 						
 						//$kribha_amount = (($total_amount1+$itemised_total_shippingcost) - $vendor_amount);
 						//change to accomodate 3% Payment gateway charges on dated 20-12-12
@@ -1560,7 +1559,7 @@ class Craftsvilla_Shipmentpayout_Adminhtml_ShipmentpayoutController extends Mage
 						//$kribha_amount = ((($total_amount1+$itemised_total_shippingcost)*0.97) - $vendor_amount);
 						
 			    	
-					$vendor_amount = $vendor_amount - ($logisticamount*(1+0.1450));
+					$vendor_amount = $vendor_amount - ($logisticamount*(1+$service_tax));
 				
 		    	$kribha_amount = ((($total_amount1+$base_shipping_amount+$discountAmountCoupon)) - $vendor_amount);
 				
@@ -1837,8 +1836,10 @@ $this->_redirect('*/*/index');
 				if(($_orderCurrencyCode != 'INR') && (strtotime($shipmentpayout_report1_val['order_created_at']) >= strtotime($_liveDate)))
 					$total_amount = $shipmentpayout_report1_val['subtotal']/1.5;
 
-		    	//$commission_amount = $shipmentpayout_report1_val['commission_percent'];
-				$commission_amount = 20;
+		    	$hlp = Mage::helper('udropship');
+		        $commission_amount = $hlp->getVendorCommission($vendorId,$shipmentpayout_report1_val['shipment_id']);
+		        $service_tax = $hlp->getServicetaxCv($shipmentpayout_report1_val['shipment_id']);
+				//$commission_amount = 20;
 		    	$itemised_total_shippingcost = $shipmentpayout_report1_val['itemised_total_shippingcost'];
 		    	$base_shipping_amount = $shipmentpayout_report1_val['base_shipping_amount'];
 				$vendorId = $shipmentpayout_report1_val['udropship_vendor'];
@@ -1859,7 +1860,7 @@ $this->_redirect('*/*/index');
 				}
 				
 				//$gen_random_number = "K".$this->gen_rand();
-                       $vendor_amount = (($total_amount+$itemised_total_shippingcost+$discountAmountCoupon)*(1-($commission_amount/100)*(1+0.1450)));
+                       $vendor_amount = (($total_amount+$itemised_total_shippingcost+$discountAmountCoupon)*(1-($commission_amount/100)*(1+ $service_tax)));
 						
 						//$kribha_amount = (($total_amount1+$itemised_total_shippingcost) - $vendor_amount);
 						//change to accomodate 3% Payment gateway charges on dated 20-12-12

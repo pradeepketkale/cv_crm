@@ -1,7 +1,7 @@
 <?php
 	session_start();
-	unset($_SESSION['ID']);
-	 
-	header("location: login.html");
-		exit();
+	if(session_destroy()) // Destroying All Sessions
+	{
+	header("Location: index.php"); // Redirecting To Home Page
+	}
 ?>

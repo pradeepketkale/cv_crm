@@ -24,54 +24,6 @@ include('session.php');
 	<script src="js/buttons.print.min.js"></script>
 
 
-
-	<script type="text/javascript">
-
-		$(document).ready(function(){
-
-			$('#filter').click(function(){
-
-
-		//validation pradeep
-			console.log('working')  
-				var startdate=document.myForm.startdate.value;  
-				var enddate=document.myForm.enddate.value;  
-  
-				if (startdate==null || startdate==""){  
-	 				 alert("Start Date can't be blank");  
-	  				 return false;  
-					 }else if(enddate==null || enddate==""){  
-	  				 alert("End date can't be blank");  
-	  				 return false;  
-					}
-		//validation end
-
-
-				$('.dataloaddiv').show();
-			})
-
-			$( "#start" ).datepicker({
-				showOn: "button",
-				changeMonth: true,
-				changeYear: true,
-				buttonImage: "img/cal.png",
-				buttonImageOnly: true,
-				dateFormat: 'yy-mm-dd',
-			});
-			
-			$( "#end" ).datepicker({
-				showOn: "button",
-				changeMonth: true,
-				changeYear: true,
-				buttonImage: "img/cal.png",
-				buttonImageOnly: true,
-				dateFormat: 'yy-mm-dd',
-			}); 
-			
-		});
-
-</script>
-
 <script type="text/javascript">
 	$(document).ready(function() {
 		var matched, browser;
@@ -114,14 +66,6 @@ include('session.php');
 </style>
 </head>
 <body>
-	<?php
-	error_reporting(E_ALL ^ E_NOTICE);
-	require_once '../app/Mage.php';
-	Mage::app();
-
-	$uvstatus = Mage::getSingleton('udropship/source')->setPath('shipment_statuses')->toOptionHash();	
-	?>
-	
 	<div class="grid Page-container">
 		<div class="col-1-1">
 
@@ -137,7 +81,7 @@ include('session.php');
 						<div class="page-breadcrumb">
 
 							<div class="page-heading">            
-								<h1>Finance Report Dashboard</h1>
+								<h1>Finance Dashboard</h1>
 								<!--<div class="clear" style="align="right";"><a href="dashboard.php" ><b>Dashboard</b></a>||
 		                       		 <a href="logout.php" ><b>Logout</b> </a>
 		                       	</div> -->
@@ -162,34 +106,25 @@ include('session.php');
 		<div class="col-1-1">
 			<div class="container-wrapper2">
 				<div style="width:100%; height:auto;padding:10px;border:1px solid #e1e1e1;border-radius:5px;">
-				<h2>Payment Invoice</h2>
-					<form action='/financereport/financereport/paymentInvoice/' method='get' name="myForm">						
+				<h2>Vendor Commission Update</h2>
+					<form action='VendorCommissionUpdate.php' method='get' name="myForm">						
 						<table  width="100%" border="0" cellspacing="0" cellpadding="0" class="tbl_rptjen">
 
-							<tr>
-								
-								<td style="text-align:left;">
-									<b>Start Date :</b><input type="text"  tabindex="15" maxlength="4" size="9" value="" class="field text datpik" name="startdate" id="start">
-								</td>
-								
-								<td style="text-align:left;">
-									<b>End Date : </b><input type="text"  tabindex="15" maxlength="4" size="9" value="" class="field text datpik" name="enddate" id="end">
+							<tr>							
+								<td style="text-align:center;" >
+									<b>Search Vendor ID: </b><input type="text"  tabindex="1" size="9" value="" class="field text datpik" name="vendorid" id="vendorid">
 								</td>
 							</tr>
 							<tr>
-
-								<td colspan="2" align="center">
-									<button id="filter" class="btn btn-submit" type='submit' style='margin-right:15px;' > Submit </button>
-
-
+								<td style="text-align:center;" >
+									<button id="search" class="btn btn-submit" type='submit' tabindex="2" style='margin-left:30%;' > Search </button>
 								</td>
-
-
 							</tr>
 						</table>
 					</form>
-
+					<button id="getVendorList" class="btn btn-submit" type='button' style='margin-left:80%;' onclick="document.location.href='/financereport/financereport/getCommissionPercent';" > Gell All Vendor csv </button>
 				</div>
+
 			</div>
 
 		</div>
