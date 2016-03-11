@@ -1,24 +1,4 @@
-<!--@subject {{var store.getFrontendName()}}: Your Order # {{var order.increment_id}} has been Shipped! @-->
-<!--@vars
-{"store url=\"\"":"Store Url",
-"skin url=\"images/logo_email.gif\" _area='frontend'":"Email Logo Image",
-"htmlescape var=$order.getCustomerName()":"Customer Name",
-"var store.getFrontendName()":"Store Name",
-"store url=\"customer/account/\"":"Customer Account Url",
-"var shipment.increment_id":"Shipment Id",
-"var order.increment_id":"Order Id",
-"var order.billing_address.format('html')":"Billing Address",
-"var payment_html":"Payment Details",
-"var order.shipping_address.format('html')":"Shipping Address",
-"var order.shipping_description":"Shipping Description",
-"layout handle=\"sales_email_order_shipment_items\" shipment=$shipment order=$order":"Shipment Items Grid",
-"block type='core/template' area='frontend' template='email/order/shipment/track.phtml' shipment=$shipment order=$order":"Shipment Track Details",
-"var comment":"Shipment Comment"}
-@-->
-<!--@styles
-body,td { color:#2f2f2f; font:11px/1.35em Verdana, Arial, Helvetica, sans-serif; }
-@-->
-
+<!--@subject Craftsvilla.com: Order Delivered # {{var orderId}} @-->
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
   <head>
@@ -53,10 +33,10 @@ body,td { color:#2f2f2f; font:11px/1.35em Verdana, Arial, Helvetica, sans-serif;
               <td bgcolor="#ffcc06" style="padding: 30px 10px;" align="left" class="responsive-image">
                   <table border="0" cellpadding="0" cellspacing="0" align="center" width="99%">
                     <tr>
-                      <td valign="top" align="left" width="300"><a href="http://www.craftsvilla.com/" target="_blank" style="border:none; outline:0;"><img src="http://i.imgur.com/1Vxasu0.png" style="border:0;" alt="" /></a></td>
+                      <td valign="top" align="left" width="300"><a href="http://www.craftsvilla.com/" target="_blank" style="border:none; outline:0;"><img src="http://i.imgur.com/JvjbXBQ.png" style="border:0;" alt="" /></a></td>
                       <td valign="top" align="right" width="300" style="color:#ffffff;">
-                        <span style="display:block; font-size:18px; color:#424242">Order Dispatched</span>
-                        <span style="display:block; color:#424242;">ID: {{var order.increment_id}} </span>
+                        <span style="display:block; font-size:18px; color:#424242">Order Delivered</span>
+                        <span style="display:block; color:#424242;">ID: {{var orderId}}</span>
                       </td>
                     </tr>
                   </table>
@@ -96,52 +76,44 @@ body,td { color:#2f2f2f; font:11px/1.35em Verdana, Arial, Helvetica, sans-serif;
               </td>
             </tr>
             <tr>
-              <td bgcolor="#ffffff" style="padding: 10px 10px 10px 10px;">
-                <div style="font-size: 18px; text-transform:capitalize;">Dear <strong>  {{htmlescape var=$billing.getName()}}
-</strong></div>
+              <td bgcolor="#ffffff" style="padding: 10px 10px 20px 10px;">
+                <div style="font-size: 18px;">Dear <strong>{{var custtomerName}}</strong></div>
                 <br />
                 <div>
-                  <p style="margin:0px 0px 8px 0px; ">Your order with ID <span style="color:#1782dd;">{{var order.increment_id}} </span> has been dispatched with Tracking ID <span style="color:#1782dd;">{{block type='core/template' area='frontend' template='email/order/shipment/track_id.phtml' shipment=$shipment order=$order test=$test}}
-                  
-                  </span>.</p>
-                  <p style="margin:0px 0px 5px 0px; ">You can now track your order by clicking on the link below.</p>
+                  <p style="margin:0px 0px 5px 0px; ">This is inform you that your Craftsvilla package has been delivered by <span style="color:#116c9f;">{{var getCourierName}}</span> with Tracking ID <span style="color:#116c9f;">{{var tracknums}}</span></p>
                 </div>
-              </td>
-            </tr>
-            <tr>
-              <td valign="top" align="left" style="padding:10px;" bgcolor="#ffffff">
-                    {{block type='core/template' area='frontend' template='email/order/shipment/cour1.phtml' shipment=$shipment order=$order test=$test}}
-                    <!-- {{if $test =="Aramex" || "aramex"}} 
-                    <a href="https://www.aramex.com/express/track.aspx" target="_blank" style="padding:10px 15px; display:block; width:180px; margin:0; background:#ffcc06; border:solid 1px #dbb212; font-size:16px; color:#8e681a; text-decoration:none; outline:0; font-weight:bold; text-align:center;">Track Your shipment</a>
-                    {{else} 
-                    {{if $test=="Fedex"|| "fedex"}} 
-                    <a href="https://www.fedex.com/apps/fedextrack/?action=track" target="_blank" style="padding:10px 15px; display:block; width:180px; margin:0; background:#ffcc06; border:solid 1px #dbb212; font-size:16px; color:#8e681a; text-decoration:none; outline:0; font-weight:bold; text-align:center;">Track Your shipment</a>
-                    {{else} 
-                    {{if $test=="Dtdc" || "dtdc"}} 
-                    <a href="<?php echo $this->getUrl('email/order/shipment/cour1.phtml'); ?>" target="_blank" style="padding:10px 15px; display:block; width:180px; margin:0; background:#ffcc06; border:solid 1px #dbb212; font-size:16px; color:#8e681a; text-decoration:none; outline:0; font-weight:bold; text-align:center;">Track Your shipment</a>
-                    {{/if}} -->
               </td>
             </tr>
             <tr>
               <td bgcolor="#ffffff" style="padding: 0px 10px 20px 10px;">
                 <div>
-                  <p style="margin:0px 0px 5px 0px; border-bottom:solid 1px #dedede; padding-bottom:15px;">In case of any query, please reach out to us at our
-                   <a style="color:#116c9f; text-decoration:none; outline:0; border:0;" href="http://www.craftsvilla.com/contact-us-craftsvilla" target="_blank">customer care.</a> We would be happy to help you.</p>
+                  <p style="margin:0px 0px 5px 0px; border-bottom:solid 1px #dedede; padding-bottom:15px;">In case of any query, please reach out to us at our <a style="color:#116c9f; text-decoration:none; outline:0; border:0;" href="http://www.craftsvilla.com/contact-us-craftsvilla" target="_blank">customer care.</a> We would be happy to help you.</p>
                 </div>
               </td>
+            </tr>
+            <tr><td style="line-height: 45px; font-size:18px; color:#626262; font-weight:bold; font-family:'Open Sans', Arial, sans-serif; padding-left:15px; " bgcolor="#ffffff">Your Order Detail</td>
             </tr>
             <tr>
               <td style="padding:10px;">
                 <table border="0" cellpadding="0" cellspacing="0" align="center" width="99%" >
                   <tr>
                     <td bgcolor="#ffffff" width="100%" style="padding: 10px; border:solid 1px #dedede;" align="center">
-                        <table align="left" width="99%" cellpadding="0" cellspacing="0" border="0" >
+                        <table align="left" width="15%" cellpadding="0" cellspacing="0" border="0" >
                             <tr>
-                                <td valign="top" align="left" class="responsive-image">
-                                    <p style="font-size:18px; color:#424242; font-weight:bold; font-family:'Open Sans', Arial, sans-serif; margin:0 0 5px 0;">Logistics Details:</p>
-                                    <p style="font-size:14px; color:#747474; font-weight:normal; font-family:'Open Sans', Arial, sans-serif; margin:0 0 5px 0;">{{block type='core/template' area='frontend' template='email/order/shipment/cour.phtml' shipment=$shipment order=$order test1=$test1}}</p>
-                                    <p style="font-size:14px; color:#747474; font-weight:normal; font-family:'Open Sans', Arial, sans-serif; margin:0 0 5px 0;">Tracking website : <span style="color:#116c9f;">{{block type='core/template' area='frontend' template='email/order/shipment/website.phtml' shipment=$shipment order=$order test2=$test2}}</span></p>
-                                    <p style="font-size:14px; color:#747474; font-weight:normal; font-family:'Open Sans', Arial, sans-serif; margin:0 0 5px 0;">Shipment Tracking Id : <span style="color:#116c9f;">{{block type='core/template' area='frontend' template='email/order/shipment/track_id.phtml' shipment=$shipment order=$order test2=$test2}}</span></p>
+                                <td valign="top" align="center" class="responsive-image">
+                                    <a href={{var base_url}}> <img src={{var image_url}} /></a>
+                                </td>
+                            </tr>
+                        </table>
+                        <table align="right" width="70%" cellpadding="0" cellspacing="0" border="0" >
+                            <tr>
+                                <td valign="top" width="60%" align="left" class="responsive-image">
+                                  <a href={{var base_url}} style="text-decoration:none; ">
+                                    <p style="font-size:14px; color:#424242; font-weight:bold; font-family:'Open Sans', Arial, sans-serif; margin:0 0 5px 0;">{{var productName}}</p>
+                                    <p style="font-size:14px; color:#747474; font-weight:normal; font-family:'Open Sans', Arial, sans-serif; margin:0 0 5px 0;">SKU : {{var sku}}</p>
+                                    <p style="font-size:14px; color:#747474; font-weight:normal; font-family:'Open Sans', Arial, sans-serif; margin:0 0 5px 0;">Qty : {{var qty}}</p>
+                                    <p ></p>
+                                  </a>
                                 </td>
                             </tr>
                         </table>
@@ -159,8 +131,13 @@ body,td { color:#2f2f2f; font:11px/1.35em Verdana, Arial, Helvetica, sans-serif;
                             <tr>
                                 <td width="300" valign="top" align="left" class="responsive-image">
                                     <p style="font-size:18px; color:#424242; font-weight:bold; font-family:'Open Sans', Arial, sans-serif; margin:0 0 5px 0;">Billing Address:</p>
-                                    <p style="font-size:14px; color:#747474; font-weight:normal; font-family:'Open Sans', Arial, sans-serif; margin:0 0 5px 0;">{{var order.getBillingAddress().format('html')}}</p>
-                                   
+                                        <p style="font-size:14px;color:#747474;font-weight:normal;font-family:'Open Sans',Arial,sans-serif;margin:0 0 5px 0">
+                                        {{var custtomerName}}<br>
+                                        {{var customercity}}<br>
+                                        {{var customerState}},  {{var customerPincode}}<br>
+                                        {{var customercountry_id}}<br>
+                                        T: {{var customerTelephone}}
+                                        </p>
                                 </td>
                             </tr>
                         </table>
@@ -168,8 +145,13 @@ body,td { color:#2f2f2f; font:11px/1.35em Verdana, Arial, Helvetica, sans-serif;
                             <tr>
                                 <td valign="top" width="300" align="left" class="responsive-image">
                                     <p style="font-size:18px; color:#424242; font-weight:bold; font-family:'Open Sans', Arial, sans-serif; margin:0 0 5px 0;">Shipping Address:</p>
-                                    <p style="font-size:14px; color:#747474; font-weight:normal; font-family:'Open Sans', Arial, sans-serif; margin:0 0 5px 0;">{{var order.getShippingAddress().format('html')}}</p>
-                                   
+                                        <p style="font-size:14px;color:#747474;font-weight:normal;font-family:'Open Sans',Arial,sans-serif;margin:0 0 5px 0">
+                                        {{var custtomerName}}<br>
+                                        {{var customercity}}<br>
+                                        {{var customerState}},  {{var customerPincode}}<br>
+                                        {{var customercountry_id}}<br>
+                                        T: {{var customerTelephone}}
+                                        </p>
                                 </td>
                             </tr>
                         </table>
@@ -178,20 +160,28 @@ body,td { color:#2f2f2f; font:11px/1.35em Verdana, Arial, Helvetica, sans-serif;
                 </table>
               </td>
             </tr>
-            <tr>
+<tr>
               <td style="padding:10px;">
                 <table border="0" cellpadding="0" cellspacing="0" align="center" width="99%" >
                   <tr>
                     <td bgcolor="#ffffff" width="100%" style="padding: 10px; border:solid 1px #dedede;" align="center">
                         <table align="left" width="40%" cellpadding="0" cellspacing="0" border="0" >
                             <tr>
-                                <td width="300" valign="top" align="left" class="responsive-image">
+                                <td valign="top" width="300" align="left" class="responsive-image">
                                     <p style="font-size:18px; color:#424242; font-weight:bold; font-family:'Open Sans', Arial, sans-serif; margin:0 0 5px 0;">Payment Mode:</p>
-                                    <p style="font-size:14px; color:#747474; font-weight:normal; font-family:'Open Sans', Arial, sans-serif; margin:0 0 5px 0;">{{var order.getPayment().getMethodInstance().getTitle()}}</p>
+                                    <p style="font-size:14px;color:#747474;font-weight:normal;font-family:'Open Sans',Arial,sans-serif;margin:0 0 5px 0">{{var payment_method}}</p>
                                 </td>
                             </tr>
                         </table>
-                       </td>
+                       <!--  <table align="right" width="40%" cellpadding="0" cellspacing="0" border="0" >
+                            <tr>
+                                <td valign="top" width="300" align="left" class="responsive-image">
+                                    <p style="font-size:18px; color:#424242; font-weight:bold; font-family:'Open Sans', Arial, sans-serif; margin:0 0 5px 0;">Payment Mode:</p>
+                                    <p style="font-size:14px;color:#747474;font-weight:normal;font-family:'Open Sans',Arial,sans-serif;margin:0 0 5px 0">OM TEX CREATION PRODUCTS</p>
+                                </td>
+                            </tr>
+                        </table> -->
+                    </td>
                   </tr>
                 </table>
               </td>
@@ -199,7 +189,9 @@ body,td { color:#2f2f2f; font:11px/1.35em Verdana, Arial, Helvetica, sans-serif;
             <tr>
               <td bgcolor="#ffffff" align="left" valign="top" style="padding:10px;">
                 <div>
-                    <p style="font-size:14px; color:#626262; margin:10px 0px 0px 0px; line-height:22px;">We have customer friendly return policies and you may easily return your products.</p>
+                    <p style="font-size:14px; color:#626262; margin:10px 0px 0px 0px; line-height:22px;">We have customer friendly return policies and you may easily return your products.
+                    </p>
+                    <p style="font-size:14px; color:#626262; margin:10px 0px 0px 0px; line-height:22px;"><a href="http://www.craftsvilla.com/shipping-artisans-designers" target="_blank" style="color:#116c9f; text-decoration:none; ">Click here to Refound policies</a></p>
                     <p style="font-size:14px; color:#626262; margin:10px 0px 0px 0px; padding-bottom:15px; line-height:22px;">Thank you from Craftsvilla Team</p>
                 </div>
               </td>
@@ -315,7 +307,12 @@ body,td { color:#2f2f2f; font:11px/1.35em Verdana, Arial, Helvetica, sans-serif;
               <td style="padding:10px;" bgcolor="#ffffff" valign="top" align="center">
                 <p style="font-size:12px; line-height:22px; color:#424242; font-weight:normal; font-family:'Open Sans', Arial, sans-serif; margin:0; display:block; text-align:center;">You received this email because you are registered on Craftsvilla.com. We respect your privacy. Please view our privacy policy. If you believe this has been sent to you by error, please contact us at</p>
                 <p style="font-size:12px; line-height:22px; color:#424242; font-weight:normal; font-family:'Open Sans', Arial, sans-serif; margin:0; display:block; text-align:center; text-decoration:none;"><a style="color:#424242; text-decoration:none; outline:0;" href="mailto:customercare@craftsvilla.com">customercare@craftsvilla.com</a></p>
-                <p style="font-size:12px; line-height:22px; color:#424242; font-weight:normal; font-family:'Open Sans', Arial, sans-serif; margin:0; display:block; text-align:center;"><span>To unsubscribe contact us at customercare@craftsvilla.com</span></p>
+                <p style="font-size:12px; line-height:22px; color:#424242; font-weight:normal; font-family:'Open Sans', Arial, sans-serif; margin:0; display:block; text-align:center;">To unsubscribe contact us at customercare@craftsvilla.com</span></p>
+
+
+
+</a>
+
               </td>
             </tr>
             <tr>
