@@ -1075,8 +1075,12 @@ public function disputeCustomerRemarks($shipment_id_value)
                  $getCourierName[]=$tracknum->getCourierName();
             }
                    
-    $img=Mage::getModel('catalog/product_media_config')->getMediaUrl($_product->getThumbnail());
-            $test= str_replace("localcadmin.craftsvilla.com/media/catalog/product/","img1.craftsvilla.com/thumb/166x166/",$img);
+   /* $img=Mage::getModel('catalog/product_media_config')->getMediaUrl($_product->getThumbnail());
+     $url=Mage::getBaseUrl();*/
+        $productImage="http://img1.craftsvilla.com/thumb/166x166".$_product->getImage();
+     //  $url_new= str_replace("index.php",'',$url); $url_new."media/catalog/product/";
+        //echo $test1= str_replace($url_new,"img1.craftsvilla.com/thumb/166x166/",$url_new);exit;
+          //  echo $test= str_replace($url_new,"img1.craftsvilla.com/thumb/166x166/",$img);exit;
         $vars = array(  
                 'sku'=>$sku[0],
                 'productName'=>$productName[0],
@@ -1091,7 +1095,7 @@ public function disputeCustomerRemarks($shipment_id_value)
                             'customerTelephone' => $customerTelephone,
                             'customercountry_id'=>$customercountry_id,
                             'payment_method' => $payment_method,
-                            'image_url' => $test,
+                            'image_url' => $productImage,
                             'tracknums'=> $tracknums[0],
                             'getCourierName' => $getCourierName[0],
                             'orderId'=>$orderId,
