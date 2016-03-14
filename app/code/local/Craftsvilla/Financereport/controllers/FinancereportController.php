@@ -852,7 +852,10 @@ public function reportDamageLostAction(){
 		    	unset($kribha_amount);
 		    	unset($gen_random_number);
 		    	unset($itemised_total_shippingcost);
-		    
+		    	$hlp = Mage::helper('udropship');
+		    	$vendorId = $shipmentpayout_report1_val['udropship_vendor']; 
+		    	$commission_amount = $hlp->getVendorCommission($vendorId, $shipmentpayout_report1_val['shipment_id']);
+		    	$service_tax = $hlp->getServicetaxCv($shipmentpayout_report1_val['shipment_id']);
 				$total_amount1 = $shipmentpayout_report1_val['subtotal'];
 				$total_amount = $shipmentpayout_report1_val['subtotal'];
 				$logisticamount = $shipmentpayout_report1_val['intshipingcost'];
@@ -865,8 +868,7 @@ public function reportDamageLostAction(){
 				$_orderCurrencyCode = $order->getOrderCurrencyCode();
 				if(($_orderCurrencyCode != 'INR') && (strtotime($shipmentpayout_report1_val['order_created_at']) >= strtotime($_liveDate)))
 					$total_amount = $shipmentpayout_report1_val['subtotal']/1.5;
-
-				$vendorId = $shipmentpayout_report1_val['udropship_vendor'];  	
+ 	
 		    	$itemised_total_shippingcost = $shipmentpayout_report1_val['itemised_total_shippingcost'];
 		    	$base_shipping_amount = $shipmentpayout_report1_val['base_shipping_amount'];
 				
@@ -885,21 +887,36 @@ public function reportDamageLostAction(){
 					$discountAmountCoupon = $order->getBaseDiscountAmount();
 					$disCouponcode = $order->getCouponCode();
 				}
-				
-				//$gen_random_number = "K".$this->gen_rand();
-                       $vendor_amount = $shipmentpayout_report1_val['todo_payment_amount'];;
-						
-						//$kribha_amount = (($total_amount1+$itemised_total_shippingcost) - $vendor_amount);
-						//change to accomodate 3% Payment gateway charges on dated 20-12-12
-						
-					// Below line commented by dileswar on dated 18-02-2013 from $itemised_total_shippingcost To $base_shipping_amount***/////////////	
-						//$kribha_amount = ((($total_amount1+$itemised_total_shippingcost)*0.97) - $vendor_amount);
+				$total_amount = $shipmentpayout_report1_val['subtotal']+$shipmentpayout_report1_val['base_shipping_amount']+$discountAmountCoupon;
+				if($shipmentpayout_report1_val['order_created_at']<='2012-07-02 23:59:59')
+				{
+					if($vendors->getManageShipping() == "imanage")
+					{
+						$vendor_amount = ($total_amount*(1-$commission_amount/100));
+						$kribha_amount = ($shipmentpayout_report1_val['subtotal'] - $vendor_amount)+$itemised_total_shippingcost+$shipmentpayout_report1_val['cod_fee'];								
+					}
+					else {
+						$vendor_amount = (($total_amount+$itemised_total_shippingcost)*(1-$commission_amount/100));
+						$kribha_amount = (($shipmentpayout_report1_val['subtotal']+$itemised_total_shippingcost) - $vendor_amount);								
+					}
+				}
+				else {
+					if($vendors->getManageShipping() == "imanage")
+					{
+						$vendor_amount = ($total_amount*(1-($commission_amount/100)*(1+0.1236)));
+						$kribha_amount = ($total_amount+$itemised_total_shippingcost+$shipmentpayout_report1_val['cod_fee'])*1.00 - $vendor_amount;							
+					}
+					else {
+						//$vendor_amount = (($total_amount+$base_shipping_amount+$discountAmountCoupon)*(1-($commission_amount/100)*(1+0.1450)));
+						$vendor_amount = (($total_amount)*(1-($commission_amount/100)*(1+$service_tax)));
+						$kribha_amount = ((($total_amount)*1.00) - $vendor_amount);
+					}
+
+				}
 						
 			    	
 					$vendor_amount = $vendor_amount - $logisticamount;
-				
-		    	$kribha_amount = $shipmentpayout_report1_val['todo_commission_amount'];
-				
+							
 				//Below lines for to update the value in shipmentpayout table ...
 					$write = Mage::getSingleton('core/resource')->getConnection('shipmentpayout_write');
 					$queryUpdateDiscount = "update shipmentpayout set `discount` ='".$discountAmountCoupon."',`couponcode` = '".$disCouponcode."' WHERE `shipment_id` = '".$shipmentpayout_report1_val['shipment_id']."'";
