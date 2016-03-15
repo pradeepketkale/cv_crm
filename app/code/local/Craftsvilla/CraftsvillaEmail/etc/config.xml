@@ -57,6 +57,17 @@
 		       <type>html</type>
 	   </create_coupon_email_template>
 
+	  <delivery_acknowledgment module="craftsvillaemail">
+	            <label>delivery_acknowledgment</label>
+	            <file>delivery_acknowledgment.html</file>
+	            <type>html</type>
+	   </delivery_acknowledgment>
+		  
+		<codrto_email_to_customer module="craftsvillaemail">
+	            <label>codrto_email_to_customer</label>
+	            <file>codrto_email_to_customer.html</file>
+	            <type>html</type>
+	   </codrto_email_to_customer>
 		
 		<customer_bankaccount_details_template module="craftsvillaemail">
 		       <label>customer_bankaccount_details_template</label>
