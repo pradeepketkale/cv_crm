@@ -58,6 +58,15 @@ include('session.php');
 
 var $tableSel = $('#example');
 $('#csv').on('click', function () {
+	var date1 = new Date(startdate);
+	var date2 = new Date(enddates);
+	var timeDiff = Math.abs(date2.getTime() - date1.getTime());
+	var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
+	if (diffDays >=31){  
+		alert("You are exceeding date Range..Please correct");  
+		return false;  
+	} 
+
 	var data = table.ajax.params();
 	data['exportcsv'] = true;
 	//alert (JSON.stringify(data));
@@ -80,6 +89,14 @@ $('.btnhdsh').hide();
 	  				 alert("End date can't be blank");  
 	  				 return false;  
 					}
+				var date1 = new Date(startdate);
+				var date2 = new Date(enddates);
+				var timeDiff = Math.abs(date2.getTime() - date1.getTime());
+				var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
+				if (diffDays >=31){  
+					alert("You are exceeding date Range..Please correct");  
+					return false;  
+				} 
 		//validation end
 
 		//pradeep

@@ -60,6 +60,14 @@ include('session.php');
 	  				 alert("End date can't be blank");  
 	  				 return false;  
 					}
+				var date1 = new Date(startdate);
+				var date2 = new Date(enddates);
+				var timeDiff = Math.abs(date2.getTime() - date1.getTime());
+				var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
+				if (diffDays >=31){  
+					alert("You are exceeding date Range..Please correct");  
+					return false;  
+				} 
 			//console.log(jQuery.param( "yo" ));
 			var data1 = [];
 			data1['startdate'] = $( "#start" ).val();// "2014-01-01";
