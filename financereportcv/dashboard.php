@@ -113,8 +113,43 @@ include('session.php');
 						
 						<div class="clear"></div> 
 					</div>
-				
-					
+
+					<div class="col-1-3 padding_top" >
+						<a href="StatewiseReport.php">	
+						<div class="container_inner1 bg6 ">
+						<h3>State wise Sales Report</h3>
+						
+						</div>
+						</a>
+						
+						
+						<div class="clear"></div> 
+					</div>
+
+					<div class="col-1-3 padding_top" >
+						<a href="ReportPrepaid.php">	
+						<div class="container_inner1 bg5 ">
+						<h3>Upcoming</h3>
+						
+						</div>
+						</a>
+						
+						
+						<div class="clear"></div> 
+					</div>
+
+					<div class="col-1-3 padding_top" >
+						<a href="ReportPrepaid.php">	
+						<div class="container_inner1 bg3 ">
+						<h3>Upcoming</h3>
+						
+						</div>
+						</a>
+						
+						
+						<div class="clear"></div> 
+					</div>
+									
 				</div>
 				<div class="clear"></div> 
 			</div>
