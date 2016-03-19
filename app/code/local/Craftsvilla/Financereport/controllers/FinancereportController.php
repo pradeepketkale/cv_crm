@@ -120,8 +120,7 @@ class Craftsvilla_Financereport_FinancereportController extends Mage_Core_Contro
         );
         $filename = "Finance_report_" . $_GET['startdate'] . "_to_" . $_GET['enddate'];
         Craftsvilla_Financereport_FinancereportController::downloadCSV($filename, $sQuery, $head, true);
-
-    }
+   }
 
 
     public function reportcodAction()
@@ -203,8 +202,6 @@ class Craftsvilla_Financereport_FinancereportController extends Mage_Core_Contro
             $sOrder = "ORDER BY " . (intval($_GET['order'][0]['column']) + 1) . " " . $_GET['order'][0]['dir'];
 
         }
-
-
         /*
          * Filtering
          * NOTE this does not match the built-in DataTables filtering which does it
@@ -448,7 +445,7 @@ WHERE " . $sWhere;
         ;
     }
 
-    public function downloadCSV($filename, $sqlQuery, $headerArray, $reportCod = false)
+    public function downloadCSV($filename, $sqlQuery, $headerArray, $reportCod = false, $statewise = false)
     {
 
         $lower_limit = 0;
@@ -490,6 +487,16 @@ WHERE " . $sWhere;
                     $realcommision                      = Mage::getModel('udropship/vendor_statement')->getCommission($rResult[$key1]["shipment_id"]);
                     $rResult[$key1]["comission_amount"] = $realcommision;
                 }
+            }
+            if ($statewise){
+            	foreach ($rResult as $key => $value) {
+            		$combined_date = json_decode($value['pan']);
+            		$rResult[$key]['tin'] = $combined_date->vat_tin_no;
+					$rResult[$key]['pan'] = $combined_date->pan_number;
+					$rResult[$key]['customer_address'] = preg_replace('/\s+/', ' ', trim($value['customer_address']));
+					$rResult[$key]['seller_address'] = preg_replace('/\s+/', ' ', trim($value['seller_address']));
+            		//var_dump($rResult[$key]);exit;
+            	}
             }
 
             $fp = fopen($filePathOfCsv, 'a');
@@ -1367,14 +1374,43 @@ WHERE " . $sWhere;
         );
         $filename = "Prepaid_report_" . $_GET['startdate'] . "_to_" . $_GET['enddate'];
         Craftsvilla_Financereport_FinancereportController::downloadCSV($filename, $sQuery, $head, true);
-
     }
 
     public function statewiseAction()
     {
-        $params = $this->getRequest()->getParams();
-        //var_dump($params);
+        $vendorCond = ($_GET['vstate'] != 'all' ? "AND uv.`region_id` =" . $_GET['vstate'] : '');
+        $customerCond = ($_GET['cstate'] != 'all' ? "AND sfoa.`region_id` =" . $_GET['cstate'] : '');
+
+        $sWhere = "sfoa.`address_type` = 'billing' " . $vendorCond . ' ' . $customerCond . ' ';
+        if (isset($_GET['startdate']) && isset($_GET['enddate'])) {
+            $sWhere .= "and date(sfo.`created_at`) >= '" . $_GET['startdate'] . "' and date(sfo.`created_at`) <= '" . $_GET['enddate'] . "'";
+        }
+
+        $sQuery   = "SELECT sfo.`increment_id` AS order_id, date(sfo.`created_at`) AS order_date,sfs.`increment_id` AS shipment_id,date(sfs.`created_at`) AS shipment_date, uv.`vendor_name` AS vendor_name,uv.`street` AS seller_address, uv.`custom_vars_combined` AS pan,'' as tin,dcr.`default_name` AS vendor_state,(sfs.`base_total_value`+sfs.`base_shipping_amount`) as GMV, sfop.`method` as payment_method, concat(sfoa.`firstname` ,' ',sfoa.`lastname`) as customer_name,sfoa.`region` as customer_region, concat(sfoa.`street` ,', ',sfoa.`city`) as customer_address from `sales_flat_shipment` as sfs
+LEFT JOIN `sales_flat_order` AS sfo ON `sfs`.`order_id` = `sfo`.`entity_id`
+LEFT JOIN `udropship_vendor` AS uv ON `sfs`.`udropship_vendor` = `uv`.`vendor_id`
+LEFT JOIN `sales_flat_order_payment` AS sfop ON `sfo`.`entity_id` = `sfop`.`parent_id`
+LEFT JOIN `sales_flat_order_address` as sfoa ON sfoa.`parent_id` = sfo.`entity_id`
+LEFT JOIN `directory_country_region` as dcr ON uv.`region_id` = dcr.`region_id`
+where " . $sWhere;
+        //echo $sQuery;exit;
+        $head     = array(
+        	'Order Id',
+            'Order Date',
+            'Shipment Id',
+            'Shipment Date',
+            'Seller Name',
+            'Seller Address',
+            'Seller Pan',
+            'Seller TIN',
+            'Seller State',
+            'Total Amount',
+            'Payment Method',
+            'Customer Name',
+            'State',
+            'Customer Address'
+        );
+        $filename = "SateWise_" . $_GET['startdate'] . "_to_" . $_GET['enddate'];
+        Craftsvilla_Financereport_FinancereportController::downloadCSV($filename, $sQuery, $head, false, true);
     }
-
-
 }

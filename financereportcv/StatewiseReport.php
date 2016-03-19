@@ -51,28 +51,31 @@ $customer = mysql_query($sql_statecode,$mainConnection);
 				buttonImage: "img/cal.png",
 				buttonImageOnly: true,
 				dateFormat: 'yy-mm-dd',
-			}); 
+			});
 
 			$('#downloadcsv').on('click', function () {
 
-				var startdate=document.myForm.startdate.value;  
-				var enddates=document.myForm.enddates.value;  
+				var startdate=document.myForm.startdate.value;
+				var enddates=document.myForm.enddates.value;
 
-				if (startdate==null || startdate==""){  
-					alert("Start Date can't be blank");  
-					return false;  
-				}else if(enddates==null || enddates==""){  
-					alert("End date can't be blank");  
-					return false;  
+				if (startdate==null || startdate==""){
+					alert("Start Date can't be blank");
+					return false;
+				}else if(enddates==null || enddates==""){
+					alert("End date can't be blank");
+					return false;
 				}
 				var date1 = new Date(startdate);
 				var date2 = new Date(enddates);
-				var timeDiff = Math.abs(date2.getTime() - date1.getTime());
+				var timeDiff = (date2.getTime() - date1.getTime());
 				var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
-				if (diffDays >=31){  
-					alert("You are exceeding date Range..Please correct");  
-					return false;  
-				} 
+				if (diffDays >=31){
+					alert("You are exceeding date Range..Please correct");
+					return false;
+				} else if (diffDays<0 ) {
+					alert("You are entering Wrong dates");
+					return false;
+				}
 			// console.log(data1);
 			/*alert("/financereport/financereport/downloadcod/?startdate="+$( "#start" ).val() + "&enddate="+$( "#end" ).val() +"&ustatus="+$( "#ustatus" ).val() +"&paymentstatus="+$( "#paymentstatus" ).val() +"&couriername="+$( "#couriername" ).val());*/
 			document.location.href="/financereport/financereport/statewise/?startdate="+$( "#start" ).val() + "&enddate="+$( "#end" ).val() +"&vstate="+$( "#vstate" ).val() +"&cstate="+$( "#cstate" ).val();
@@ -165,17 +168,17 @@ $customer = mysql_query($sql_statecode,$mainConnection);
 					<div class="container">
 						<div class="page-breadcrumb">
 
-							<div class="page-heading">            
+							<div class="page-heading">
 								<h1>Finance Report Dashboard</h1>
 								<!--<div class="clear" style="align="right";"><a href="dashboard.php" ><b>Dashboard</b></a>||
 		                       		 <a href="logout.php" ><b>Logout</b> </a>
 		                       		</div> -->
 		                       		<div class="FRnavigation" style="align="right";"><a href="dashboard.php" ><b>Dashboard</b></a>
 		                       			<a href="logout.php" ><b>Logout</b> </a>
-		                       		</div>  
+		                       		</div>
 		                       	</div>
 
-		                       	<div class="clear"></div> 
+		                       	<div class="clear"></div>
 		                       </div>
 
 
@@ -184,7 +187,7 @@ $customer = mysql_query($sql_statecode,$mainConnection);
 
 		           </div>
 		       </div>
-		   </div>	
+		   </div>
 
 
 		   <div class="grid grid-pad">
@@ -192,7 +195,7 @@ $customer = mysql_query($sql_statecode,$mainConnection);
 		   		<div class="container-wrapper2">
 		   			<div style="width:100%; height:auto;padding:10px;border:1px solid #e1e1e1;border-radius:5px;">
 		   				<h2>State Wise Report</h2>
-		   				<form action='#' method='POST' onsubmit="return validateform()" name="myForm" id="myForm">						
+		   				<form action='#' method='POST' onsubmit="return validateform()" name="myForm" id="myForm">
 		   					<table  width="100%" border="0" cellspacing="0" cellpadding="0" class="tbl_rptjen">
 
 		   						<tr>
@@ -225,7 +228,8 @@ $customer = mysql_query($sql_statecode,$mainConnection);
 									<?php while($row = mysql_fetch_assoc($customer) ) { ?>
 									<option value=<?php echo($row['region_id'])?> ><?php echo($row['default_name'])?></option>
 									<?php } ?>
-								</select></td></tr>
+								</select></td>
+							</tr>
 								<tr>
 									<td colspan="6" align="center">
 										<div>

@@ -47,9 +47,9 @@ include('session.php');
 				buttonImage: "img/cal.png",
 				buttonImageOnly: true,
 				dateFormat: 'yy-mm-dd',
-			}); 
+			});
 
-			
+
 
 // table.on( 'xhr', function () {
 // 				    var data = table.ajax.url();
@@ -60,12 +60,15 @@ var $tableSel = $('#example');
 $('#csv').on('click', function () {
 	var date1 = new Date(startdate);
 	var date2 = new Date(enddates);
-	var timeDiff = Math.abs(date2.getTime() - date1.getTime());
+	var timeDiff = (date2.getTime() - date1.getTime());
 	var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
-	if (diffDays >=31){  
-		alert("You are exceeding date Range..Please correct");  
-		return false;  
-	} 
+	if (diffDays >=31){
+		alert("You are exceeding date Range..Please correct");
+		return false;
+	} else if (diffDays<0 ) {
+		alert("You are entering Wrong dates");
+		return false;
+	}
 
 	var data = table.ajax.params();
 	data['exportcsv'] = true;
@@ -76,39 +79,42 @@ $('#csv').on('click', function () {
 $('.btnhdsh').hide();
 
 		$('#filter').on('click', function (e) {
-			
+
 			//validation pradeep
-			console.log('working')  
-				var startdate=document.myForm.startdate.value;  
-				var enddates=document.myForm.enddates.value;  
-  
-				if (startdate==null || startdate==""){  
-	 				 alert("Start Date can't be blank");  
-	  				 return false;  
-					 }else if(enddates==null || enddates==""){  
-	  				 alert("End date can't be blank");  
-	  				 return false;  
+			console.log('working')
+				var startdate=document.myForm.startdate.value;
+				var enddates=document.myForm.enddates.value;
+
+				if (startdate==null || startdate==""){
+	 				 alert("Start Date can't be blank");
+	  				 return false;
+					 }else if(enddates==null || enddates==""){
+	  				 alert("End date can't be blank");
+	  				 return false;
 					}
 				var date1 = new Date(startdate);
 				var date2 = new Date(enddates);
-				var timeDiff = Math.abs(date2.getTime() - date1.getTime());
+				var timeDiff = (date2.getTime() - date1.getTime());
 				var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
-				if (diffDays >=31){  
-					alert("You are exceeding date Range..Please correct");  
-					return false;  
-				} 
+				if (diffDays >=31){
+					alert("You are exceeding date Range..Please correct");
+					return false;
+				} else if (diffDays<0 ) {
+					alert("You are entering Wrong dates");
+					return false;
+				}
 		//validation end
 
 		//pradeep
 		 $('#example tfoot tr th').find('select').css('background-color','red').hide();
 		  $('#example thead	 tr th').find('.ui-icon ').css('background-color','red').hide();
-			
-		$('.btnhdsh').show();		
+
+		$('.btnhdsh').show();
 		 table = $('#example').DataTable( {
-			
+
 				"processing": true,
 				"serverSide": true,
-					"bDestroy": true,	
+					"bDestroy": true,
 				"ajax": {
 					"url": "/financereport/financereport/recoForPayment/",
 					"data": function ( d ) {
@@ -118,20 +124,20 @@ $('.btnhdsh').hide();
             		}
         		},
         		"lengthMenu": [ 25, 50, 75, 100 ],
- 
+
 		        initComplete: function () {
 		        	this.api().columns().every( function () {
 		        		var column = this;
 		        		var select = $('<select><option value="">--Select--</option></select>')
 		        		.appendTo( $(column.footer()) )
 		        		.on( 'change', function () {
-							
+
 		        			var val = $.fn.dataTable.util.escapeRegex(
-		        				$(this).val()        				
-		        				
+		        				$(this).val()
+
 		        				);
 		        				//console.log(this);
-		        				
+
 		        			column
 		        			.search( val ? '^'+val+'$' : '', true, false )
 		        			.draw();
@@ -141,10 +147,10 @@ $('.btnhdsh').hide();
 		        			select.append( '<option value="'+d+'">'+d+'</option>' )
 		        		} );
 		        	} );
-		        },       
+		        },
 		    } );
-	
-	
+
+
 			//console.log('#filter');
 			e.preventDefault();
 			var startDate = $('#start').val(), endDate = $('#end').val()
@@ -154,7 +160,7 @@ $('.btnhdsh').hide();
 
 			//filterselected(13,paystatus);
 
-		
+
 			$.fn.dataTableExt.afnFiltering.length = 0;
 
 			return false;
@@ -182,7 +188,7 @@ var filterByDate = function (column, startDate, endDate) {
 		} else {
 			return false;
 		}
-		
+
 	});
 };
 
@@ -242,9 +248,9 @@ var normalizeDate = function (dateString) {
 	require_once '../app/Mage.php';
 	Mage::app();
 
-	$uvstatus = Mage::getSingleton('udropship/source')->setPath('shipment_statuses')->toOptionHash();	
+	$uvstatus = Mage::getSingleton('udropship/source')->setPath('shipment_statuses')->toOptionHash();
 	?>
-	
+
 	<div class="grid Page-container">
 		<div class="col-1-1">
 
@@ -259,17 +265,17 @@ var normalizeDate = function (dateString) {
 					<div class="container">
 						<div class="page-breadcrumb">
 
-							<div class="page-heading">            
+							<div class="page-heading">
 								<h1>Finance Report Dashboard</h1>
 								<!--<div class="clear" style="align="right";"><a href="dashboard.php" ><b>Dashboard</b></a>||
 		                       		 <a href="logout.php" ><b>Logout</b> </a>
 		                       	</div> -->
 		                       	<div class="FRnavigation" style="align="right";"><a href="dashboard.php" ><b>Dashboard</b></a>
                        		 <a href="logout.php" ><b>Logout</b> </a>
-                       	 </div>  
+                       	 </div>
 							</div>
 
-							<div class="clear"></div> 
+							<div class="clear"></div>
 						</div>
 
 
@@ -278,7 +284,7 @@ var normalizeDate = function (dateString) {
 
 			</div>
 		</div>
-	</div>	
+	</div>
 
 
 	<div class="grid grid-pad">
@@ -286,46 +292,46 @@ var normalizeDate = function (dateString) {
 			<div class="container-wrapper2">
 				<div style="width:100%; height:auto;padding:10px;border:1px solid #e1e1e1;border-radius:5px;">
 				<h2>Record For Payment</h2>
-					<form action='#codreport' method='POST' onsubmit="return validateform()" name="myForm">						
+					<form action='#codreport' method='POST' onsubmit="return validateform()" name="myForm">
 						<table  width="100%" border="0" cellspacing="0" cellpadding="0" class="tbl_rptjen">
 
 							<tr>
-								
+
 								<td style="text-align:left;">
 									<b>Start Date :</b><input type="text"  tabindex="15" maxlength="4" size="9" value="" class="field text datpik" name="startdate" id="start" required>
 								</td>
-								
+
 								<td style="text-align:left;">
 									<b>End Date : </b><input type="text"  tabindex="15" maxlength="4" size="9" value="" class="field text datpik" name="enddates" id="end" required>
 								</td>
 							</tr>
 
-								
+
 							<tr>
-										
+
 										<td colspan="2" align="center">
 											<button id="filter" class="btn btn-submit" type='submit' style='margin-right:15px;' > Submit </button>
-											
-											
+
+
 											</td>
-										
+
 
 									</tr>
 </table>
 </form>
 </div>
 </div>
-<div class="clear"></div> 
+<div class="clear"></div>
 </div>
 </div>
 <div class="grid grid-pad">
-		
-							<table id="example" class="display btnhdsh" cellspacing="0" width="100%">    
+
+							<table id="example" class="display btnhdsh" cellspacing="0" width="100%">
 								<button id="csv" class="btn btn-submit btnhdsh" type='submit' style="margin-bottom:10px;"> Convert To CSV  </button>
 								<thead >
 									<tr>
 										<th>Shipment Id</th>
-										<th>AWB Number</th>										
+										<th>AWB Number</th>
 										<th>Merchant Name</th>
 										<th>Merchant Id</th>
 										<th>Amount</th>
