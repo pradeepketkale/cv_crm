@@ -1012,7 +1012,7 @@ public function disputeCustomerRemarks($shipment_id_value)
                  ->sendTransactional($templateId, $sender,$_orderBillingEmail, '', $vars, $storeId);
 
         $shipment->setUdropshipStatus(25);
-      //  Mage::helper('udropship')->addShipmentComment($shipment, ('Status has been changed to Cod rto'));
+        Mage::helper('udropship')->addShipmentComment($shipment, ('Status has been changed to Cod rto'));
             $shipment->save();
 
     }
@@ -1107,7 +1107,7 @@ public function disputeCustomerRemarks($shipment_id_value)
                  ->sendTransactional($templateId, $sender,$_orderBillingEmail, '', $vars, $storeId);
 
         $shipment->setUdropshipStatus(7);
-        //Mage::helper('udropship')->addShipmentComment($shipment, ('Status has been changed to Cod rto'));
+        Mage::helper('udropship')->addShipmentComment($shipment, ('Status has been changed to Delivered'));
             $shipment->save();
     }
 
