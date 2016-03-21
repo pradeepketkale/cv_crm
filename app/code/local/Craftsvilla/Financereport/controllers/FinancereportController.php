@@ -495,7 +495,9 @@ WHERE " . $sWhere;
 					$rResult[$key]['pan'] = $combined_date->pan_number;
 					$rResult[$key]['customer_address'] = preg_replace('/\s+/', ' ', trim($value['customer_address']));
 					$rResult[$key]['seller_address'] = preg_replace('/\s+/', ' ', trim($value['seller_address']));
-            		//var_dump($rResult[$key]);exit;
+            		$hlp               = Mage::helper('udropship');
+                    $discountAmount = $hlp->getDiscountamt($rResult[$key]['shipment_id']);
+                    $rResult[$key]['GMV'] = $rResult[$key]['GMV'] - $discountAmount;
             	}
             }
 
