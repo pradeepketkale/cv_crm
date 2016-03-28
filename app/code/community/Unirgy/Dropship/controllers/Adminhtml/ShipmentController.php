@@ -26,10 +26,10 @@ class Unirgy_Dropship_Adminhtml_ShipmentController extends Mage_Adminhtml_Contro
 
                 Mage::helper('udropship')->setShipmentComplete($shipment);
                 Mage::getSingleton('adminhtml/session')->addSuccess(Mage::helper('udropship')->__('Shipment has been marked as complete'));
-                
-                // function calls the smsTrack Added By Dileswar on date 07-11-2012 
+
+                // function calls the smsTrack Added By Dileswar on date 07-11-2012
                 $this->smsTrack($shipment->getData('order_id'));
-                
+
             } catch (Exception $e) {
                 Mage::getSingleton('adminhtml/session')->addError(Mage::helper('udropship')->__('There was a problem marking this shipment as complete: '.$e->getMessage()));
             }
@@ -49,28 +49,28 @@ class Unirgy_Dropship_Adminhtml_ShipmentController extends Mage_Adminhtml_Contro
         $_customerTelephone = $_order->getBillingAddress()->getTelephone();
         $orderId = $_order->getId();
         $shipment = Mage::getModel('sales/order_shipment');
-        
+
         $_shipmenttrack = Mage::getModel('sales/order_shipment_track');
-        
+
         $_helpv = Mage::helper('udropship');
-        
+
         $shippmentCollection = $shipment->getCollection()
                                     ->addAttributeToFilter('order_id', $orderId);
-        $_shipmentIncrmentId = 0; 
+        $_shipmentIncrmentId = 0;
         foreach($shippmentCollection as $_shipment){
             $_shipmentIncrmentId = $_shipment['increment_id'];
         }
-        
-    
+
+
         $_shipmenttrackCollection = $_shipmenttrack->getCollection()
                                     ->addAttributeToFilter('order_id', $orderId);
         /*echo "<pre>";
-        print_r($_shipmenttrackCollection->getData());exit;    */                        
+        print_r($_shipmenttrackCollection->getData());exit;    */
         $_smsServerUrl = Mage::getStoreConfig('sms/general/server_url');
         $_smsUserName = Mage::getStoreConfig('sms/general/user_name');
         $_smsPassowrd = Mage::getStoreConfig('sms/general/password');
         $_smsSource = Mage::getStoreConfig('sms/general/source');
-        
+
         foreach($_shipmenttrackCollection as $_shipmenttrack){
             //$vendorIfo = '';
             //$message = '';
@@ -80,7 +80,7 @@ class Unirgy_Dropship_Adminhtml_ShipmentController extends Mage_Adminhtml_Contro
                 $message = 'Received new shipment: International, #'.$_shipment->getIncrementId().', Rs. '.number_format($_shipment->getBaseTotalValue(), 2, '.', '').'. Please ship immediately to Craftsvilla Warehouse in Mumbai.';
             else
                 $message = 'Received new shipment: Domestic, #'.$_shipment->getIncrementId().', Rs. '.number_format($_shipment->getBaseTotalValue(), 2, '.', '').'. Please ship immediately to Customer directly.';
-                
+
             $_smsUrl = $_smsServerUrl."username=".$_smsUserName."&password=".$_smsPassowrd."&type=0&dlr=0&destination=".$_vendorTelephone."&source=".$_smsSource."&message=".urlencode($message);
             $parse_url = file($_smsUrl);
 */
@@ -89,13 +89,13 @@ class Unirgy_Dropship_Adminhtml_ShipmentController extends Mage_Adminhtml_Contro
                     $customerMessage = 'Your order has been shipped. Tracking Details: Shipment#: '.$_shipmentIncrmentId.' , Track Number: '.$_shipmenttrack->getNumber().'Courier Name :'.$_shipmenttrack->getCourierName().' - Craftsvilla.com (Customercare email: customercare@craftsvilla.com)
 ';
                     $_customerSmsUrl = $_smsServerUrl."username=".$_smsUserName."&password=".$_smsPassowrd."&type=0&dlr=0&destination=".$_customerTelephone."&source=".$_smsSource."&message=".urlencode($customerMessage);
-                    $parse_url = file($_customerSmsUrl);            
+                    $parse_url = file($_customerSmsUrl);
                 }
             ///
-            
+
         }
-      
-        
+
+
     }
     protected function _initShipment()
     {
@@ -111,28 +111,28 @@ class Unirgy_Dropship_Adminhtml_ShipmentController extends Mage_Adminhtml_Contro
 
         return $shipment;
     }
-    
-    
-    
-    
+
+
+
+
     public function addCommentAction()
     {
         /*Start..
         *Craftsvilla Comment
-        *Added to get order id 
+        *Added to get order id
         *Added by Suresh on 04-06-2012
         */
-        
+
         $shipmentId_value = $this->getRequest()->getParam('shipment_id');
         $shipment_collection = Mage::getModel('sales/order_shipment')->load($shipmentId_value);
         $shipment_id_value = $shipment_collection->getIncrementId();
 
         /*End..
         *Craftsvilla Comment
-        *Added to get order id 
+        *Added to get order id
         *Added by Suresh on 04-06-2012
         */
-            
+
         try {
             $data = $this->getRequest()->getPost('comment');
         $dataDispute = $this->getRequest()->getPost('disputeremarks');
@@ -152,26 +152,26 @@ class Unirgy_Dropship_Adminhtml_ShipmentController extends Mage_Adminhtml_Contro
 
         if (empty($dataDispute) && $data['status']==20) {
                 Mage::throwException($this->__('Please Select Reason For Dispute Raise'));
-            }        
+            }
 //mend
 
             $hlp = Mage::helper('udropship');
             $status = $data['status'];
-            
+
             $statusShipped   = Unirgy_Dropship_Model_Source::SHIPMENT_STATUS_SHIPPED;
             $statusDelivered = Unirgy_Dropship_Model_Source::SHIPMENT_STATUS_DELIVERED;
             $statusCanceled  = Unirgy_Dropship_Model_Source::SHIPMENT_STATUS_CANCELED;
             //added By dileswar 13-10-2012
             $statusOutofstock = Unirgy_Dropship_Model_Source::SHIPMENT_STATUS_OUTOFSTOCK_CRAFTSVILLA ;
-            
-            
+
+
             $statuses = Mage::getSingleton('udropship/source')->setPath('shipment_statuses')->toOptionHash();
-            
-            
+
+
             $statusSaveRes = true;
             if ($status!=$shipment->getUdropshipStatus()) {
                 $oldStatus = $shipment->getUdropshipStatus();
-                if (($oldStatus==$statusShipped || $oldStatus==$statusDelivered ) 
+                if (($oldStatus==$statusShipped || $oldStatus==$statusDelivered )
                     && $status!=$statusShipped && $status!=$statusDelivered && $hlp->isUdpoActive()
                 ) {
                     Mage::helper('udpo')->revertCompleteShipment($shipment, true);
@@ -196,7 +196,7 @@ class Unirgy_Dropship_Adminhtml_ShipmentController extends Mage_Adminhtml_Contro
                     $shipment->setUdropshipStatus($status)->save();
                     $commentText = $changedComment;
                 }
-            
+
             //******Below cond. added By Dileswar  for call of below function on line 357 *****//
                 if($status == 12)
                     {
@@ -212,19 +212,19 @@ class Unirgy_Dropship_Adminhtml_ShipmentController extends Mage_Adminhtml_Contro
                     }
                     if($status == 20)
                     {
-                        if(isset($_POST['disputeMail'])) 
+                        if(isset($_POST['disputeMail']))
                         {
                             $this->sendDisputeRaisedEmailtoCustomer($shipment_id_value);
                         }
                         //mstart
-                        if(isset($_POST['disputeremarks'])) 
+                        if(isset($_POST['disputeremarks']))
                         {
                             $this->disputeCustomerRemarks($shipment_id_value);
                         }
                         //msend
                     }
                      if($status == 7)
-                    {   
+                    {
                        $this->deliver($shipment_id_value,$shipmentId_value);
                     }
                 $comment = Mage::getModel('sales/order_shipment_comment')
@@ -235,18 +235,18 @@ class Unirgy_Dropship_Adminhtml_ShipmentController extends Mage_Adminhtml_Contro
                     ->setUsername(Mage::getSingleton('admin/session')->getUser()->getUsername())
                     ->setUdropshipStatus(@$statuses[$status]);
                 $shipment->addComment($comment);
-                
+
                 if (isset($data['is_vendor_notified'])) {
                     Mage::helper('udropship')->sendShipmentCommentNotificationEmail($shipment, $data['comment']);
                     Mage::helper('udropship')->processQueue();
                 }
-                
+
                 /*Start..
                 *Craftsvilla Comment
-                *Added sendmail to customercare@craftsvilla.com when shipment status Changed to 'Shipped To Craftsvilla' 
+                *Added sendmail to customercare@craftsvilla.com when shipment status Changed to 'Shipped To Craftsvilla'
                 *Added by Suresh on 2-06-2012
                 */
-               
+
                 if($status == 15 || $status == 16 || $status == 17 || $status == 18)
                 {
                     //$shipment->sendUpdateEmail('suresh.konda@craftsvilla.com', $data['comment']);
@@ -255,54 +255,54 @@ class Unirgy_Dropship_Adminhtml_ShipmentController extends Mage_Adminhtml_Contro
                     if($status == 15)
                     {
                         $mail->setBody('Shipment Id:#'.$shipment_id_value.' Shipment status changed to "Shipped To Craftsvilla"');
-                        $mail->setSubject('Shipment Id:#'.$shipment_id_value.' Shipment status changed to "Shipped To Craftsvilla"');                        
+                        $mail->setSubject('Shipment Id:#'.$shipment_id_value.' Shipment status changed to "Shipped To Craftsvilla"');
                     }
-                    
+
                     if($status == 16)
                     {
-                        
+
                         $mail->setBody('Shipment Id:#'.$shipment_id_value.' Shipment status changed to "QC Rejected by Craftsvilla"');
-                        $mail->setSubject('Shipment Id:#'.$shipment_id_value.' Shipment status changed to "QC Rejected by Craftsvilla"');                        
+                        $mail->setSubject('Shipment Id:#'.$shipment_id_value.' Shipment status changed to "QC Rejected by Craftsvilla"');
                     }
-                    
+
                     if($status == 17)
                     {
                         $mail->setBody('Shipment Id:#'.$shipment_id_value.' Shipment status changed to "Received in Craftsvilla"');
-                        $mail->setSubject('Shipment Id:#'.$shipment_id_value.' Shipment status changed to "Received in Craftsvilla"');                        
+                        $mail->setSubject('Shipment Id:#'.$shipment_id_value.' Shipment status changed to "Received in Craftsvilla"');
                     }
-                    
+
                     if($status == 18)
                     {
                         $mail->setBody('Shipment Id:#'.$shipment_id_value.'Shipment status changed to "Product Out Of Stock"');
-                        $mail->setSubject('Shipment Id:#'.$shipment_id_value.' Shipment status changed to "Product Out Of Stock"');                        
+                        $mail->setSubject('Shipment Id:#'.$shipment_id_value.' Shipment status changed to "Product Out Of Stock"');
                     }
                     if($status == 21)
                     {
                         $mail->setBody('Shipment Id:#'.$shipment_id_value.'Shipment status changed to "Shipment Delayed"');
-                        $mail->setSubject('Shipment Id:#'.$shipment_id_value.' Shipment status changed to "Shipment Delayed"');                        
+                        $mail->setSubject('Shipment Id:#'.$shipment_id_value.' Shipment status changed to "Shipment Delayed"');
                     }
-                    
-                    
-                
+
+
+
                 $mail->setToName('Customercare');
                     $mail->setToEmail('customercare@craftsvilla.com');
                     $mail->setFromEmail("customercare@craftsvilla.com");
                     $mail->setFromName("Customer Care Craftsvilla");
                     $mail->setType('text');
                     $mail->send();
-                                
+
                 }
-                
+
                 /*End..
                 *Craftsvilla Comment
-                *Added sendmail to customercare@craftsvilla.com when shipment status Changed to 'Shipped To Craftsvilla' 
+                *Added sendmail to customercare@craftsvilla.com when shipment status Changed to 'Shipped To Craftsvilla'
                 *Added by Suresh on 2-06-2012
                 */
-                
+
                 $shipment->sendUpdateEmail(!empty($data['is_customer_notified']), $data['comment']);
                 $shipment->getCommentsCollection()->save();
             } else {
-                
+
                 $comment = Mage::getModel('sales/order_shipment_comment')
                     ->setComment($data['comment'])
                     ->setIsCustomerNotified(isset($data['is_customer_notified']))
@@ -336,7 +336,7 @@ class Unirgy_Dropship_Adminhtml_ShipmentController extends Mage_Adminhtml_Contro
 
                     {
 
-                        if(isset($_POST['disputeMail'])) 
+                        if(isset($_POST['disputeMail']))
 
                         {
 
@@ -344,7 +344,7 @@ class Unirgy_Dropship_Adminhtml_ShipmentController extends Mage_Adminhtml_Contro
 
                         }
                         //mstart
-                        if(isset($_POST['disputeremarks'])) 
+                        if(isset($_POST['disputeremarks']))
 
                         {
 
@@ -353,18 +353,18 @@ class Unirgy_Dropship_Adminhtml_ShipmentController extends Mage_Adminhtml_Contro
                         }
                         //mend
                     }
-                 
+
                 if (isset($data['is_vendor_notified'])) {
                     Mage::helper('udropship')->sendShipmentCommentNotificationEmail($shipment, $data['comment']);
                     Mage::helper('udropship')->processQueue();
                 }
-                
+
                 /*Start..
                 *Craftsvilla Comment
-                *Added sendmail to customercare@craftsvilla.com when shipment status Changed to 'Shipped To Craftsvilla' 
+                *Added sendmail to customercare@craftsvilla.com when shipment status Changed to 'Shipped To Craftsvilla'
                 *Added by Suresh on 2-06-2012
                 */
-                
+
                 if($status == 15 || $status == 16 || $status == 17)
                 {
                     //$shipment->sendUpdateEmail('suresh.konda@craftsvilla.com', $data['comment']);
@@ -373,22 +373,22 @@ class Unirgy_Dropship_Adminhtml_ShipmentController extends Mage_Adminhtml_Contro
                     if($status == 15)
                     {
                         $mail->setBody('Shipment Id:#'.$shipment_id_value.' Shipment status changed to "Shipped To Craftsvilla"');
-                        $mail->setSubject('Shipment Id:#'.$shipment_id_value.' Shipment status changed to "Shipped To Craftsvilla"');                        
+                        $mail->setSubject('Shipment Id:#'.$shipment_id_value.' Shipment status changed to "Shipped To Craftsvilla"');
                     }
-                    
+
                     if($status == 16)
                     {
                         $mail->setBody('Shipment Id:#'.$shipment_id_value.' Shipment status changed to "QC Rejected by Craftsvilla"');
-                        $mail->setSubject('Shipment Id:#'.$shipment_id_value.' Shipment status changed to "QC Rejected by Craftsvilla"');                        
+                        $mail->setSubject('Shipment Id:#'.$shipment_id_value.' Shipment status changed to "QC Rejected by Craftsvilla"');
                     }
-                    
+
                     if($status == 17)
                     {
                         $mail->setBody('Shipment Id:#'.$shipment_id_value.' Shipment status changed to "Received in Craftsvilla"');
-                        $mail->setSubject('Shipment Id:#'.$shipment_id_value.' Shipment status changed to "Received in Craftsvilla"');                        
+                        $mail->setSubject('Shipment Id:#'.$shipment_id_value.' Shipment status changed to "Received in Craftsvilla"');
                     }
-                    
-                    
+
+
                     $mail->setToName('Craftsvilla');
                     $mail->setToEmail('customercare@craftsvilla.com');
                     $mail->setFromEmail("customercare@craftsvilla.com");
@@ -396,13 +396,13 @@ class Unirgy_Dropship_Adminhtml_ShipmentController extends Mage_Adminhtml_Contro
                     $mail->setType('text');
                     $mail->send();
                 }
-                
+
                 /*End..
                 *Craftsvilla Comment
-                *Added sendmail to customercare@craftsvilla.com when shipment status Changed to 'Shipped To Craftsvilla' 
+                *Added sendmail to customercare@craftsvilla.com when shipment status Changed to 'Shipped To Craftsvilla'
                 *Added by Suresh on 2-06-2012
                 */
-                
+
                 $shipment->sendUpdateEmail(!empty($data['is_customer_notified']), $data['comment']);
                 $shipment->getCommentsCollection()->save();
             }
@@ -415,14 +415,14 @@ class Unirgy_Dropship_Adminhtml_ShipmentController extends Mage_Adminhtml_Contro
                 array('shipment'=>$shipment)
             );
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        } 
+        }
         catch (Mage_Core_Exception $e) {
             $response = array(
                 'error'     => true,
                 'message'   => $e->getMessage()
             );
             $response = Zend_Json::encode($response);
-        } 
+        }
         catch (Exception $e) {
             //echo '<pre>';print_r($e->getMessage());
             //Mage::logException($e);
@@ -434,8 +434,8 @@ class Unirgy_Dropship_Adminhtml_ShipmentController extends Mage_Adminhtml_Contro
         }
         $this->getResponse()->setBody($response);
     }
-    
-// New Function Created By Dileswar On Dated 19-02-2013 For get closing balance(in submit of refund inited the amount will reflect on shipment payout & dropship panel)******    *******************////    
+
+// New Function Created By Dileswar On Dated 19-02-2013 For get closing balance(in submit of refund inited the amount will reflect on shipment payout & dropship panel)******    *******************////
 
     public function adjustmentRefundAmount($shipment_id_value)
         {
@@ -447,7 +447,7 @@ class Unirgy_Dropship_Adminhtml_ShipmentController extends Mage_Adminhtml_Contro
             exit();*/
             /*echo '<pre>';
             print_r($collection->getData());exit;*/
-            
+
             $payouData = $collection->getData();
             foreach ($payouData as $_payoutData)
                 {
@@ -463,29 +463,29 @@ class Unirgy_Dropship_Adminhtml_ShipmentController extends Mage_Adminhtml_Contro
                         exit();*/
             if($payoutStatus == 1)
                 {
-            
+
                         //$_liveDate = "2012-08-21 00:00:00";
                         $order = Mage::getModel('sales/order')->loadByIncrementId($_payoutData['order_id']);
                         $_orderCurrencyCode = $order->getOrderCurrencyCode();
                         //if(($_orderCurrencyCode != 'INR') && (strtotime($_payoutData['order_created_at']) >= strtotime($_liveDate)))
-                        if($_orderCurrencyCode != 'INR') 
+                        if($_orderCurrencyCode != 'INR')
                         $total_amount = $_payoutData['subtotal']/1.5.'<br>';
-                        
-                        
+
+
                         $commission_amount = $_payoutData['commission_percent'].'<br>';
                         $itemised_total_shippingcost = $_payoutData['itemised_total_shippingcost'].'<br>';
                         $base_shipping_amount = $_payoutData['base_shipping_amount'];
-                        
+
                         //$vendors = Mage::helper('udropship')->getVendor($_payoutData['udropship_vendor']);
                         /*echo "Query:".$vendors->getSelect()->__toString();
                         exit();*/
-                            
+
                         //$vendors_arr = $vendors->getData();
                             //echo "<pre>"; print_r($vendors_arr); exit;
                         //$new_vendor_obj = json_decode($vendors_arr[0]['custom_vars_combined']);
-                            
-                        
-            
+
+
+
                         /*//if($_payoutData['order_created_at']<='2012-07-02 23:59:59')
                         //{
                             if($vendors->getManageShipping() == "imanage")
@@ -501,7 +501,7 @@ class Unirgy_Dropship_Adminhtml_ShipmentController extends Mage_Adminhtml_Contro
                         else {*/
                             if($vendors->getManageShipping() == "imanage")
                             {
-            
+
                                 $vendor_amount = ($total_amount*(1-($commission_amount/100)*(1+0.1236)));
                                 //$kribha_amount = ($total_amount1 - $vendor_amount)+$itemised_total_shippingcost+$shipmentpayout_report1_val['cod_fee'];
                                 //change to accomodate 3% Payment gateway charges on dated 20-12-12
@@ -511,31 +511,31 @@ class Unirgy_Dropship_Adminhtml_ShipmentController extends Mage_Adminhtml_Contro
                                 $vendor_amount = (($total_amount+$itemised_total_shippingcost)*(1-($commission_amount/100)*(1+0.1236)));
                                 //$kribha_amount = (($total_amount1+$itemised_total_shippingcost) - $vendor_amount);
                                 //change to accomodate 3% Payment gateway charges on dated 20-12-12
-                                
-                            // Below line commented by dileswar on dated 18-02-2013 from $itemised_total_shippingcost To $base_shipping_amount***/////////////    
+
+                            // Below line commented by dileswar on dated 18-02-2013 from $itemised_total_shippingcost To $base_shipping_amount***/////////////
                                 //$kribha_amount = ((($total_amount1+$itemised_total_shippingcost)*0.97) - $vendor_amount);
                                 $kribha_amount = ((($total_amount1+$base_shipping_amount)*0.97) - $vendor_amount);
                             }
                         //}
-                        
+
                     $payoutAdjust = $payoutAdjust-$vendor_amount;
-                    
-                    $write = Mage::getSingleton('core/resource')->getConnection('shipmentpayout_write');    
+
+                    $write = Mage::getSingleton('core/resource')->getConnection('shipmentpayout_write');
                     $queryUpdate = "update shipmentpayout set adjustment='".$payoutAdjust."' , `comment` = 'Adjustment Against Refund Paid'  WHERE shipment_id = '".$shipment_id_value."'";
                     $write->query($queryUpdate);
-                    
+
                     $closingbalance = $closingbalance - $vendor_amount;
                     $queyVendor = "update `udropship_vendor` set closing_balance = '".$closingbalance."' WHERE `vendor_id` = '".$vendorId."'";
                     $write->query($queyVendor);
                 }
                 else
                     {
-                    $write = Mage::getSingleton('core/resource')->getConnection('shipmentpayout_write');    
+                    $write = Mage::getSingleton('core/resource')->getConnection('shipmentpayout_write');
                     $queryUpdate = "update shipmentpayout set shipmentpayout_status= '2' WHERE shipment_id = '".$shipment_id_value."'";
                     $write->query($queryUpdate);
-                        
+
                     }
-            
+
         // Email To seller in refund intiated state
             $storeId = Mage::app()->getStore()->getId();
             $templateId = 'udropship_refund_seller_email_template';
@@ -549,30 +549,30 @@ class Unirgy_Dropship_Adminhtml_ShipmentController extends Mage_Adminhtml_Contro
                         'vendorShopName' => $_vendorShopName,
                         );
             $_email = Mage::getModel('core/email_template');
-            $_email->sendTransactional($templateId, $sender, $_vendorEmail, $_vendorName, $varsVendorEmail, $storeId);            
+            $_email->sendTransactional($templateId, $sender, $_vendorEmail, $_vendorName, $varsVendorEmail, $storeId);
         }
     }
     public function refundTodo($shipment_id_value,$shipentId)
-        { 
-        $user = Mage::getSingleton('admin/session'); 
+        {
+        $user = Mage::getSingleton('admin/session');
         $userFirstname = $user->getUser()->getFirstname();
         $refundedamount = $this->getRequest()->getParam('refundamount');
-        $storeId = Mage::app()->getStore()->getId();      
+        $storeId = Mage::app()->getStore()->getId();
         $templateId = 'refundtodo_email_to_customer';
         $templateId2 = 'refundtodo_email_to_vendor';
-        $shipment1 = Mage::getModel('sales/order_shipment');        
+        $shipment1 = Mage::getModel('sales/order_shipment');
         $shipment = $shipment1->load($shipentId);
         $dropship = Mage::getModel('udropship/vendor')->load($shipment->getUdropshipVendor());
         $vendorName = $dropship->getVendorName();
         $venEmail = $dropship->getEmail();
-        //    echo '<pre>';print_r($shipment);exit;        
+        //    echo '<pre>';print_r($shipment);exit;
         $_order = $shipment->getOrder();
-        //echo '<pre>';print_r($_order);exit;        
+        //echo '<pre>';print_r($_order);exit;
         $entityid = $shipment->getEntityId();
         $baseTotalValue = floor($shipment->getBaseTotalValue());
         $itemisedtotalshippingcost = floor($shipment->getItemisedTotalShippingcost());
         $totalcost = floor($itemisedcost);
-        $write = Mage::getSingleton('core/resource')->getConnection('shipmentpayout_write');    
+        $write = Mage::getSingleton('core/resource')->getConnection('shipmentpayout_write');
         $sender = Array('name'  => 'Craftsvilla',
                         'email' => 'places@craftsvilla.com');
         $emailrefunded = Mage::getModel('core/email_template');
@@ -590,18 +590,18 @@ class Unirgy_Dropship_Adminhtml_ShipmentController extends Mage_Adminhtml_Contro
             }
         $totalAmounttoRefund = Mage::helper('udropship')->getrefundCv($shipentId);
 //to get summary of all price
-        
+
         $summaryprice = "<table border='0' width='750px'><tr><td style='font-size: 13px;height: 26px;padding: 11px;vertical-align:top;text-align: right;background:#F2F2F2;color:#CE3D49;'>Total Value : Rs.".$baseTotalValue."<br/>Shipping & Handling:Rs. ".$itemisedtotalshippingcost."<br/> Discount:Rs.".$discountamount."</td></tr><table>";
-//echo $summaryprice;exit; 
+//echo $summaryprice;exit;
         $_address = $_order->getShippingAddress();
         //echo '<pre>';print_r($_order->getShippingAddress());exit;
-//to get Shipping address        
+//to get Shipping address
         $getName = $_order->getCustomerFirstname();
         $customerTelephone = $_order->getBillingAddress()->getTelephone();
         $_orderBillingCountry = $_order->getBillingAddress()->getCountryId();
         $_orderBillingEmail = $_order->getBillingAddress()->getEmail();
         $street = $_order->getShippingAddress()->getStreet();
-        $street1 = $street[0].$street[1];        
+        $street1 = $street[0].$street[1];
         $city = $_order->getShippingAddress()->getCity();
         $fname = $_order->getShippingAddress()->getFirstname();
         $lname = $_order->getShippingAddress()->getLastname();
@@ -609,7 +609,7 @@ class Unirgy_Dropship_Adminhtml_ShipmentController extends Mage_Adminhtml_Contro
         $postcode = $_order->getShippingAddress()->getPostcode();
         $countrycode = $_order->getShippingAddress()->getCountryId();
 
-            
+
 $customerShipaddressHtml = "<table border='0' width='750px'><tr><td style='font-size: 13px;height: 26px;padding: 11px;vertical-align:top;background:#F2F2F2;color:#CE3D49;'>".$fullname."<br/>".$street1."<br/>".$city."<br/>".$postcode."<br/>".$countrycode."</td></tr><table>";
 
 
@@ -621,12 +621,12 @@ $customerShipaddressHtml = "<table border='0' width='750px'><tr><td style='font-
                 //echo $_item['product_id'];exit;
                 $product = Mage::helper('catalog/product')->loadnew($_item['product_id']);
             try{
-            $image="<img src='".Mage::helper('catalog/image')->init($product, 'image')->resize(166, 166)."' alt='' width='154' border='0' style='float:left; border:2px solid #ccc; margin:0 20px 20px;' />                    ";}catch(Exception $e){$image = '';}                
+            $image="<img src='".Mage::helper('catalog/image')->init($product, 'image')->resize(166, 166)."' alt='' width='154' border='0' style='float:left; border:2px solid #ccc; margin:0 20px 20px;' />                    ";}catch(Exception $e){$image = '';}
                  $customerShipmentItemHtml .= "<tr><td style='font-size: 13px;height: 26px;padding: 11px;vertical-align:top;background:#F2F2F2;color:#CE3D49;'>".$image."</td><td style='font-size: 13px;height: 26px;padding: 11px;vertical-align:top;background:#F2F2F2;color:#CE3D49;'>".$shipment_id_value."</td><td style='font-size: 13px;height: 26px;padding: 11px;vertical-align:top;background:#F2F2F2;color:#CE3D49;'>".$_item['sku']."</td><td style='font-size: 13px;height: 26px;padding: 11px;vertical-align:top;background:#F2F2F2;color:#CE3D49;'>".$_item->getName()."</td><td style='font-size: 13px;height: 26px;padding: 11px;vertical-align:top;background:#F2F2F2;color:#CE3D49;'>".$currencysym .$_item->getPrice()."</td></tr>";
                 }
         $customerShipmentItemHtml .= "</table>";
-        
-        if($refundedamount)        
+
+        if($refundedamount)
             {
             $editRefundamount = $refundedamount;
             $vars = array('shipmentid'=>$_shipmentId,
@@ -640,9 +640,9 @@ $customerShipaddressHtml = "<table border='0' width='750px'><tr><td style='font-
                             );
             //print_r($vars);exit;
             $emailrefunded->setDesignConfig(array('area'=>'frontend', 'store'=>$storeId))
-                 ->sendTransactional($templateId, $sender,$_orderBillingEmail, '', $vars, $storeId);    
+                 ->sendTransactional($templateId, $sender,$_orderBillingEmail, '', $vars, $storeId);
             $emailrefunded->setDesignConfig(array('area'=>'frontend', 'store'=>$storeId))
-                 ->sendTransactional($templateId2, $sender,$venEmail, '', $vars, $storeId);    
+                 ->sendTransactional($templateId2, $sender,$venEmail, '', $vars, $storeId);
             $queryUpdate = "update shipmentpayout set `refundtodo`='".$editRefundamount."' WHERE shipment_id = '".$shipment_id_value."'";
             $write->query($queryUpdate);
             $shipment->setUdropshipStatus(23);
@@ -666,14 +666,14 @@ $customerShipaddressHtml = "<table border='0' width='750px'><tr><td style='font-
                  ->sendTransactional($templateId2, $sender,$venEmail, '', $vars, $storeId);
             $queryUpdate = "update shipmentpayout set `refundtodo`='".$systRefundamount."' WHERE shipment_id = '".$shipment_id_value."'";
             $write->query($queryUpdate);
-            $shipment->setUdropshipStatus(23);            
+            $shipment->setUdropshipStatus(23);
             Mage::helper('udropship')->addShipmentComment($shipment, ('Status has been changed to Refunded to do, Value  is Rs '.$systRefundamount.' and done by agent '.$userFirstname));
-            $shipment->save();                
-            }    
+            $shipment->save();
+            }
      }
-     
+
      public function qcrejectAction()
-        { 
+        {
             $data = $this->getRequest()->getPost('comment');
              $comment = $data['comment'];
             $shipmentId_value = $this->getRequest()->getParam('shipment_id');
@@ -693,15 +693,15 @@ $customerShipaddressHtml = "<table border='0' width='750px'><tr><td style='font-
             $vendorname = $vendor->getVendorName();
             $vendoremail = $vendor['email'];
             if ($shipment->getUdropshipStatus()!==Unirgy_Dropship_Model_Source::SHIPMENT_STATUS_QC_REJECTED_CRAFTSVILLA) {
-                
+
                     $shipment->setUdropshipStatus(Unirgy_Dropship_Model_Source::SHIPMENT_STATUS_QC_REJECTED_CRAFTSVILLA);
                     Mage::helper('udropship')->addShipmentComment($shipment,
                     $this->__($comment.' QC Rejected by Craftsvilla')
                 );
-                        
+
                             }
                       $shipment->save();
-                    $storeId = Mage::app()->getStore()->getId();      
+                    $storeId = Mage::app()->getStore()->getId();
                         $templateId = 'qcreject_email_template1';
                         $sender = Array('name'  => 'Craftsvilla',
                         'email' => 'places@craftsvilla.com');
@@ -710,26 +710,26 @@ $customerShipaddressHtml = "<table border='0' width='750px'><tr><td style='font-
                         $_email = Mage::getModel('core/email_template');
                         $mailSubject = 'Your Product Has Been QC Rejected By Craftsvilla!';
                         $vendorShipmentItemHtml = "<table border='0' width='750px'><tr><td style='font-size: 13px;height: 26px;padding: 11px;vertical-align:top;background:#F2F2F2;color:#CE3D49;'>Image</td><td style='font-size: 13px;height: 26px;padding: 11px;vertical-align:top;background:#F2F2F2;color:#CE3D49;'><a href='www.craftsvilla.com/marketplace' style='color:#CE3D49;'>Shipment Id</a></td><td style='font-size: 13px;height: 26px;padding: 11px;vertical-align:top;background:#F2F2F2;color:#CE3D49;'>Product Name</td><td style='font-size: 13px;height: 26px;padding: 11px;vertical-align:top;background:#F2F2F2;color:#CE3D49;'>Price</td></tr>";
-                            
+
                 $_items1 = Mage::getModel('sales/order_shipment')->load($shipmentId_value);
-                
+
                 $all = $_items1->getAllItems();
-            
+
                 foreach ($all as $_item)
                 {
                 $product = Mage::getModel('catalog/product')->load($_item->getProductId());
-                $image="<img src='".Mage::helper('catalog/image')->init($product, 'image')->resize(154, 154)."' alt='' width='154' border='0' style='float:left; border:2px solid #ccc; margin:0 20px 20px;' />";                
+                $image="<img src='".Mage::helper('catalog/image')->init($product, 'image')->resize(154, 154)."' alt='' width='154' border='0' style='float:left; border:2px solid #ccc; margin:0 20px 20px;' />";
                  $vendorShipmentItemHtml .= "<tr><td style='font-size: 13px;height: 26px;padding: 11px;vertical-align:top;background:#F2F2F2;color:#CE3D49;'>".$image."</td><td style='font-size: 13px;height: 26px;padding: 11px;vertical-align:top;background:#F2F2F2;color:#CE3D49;'><a href='www.craftsvilla.com/marketplace' style='color:#CE3D49;'>".$shipmentvalue."</a></td><td style='font-size: 13px;height: 26px;padding: 11px;vertical-align:top;background:#F2F2F2;color:#CE3D49;'>".$_item->getName()."</td><td style='font-size: 13px;height: 26px;padding: 11px;vertical-align:top;background:#F2F2F2;color:#CE3D49;'>".$currencysym .$_item->getPrice()."</td></tr>";
                 }
         $vendorShipmentItemHtml .= "</table>";
-                        
-            
+
+
                     $vars = Array('shipmentitem' =>$vendorShipmentItemHtml,
                                    'qcrejectimage' => $pathhtml,
                                    'vendorname' => $vendorname,
                                    'comment' => $comment,
-                                   'shipmentid' => $shipmentvalue );        
-                    //print_r($vars);exit;        
+                                   'shipmentid' => $shipmentvalue );
+                    //print_r($vars);exit;
                     /*$_email->setDesignConfig(array('area'=>'frontend', 'store'=>$storeId))
                             ->setTemplateSubject($mailSubject)
                             ->sendTransactional($templateId, $sender, 'gsonar8@gmail.com', $recname, $vars, $storeId);*/
@@ -743,14 +743,14 @@ $customerShipaddressHtml = "<table border='0' width='750px'><tr><td style='font-
                     $translate->setTranslateInline(true);
                     Mage::getSingleton('adminhtml/session')->addSuccess(Mage::helper('udropship')->__('Shipment has been marked as QC Rejected and email has been sent to vendor'));
                     $this->_redirect("adminhtml/sales_shipment/view/shipment_id/$shipmentId_value");
-            
+
      }
-     
+
      public function penaltyOutofstock($shipment_id_value)
          {
             $_shipmentId = $shipment_id_value;
             $detailShipment = Mage::getModel('shipmentpayout/shipmentpayout')->getCollection();
-            
+
             $detailShipment->getSelect()
                       ->join(array('a'=>'sales_flat_shipment'), 'a.increment_id=main_table.shipment_id',array('udropship_vendor', 'subtotal'=>'base_total_value', 'commission_percent'=>'commission_percent', 'itemised_total_shippingcost'=>'itemised_total_shippingcost','cod_fee'=>'cod_fee','base_shipping_amount'=>'base_shipping_amount'))
                     ->where('main_table.shipment_id = '.$_shipmentId);
@@ -758,7 +758,7 @@ $customerShipaddressHtml = "<table border='0' width='750px'><tr><td style='font-
             //exit();
             //echo '<pre>';
             //print_r($detailShipment->getData());exit;
-            foreach($detailShipment->getData() as $_detailShipment) 
+            foreach($detailShipment->getData() as $_detailShipment)
             {
             $baseTotalValue = $_detailShipment['subtotal'];
             $amntAdjust = $_detailShipment['adjustment'];
@@ -769,25 +769,25 @@ $customerShipaddressHtml = "<table border='0' width='750px'><tr><td style='font-
             $_email = Mage::getModel('core/email_template');
 
             $penaltyAmount = ($baseTotalValue*0.02);
-            
+
             $amntAdjust = $amntAdjust-$penaltyAmount;
-            
-            $read = Mage::getSingleton('core/resource')->getConnection('udropship_read');    
+
+            $read = Mage::getSingleton('core/resource')->getConnection('udropship_read');
             $getClosingblncQuery = "SELECT `email`,`vendor_name`,`closing_balance` FROM `udropship_vendor` where `vendor_id` = '".$vendorAttn."'";
             $getClosingblncResult = $read->query($getClosingblncQuery)->fetch();
             $closingBalance = $getClosingblncResult['closing_balance'];
             $vendorName = $getClosingblncResult['vendor_name'];
             $vendorEmail = $getClosingblncResult['email'];
-            $closingBalance = $closingBalance-$penaltyAmount; 
-            
-            $write = Mage::getSingleton('core/resource')->getConnection('core_write');    
-            
+            $closingBalance = $closingBalance-$penaltyAmount;
+
+            $write = Mage::getSingleton('core/resource')->getConnection('core_write');
+
             $queryUpdateForAdjustment = "update shipmentpayout set adjustment='".$amntAdjust."' , `comment` = 'Adjustment Against Out Of Stock'  WHERE shipment_id = '".$_shipmentId."'";
             $write->query($queryUpdateForAdjustment);
-            
+
             $queryUpdateForClosingbalance = "update `udropship_vendor` set `closing_balance`='".$closingBalance."'  WHERE `vendor_id`= '".$vendorAttn."'";
             $write->query($queryUpdateForClosingbalance);
-            
+
             $vars = array('penaltyprice'=>$penaltyAmount,
                           'shipmentid'=>$_shipmentId,
                           'vendorShopName'=>$vendorName
@@ -796,12 +796,12 @@ $customerShipaddressHtml = "<table border='0' width='750px'><tr><td style='font-
                     ->sendTransactional($templateId, $sender,$vendorEmail, '', $vars, $storeId);
             }
         }
-        
+
 public function sendDisputeRaisedEmailtoCustomer($shipment_id_value)
 
     {
 +
-        $user = Mage::getSingleton('admin/session'); 
+        $user = Mage::getSingleton('admin/session');
         $userFirstname = $user->getUser()->getFirstname();
         $shipmentId_value = $this->getRequest()->getParam('shipment_id');
         $shipment = Mage::getModel('sales/order_shipment');
@@ -821,7 +821,7 @@ public function sendDisputeRaisedEmailtoCustomer($shipment_id_value)
 
                 $product = Mage::helper('catalog/product')->loadnew($_item['product_id']);
 
-            try{                
+            try{
 
             $image="<img src='".Mage::helper('catalog/image')->init($product, 'image')->resize(166, 166)."' alt='' width='154' border='0' style='float:left; border:2px solid #ccc; margin:0 20px 20px;' />";
 
@@ -887,9 +887,9 @@ $vendoremail = $vendorDataaa->getEmail();
 
         //echo "email sent successfully to your email";
 
-        
 
-        
+
+
 
         $templateIdvendor ='disputeraise_seller_template';
 
@@ -923,7 +923,7 @@ $vendoremail = $vendorDataaa->getEmail();
 
         //echo "email sent successfully to your email";
 
-        
+
 
        $shipment->setUdropshipStatus(20);
 
@@ -937,60 +937,60 @@ $vendoremail = $vendorDataaa->getEmail();
 
 public function disputeCustomerRemarks($shipment_id_value)
     {
-//mstart        
+//mstart
         $connread = Mage::getSingleton('core/resource')->getConnection('core_read');
         $connwrite = Mage::getSingleton('core/resource')->getConnection('core_write');
-        
+
         $shipmentId = $shipment_id_value;
         $shipment = Mage::getModel('sales/order_shipment')->loadByIncrementId($shipment_id_value);
-        $vendorId = $shipment->getUdropshipVendor(); 
-        $vendorDetails = Mage::getModel('udropship/vendor')->load($vendorId); 
-        
+        $vendorId = $shipment->getUdropshipVendor();
+        $vendorDetails = Mage::getModel('udropship/vendor')->load($vendorId);
+
         $vendorName = mysql_escape_string($vendorDetails->getVendorName());
-        $disputeRemark = mysql_escape_string($this->getRequest()->getParam('disputeremarks')); 
-        
-        $duplicateDispute = "SELECT * FROM `disputecusremarks` WHERE `shipment_id` = '".$shipmentId."'"; 
-        $duplicateDisputeRes = $connread->query($duplicateDispute)->fetchAll(); 
+        $disputeRemark = mysql_escape_string($this->getRequest()->getParam('disputeremarks'));
+
+        $duplicateDispute = "SELECT * FROM `disputecusremarks` WHERE `shipment_id` = '".$shipmentId."'";
+        $duplicateDisputeRes = $connread->query($duplicateDispute)->fetchAll();
         $connread->closeConnection();
-        if(!($duplicateDisputeRes)) 
+        if(!($duplicateDisputeRes))
         {
-        
-            $insertDisputeRemark = "INSERT INTO `disputecusremarks`(`shipment_id`, `vendor_id`, `vendor_name`, `remarks`) VALUES ($shipmentId,$vendorId,'".$vendorName."','".$disputeRemark."')"; 
+
+            $insertDisputeRemark = "INSERT INTO `disputecusremarks`(`shipment_id`, `vendor_id`, `vendor_name`, `remarks`) VALUES ($shipmentId,$vendorId,'".$vendorName."','".$disputeRemark."')";
                $connwrite->query($insertDisputeRemark);
                $connwrite->closeConnection();
-               
+
         }
-        else 
-        { 
-        
-            $updateDisputeRemark = "UPDATE `disputecusremarks` SET `remarks` = '".$disputeRemark."' WHERE `shipment_id` = '".$shipmentId."'"; 
+        else
+        {
+
+            $updateDisputeRemark = "UPDATE `disputecusremarks` SET `remarks` = '".$disputeRemark."' WHERE `shipment_id` = '".$shipmentId."'";
                $connwrite->query($updateDisputeRemark);
                $connwrite->closeConnection();
-               
+
            }
-           
-  //mend         
+
+  //mend
     }
 
     public function codrto($shipment_id_value,$shipentId)
     {
-       $user = Mage::getSingleton('admin/session'); 
+       $user = Mage::getSingleton('admin/session');
         $userFirstname = $user->getUser()->getFirstname();
-       
-        $storeId = Mage::app()->getStore()->getId();      
+
+        $storeId = Mage::app()->getStore()->getId();
         $templateId = 'codrto_email_to_customer';
-       
-        $shipment1 = Mage::getModel('sales/order_shipment');        
+
+        $shipment1 = Mage::getModel('sales/order_shipment');
         $shipment = $shipment1->load($shipentId);
-       
-        //  echo '<pre>';print_r($shipment);exit;       
-        $_order = $shipment->getOrder();              
-        $write = Mage::getSingleton('core/resource')->getConnection('shipmentpayout_write');    
+
+        //  echo '<pre>';print_r($shipment);exit;
+        $_order = $shipment->getOrder();
+        $write = Mage::getSingleton('core/resource')->getConnection('shipmentpayout_write');
         $sender = Array('name'  => 'Craftsvilla',
                         'email' => 'places@craftsvilla.com');
         $emailrefunded = Mage::getModel('core/email_template');
         $orderitem = Mage::getModel('sales/order_shipment_item')->getCollection();
-        $_address = $_order->getShippingAddress();       
+        $_address = $_order->getShippingAddress();
         $getName = $_order->getCustomerFirstname();
         $customerTelephone = $_order->getBillingAddress()->getTelephone();
         $_orderBillingCountry = $_order->getBillingAddress()->getCountryId();
@@ -1007,46 +1007,46 @@ public function disputeCustomerRemarks($shipment_id_value)
                             'refundedamt' => $systRefundamount,
                             'orderId'=>$orderId,
                             );
-           
+
         $emailrefunded->setDesignConfig(array('area'=>'frontend', 'store'=>$storeId))
                  ->sendTransactional($templateId, $sender,$_orderBillingEmail, '', $vars, $storeId);
-            
-        $shipment->setUdropshipStatus(25);          
+
+        $shipment->setUdropshipStatus(25);
         Mage::helper('udropship')->addShipmentComment($shipment, ('Status has been changed to Cod rto'));
-            $shipment->save();              
-          
+            $shipment->save();
+
     }
 
      public function deliver($shipment_id_value,$shipentId)
     {
-        $user = Mage::getSingleton('admin/session'); 
+        $user = Mage::getSingleton('admin/session');
         $userFirstname = $user->getUser()->getFirstname();
-       
-        $storeId = Mage::app()->getStore()->getId();      
+
+        $storeId = Mage::app()->getStore()->getId();
         $templateId = 'delivery_acknowledgment';
-        
-        $shipment1 = Mage::getModel('sales/order_shipment');        
+
+        $shipment1 = Mage::getModel('sales/order_shipment');
         $shipment = $shipment1->load($shipentId);
         $product=Mage::getModel('catalog/product')->load($product_id);
        // echo '<pre>';print_r($product);exit;
-        //  echo '<pre>';print_r($shipment);exit;  
+        //  echo '<pre>';print_r($shipment);exit;
         $_orderId = $shipment->getOrderId();
         $orders  = Mage::getModel('sales/order')->load($_orderId);
         $orderId = $orders->getIncrementId();
-        $_order = $shipment->getOrder();              
-        $write = Mage::getSingleton('core/resource')->getConnection('shipmentpayout_write');    
+        $_order = $shipment->getOrder();
+        $write = Mage::getSingleton('core/resource')->getConnection('shipmentpayout_write');
         $sender = Array('name'  => 'Craftsvilla',
                         'email' => 'places@craftsvilla.com');
         $emailrefunded = Mage::getModel('core/email_template');
         $orderitem = Mage::getModel('sales/order_shipment_item')->getCollection();
-        $_address = $_order->getShippingAddress();       
+        $_address = $_order->getShippingAddress();
         $getName = $_order->getCustomerFirstname();
         $customerTelephone = $_order->getBillingAddress()->getTelephone();
         $_orderBillingCountry = $_order->getBillingAddress();
         $_orderBillingEmail = $_order->getBillingAddress()->getEmail();
-       
+
          $orderitem = Mage::getModel('sales/order_shipment_item')->getCollection();
-        $_address = $_order->getShippingAddress();       
+        $_address = $_order->getShippingAddress();
         $getName = $_order->getCustomerFirstname();
         $customerTelephone = $_order->getBillingAddress()->getTelephone();
         $customerstreet = $_order->getBillingAddress()->getStreet();
@@ -1054,34 +1054,34 @@ public function disputeCustomerRemarks($shipment_id_value)
         $customercountry_id = $_order->getBillingAddress()->getCountryId();
         $customerState= $_order->getBillingAddress()->getRegion();
         $customerPincode = $_order->getBillingAddress()->getPostcode();
-        $payment_method = $_order->getPayment()->getMethodInstance()->getTitle(); 
+        $payment_method = $_order->getPayment()->getMethodInstance()->getTitle();
        // $shipmentDetail = Mage::getModel('sales/order_shipment')->load($shipment);
         $items = $shipment->getAllItems();
-       
+
        $sku=array();
     $productName=array();
     foreach($items as $_items){
         $_product=Mage::getModel('catalog/product')->load($_items->getProductId());
          $base_url= "http://www.craftsvilla.com/catalog/product/view/id/".$_product['entity_id'];
          $sku[]=mysql_escape_string($_items->getSku());
-         $productName[]=mysql_escape_string($_items->getName()); 
-         $price[] =mysql_escape_string($_items->getPrice()); 
+         $productName[]=mysql_escape_string($_items->getName());
+         $price[] =mysql_escape_string($_items->getPrice());
           $qty[] =mysql_escape_string($_items->getQtyOrdered());
-         
+
     }
      foreach($shipment->getAllTracks() as $tracknum)
             {
                  $tracknums[]=$tracknum->getNumber();
                  $getCourierName[]=$tracknum->getCourierName();
             }
-                   
+
    /* $img=Mage::getModel('catalog/product_media_config')->getMediaUrl($_product->getThumbnail());
      $url=Mage::getBaseUrl();*/
         $productImage="http://img1.craftsvilla.com/thumb/166x166".$_product->getImage();
      //  $url_new= str_replace("index.php",'',$url); $url_new."media/catalog/product/";
         //echo $test1= str_replace($url_new,"img1.craftsvilla.com/thumb/166x166/",$url_new);exit;
           //  echo $test= str_replace($url_new,"img1.craftsvilla.com/thumb/166x166/",$img);exit;
-        $vars = array(  
+        $vars = array(
                 'sku'=>$sku[0],
                 'productName'=>$productName[0],
                 'price'=>$price[0],
@@ -1105,10 +1105,10 @@ public function disputeCustomerRemarks($shipment_id_value)
 
         $emailrefunded->setDesignConfig(array('area'=>'frontend', 'store'=>$storeId))
                  ->sendTransactional($templateId, $sender,$_orderBillingEmail, '', $vars, $storeId);
-            
-        $shipment->setUdropshipStatus(7);          
-        Mage::helper('udropship')->addShipmentComment($shipment, ('Status has been changed to Cod rto'));
-            $shipment->save();         
+
+        $shipment->setUdropshipStatus(7);
+        Mage::helper('udropship')->addShipmentComment($shipment, ('Status has been changed to Delivered'));
+            $shipment->save();
     }
 
 
