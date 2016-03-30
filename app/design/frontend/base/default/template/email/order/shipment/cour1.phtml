@@ -1,0 +1,52 @@
+<?php $_shipment=$this->getShipment() ?>
+<?php $_order=$this->getOrder() ?>
+<?php if ($_shipment && $_order && $_shipment->getAllTracks()): ?>
+<?php $i=0; foreach ($_shipment->getAllTracks() as $_item): $i++ ?>
+       
+            <?php  $test = $_item->getCourierName() ?>
+            
+            <?php  $track = $_item->getNumber() ?>
+            <?php
+            //echo $test;
+            $aramex = "Aramex";
+            $fedex = "Fedex";
+            $Dtdc = "Dtdc";
+           
+            for( $i = 0 ; $i < count($aramex) ; $i++ ) 
+            {
+            	if($test == $aramex)
+              {
+             		?>
+                  <a href="http://www.aramex.com/express/track-results-multiple.aspx?ShipmentNumber=<?php echo $track;?>" target="_blank" style="padding:10px 15px; display:block; width:180px; margin:0; background:#ffcc06; border:solid 1px #dbb212; font-size:16px; color:#8e681a; text-decoration:none; outline:0; font-weight:bold; text-align:center;">Track Your shipment</a>
+                  <?php
+              	}
+              }
+               for( $i = 0 ; $i < count($fedex) ; $i++ ) 
+                {
+                  
+                  if($test == $fedex)
+                  {
+                    
+                    ?>
+                  
+                  <a href="https://www.fedex.com/apps/fedextrack/?action=track&trackingnumber=<?php echo $track;?>&cntry_code=us" target="_blank" style="padding:10px 15px; display:block; width:180px; margin:0; background:#ffcc06; border:solid 1px #dbb212; font-size:16px; color:#8e681a; text-decoration:none; outline:0; font-weight:bold; text-align:center;">Track Your shipment</a>
+                  <?php
+             		 }
+                }
+                  for( $i = 0 ; $i < count($dtdc) ; $i++ ) 
+                {
+                 
+                  if($test == $Dtdc)
+                  {
+                    
+                  	?>
+                  <a href="http://dtdc.com/tracking/<?php echo $track;?>" target="_blank" style="padding:10px 15px; display:block; width:180px; margin:0; background:#ffcc06; border:solid 1px #dbb212; font-size:16px; color:#8e681a; text-decoration:none; outline:0; font-weight:bold; text-align:center;">Track Your shipment</a>
+                  <?php 
+                }
+
+                }
+            ?>
+ <?php endforeach ?>
+   
+<?php endif; ?>
+

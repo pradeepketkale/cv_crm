@@ -69,6 +69,7 @@ class Unirgy_Dropship_Model_Source extends Unirgy_Dropship_Model_Source_Abstract
     const SHIPMENT_STATUS_REFUND_VOUCHER_REQUESTED = 34;
     const SHIPMENT_STATUS_REFUND_VOUCHER_SENT = 35;
     const SHIPMENT_STATUS_DAMAGE_LOST_IN_TRANSIT = 36; 
+    const SHIPMENT_STATUS_PREPAID_RTO = 41;
     
     const TRACK_STATUS_PENDING   = 'P';
     const TRACK_STATUS_CANCELED  = 'C';
@@ -233,6 +234,7 @@ class Unirgy_Dropship_Model_Source extends Unirgy_Dropship_Model_Source_Abstract
                 self::SHIPMENT_STATUS_REFUND_VOUCHER_REQUESTED => $hlp->__('Refund Voucher Requested'),
                 self::SHIPMENT_STATUS_REFUND_VOUCHER_SENT => $hlp->__('Refund Voucher Sent'),
                 self::SHIPMENT_STATUS_DAMAGE_LOST_IN_TRANSIT => $hlp->__('Damage/Lost in transit'),
+                self::SHIPMENT_STATUS_PREPAID_RTO  => $hlp->__('PREPAID RTO'),
             );
             
             

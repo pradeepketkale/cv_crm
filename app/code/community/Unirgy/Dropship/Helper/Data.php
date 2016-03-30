@@ -4515,19 +4515,27 @@ public function getServicetaxCv($shipmentId)
         $sqlGetCreatedDate = "SELECT `created_at` FROM `sales_flat_shipment` WHERE `increment_id` = '".$shipment_id."'";
         $resGetCreatedDate = $readCon->query($sqlGetCreatedDate)->fetch();
         $created_date = date("Y-m-d", strtotime($resGetCreatedDate['created_at']));
-        $queryGet = "select `commission_percent` from finance_vendor_commission where `vendor_id` = ".$vendorid." and (`start_date` <= '".$created_date."' and `end_date` >= '".$created_date."') or (`start_date` <= '".$created_date."' and `end_date` = '0000-00-00')";
+        $queryGet = "select `commission_percent` FROM finance_vendor_commission WHERE `vendor_id` = ".$vendorid." AND ((`start_date` <= '".$created_date."' AND `end_date` >= '".$created_date."') OR (`start_date` <= '".$created_date."' AND `end_date` = '0000-00-00'))";
+        //echo $queryGet;
         $resCommission = $readCon->query($queryGet)->fetch();
         $readCon->closeConnection();
+        $strTest = $vendorid .",". $shipment_id. "," . $created_date . "," . $queryGet;
+        $filename = "vendorcommission_".date("Ymd");
+        $filePathOfCsv = Mage::getBaseDir('media').DS.'misreport'.DS.$filename.'.txt';
+        $fp=fopen($filePathOfCsv,'a');
+        
         if($resCommission){
             if(is_numeric($resCommission['commission_percent'])){
                 $commission_percent = $resCommission['commission_percent'];        
             } else {
                 $commission_percent = 20;
             }
-        }
-         else {
+        }else {
             $commission_percent = 20;
         }
+        $strTest .= ",".$commission_percent ."\n";
+        fputs($fp, $strTest);
+        fclose($fp);
         return  $commission_percent;
     }
 }

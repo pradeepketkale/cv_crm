@@ -112,7 +112,7 @@ include('session.php');
 	$sqlVendorComm = "SELECT `vendor_id`,`commission_percent`, `date_created` FROM `finance_vendor_commission` WHERE `vendor_id` = '".$vendor_id."' order by `date_created` desc ";
 	try{
 		$rVendor = mysql_query($sqlVendorComm,$mainConnection);
-		$rowCount = mysql_num_rows($sqlVendorComm);
+		$rowCount = mysql_num_rows($rVendor);
 		$row = mysql_fetch_assoc($rVendor);
 		if($rowCount == 0){
 			$vendor_commission = 20;

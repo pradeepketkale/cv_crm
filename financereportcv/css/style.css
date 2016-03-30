@@ -1,5 +1,5 @@
  /*=====Login page pradeep========*/
- 
+
  body
   {
     margin:0px;
@@ -26,9 +26,9 @@ a:focus {
 }
 figure {
   margin: 0;
-} 
-  
-  
+}
+
+
 input,
 select {
   height: 25px;
@@ -108,16 +108,16 @@ div#example_filter {
   border-top: 0;
   background: none;
   border-color: #666;
-} 
+}
 
 /* =================================================================================
-Logo 
+Logo
 ================================================================================= */
 .logo-wrapper{
     width:350px;
     margin:0 auto;
     border-bottom: 1px solid #e1e1e1;
-    
+
   }
 #ustatus
 {
@@ -130,10 +130,10 @@ Logo
           background-color: #FFFFFF;
           margin-left: 44px;
           margin-top: 15px;
-    
+
   } --*/
 .logo{
-          background: url(../img/craftsvilla_logo.jpg ) no-repeat; 
+          background: url(../img/craftsvilla_logo.jpg ) no-repeat;
         height: 41px;
           width: 178px;
           background-color: #FFFFFF;
@@ -141,16 +141,16 @@ Logo
 }
 
 .logo_h{
-  
+
    background: url(../img/craftsvilla_logo.jpg ) no-repeat;
           height: 77px;
     background-color: #fff;
     background-position: 49px 11px;
-          
-} 
-  
-  
-  
+
+}
+
+
+
 /* =================================================================================
 Login Pages
 ================================================================================= */
@@ -230,7 +230,7 @@ Login Pages
 }
 .login-form .footer-links a:hover {
   color: #37363e;
-} 
+}
  .form-control {
   height: 34px;
   border-radius: 3px;
@@ -251,15 +251,15 @@ Login Pages
 .form-label {
   font-weight: 500;
 }
- 
+
 .btn_wdt
   {
     width:275px;
-  } 
+  }
  /* =================================================================================
 Buttons
 ================================================================================= */
- 
+
  .btn {
   font-size: 14px;
   padding: 7px 20px 7px 20px;
@@ -338,7 +338,7 @@ Buttons
     color: #000 !important;
     border: 1px solid #111;
     background-color: #585858;
-   
+
 }
 .paginate_button:active {
     outline: none;
@@ -355,17 +355,17 @@ Buttons
   /*--width:1024px; --*/
   margin:0 auto;
   height:auto;
-  
-  
+
+
 }
 .container-wrapper1{
   width:1024px;
   margin:0 auto;
   height:auto;
   box-shadow:0px 1px 27px 1px #E1E1E1;
-  
-  
-  
+
+
+
 }
 .container-wrapper2{
   width:1024px;
@@ -374,7 +374,7 @@ Buttons
   box-shadow:0px 1px 27px 1px #E1E1E1;
   border-bottom:3px solid #a1a1a1;
   font-size: 12px;
-  
+
 }
 
 
@@ -394,10 +394,10 @@ Buttons
     color: #8b704c;
     font-family: sans-serif;
   margin-right: 271px;
-  
+
 }
 .Page-container{
-  
+
   width:100%;
   border:1px solid #e1e1e1;
   box-shadow:0px 1px 17px -8px #000000;
@@ -410,9 +410,9 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f7fbfc', end
 }
 
 .page-breadcrumb{
-  
+
   width:100%;
-  
+
 }
 .page-breadcrumb > .breadcrumb > li {
       font-size: 11px;
@@ -433,7 +433,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f7fbfc', end
     float:right;
     margin-top: -37px;
     font-size: 14px;
-    font-family: Verdana, sans-serif;    
+    font-family: Verdana, sans-serif;
   }
 .FRnavigation a
   {
@@ -447,19 +447,20 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f7fbfc', end
 
 
 .container_inner1{
-  
+
   width:300px;height: 90px;background-color:rgba(0, 188, 212, 0.82);border-radius: 4px;float:left;margin-right:25px;border:1px solid #e1e1e1;cursor:pointer;
 }
 .container_inner1 h3{
    text-align: center;
     color: #fff;
     /*-- font-size: 18px; --*/
+    font-size: medium;
     font-family: Verdana, sans-serif;
     text-shadow: 0px 1px rgba(127, 127, 127, 0.66);
-  
+
 }
 .container_inner2 {
-    font-size: 11px;  
+    font-size: 11px;
 }
 .container_inner1:hover{
   box-shadow: 0px -3px 12px -3px #000;
@@ -496,12 +497,12 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f7fbfc', end
 /*.fg-toolbar.ui-toolbar.ui-widget-header.ui-helper-clearfix.ui-corner-tl.ui-corner-tr {
     width: 1946px;
 }
- 
+
  .fg-toolbar.ui-toolbar.ui-widget-header.ui-helper-clearfix.ui-corner-bl.ui-corner-br
  {
   width: 1946px;
  }*/
- 
+
  .floatRight{
   float:right;
 }
