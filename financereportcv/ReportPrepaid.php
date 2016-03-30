@@ -46,20 +46,31 @@ include('session.php');
 				buttonImage: "img/cal.png",
 				buttonImageOnly: true,
 				dateFormat: 'yy-mm-dd',
-			}); 
+			});
 
 		$('#downloadcsv').on('click', function () {
 
-			var startdate=document.myForm.startdate.value;  
-				var enddates=document.myForm.enddates.value;  
-  
-				if (startdate==null || startdate==""){  
-	 				 alert("Start Date can't be blank");  
-	  				 return false;  
-					 }else if(enddates==null || enddates==""){  
-	  				 alert("End date can't be blank");  
-	  				 return false;  
+			var startdate=document.myForm.startdate.value;
+				var enddates=document.myForm.enddates.value;
+
+				if (startdate==null || startdate==""){
+	 				 alert("Start Date can't be blank");
+	  				 return false;
+					 }else if(enddates==null || enddates==""){
+	  				 alert("End date can't be blank");
+	  				 return false;
 					}
+				var date1 = new Date(startdate);
+				var date2 = new Date(enddates);
+				var timeDiff = (date2.getTime() - date1.getTime());
+				var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
+				if (diffDays >=31){
+					alert("You are exceeding date Range..Please correct");
+					return false;
+				} else if (diffDays<0 ) {
+					alert("You are entering Wrong dates");
+					return false;
+				}
 			//console.log(jQuery.param( "yo" ));
 			var data1 = [];
 			data1['startdate'] = $( "#start" ).val();// "2014-01-01";
@@ -91,7 +102,7 @@ var filterByDate = function (column, startDate, endDate) {
 		} else {
 			return false;
 		}
-		
+
 	});
 };
 
@@ -160,17 +171,17 @@ var normalizeDate = function (dateString) {
 					<div class="container">
 						<div class="page-breadcrumb">
 
-							<div class="page-heading">            
+							<div class="page-heading">
 								<h1>Finance Report Dashboard</h1>
 								<!--<div class="clear" style="align="right";"><a href="dashboard.php" ><b>Dashboard</b></a>||
 		                       		 <a href="logout.php" ><b>Logout</b> </a>
 		                       	</div> -->
 		                       	<div class="FRnavigation" style="align="right";"><a href="dashboard.php" ><b>Dashboard</b></a>
                        		 <a href="logout.php" ><b>Logout</b> </a>
-                       	 </div>  
+                       	 </div>
 							</div>
 
-							<div class="clear"></div> 
+							<div class="clear"></div>
 						</div>
 
 
@@ -179,7 +190,7 @@ var normalizeDate = function (dateString) {
 
 			</div>
 		</div>
-	</div>	
+	</div>
 
 
 	<div class="grid grid-pad">
@@ -187,16 +198,16 @@ var normalizeDate = function (dateString) {
 			<div class="container-wrapper2">
 				<div style="width:100%; height:auto;padding:10px;border:1px solid #e1e1e1;border-radius:5px;">
 					<h2>Prepaid Report</h2>
-					<form action='#' method='POST' onsubmit="return validateform()" name="myForm" id="myForm">						
+					<form action='#' method='POST' onsubmit="return validateform()" name="myForm" id="myForm">
 						<table  width="100%" border="0" cellspacing="0" cellpadding="0" class="tbl_rptjen">
 
 							<tr>
-								
+
 								<td style="text-align:left;">
 									<b>Start Date :</b>
 									<input type="text"  tabindex="15" maxlength="4" size="9" value="" class="field text datpik" name="startdate" id="start" required>
 								</td>
-								
+
 								<td style="text-align:left;">
 									<b>End Date : </b><input type="text"  tabindex="15" maxlength="4" size="9" value="" class="field text datpik" name="enddates" id="end" required>
 								</td>
@@ -204,7 +215,7 @@ var normalizeDate = function (dateString) {
 
 
 							<!-- <tr>
-										
+
 								<td colspan="2" align="center">
 									<button id="filter" class="btn btn-submit" type='submit' style='margin-right:15px;' > Submit </button>
 								</td>
@@ -253,7 +264,7 @@ var normalizeDate = function (dateString) {
 						<option value="partially recieved">partially recieved</option>
 						<option value="Damage/Lost in Transit">Damage/Lost in Transit</option>
 					</select></td>
-					
+
 					<td><b>Payment Status:</b></td>
 					<td><select id="paymentstatus" form="myForm" style="margin-right:3em; width:6em">
 						<option value="all">ALL</option>

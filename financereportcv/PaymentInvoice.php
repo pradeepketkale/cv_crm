@@ -33,20 +33,30 @@ include('session.php');
 
 
 		//validation pradeep
-			console.log('working')  
-				var startdate=document.myForm.startdate.value;  
-				var enddate=document.myForm.enddate.value;  
-  
-				if (startdate==null || startdate==""){  
-	 				 alert("Start Date can't be blank");  
-	  				 return false;  
-					 }else if(enddate==null || enddate==""){  
-	  				 alert("End date can't be blank");  
-	  				 return false;  
-					}
+			console.log('working')
+				var startdate=document.myForm.startdate.value;
+				var enddate=document.myForm.enddate.value;
+
+				if (startdate==null || startdate==""){
+ 				 alert("Start Date can't be blank");
+  				 return false;
+				 }else if(enddate==null || enddate==""){
+  				 alert("End date can't be blank");
+  				 return false;
+				}
+				var date1 = new Date(startdate);
+				var date2 = new Date(enddates);
+				var timeDiff = (date2.getTime() - date1.getTime());
+				var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
+				if (diffDays >=31){
+					alert("You are exceeding date Range..Please correct");
+					return false;
+				} else if (diffDays<0 ) {
+					alert("You are entering Wrong dates");
+					return false;
+				}
 		//validation end
-
-
+				document.location.href="/financereport/financereport/paymentInvoice/?startdate="+$( "#start" ).val() + "&enddate="+$( "#end" ).val();
 				$('.dataloaddiv').show();
 			})
 
@@ -58,7 +68,7 @@ include('session.php');
 				buttonImageOnly: true,
 				dateFormat: 'yy-mm-dd',
 			});
-			
+
 			$( "#end" ).datepicker({
 				showOn: "button",
 				changeMonth: true,
@@ -66,14 +76,19 @@ include('session.php');
 				buttonImage: "img/cal.png",
 				buttonImageOnly: true,
 				dateFormat: 'yy-mm-dd',
-			}); 
-			
+			});
+
 		});
 
 </script>
 
 <script type="text/javascript">
 	$(document).ready(function() {
+
+		$(document).on("submit", "form", function(e){
+		    e.preventDefault();
+		    return  false;
+		});
 		var matched, browser;
 		jQuery.uaMatch = function( ua ) {
 			ua = ua.toLowerCase();
@@ -119,9 +134,9 @@ include('session.php');
 	require_once '../app/Mage.php';
 	Mage::app();
 
-	$uvstatus = Mage::getSingleton('udropship/source')->setPath('shipment_statuses')->toOptionHash();	
+	$uvstatus = Mage::getSingleton('udropship/source')->setPath('shipment_statuses')->toOptionHash();
 	?>
-	
+
 	<div class="grid Page-container">
 		<div class="col-1-1">
 
@@ -136,26 +151,24 @@ include('session.php');
 					<div class="container">
 						<div class="page-breadcrumb">
 
-							<div class="page-heading">            
+							<div class="page-heading">
 								<h1>Finance Report Dashboard</h1>
 								<!--<div class="clear" style="align="right";"><a href="dashboard.php" ><b>Dashboard</b></a>||
 		                       		 <a href="logout.php" ><b>Logout</b> </a>
 		                       	</div> -->
 		                       	<div class="FRnavigation" style="align="right";"><a href="dashboard.php" ><b>Dashboard</b></a>
                        		 <a href="logout.php" ><b>Logout</b> </a>
-                       	 </div> 
+                       	 </div>
 							</div>
 
-							<div class="clear"></div> 
+							<div class="clear"></div>
 						</div>
-
-
 					</div>
 				</div>
 
 			</div>
 		</div>
-	</div>	
+	</div>
 
 
 	<div class="grid grid-pad">
@@ -163,28 +176,23 @@ include('session.php');
 			<div class="container-wrapper2">
 				<div style="width:100%; height:auto;padding:10px;border:1px solid #e1e1e1;border-radius:5px;">
 				<h2>Payment Invoice</h2>
-					<form action='/financereport/financereport/paymentInvoice/' method='get' name="myForm">						
+					<form action='' name="myForm">
 						<table  width="100%" border="0" cellspacing="0" cellpadding="0" class="tbl_rptjen">
 
 							<tr>
-								
+
 								<td style="text-align:left;">
 									<b>Start Date :</b><input type="text"  tabindex="15" maxlength="4" size="9" value="" class="field text datpik" name="startdate" id="start">
 								</td>
-								
+
 								<td style="text-align:left;">
 									<b>End Date : </b><input type="text"  tabindex="15" maxlength="4" size="9" value="" class="field text datpik" name="enddate" id="end">
 								</td>
 							</tr>
 							<tr>
-
 								<td colspan="2" align="center">
-									<button id="filter" class="btn btn-submit" type='submit' style='margin-right:15px;' > Submit </button>
-
-
+									<button id="filter" class="btn btn-submit" type='submit' style='margin-right:15px;' > Download </button>
 								</td>
-
-
 							</tr>
 						</table>
 					</form>
@@ -197,7 +205,7 @@ include('session.php');
 
 			<div class="dataloaddiv">
 
-				<h3>Please wait while your CSV gets Prepared. <br> Please Reload the page After file gets Download. </h3>	
+				<h3>Please wait while your CSV gets Prepared. <br> Please Reload the page After file gets Download. </h3>
 				<div class="loader"></div>
 			</div>
 

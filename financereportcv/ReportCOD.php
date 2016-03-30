@@ -49,9 +49,9 @@ include('session.php');
 				buttonImage: "img/cal.png",
 				buttonImageOnly: true,
 				dateFormat: 'yy-mm-dd',
-			}); 
+			});
 
-			
+
 
 // table.on( 'xhr', function () {
 // 				    var data = table.ajax.url();
@@ -67,6 +67,28 @@ $('#csv').on('click', function () {
 } );
 
 $('#downloadcsv').on('click', function () {
+
+	var startdate=document.myForm.startdate.value;
+	var enddates=document.myForm.enddates.value;
+
+	if (startdate==null || startdate==""){
+		alert("Start Date can't be blank");
+		return false;
+	}else if(enddates==null || enddates==""){
+		alert("End date can't be blank");
+		return false;
+	}
+	var date1 = new Date(startdate);
+	var date2 = new Date(enddates);
+	var timeDiff = (date2.getTime() - date1.getTime());
+	var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
+	if (diffDays >=31){
+		alert("You are exceeding date Range..Please correct");
+		return false;
+	} else if (diffDays<0 ) {
+		alert("You are entering Wrong dates");
+		return false;
+	}
 	//console.log(jQuery.param( data1 ));
 	var data1 = [];
 	data1['startdate'] = $( "#start" ).val();// "2014-01-01";
@@ -76,40 +98,48 @@ $('#downloadcsv').on('click', function () {
 	data1['paymentstatus'] = $( "#paymentstatus" ).val();
 	data1['couriername'] = $( "#couriername" ).val();
 	// console.log(data1);
-	 /*alert("/financereport/financereport/downloadcod/?startdate="+$( "#start" ).val() + "&enddate="+$( "#end" ).val() +"&ustatus="+$( "#ustatus" ).val() +"&paymentstatus="+$( "#paymentstatus" ).val() +"&couriername="+$( "#couriername" ).val());*/
+	/*alert("/financereport/financereport/downloadcod/?startdate="+$( "#start" ).val() + "&enddate="+$( "#end" ).val() +"&ustatus="+$( "#ustatus" ).val() +"&paymentstatus="+$( "#paymentstatus" ).val() +"&couriername="+$( "#couriername" ).val());*/
 	document.location.href="/financereport/financereport/downloadcod/?startdate="+$( "#start" ).val() + "&enddate="+$( "#end" ).val() +"&ustatus="+$( "#ustatus" ).val() +"&paymentstatus="+$( "#paymentstatus" ).val() +"&couriername="+$( "#couriername" ).val();
 } );
 
 $('.btnhdsh').hide();
 
 $('#filter').on('click', function (e) {
-		
+
 		//validation pradeep
-			//console.log('working')  
-				var startdate=document.myForm.startdate.value;  
-				var enddates=document.myForm.enddates.value;  
-  
-				if (startdate==null || startdate==""){  
-	 				 alert("Start Date can't be blank");  
-	  				 return false;  
-					 }else if(enddates==null || enddates==""){  
-	  				 alert("End date can't be blank");  
-	  				 return false;  
-					}
+			//console.log('working')
+			var startdate=document.myForm.startdate.value;
+			var enddates=document.myForm.enddates.value;
+
+			if (startdate==null || startdate==""){
+				alert("Start Date can't be blank");
+				return false;
+			}else if(enddates==null || enddates==""){
+				alert("End date can't be blank");
+				return false;
+			}
+			var date1 = new Date(startdate);
+			var date2 = new Date(enddates);
+			var timeDiff = Math.abs(date2.getTime() - date1.getTime());
+			var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
+			if (diffDays >=31){
+				alert("You are exceeding 31 days date Range..Please correct");
+				return false;
+			}
 		//validation end
 
 		//
-		 $('#example tfoot tr th').find('select').css('background-color','red').hide();
-		  $('#example thead	 tr th').find('.ui-icon ').css('background-color','red').hide();
-		
-		// pradeep	
-		$('.btnhdsh').show();		
-		 table = $('#example').DataTable( {
+		$('#example tfoot tr th').find('select').css('background-color','red').hide();
+		$('#example thead	 tr th').find('.ui-icon ').css('background-color','red').hide();
+
+		// pradeep
+		$('.btnhdsh').show();
+		table = $('#example').DataTable( {
 		 	//"bJQueryUI": true,
 				// "bRetrieve": true,
 				"processing": true,
 				"serverSide": true,
-				"bDestroy": true,		
+				"bDestroy": true,
 				"ajax": {
 					"url": "/financereport/financereport/reportcod/",
 					"data": function ( d ) {
@@ -119,18 +149,18 @@ $('#filter').on('click', function (e) {
 						d.paymentstatus = $( "#paymentstatus" ).val();
 						d.couriername = $( "#couriername" ).val();
 						d.exportcsv = false;
-            		}
+					}
 
-        		},
+				},
 
 
-        		"lengthMenu": [ 25, 50, 75, 100 ],
- 				
-		        initComplete: function () {
+				"lengthMenu": [ 25, 50, 75, 100 ],
 
-		        	this.api().columns().every( function () {
+				initComplete: function () {
 
-		        		var column = this;
+					this.api().columns().every( function () {
+
+						var column = this;
 
 		        		//console.log(column[0]);
 		        		var select = $('<select><option value="">--Select--</option></select>')
@@ -138,38 +168,38 @@ $('#filter').on('click', function (e) {
 
 		        		.on( 'change', function () {
 
-							
-		        			var val = $.fn.dataTable.util.escapeRegex(
-		        				$(this).val() 
 
-		        				
+		        			var val = $.fn.dataTable.util.escapeRegex(
+		        				$(this).val()
+
+
 		        				);
 		        				//console.log(this);
-		        					
-		        			column
-		        			
-		        			.search( val ? '^'+val+'$' : '', true, false )
-							.draw()
-		        			
-		        		} );
 
-		        				
+		        				column
+
+		        				.search( val ? '^'+val+'$' : '', true, false )
+		        				.draw()
+
+		        			} );
+
+
 		        		column.data().unique().sort().each( function ( d, j ) {
 
-		        		select.append( '<option value="'+d+'">'+d+'</option>' )
+		        			select.append( '<option value="'+d+'">'+d+'</option>' )
 		        		//console.log(data);
 
-		        		} );
 		        	} );
-		        },       
+		        	} );
+				},
 
 
 
 
-		    } );
-	
-				
-		
+			} );
+
+
+
 
 			//console.log('#filter');
 			e.preventDefault();
@@ -180,13 +210,13 @@ $('#filter').on('click', function (e) {
 
 			//filterselected(13,paystatus);
 
-		
+
 			$.fn.dataTableExt.afnFiltering.length = 0;
 
 			return false;
 
-			//validation 
-			
+			//validation
+
 
 
 		} );
@@ -218,7 +248,7 @@ var filterByDate = function (column, startDate, endDate) {
 		} else {
 			return false;
 		}
-		
+
 	});
 };
 
@@ -262,17 +292,17 @@ var normalizeDate = function (dateString) {
 			jQuery.browser = browser;
 		} );
 
-</script>
+	</script>
 
-<style>
-	#ui-datepicker-div{width:18% !important;}
-	#example_wrapper{overflow-x: scroll;}
+	<style>
+		#ui-datepicker-div{width:18% !important;}
+		#example_wrapper{overflow-x: scroll;}
 
-	#example_paginate .ui-state-default{width: 50px;}
-	.dt-button{padding: :10px;}
-</style>
+		#example_paginate .ui-state-default{width: 50px;}
+		.dt-button{padding: :10px;}
+	</style>
 </head>
-<body>	
+<body>
 	<div class="grid Page-container">
 		<div class="col-1-1">
 
@@ -287,195 +317,195 @@ var normalizeDate = function (dateString) {
 					<div class="container">
 						<div class="page-breadcrumb">
 
-							<div class="page-heading">            
+							<div class="page-heading">
 								<h1>Finance Report Dashboard</h1>
 								<!--<div class="clear" style="align="right";"><a href="dashboard.php" ><b>Dashboard</b></a>||
 		                       		 <a href="logout.php" ><b>Logout</b> </a>
-		                       	</div> -->
-		                       	<div class="FRnavigation" style="align="right";"><a href="dashboard.php" ><b>Dashboard</b></a>
-                       		 <a href="logout.php" ><b>Logout</b> </a>
-                       	 </div>          
-							</div>
+		                       		</div> -->
+		                       		<div class="FRnavigation" style="align="right";"><a href="dashboard.php" ><b>Dashboard</b></a>
+		                       			<a href="logout.php" ><b>Logout</b> </a>
+		                       		</div>
+		                       	</div>
 
-							<div class="clear"></div> 
-						</div>
-
-
-					</div>
-				</div>
-
-			</div>
-		</div>
-	</div>	
+		                       	<div class="clear"></div>
+		                       </div>
 
 
-	<div class="grid grid-pad">
-		<div class="col-1-1">
-			<div class="container-wrapper2">
-				<div style="width:100%; height:auto;padding:10px;border:1px solid #e1e1e1;border-radius:5px;">
-				<h2>COD Report </h2>
-					<form action='#' method='POST' onsubmit="return validateform()" name="myForm" id="myForm">						
-						<table  width="100%" border="0" cellspacing="0" cellpadding="0" class="tbl_rptjen">
+		                   </div>
+		               </div>
 
-							<tr>
-								
-								<td style="text-align:left;">
-									<b>Start Date :</b>
-									<input type="text"  tabindex="15" maxlength="4" size="9" value="" class="field text datpik" name="startdate" id="start" required>
-								</td>
-								
-								<td style="text-align:left;">
-									<b>End Date : </b><input type="text"  tabindex="15" maxlength="4" size="9" value="" class="field text datpik" name="enddates" id="end" required>
-								</td>
-							</tr>
+		           </div>
+		       </div>
+		   </div>
 
-								
+
+		   <div class="grid grid-pad">
+		   	<div class="col-1-1">
+		   		<div class="container-wrapper2">
+		   			<div style="width:100%; height:auto;padding:10px;border:1px solid #e1e1e1;border-radius:5px;">
+		   				<h2>COD Report </h2>
+		   				<form action='#' method='POST' onsubmit="return validateform()" name="myForm" id="myForm">
+		   					<table  width="100%" border="0" cellspacing="0" cellpadding="0" class="tbl_rptjen">
+
+		   						<tr>
+
+		   							<td style="text-align:left;">
+		   								<b>Start Date :</b>
+		   								<input type="text"  tabindex="15" maxlength="4" size="9" value="" class="field text datpik" name="startdate" id="start" required>
+		   							</td>
+
+		   							<td style="text-align:left;">
+		   								<b>End Date : </b><input type="text"  tabindex="15" maxlength="4" size="9" value="" class="field text datpik" name="enddates" id="end" required>
+		   							</td>
+		   						</tr>
+
+
 							<!-- <tr>
-										
+
 								<td colspan="2" align="center">
 									<button id="filter" class="btn btn-submit" type='submit' style='margin-right:15px;' > Submit </button>
 								</td>
 							</tr> -->
-					</table>
+						</table>
 					</form>
 
 					<!----pradeep -->
 
 					<table border="0" width="100%" cellspacing="0" cellpadding="0" style="width:90%;padding:0px; margin:0 auto;">
-<tr>
-	<td><b>Udropship Status:</b></td>
-	<td>
-		<select id="ustatus" form="myForm" style="margin-right:3em; width:15em">
-						  <option value="all">ALL</option>
-						  <option value="pending">pending</option>
-						  <option value="shipped to customer">shipped to customer</option>
-						  <option value="partial">partial</option>
-						  <option value="pendingpickup">pendingpickup</option>
-						  <option value="ack">ack</option>
-						  <option value="exported">exported</option>
-						  <option value="ready">ready</option>
-						  <option value="onhold">onhold</option>
-						  <option value="backorder">backorder</option>
-						  <option value="cancelled">cancelled</option>
-						  <option value="delivered">delivered</option>
-						  <option value="processing">processing</option>
-						  <option value="refundintiated">refundintiated</option>
-						  <option value="not delivered">not delivered</option>
-						  <option value="charge_back">charge_back</option>
-						  <option value="shipped craftsvilla">shipped craftsvilla</option>
-						  <option value="qc_rejected">qc_rejected</option>
-						  <option value="received">received</option>
-						  <option value="out of stock">out of stock</option>
-						  <option value="partial refund initiated">partial refund initiated</option>
-						  <option value="dispute raised">dispute raised</option>
-						  <option value="shipment delayed">shipment delayed</option>
-						  <option value="partially shipped">partially shipped</option>
-						  <option value="refund to do">refund to do</option>
-						  <option value="Accepted">Accepted</option>
-						  <option value="Returned By Customer">Returned By Customer</option>
-						  <option value="Returned To Seller">Returned To Seller</option>
-						  <option value="Mainfest Shared">Mainfest Shared</option>
-						  <option value="COD SHIPMENT PICKED UP">COD SHIPMENT PICKED UP</option>
-						  <option value="Packing slip printed">Packing slip printed</option>
-						  <option value="Handed to courier">Handed to courier</option>
-						  <option value="Returned Recieved from customer">Returned Recieved from customer</option>
-						  <option value="partially recieved">partially recieved</option>
-						  <option value="Damage/Lost in Transit">Damage/Lost in Transit</option>
-						</select>
+						<tr>
+							<td><b>Udropship Status:</b></td>
+							<td>
+								<select id="ustatus" form="myForm" style="margin-right:3em; width:15em">
+									<option value="all">ALL</option>
+									<option value="pending">pending</option>
+									<option value="shipped to customer">shipped to customer</option>
+									<option value="partial">partial</option>
+									<option value="pendingpickup">pendingpickup</option>
+									<option value="ack">ack</option>
+									<option value="exported">exported</option>
+									<option value="ready">ready</option>
+									<option value="onhold">onhold</option>
+									<option value="backorder">backorder</option>
+									<option value="cancelled">cancelled</option>
+									<option value="delivered">delivered</option>
+									<option value="processing">processing</option>
+									<option value="refundintiated">refundintiated</option>
+									<option value="not delivered">not delivered</option>
+									<option value="charge_back">charge_back</option>
+									<option value="shipped craftsvilla">shipped craftsvilla</option>
+									<option value="qc_rejected">qc_rejected</option>
+									<option value="received">received</option>
+									<option value="out of stock">out of stock</option>
+									<option value="partial refund initiated">partial refund initiated</option>
+									<option value="dispute raised">dispute raised</option>
+									<option value="shipment delayed">shipment delayed</option>
+									<option value="partially shipped">partially shipped</option>
+									<option value="refund to do">refund to do</option>
+									<option value="Accepted">Accepted</option>
+									<option value="Returned By Customer">Returned By Customer</option>
+									<option value="Returned To Seller">Returned To Seller</option>
+									<option value="Mainfest Shared">Mainfest Shared</option>
+									<option value="COD SHIPMENT PICKED UP">COD SHIPMENT PICKED UP</option>
+									<option value="Packing slip printed">Packing slip printed</option>
+									<option value="Handed to courier">Handed to courier</option>
+									<option value="Returned Recieved from customer">Returned Recieved from customer</option>
+									<option value="partially recieved">partially recieved</option>
+									<option value="Damage/Lost in Transit">Damage/Lost in Transit</option>
+								</select>
 
-	</td>
-	<td><b>Payment Status:</b></td>
-	<td>
-		<select id="paymentstatus" form="myForm" style="margin-right:3em; width:6em">
-						  <option value="all">ALL</option>
-						  <option value="0">Unpaid</option>
-						  <option value="1">Paid</option>
-						  <option value="2">Refunded</option>
-						</select>
+							</td>
+							<td><b>Payment Status:</b></td>
+							<td>
+								<select id="paymentstatus" form="myForm" style="margin-right:3em; width:6em">
+									<option value="all">ALL</option>
+									<option value="0">Unpaid</option>
+									<option value="1">Paid</option>
+									<option value="2">Refunded</option>
+								</select>
 
-	</td>
-	<td><b>Courier name:</b></td>
-	<td>
-		<select id="couriername" form="myForm" style="margin-right:3em; width:10em">
-						  <option value="all">ALL</option>
-						  <option value="Aramex">Aramex</option>
-						  <option value="Fedex">Fedex</option>
-						  <option value="Dtdc">Dtdc</option>
-						</select>
+							</td>
+							<td><b>Courier name:</b></td>
+							<td>
+								<select id="couriername" form="myForm" style="margin-right:3em; width:10em">
+									<option value="all">ALL</option>
+									<option value="Aramex">Aramex</option>
+									<option value="Fedex">Fedex</option>
+									<option value="Dtdc">Dtdc</option>
+								</select>
 
-	</td>
-</tr>
+							</td>
+						</tr>
 
-<tr>
+						<tr>
 
-<td colspan="2" align="right">
+							<td colspan="2" align="right">
 
-<button id="filter" class="btn btn-submit" type='submit' form="myForm"  style='margin-right:15px;margin-left:30%;margin-top:1em;' > Show Data </button>
+								<button id="filter" class="btn btn-submit" type='submit' form="myForm"  style='margin-right:15px;margin-left:30%;margin-top:1em;' > Show Data </button>
 
-</td>
-<td colspan="4" align="left">
-	<button id="downloadcsv" class="btn btn-submit" type='submit' style='margin-right:15px;margin-left:20%;margin-top:1em;' > Download CSV </button>
-</td>
+							</td>
+							<td colspan="4" align="left">
+								<button id="downloadcsv" class="btn btn-submit" type='submit' style='margin-right:15px;margin-left:20%;margin-top:1em;' > Download CSV </button>
+							</td>
 
 
 
-</tr>
-</table>
+						</tr>
+					</table>
 					<!---pradeep -->
 
 
 
 				</div>
-</div>
-<div class="clear"></div> 
-</div>
-</div>
-<div class="grid grid-pad">
-		
-							<table id="example" class="display btnhdsh" cellspacing="0" width="100%">    
-								<button id="csv" class="btn btn-submit btnhdsh" type='submit' style="margin-bottom:10px;"> Convert To CSV  </button>
-								<thead >
-									<tr>
-										<th>Order Id</th>
-										<th>Order Date</th>
-										<th>Shipment Id</th>
-										<th>Udropship Status</th>
-										<th>Payout Status</th>
-										<th>Shipment Date</th>
-										<th>Awb Number</th>
-										<th>Shipment Update</th>
-										<th>UTR Number</th>
-										<th>Payment Updated Date</th>
-										<th>Vendor Name</th>
-										<th>SubTotal</th>
-										<th>Payment Amount</th>
-										<th>Comission Amount</th>
-										<th>Courier Name</th>
-									</tr>
-
-								</thead>
-								<tfoot >
-									<tr class="aaa">
-										<th>Order Id</th>
-										<th>Order Date</th>
-										<th>Shipment Id</th>
-										<th>Udropship Status</th>
-										<th>Payout Status</th>
-										<th>Shipment Date</th>
-										<th>Awb Number</th>
-										<th>Shipment Update</th>
-										<th>UTR Number</th>
-										<th>Payment Updated Date</th>
-										<th>Vendor Name</th>
-										<th>SubTotal</th>
-										<th>Payment Amount</th>
-										<th>Comission Amount</th>
-										<th>Courier Name</th>
-									</tr>
-
-								</tfoot>
-								</table>
-
+			</div>
+			<div class="clear"></div>
 		</div>
-	</body>
-	</html>
+	</div>
+	<div class="grid grid-pad">
+
+		<table id="example" class="display btnhdsh" cellspacing="0" width="100%">
+			<button id="csv" class="btn btn-submit btnhdsh" type='submit' style="margin-bottom:10px;"> Convert To CSV  </button>
+			<thead >
+				<tr>
+					<th>Order Id</th>
+					<th>Order Date</th>
+					<th>Shipment Id</th>
+					<th>Udropship Status</th>
+					<th>Payout Status</th>
+					<th>Shipment Date</th>
+					<th>Awb Number</th>
+					<th>Shipment Update</th>
+					<th>UTR Number</th>
+					<th>Payment Updated Date</th>
+					<th>Vendor Name</th>
+					<th>SubTotal</th>
+					<th>Payment Amount</th>
+					<th>Comission Amount</th>
+					<th>Courier Name</th>
+				</tr>
+
+			</thead>
+			<tfoot >
+				<tr class="aaa">
+					<th>Order Id</th>
+					<th>Order Date</th>
+					<th>Shipment Id</th>
+					<th>Udropship Status</th>
+					<th>Payout Status</th>
+					<th>Shipment Date</th>
+					<th>Awb Number</th>
+					<th>Shipment Update</th>
+					<th>UTR Number</th>
+					<th>Payment Updated Date</th>
+					<th>Vendor Name</th>
+					<th>SubTotal</th>
+					<th>Payment Amount</th>
+					<th>Comission Amount</th>
+					<th>Courier Name</th>
+				</tr>
+
+			</tfoot>
+		</table>
+
+	</div>
+</body>
+</html>
