@@ -102,7 +102,7 @@ body,td { color:#2f2f2f; font:11px/1.35em Verdana, Arial, Helvetica, sans-serif;
                 <br />
                 <div>
                   <p style="margin:0px 0px 8px 0px; ">Your order with ID <span style="color:#1782dd;">{{var order.increment_id}} </span> has been dispatched with Tracking ID <span style="color:#1782dd;">{{block type='core/template' area='frontend' template='email/order/shipment/track_id.phtml' shipment=$shipment order=$order test=$test}}
-                  
+
                   </span>.</p>
                   <p style="margin:0px 0px 5px 0px; ">You can now track your order by clicking on the link below.</p>
                 </div>
@@ -111,13 +111,13 @@ body,td { color:#2f2f2f; font:11px/1.35em Verdana, Arial, Helvetica, sans-serif;
             <tr>
               <td valign="top" align="left" style="padding:10px;" bgcolor="#ffffff">
                     {{block type='core/template' area='frontend' template='email/order/shipment/cour1.phtml' shipment=$shipment order=$order test=$test}}
-                    <!-- {{if $test =="Aramex" || "aramex"}} 
+                    <!-- {{if $test =="Aramex" || "aramex"}}
                     <a href="https://www.aramex.com/express/track.aspx" target="_blank" style="padding:10px 15px; display:block; width:180px; margin:0; background:#ffcc06; border:solid 1px #dbb212; font-size:16px; color:#8e681a; text-decoration:none; outline:0; font-weight:bold; text-align:center;">Track Your shipment</a>
-                    {{else} 
-                    {{if $test=="Fedex"|| "fedex"}} 
+                    {{else}
+                    {{if $test=="Fedex"|| "fedex"}}
                     <a href="https://www.fedex.com/apps/fedextrack/?action=track" target="_blank" style="padding:10px 15px; display:block; width:180px; margin:0; background:#ffcc06; border:solid 1px #dbb212; font-size:16px; color:#8e681a; text-decoration:none; outline:0; font-weight:bold; text-align:center;">Track Your shipment</a>
-                    {{else} 
-                    {{if $test=="Dtdc" || "dtdc"}} 
+                    {{else}
+                    {{if $test=="Dtdc" || "dtdc"}}
                     <a href="<?php echo $this->getUrl('email/order/shipment/cour1.phtml'); ?>" target="_blank" style="padding:10px 15px; display:block; width:180px; margin:0; background:#ffcc06; border:solid 1px #dbb212; font-size:16px; color:#8e681a; text-decoration:none; outline:0; font-weight:bold; text-align:center;">Track Your shipment</a>
                     {{/if}} -->
               </td>
@@ -128,6 +128,13 @@ body,td { color:#2f2f2f; font:11px/1.35em Verdana, Arial, Helvetica, sans-serif;
                   <p style="margin:0px 0px 5px 0px; border-bottom:solid 1px #dedede; padding-bottom:15px;">In case of any query, please reach out to us at our
                    <a style="color:#116c9f; text-decoration:none; outline:0; border:0;" href="http://www.craftsvilla.com/contact-us-craftsvilla" target="_blank">customer care.</a> We would be happy to help you.</p>
                 </div>
+              </td>
+            </tr>
+             <tr><td style="line-height: 45px; font-size:18px; color:#626262; font-weight:bold; font-family:'Open Sans', Arial, sans-serif; padding-left:15px; " bgcolor="#ffffff">Your Order Details</td>
+            </tr>
+            <tr>
+              <td style="padding:10px;">
+                {{layout handle="sales_email_order_items" order=$order}}
               </td>
             </tr>
             <tr>
@@ -160,7 +167,7 @@ body,td { color:#2f2f2f; font:11px/1.35em Verdana, Arial, Helvetica, sans-serif;
                                 <td width="300" valign="top" align="left" class="responsive-image">
                                     <p style="font-size:18px; color:#424242; font-weight:bold; font-family:'Open Sans', Arial, sans-serif; margin:0 0 5px 0;">Billing Address:</p>
                                     <p style="font-size:14px; color:#747474; font-weight:normal; font-family:'Open Sans', Arial, sans-serif; margin:0 0 5px 0;">{{var order.getBillingAddress().format('html')}}</p>
-                                   
+
                                 </td>
                             </tr>
                         </table>
@@ -169,7 +176,7 @@ body,td { color:#2f2f2f; font:11px/1.35em Verdana, Arial, Helvetica, sans-serif;
                                 <td valign="top" width="300" align="left" class="responsive-image">
                                     <p style="font-size:18px; color:#424242; font-weight:bold; font-family:'Open Sans', Arial, sans-serif; margin:0 0 5px 0;">Shipping Address:</p>
                                     <p style="font-size:14px; color:#747474; font-weight:normal; font-family:'Open Sans', Arial, sans-serif; margin:0 0 5px 0;">{{var order.getShippingAddress().format('html')}}</p>
-                                   
+
                                 </td>
                             </tr>
                         </table>
