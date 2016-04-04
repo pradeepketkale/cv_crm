@@ -36,8 +36,8 @@ class Craftsvilla_Financereport_FinancereportController extends Mage_Core_Contro
             'partially shipped' => 22,
             'refund to do' => 23,
             'Accepted' => 24,
-            'Returned By Customer' => 25,
-            'Returned To Seller' => 26,
+            'COD RTO' => 25,
+            'Returned By Customer' => 26,
             'Mainfest Shared' => 27,
             'COD SHIPMENT PICKED UP' => 28,
             'Packing slip printed' => 30,
@@ -82,8 +82,8 @@ class Craftsvilla_Financereport_FinancereportController extends Mage_Core_Contro
 		when 22 then 'partially shipped'
 		when 23 then 'refund to do'
 		when 24 then 'Accepted'
-		when 25 then 'Returned By Customer'
-		when 26 then 'Returned To Seller'
+		when 25 then 'COD RTO'
+		when 26 then 'Returned By Customer'
 		when 27 then 'Mainfest Shared'
 		when 28 then 'COD SHIPMENT PICKED UP'
 		when 30 then 'Packing slip printed'
@@ -175,8 +175,8 @@ class Craftsvilla_Financereport_FinancereportController extends Mage_Core_Contro
             'partially shipped' => 22,
             'refund to do' => 23,
             'Accepted' => 24,
-            'Returned By Customer' => 25,
-            'Returned To Seller' => 26,
+            'COD RTO' => 25,
+            'Returned By Customer' => 26,
             'Mainfest Shared' => 27,
             'COD SHIPMENT PICKED UP' => 28,
             'Packing slip printed' => 30,
@@ -319,8 +319,8 @@ when 21 then 'shipment delayed'
 when 22 then 'partially shipped'
 when 23 then 'refund to do'
 when 24 then 'Accepted'
-when 25 then 'Returned By Customer'
-when 26 then 'Returned To Seller'
+when 25 then 'COD RTO'
+when 26 then 'Returned By Customer'
 when 27 then 'Mainfest Shared'
 when 28 then 'COD SHIPMENT PICKED UP'
 when 30 then 'Packing slip printed'
@@ -1292,8 +1292,8 @@ WHERE " . $sWhere;
             'partially shipped' => 22,
             'refund to do' => 23,
             'Accepted' => 24,
-            'Returned By Customer' => 25,
-            'Returned To Seller' => 26,
+            'COD RTO' => 25,
+            'Returned By Customer' => 26,
             'Mainfest Shared' => 27,
             'COD SHIPMENT PICKED UP' => 28,
             'Packing slip printed' => 30,
@@ -1338,8 +1338,8 @@ WHERE " . $sWhere;
 					when 22 then 'partially shipped'
 					when 23 then 'refund to do'
 					when 24 then 'Accepted'
-					when 25 then 'Returned By Customer'
-					when 26 then 'Returned To Seller'
+					when 25 then 'COD RTO'
+					when 26 then 'Returned By Customer'
 					when 27 then 'Mainfest Shared'
 					when 28 then 'COD SHIPMENT PICKED UP'
 					when 30 then 'Packing slip printed'
