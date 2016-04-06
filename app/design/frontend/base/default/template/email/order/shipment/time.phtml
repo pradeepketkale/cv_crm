@@ -1,0 +1,21 @@
+<?php
+$order =$this->getOrder();
+$address=$order->getShippingAddress();
+//echo $country_name = Mage::app()>getLocale()>getCountryTranslation($address['country_id']);
+ $country_name = $address['country_id'];
+if($country_name=='IN')
+{?>
+
+<?php
+}
+else
+{
+    ?>
+    <p style="font-size:18px; color:#424242; font-weight:normal; font-family:'Open Sans', Arial, sans-serif; margin:0; display:block; text-align:center;">8.00 am - 8.00 pm IST</p>
+    <?php
+}
+
+//echo "<pre>"; print_r($order);exit;
+
+
+?>

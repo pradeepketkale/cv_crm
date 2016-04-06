@@ -1,148 +1,318 @@
-<!--@subject {{var store.getFrontendName()}}: New Order # {{var order.increment_id}} @-->
+<!--@subject {{var store.getFrontendName()}}: New Order # {{var order.increment_id}}  @-->
 <!--@vars
 {"store url=\"\"":"Store Url",
 "skin url=\"images/logo_email.gif\" _area='frontend'":"Email Logo Image",
 "htmlescape var=$order.getCustomerName()":"Customer Name",
-"var store.getFrontendName()":"Store Name",
-"store url=\"customer/account/\"":"Customer Account Url",
 "var order.increment_id":"Order Id",
-"var order.getCreatedAtFormated('long')":"Order Created At (datetime)",
-"var order.getBillingAddress().format('html')":"Billing Address",
-"var payment_html":"Payment Details",
-"var order.getShippingAddress().format('html')":"Shipping Address",
-"var order.getShippingDescription()":"Shipping Description",
-"layout handle=\"sales_email_order_items\" order=$order":"Order Items Grid",
-"var order.getEmailCustomerNote()":"Email Order Note"}
+"var order.getStatusLabel()":"Order Status",
+"store url=\"customer/account/\"":"Customer Account Url",
+"var comment":"Order Comment",
+"var store.getFrontendName()":"Store Name"}
 @-->
 <!--@styles
 body,td { color:#2f2f2f; font:11px/1.35em Verdana, Arial, Helvetica, sans-serif; }
 @-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Responsive email</title>
+    <style type="text/css">
+      body {margin: 10px 0; padding: 0 10px; background: #F9F2E7; font-size: 14px;}
+      table {border-collapse: collapse;}
+      td {font-family: arial, sans-serif; color: #424242;}
 
+      @media only screen and (max-width: 480px) {
+        body,table,td,p,a,li,blockquote {
+          -webkit-text-size-adjust:none !important;
+        }
+        table {width: 100% !important;}
 
-  <div style="width:725px;color:#444444;font-size:13px;line-height:18px;font-family:Arial, Helvetica, sans-serif;margin:0 auto;"> 
-  <!--Header HTML-->
-  <div style="height:130px;">
-  <p style="float:right;"><a href="http://www.craftsvilla.com/" style="color:#0192b5;font-size:14px;font-style:italic;font-weight:bold;text-decoration:none;">Start Shopping <img src="{{skin url='images/arrow_icon.jpg' _area='frontend'}}" alt="" border="0" style="vertical-align:middle; margin-left:5px;"/></a></p>
-  <div style="clear:both;"><a href="http://www.craftsvilla.com/"><img src="{{skin url='images/logo_email.gif' _area='frontend'}}" alt="CraftsVilla" border="0" style="float:left;"/></a>
-    <div style="float: left; margin:26px 0 0 22px;"><img src="{{skin url='images/img_bg_new_email.jpg' _area='frontend'}}" alt="" border="0"/>
-      
-    </div>
-  </div>
-  <img src="{{skin url='images/top_image_new.jpg' _area='frontend'}}" alt="" border="0" style="padding-top:12px;"/> 
-  </div>
-  <!--Header HTML End--> 
-  
-  <!--Content Start -->
+        .responsive-image img {
+          height: auto !important;
+          max-width: 100% !important;
+          width: 100% !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr>
+        <td>
+          <table border="0" cellpadding="0" cellspacing="0" align="center" width="600" bgcolor="#ffffff">
+            <tr>
+              <td bgcolor="#ffcc06" style="padding: 30px 10px;" align="left" class="responsive-image">
+                  <table border="0" cellpadding="0" cellspacing="0" align="center" width="99%">
+                    <tr>
+                      <td valign="top" align="left" width="300"><a href="http://www.craftsvilla.com/" target="_blank" style="border:none; outline:0;"><img src="http://i.imgur.com/JvjbXBQ.png" style="border:0;" alt="" /></a></td>
+                      <td valign="top" align="right" width="300" style="color:#ffffff;">
+                        <span style="display:block; font-size:18px; color:#424242">Order Received</span>
+                        <span style="display:block; color:#424242;">ID: {{var order.increment_id}}</span>
+                      </td>
+                    </tr>
+                  </table>
+              </td>
+            </tr>
+            <tr>
+              <td valign="top" bgcolor="#bb9605" style="padding:0px;" align="center" class="responsive-image">
+                <table border="0" cellpadding="0" cellspacing="0" align="center" width="99%">
+                  <tr>
+                    <td valign="top" align="center">
+                      <a href="http://www.craftsvilla.com/sarees-sari.html" target="_blank" style="text-decoration:none; color:#ffffff; font-size:11px; outline:0; display:block;">
+                        <img src="http://i.imgur.com/cMncgB3.png" border="0" />
+                      </a>
+                    </td>
+                    <td valign="top" align="center">
+                      <a href="http://www.craftsvilla.com/clothing/lehnga.html" target="_blank" style="text-decoration:none; color:#ffffff; font-size:11px; outline:0; display:block;">
+                        <img src="http://i.imgur.com/StLI3RN.png" border="0" />
+                      </a>
+                    </td>
+                    <td valign="top" align="center">
+                      <a href="http://www.craftsvilla.com/clothing/salwar-suit.html" target="_blank" style="text-decoration:none; color:#ffffff; font-size:11px; outline:0; display:block;">
+                        <img src="http://i.imgur.com/DLsfaAS.png" border="0" />
+                      </a>
+                    </td>
+                    <td valign="top" align="center">
+                      <a href="http://www.craftsvilla.com/home-decor-products.html" target="_blank" style="text-decoration:none; color:#ffffff; font-size:11px; outline:0; display:block;">
+                        <img src="http://i.imgur.com/C2ddz9B.png" border="0" />
+                      </a>
+                    </td>
+                    <td valign="top" align="center">
+                      <a href="http://www.craftsvilla.com/accessories.html" target="_blank" style="text-decoration:none; color:#ffffff; font-size:11px; outline:0; display:block;">
+                        <img src="http://i.imgur.com/mzh85Ez.png" border="0" />
+                      </a>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <tr>
+              <td bgcolor="#ffffff" style="padding: 10px 10px 20px 10px;">
+                 <div style="font-size: 20px; text-transform: capitalize;">Dear <strong>{{htmlescape var=$order.getCustomerName()}}</strong></div>
+                <br />
+                <div>
+                  <p style="margin:0px 0px 5px 0px; ">You order with order ID <span style="color:#1782dd;">{{var order.increment_id}}</span> has been confirmed and is now being processed.</p>
+                  <p style="margin:0px 0px 5px 0px; ">The items will be shipped once ready.</p>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td bgcolor="#ffffff" style="padding: 0px 10px 20px 10px;">
+                <div>
+                 {{block type='core/template' area='frontend' template='email/order/shipment/international.phtml' shipment=$shipment order=$order test=$test}}
 
+               </div>
+              </td>
+            </tr>
+            <tr>
+              <td bgcolor="#ffffff" style="padding: 0px 10px 20px 10px;">
+                <div>
+                  <p style="margin:0px 0px 5px 0px; border-bottom:solid 1px #dedede; padding-bottom:15px;">In case of any query, please reach out to us at our <a style="color:#116c9f; text-decoration:none; outline:0; border:0;" href="http://www.craftsvilla.com/contact-us-craftsvilla" target="_blank">customer care.</a> We would be happy to help you.</p>
+                </div>
+              </td>
+            </tr>
+            <tr><td style="line-height: 45px; font-size:18px; color:#626262; font-weight:bold; font-family:'Open Sans', Arial, sans-serif; padding-left:15px; " bgcolor="#ffffff">Your Order Details</td>
+            </tr>
+            <tr>
+              <td style="padding:10px;">
+                {{layout handle="sales_email_order_items" order=$order}}
+              </td>
+            </tr>
+            <h1>
+            <?php echo "It works!"; ?>
+            </h1>
+            <tr>
+              <td style="padding:10px;">
+                <table border="0" cellpadding="0" cellspacing="0" align="center" width="99%" >
+                  <tr>
+                    <td bgcolor="#ffffff" width="100%" style="padding: 10px; border:solid 1px #dedede;" align="center">
+                        <table align="left" width="40%" cellpadding="0" cellspacing="0" border="0" >
+                            <tr>
+                                <td width="300" valign="top" align="left" class="responsive-image">
+                                    <p style="font-size:18px; color:#424242; font-weight:bold; font-family:'Open Sans', Arial, sans-serif; margin:0 0 5px 0;">Billing Address:</p>
+                                    <p style="font-size:14px; color:#747474; font-weight:normal; font-family:'Open Sans', Arial, sans-serif; margin:0 0 5px 0;">{{var order.getBillingAddress().format('html')}}</p>
 
-<table cellspacing="0" cellpadding="0" border="0" width="100%">
+                                </td>
+                            </tr>
+                        </table>
+                        <table align="right" width="40%" cellpadding="0" cellspacing="0" border="0" >
+                            <tr>
+                                <td valign="top" width="300" align="left" class="responsive-image">
+                                    <p style="font-size:18px; color:#424242; font-weight:bold; font-family:'Open Sans', Arial, sans-serif; margin:0 0 5px 0;">Shipping Address:</p>
+                                    <p style="font-size:14px; color:#747474; font-weight:normal; font-family:'Open Sans', Arial, sans-serif; margin:0 0 5px 0;">{{var order.getShippingAddress().format('html')}}</p>
+
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
 <tr>
-    <td align="center" valign="top" style="padding:20px 0 px 0">
-        <table bgcolor="#FFFFFF" cellspacing="0" cellpadding="10" border="0" width="100%">
-                    
-            <!-- [ middle starts here] -->
+              <td style="padding:10px;">
+                <table border="0" cellpadding="0" cellspacing="0" align="center" width="99%" >
+                  <tr>
+                    <td bgcolor="#ffffff" width="100%" style="padding: 10px; border:solid 1px #dedede;" align="center">
+                        <table align="left" width="99%" cellpadding="0" cellspacing="0" border="0" >
+                            <tr>
+                                <td valign="top" width="300" align="left" class="responsive-image">
+                                    <p style="font-size:18px; color:#424242; font-weight:bold; font-family:'Open Sans', Arial, sans-serif; margin:0 0 5px 0;">Payment Mode:</p>
+                                    <p style="font-size:14px; color:#747474; font-weight:normal; font-family:'Open Sans', Arial, sans-serif; margin:0 0 5px 0;"> {{var order.getPayment().getMethodInstance().getTitle()}}</p>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
             <tr>
-                <td valign="top">
-                    <h1 style="font-size:22px; font-weight:normal; line-height:22px; margin:0 0 11px 0;"">Hello, <span style="color:#CE3D49;">{{htmlescape var=$order.getCustomerName()}}</span></h1>
-                    <p style="font-size:12px; line-height:16px; margin:0;">
-                        Thank you for your order from {{var store.getFrontendName()}}.
-                        Once your package ships we will send an email with a link to track your order.
-                        You can check the status of your order by <a href="{{store url="customer/account/"}}" style="color:#1E7EC8;">logging into your account</a>.
-                        If you have any questions about your order please contact us at <a href="mailto:{{config path='trans_email/ident_support/email'}}" style="color:#1E7EC8;">{{config path='trans_email/ident_support/email'}}</a> <!--or call us at <span class="nobr">{{config path='general/store_information/phone'}}</span> Monday - Friday, 8am - 5pm IST-->.
+              <td bgcolor="#ffffff" align="left" valign="top" style="padding:10px;">
+                <div>
+                    <p style="font-size:14px; color:#626262; margin:10px 0px 0px 0px; line-height:22px;">We have customer friendly return policies and you may easily return your products.
                     </p>
-                 <p style="font-size:12px; line-height:16px; margin:0;">Your order confirmation is below. Thank you again for your business.</p>
-                    
-                  <p style="font-weight:bold;font-size:12px;background:#7599AB;padding:10px;color:#fff;">Note: All domestic delivery within India in 10 working days and all international delivery within 21 working days. Your order may come in mulitple separate shipments from different Sellers. Tracking details wil be updated in 5 working days.</p></td>
+                    <p style="font-size:14px; color:#626262; margin:10px 0px 0px 0px; padding-bottom:15px; line-height:22px;">Thank you from Craftsvilla Team</p>
+                </div>
+              </td>
             </tr>
             <tr>
-                <td>
-                    <h2 style="font-size:18px; font-weight:normal; margin:0;">Your Transaction #{{var order.increment_id}} <small>(placed on {{var order.getCreatedAtFormated('long')}})</small></h2>
-                </td>
+              <td valign="top" align="center" bgcolor="#ffffff" style="padding:10px;">
+                <table border="0" cellpadding="0" cellspacing="0" align="center" width="99%">
+                  <tr>
+                    <td bgcolor="#ebf6fb" style="border:solid 1px #bfd4de; padding:2px;" width="300">
+                      <div style="text-align:center; color:#4a4a4a; font-size:18px; padding:5px; border-bottom:solid 1px #bfd4de;">100% Buyer's Protection</div>
+                        <table border="0" cellpadding="0" cellspacing="0" align="left" width="33%">
+                          <tr>
+                            <td valign="top" width="300" style="padding:10px; border-right:solid 1px #bfd4de;">
+                              <table border="0" cellpadding="0" cellspacing="0" align="left" width="99%">
+                                <tr>
+                                  <td valign="top" width="200" align="right">
+                                    <a target="_blank" href="http://www.craftsvilla.com/shipping-artisans-designers" style="outline:0; display:block;">
+                                      <img src="http://i.imgur.com/FjEWTpf.png?1" style=" margin-right:15px;">
+                                    </a>
+                                  </td>
+                                  <td valign="top" width="200" align="left">
+                                    <a href="http://www.craftsvilla.com/shipping-artisans-designers" target="_blank" style="outline:0; text-decoration:none;">
+                                      <span style="display:block; font-size:14px; color:#4a4a4a;">SHIPPING</span>
+                                      <span style="display:block; font-size:14px; color:#4a4a4a;">POLICY</span>
+                                    </a>
+                                  </td>
+                                </tr>
+                              </table>
+                            </td>
+                          </tr>
+                        </table>
+                        <table border="0" cellpadding="0" cellspacing="0" align="left" width="33%">
+                          <tr>
+                            <td valign="top" width="300" style="padding:10px; border-right:solid 1px #bfd4de;">
+                              <table border="0" cellpadding="0" cellspacing="0" align="left" width="99%">
+                                <tr>
+                                  <td valign="top" width="200" align="right">
+                                    <a href="http://www.craftsvilla.com/shipping-artisans-designers" target="_blank" style="outline:0; display:block;">
+                                      <img src="http://i.imgur.com/7z3k7S0.png" style=" margin-right:15px;">
+                                    </a>
+                                  </td>
+                                  <td valign="top" width="200" align="left">
+                                    <a href="http://www.craftsvilla.com/shipping-artisans-designers" target="_blank" style="outline:0; color:#4a4a4a; text-decoration:none;">
+                                      <span style="display:block; font-size:14px; color:#4a4a4a;">RETURN</span>
+                                      <span style="display:block; font-size:14px; color:#4a4a4a;">POLICY</span>
+                                    </a>
+                                  </td>
+                                </tr>
+                              </table>
+                            </td>
+                          </tr>
+                        </table>
+                        <table border="0" cellpadding="0" cellspacing="0" align="left" width="33%">
+                          <tr>
+                            <td valign="top" width="300" style="padding:10px;">
+                              <table border="0" cellpadding="0" cellspacing="0" align="left" width="99%">
+                                <tr>
+                                  <td valign="top" width="200" align="right">
+                                    <a href="http://www.craftsvilla.com/shipping-artisans-designers" target="_blank" style="outline:0; display:block;">
+                                      <img src="http://i.imgur.com/5Lu6DJO.png" style=" margin-right:15px;">
+                                    </a>
+                                  </td>
+                                  <td valign="top" width="200" align="left">
+                                    <a href="http://www.craftsvilla.com/shipping-artisans-designers" style="text-decoration:none; color:#4a4a4a; outline:0;" target="_blank">
+                                      <span style="display:block; font-size:14px; color:#4a4a4a;">100% SECURE</span>
+                                      <span style="display:block; font-size:14px; color:#4a4a4a;">PAYMENTS</span>
+                                    </a>
+                                  </td>
+                                </tr>
+                              </table>
+                            </td>
+                          </tr>
+                        </table>
+                    </td>
+                  </tr>
+                </table>
+              </td>
             </tr>
+             {{block type='core/template' area='frontend' template='email/order/shipment/download.phtml' shipment=$shipment order=$order test=$test}}
             <tr>
-                <td>
-                    <table cellspacing="0" cellpadding="0" border="0" width="100%">
-                        <thead>
-                        <tr>
-                            <th align="left" width="325" bgcolor="#EAEAEA" style="font-size:13px; padding:5px 9px 6px 9px; line-height:1em;">Billing Information:</th>
-                            <th width="10"></th>
-                            <th align="left" width="325" bgcolor="#EAEAEA" style="font-size:13px; padding:5px 9px 6px 9px; line-height:1em;">Payment Method:</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td valign="top" style="font-size:12px; padding:7px 9px 9px 9px; border-left:1px solid #EAEAEA; border-bottom:1px solid #EAEAEA; border-right:1px solid #EAEAEA;">
-                                {{var order.getBillingAddress().format('html')}}
-                            </td>
-                            <td>&nbsp;</td>
-                            <td valign="top" style="font-size:12px; padding:7px 9px 9px 9px; border-left:1px solid #EAEAEA; border-bottom:1px solid #EAEAEA; border-right:1px solid #EAEAEA;">
-                                {{var payment_html}}
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                    <br/>
-                    {{depend order.getIsNotVirtual()}}
-                    <table cellspacing="0" cellpadding="0" border="0" width="100%">
-                        <thead>
-                        <tr>
-                            <th align="left" width="325" bgcolor="#EAEAEA" style="font-size:13px; padding:5px 9px 6px 9px; line-height:1em;">Shipping Information:</th>
-                            <th width="10"></th>
-                            <th align="left" width="325" bgcolor="#EAEAEA" style="font-size:13px; padding:5px 9px 6px 9px; line-height:1em;">Shipping Method:</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td valign="top" style="font-size:12px; padding:7px 9px 9px 9px; border-left:1px solid #EAEAEA; border-bottom:1px solid #EAEAEA; border-right:1px solid #EAEAEA;">
-                                {{var order.getShippingAddress().format('html')}}
-                                &nbsp;
-                            </td>
-                            <td>&nbsp;</td>
-                            <td valign="top" style="font-size:12px; padding:7px 9px 9px 9px; border-left:1px solid #EAEAEA; border-bottom:1px solid #EAEAEA; border-right:1px solid #EAEAEA;">
-                                {{var order.getShippingDescription()}}
-                                &nbsp;
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                    <br/>
-                    {{/depend}}
-                    {{layout handle="sales_email_order_items" order=$order}}
-                    <p style="font-size:12px; margin:0 0 10px 0">{{var order.getEmailCustomerNote()}}</p>
-                </td>
-            	            
-            </tr>
-           
-        </table>
-		  
-    </td>
-</tr>
-</table>
-<p><strong>Please note below our Refund Policy:</strong> <br>
-  We  have a friendly return policy whereby we refund for products which are damaged,  broken, have manufacturing defects, wrong size or does not match with  photo/description as given on Craftsvilla.
- <strong>The customer/buyer has  to get back to Craftsvilla customer care through phone/email within 24 hours of  receipt of damaged goods or goods not meeting description.</strong>&nbsp;Craftsvilla will then log a dispute and  initiate a process of resolution between the artisan/designer and the customer.  Customer will have to send an image of product on email in case she is claiming  that the product is damaged or not matching description.&nbsp;<strong>The return shipping to seller for the product  will be borne by the customer.</strong></p>
+              <td bgcolor="#ffffff" style="padding:10px;">
+                <table border="0" cellpadding="0" cellspacing="0" align="center" width="99%">
+                  <tr>
+                    <td width="250" bgcolor="#ffffff" style="padding: 10px; color: #000; border:solid 1px #dedede;">
+                      <p style="font-size:18px; color:#424242; font-weight:normal; font-family:'Open Sans', Arial, sans-serif; margin:0; display:block; text-align:center;">QUERIES?</p>
+                      <p style="font-size:18px; color:#424242; font-weight:normal; font-family:'Open Sans', Arial, sans-serif; margin:5px 0px; display:block; text-align:center;">Email us on <a href="mailto:customercare@craftsvilla.com" style="color:#116c9f; text-decoration:none; outline:0;">customercare@craftsvilla.com</a> or call us at</p>
+                      <p style="font-size:25px; color:#424242; font-weight:normal; font-family:'Open Sans', Arial, sans-serif; margin:0; display:block; text-align:center;">
+                        <a href="tel:02261579090" style="text-decoration:none; outline:0; color:#424242;">022-61579090</a>
+                      </p>
+                      {{block type='core/template' area='frontend' template='email/order/shipment/time.phtml' shipment=$shipment order=$order test=$test}}
 
- <!--Content End --> 
-  
-  <!--Footer HTML--> 
-  <div style="height:215px;">
-  <img src="{{skin url='images/top_image_new.jpg' _area='frontend'}}" alt="" border="0" style="padding-top:12px;"/>
-  <div style="background:#ebebeb;color:#343232;font-style:italic;overflow:hidden;padding:9px 6px 15px;">
-    <div style="padding:0 10px 5px;overflow:hidden;">
-      <p style="font-size:12px;font-style:normal;float:left;margin:4px 0 0 0;"><a href="http://www.craftsvilla.com/about-us-craftsvilla/" style="text-decoration:none;color:#000000;">About</a> | <a href="http://www.craftsvilla.com/contact-us-craftsvilla/" style="text-decoration:none;color:#000000;">Contact Us</a> | <a href="http://www.craftsvilla.com/shipping-artisans-designers/" style="text-decoration:none;color:#000000;">Shipping &amp; Return Policy</a> | <a href="http://www.craftsvilla.com/terms-and-conditions-craftsvilla/" style="text-decoration:none;color:#000000;">Terms Privacy</a></p>
-     <p style="float:right;margin:0;"><a href="https://www.facebook.com/craftsvilla"><img src="{{skin url='images/ficon.jpg' _area='frontend'}}" alt="Facebook" border="0" style="margin-right:5px;" /></a><a href="https://twitter.com/#!/craftsvilla"><img src="{{skin url='images/ticon.jpg' _area='frontend'}}" alt="twitter" border="0" /></a></p>
-    </div>
-    <div style="clear:both;"></div>
-    <p style="border-width:1px 0; border-style:solid; border-color:#dddcdc; padding:1px;margin:0;"></p>
-    <div style="padding:0 10px;">
-      <p>You received this email because you are registered on Craftsvilla.com. We respect your privacy. Please view our privacy policy. If you believe this has been sent to you in error, please contact at <a href="mailto:customercare@craftsvilla.com" style="color:#444;">customercare@craftsvilla.com</a>.</p>
-      <p style="color:#656565;margin:0;float:left;">Craftsvilla.com<br>
-        Row House No. 2, Nirav Housing Complex, Thakur Complex<br>
-        Kandivli (E), Mumbai, India 400101</p>
-        <a href="http://www.surveymonkey.com/s/GTZZ7T5" style="color:#fff;text-decoration:none;font-weight:bold;font-size:13px;display:block;background:#7599AB;width:200px;padding:3px 0;border-radius:4px;float:right;margin:13px 14px 0 0;text-align:center;">Click here to take survey</a> 
-    </div>
-  </div>
-  <img src="{{skin url='images/top_image_new.jpg' _area='frontend'}}" alt="" border="0"/> 
-  </div>
-  <!--Footer HTML END--> 
-</div>
+
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <tr>
+              <td bgcolor="#ffffff" valign="top" align="center">
+                <div style="text-align:center; font-size:14px; padding:10px 0px 15px 0px; border-bottom:solid 1px #efefef; width:90%;">
+                  <a href="http://www.craftsvilla.com/terms-and-conditions-craftsvilla" target="_blank" style="border:none; text-decoration:none; color:#116c9f; outline:0; "><i>Terms of purchase, return, refunds & others</i></a>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding:10px;" bgcolor="#ffffff" valign="top" align="center">
+                <p style="font-size:12px; line-height:22px; color:#424242; font-weight:normal; font-family:'Open Sans', Arial, sans-serif; margin:0; display:block; text-align:center;">You received this email because you are registered on Craftsvilla.com. We respect your privacy. Please view our privacy policy. If you believe this has been sent to you by error, please contact us at</p>
+                <p style="font-size:12px; line-height:22px; color:#424242; font-weight:normal; font-family:'Open Sans', Arial, sans-serif; margin:0; display:block; text-align:center; text-decoration:none;"><a style="color:#424242; text-decoration:none; outline:0;" href="mailto:customercare@craftsvilla.com">customercare@craftsvilla.com</a></p>
+                <p style="font-size:12px; line-height:22px; color:#424242; font-weight:normal; font-family:'Open Sans', Arial, sans-serif; margin:0; display:block; text-align:center;">To unsubscribe contact us at customercare@craftsvilla.com</span></p>
+
+</a>
+
+              </td>
+            </tr>
+            <tr>
+              <td valign="top" align="center">
+                <table border="0" cellpadding="0" cellspacing="0" align="center" width="30%">
+                  <tr>
+                    <td valign="top" align="center"><a href="https://www.facebook.com/craftsvilla" target="_blank" style="border:none; outline:0;"><img src="http://i.imgur.com/AjNqcaX.png"></a></td>
+                    <td valign="top" align="center"><a href="https://twitter.com/craftsvilla" target="_blank" style="border:none; outline:0;"><img src="http://i.imgur.com/2enwYB3.png"></a></td>
+                    <td valign="top" align="center"><a href="https://plus.google.com/+craftsvilla/posts" target="_blank" style="border:none; outline:0;"><img src="http://i.imgur.com/9R9Qd2P.png"></a></td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <tr>
+              <td bgcolor="#ffffff" style="padding:10px;">
+                <table border="0" cellpadding="0" cellspacing="0" align="center" width="99%">
+                  <tr>
+                    <td width="300" valign="top" align="center" class="responsive-image">
+                        <img src="http://i.imgur.com/eNroAQY.png" alt="" title="">
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>
