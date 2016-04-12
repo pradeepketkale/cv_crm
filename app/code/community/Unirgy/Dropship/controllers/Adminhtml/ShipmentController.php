@@ -551,7 +551,6 @@ class Unirgy_Dropship_Adminhtml_ShipmentController extends Mage_Adminhtml_Contro
                                 $kribha_amount = ((($total_amount1+$base_shipping_amount)*0.97) - $vendor_amount);
                             }
                         //}
-                            echo $commission_amount; exit;
                     $payoutAdjust = $payoutAdjust-$vendor_amount;
 
                     $write = Mage::getSingleton('core/resource')->getConnection('shipmentpayout_write');
