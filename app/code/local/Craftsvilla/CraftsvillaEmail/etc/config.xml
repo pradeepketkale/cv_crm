@@ -34,7 +34,7 @@
 		            <file>cancel_email_to_customer_email_template.html</file>
 		            <type>html</type>
 		   </cancel_email_to_customer_email_template>
-			
+
 			<refundtodo_email_to_customer module="craftsvillaemail">
 		            <label>Cancelled Email to customer</label>
 		            <file>refundtodo_email_to_customer.html</file>
@@ -50,7 +50,7 @@
 		       <file>cancel_email_to_seller_from_customer_email_template.html</file>
 		       <type>html</type>
 	   </cancel_email_to_seller_from_customer_email_template>
-		
+
 		<create_coupon_email_template module="craftsvillaemail">
 		       <label>create_coupon_email_template</label>
 		       <file>create_coupon_email_template.html</file>
@@ -62,26 +62,32 @@
 	            <file>delivery_acknowledgment.html</file>
 	            <type>html</type>
 	   </delivery_acknowledgment>
-		  
-		<codrto_email_to_customer module="craftsvillaemail">
+
+		<refund_initiated module="craftsvillaemail">
+	            <label>refund_initiated</label>
+	            <file>refund_initiated.html</file>
+	            <type>html</type>
+	   </refund_initiated>
+
+	   <codrto_email_to_customer module="craftsvillaemail">
 	            <label>codrto_email_to_customer</label>
 	            <file>codrto_email_to_customer.html</file>
 	            <type>html</type>
 	   </codrto_email_to_customer>
-		
+
 		<customer_bankaccount_details_template module="craftsvillaemail">
 		       <label>customer_bankaccount_details_template</label>
 		       <file>customer_bankaccount_details_template.html</file>
 		       <type>html</type>
 	   </customer_bankaccount_details_template>
-	   
+
 	   <disputeraisecustomer_bankaccount_details_vendor_template module="craftsvillaemail">
 		       <label>disputeraisecustomer_bankaccount_details_vendor_template</label>
 		       <file>disputeraisecustomer_bankaccount_details_vendor_template.html</file>
 		       <type>html</type>
 	   </disputeraisecustomer_bankaccount_details_vendor_template>
-	   
-	         
+
+
 		<Mail_Return_Survey module="craftsvillaemail">
 		       <label>Mail_Return_Survey</label>
 		       <file>Mail_Return_Survey.html</file>
@@ -122,15 +128,15 @@
 		       <file>disputeraisedprepaid_track_email_to_vendor.html</file>
 		       <type>html</type>
 	   </disputeraisedprepaid_track_email_to_vendor>
-	   
-	   
+
+
 		<survey_email_template module="craftsvillaemail">
 				   <label>survey_email_template</label>
 				   <file>survey_email_template.html</file>
 				   <type>html</type>
 		</survey_email_template>
-		
-		
+
+
 	</email>
         </template>
 
