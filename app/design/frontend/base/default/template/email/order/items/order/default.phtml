@@ -25,9 +25,64 @@
  */
 ?>
 <?php $_item = $this->getItem() ?>
-<?php $_order = $this->getItem()->getOrder() ?>
-<tr>
-    <td align="left" valign="top" style="font-size:11px; padding:3px 9px; border-bottom:1px dotted #CCCCCC;">
+<?php $_order = $this->getItem()->getOrder()
+?>
+<table border="0" cellpadding="0" cellspacing="0" align="center" width="99%" >
+
+                  <tr>
+                    <td bgcolor="#ffffff" width="100%" style="padding: 10px; border:solid 1px #dedede;" align="center">
+                        <table align="left" width="15%" cellpadding="0" cellspacing="0" border="0" >
+                            <tr>
+                                <td valign="top" align="center" class="responsive-image">
+                                   <?php
+                            $product = Mage::getModel('catalog/product')
+                            ->setStoreId($_item->getOrder()->getStoreId())
+                            ->load($_item->getProductId());
+                              $base_url= Mage::getBaseUrl();
+                              $img_url=   "catalog/product/view/id/".$product['entity_id'];
+                              $link= $base_url . $img_url;
+                                ?>
+
+
+                                 <a href="<?php echo $link; ?>" ><?php //added for sending image with order
+
+                                 $data1="http://img1.craftsvilla.com/thumb/166x166/";
+                                 $data2 = $product['small_image'];
+
+                                  $url= $data1 . $data2;
+                                  echo "<img src='{$url}'   />" ;
+                                  ?></a>
+
+                                </td>
+                            </tr>
+                        </table>
+                        <table align="right" width="60%" cellpadding="0" cellspacing="0" border="0" >
+                            <tr>
+                                <td valign="top" width="60%"  align="left" class="responsive-image">
+                                  <a href=<?php echo $link; ?> style="text-decoration:none; ">
+
+                                   <p style="font-size:14px;color:#424242;font-weight:bold;font-family:'Open Sans',Arial,sans-serif;margin:0 0 5px 95px"><?php echo $this->htmlEscape($_item->getName()) ?></p>
+                                    <p style="font-size:14px;color:#747474;font-weight:normal;font-family:'Open Sans',Arial,sans-serif;margin:0 0 5px 95px">Seller : <?php echo $this->getVendorDetails($_item) ?></p>
+                                    <p style="font-size:14px;color:#747474;font-weight:normal;font-family:'Open Sans',Arial,sans-serif;margin:0 0 5px 95px"><?php echo "SKU : ".$this->htmlEscape($this->getSku($_item)) ?></p>
+                                    <p style="font-size:14px;color:#747474;font-weight:normal;font-family:'Open Sans',Arial,sans-serif;margin:0 0 5px 95px"><?php echo "Qty : ".$_item->getQtyOrdered()*1 ?></p>
+
+</a>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                  </tr>
+
+                </table>
+
+
+
+
+
+
+
+
+   <!--  <td align="left" valign="top" style="font-size:11px; padding:3px 9px; border-bottom:1px dotted #CCCCCC;">
         <strong style="font-size:11px;"><?php echo $this->htmlEscape($_item->getName()) ?></strong>
         <?php if ($this->getItemOptions()): ?>
         <dl style="margin:0; padding:0;">
@@ -133,4 +188,4 @@
         <strong><?php echo $this->__('Message:'); ?></strong><br /><?php echo $this->htmlEscape($_giftMessage->getMessage()) ?>
     </td>
 </tr>
-<?php endif; ?>
+<?php endif; ?>-->

@@ -1,0 +1,18 @@
+<?php
+$order =$this->getOrder();
+$address=$order->getShippingAddress();
+$country_name = $address['country_id'];
+if($country_name=='IN')
+{?>
+ <p style="margin:0px 0px 5px 0px; ">We'll send tracking details over SMS and email once the items are dispatched</p>
+<?php
+}
+else
+{
+    ?>
+    <p style="margin:0px 0px 5px 0px; ">We'll send tracking details over email once the items are dispatched</p>
+    <?php
+}
+
+
+?>

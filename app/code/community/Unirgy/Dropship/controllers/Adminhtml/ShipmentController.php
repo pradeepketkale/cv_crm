@@ -200,7 +200,7 @@ class Unirgy_Dropship_Adminhtml_ShipmentController extends Mage_Adminhtml_Contro
             //******Below cond. added By Dileswar  for call of below function on line 357 *****//
                 if($status == 12)
                     {
-                       $this->adjustmentRefundAmount($shipment_id_value);
+                       $this->adjustmentRefundAmount($shipment_id_value,$shipmentId_value);
                     }
                     if($status == 23)
                     {
@@ -311,10 +311,10 @@ class Unirgy_Dropship_Adminhtml_ShipmentController extends Mage_Adminhtml_Contro
                     ->setUsername(Mage::getSingleton('admin/session')->getUser()->getUsername())
                     ->setUdropshipStatus(@$statuses[$status]);
                 $shipment->addComment($comment);
-                /*if($status == 12)
+                if($status == 12)
                     {
-                       $this->adjustmentRefundAmount($shipment_id_value);
-                    }*/
+                       $this->adjustmentRefundAmount($shipment_id_value,$shipmentId_value);
+                    }
                     if($status == 23)
                     {
                        $this->refundTodo($shipment_id_value,$shipmentId_value);
@@ -437,9 +437,63 @@ class Unirgy_Dropship_Adminhtml_ShipmentController extends Mage_Adminhtml_Contro
 
 // New Function Created By Dileswar On Dated 19-02-2013 For get closing balance(in submit of refund inited the amount will reflect on shipment payout & dropship panel)******    *******************////
 
-    public function adjustmentRefundAmount($shipment_id_value)
+    public function adjustmentRefundAmount($shipment_id_value,$shipentId)
         {
-            $collection = Mage::getModel('shipmentpayout/shipmentpayout')->getCollection();
+
+        $user = Mage::getSingleton('admin/session');
+        $userFirstname = $user->getUser()->getFirstname();
+        $storeId = Mage::app()->getStore()->getId();
+        $templateId = 'refund_initiated';
+        $shipment1 = Mage::getModel('sales/order_shipment');
+        $shipment = $shipment1->load($shipentId);
+        $product=Mage::getModel('catalog/product')->load($product_id);
+        $_orderId = $shipment->getOrderId();
+        $orders  = Mage::getModel('sales/order')->load($_orderId);
+        $orderId = $orders->getIncrementId();
+        $_order = $shipment->getOrder();
+        $write = Mage::getSingleton('core/resource')->getConnection('shipmentpayout_write');
+        $sender = Array('name'  => 'Craftsvilla',
+                        'email' => 'places@craftsvilla.com');
+        $emailrefunded = Mage::getModel('core/email_template');
+        $orderitem = Mage::getModel('sales/order_shipment_item')->getCollection();
+        $_address = $_order->getShippingAddress();
+        $getName = $_order->getCustomerFirstname();
+        $customerTelephone = $_order->getBillingAddress()->getTelephone();
+        $_orderBillingCountry = $_order->getBillingAddress();
+        $_orderBillingEmail = $_order->getBillingAddress()->getEmail();
+        $orderitem = Mage::getModel('sales/order_shipment_item')->getCollection();
+        $_address = $_order->getShippingAddress();
+        $getName = $_order->getCustomerFirstname();
+        $customerTelephone = $_order->getBillingAddress()->getTelephone();
+        $customerstreet = $_order->getBillingAddress()->getStreet();
+        $customercity = $_order->getBillingAddress()->getCity();
+        $customercountry_id = $_order->getBillingAddress()->getCountryId();
+        $customerState= $_order->getBillingAddress()->getRegion();
+        $customerPincode = $_order->getBillingAddress()->getPostcode();
+        $payment_method = $_order->getPayment()->getMethodInstance()->getTitle();
+        $items = $shipment->getAllItems();
+        $sku=array();
+        $productName=array();
+        foreach($items as $_items)
+        {
+             $_product=Mage::getModel('catalog/product')->load($_items->getProductId());
+             $base_url= "http://www.craftsvilla.com/catalog/product/view/id/".$_product['entity_id'];
+             $productName[]=mysql_escape_string($_items->getName());
+
+        }
+        $productImage="http://img1.craftsvilla.com/thumb/166x166".$_product->getImage();
+        $vars = array(
+                'orderId'=>$orderId,
+                'productName'=>$productName[0],
+                'custtomerName'=> $getName,
+             );
+         // echo '<pre>';print_r($vars);exit;
+        $emailrefunded->setDesignConfig(array('area'=>'frontend', 'store'=>$storeId))
+                 ->sendTransactional($templateId, $sender,$_orderBillingEmail, '', $vars, $storeId);
+        $shipment->setUdropshipStatus(12);
+        Mage::helper('udropship')->addShipmentComment($shipment, ('Status has been changed to Refund Initiated'));
+            $shipment->save();
+         $collection = Mage::getModel('shipmentpayout/shipmentpayout')->getCollection();
             $collection->getSelect()
                       ->join(array('a'=>'sales_flat_shipment'), 'a.increment_id=main_table.shipment_id',array('udropship_vendor', 'subtotal'=>'base_total_value', 'commission_percent'=>'commission_percent', 'itemised_total_shippingcost'=>'itemised_total_shippingcost','cod_fee'=>'cod_fee','base_shipping_amount'=>'base_shipping_amount'))
                     ->where('main_table.shipment_id = '.$shipment_id_value);
@@ -463,42 +517,22 @@ class Unirgy_Dropship_Adminhtml_ShipmentController extends Mage_Adminhtml_Contro
                         exit();*/
             if($payoutStatus == 1)
                 {
-
                         //$_liveDate = "2012-08-21 00:00:00";
                         $order = Mage::getModel('sales/order')->loadByIncrementId($_payoutData['order_id']);
                         $_orderCurrencyCode = $order->getOrderCurrencyCode();
                         //if(($_orderCurrencyCode != 'INR') && (strtotime($_payoutData['order_created_at']) >= strtotime($_liveDate)))
                         if($_orderCurrencyCode != 'INR')
                         $total_amount = $_payoutData['subtotal']/1.5.'<br>';
-
+                        $vendors = Mage::helper('udropship')->getVendor($shipment_id_value);
+                        $vendorId = $shipment_id_value['udropship_vendor'];
+                        $hlp = Mage::helper('udropship');
+                        $commission_amount = $hlp->getVendorCommission($vendorId, $shipment_id_value);
+                        $service_tax = $hlp->getServicetaxCv($shipment_id_value);
 
                         $commission_amount = $_payoutData['commission_percent'].'<br>';
                         $itemised_total_shippingcost = $_payoutData['itemised_total_shippingcost'].'<br>';
                         $base_shipping_amount = $_payoutData['base_shipping_amount'];
 
-                        //$vendors = Mage::helper('udropship')->getVendor($_payoutData['udropship_vendor']);
-                        /*echo "Query:".$vendors->getSelect()->__toString();
-                        exit();*/
-
-                        //$vendors_arr = $vendors->getData();
-                            //echo "<pre>"; print_r($vendors_arr); exit;
-                        //$new_vendor_obj = json_decode($vendors_arr[0]['custom_vars_combined']);
-
-
-
-                        /*//if($_payoutData['order_created_at']<='2012-07-02 23:59:59')
-                        //{
-                            if($vendors->getManageShipping() == "imanage")
-                            {
-                                $vendor_amount = ($total_amount*(1-$commission_amount/100));
-                                $kribha_amount = ($total_amount1 - $vendor_amount)+$itemised_total_shippingcost+$_payoutData['cod_fee'];
-                            }
-                            else {
-                                $vendor_amount = (($total_amount+$itemised_total_shippingcost)*(1-$commission_amount/100));
-                                $kribha_amount = (($total_amount1+$itemised_total_shippingcost) - $vendor_amount);
-                            }
-                        //}
-                        else {*/
                             if($vendors->getManageShipping() == "imanage")
                             {
 
@@ -508,7 +542,7 @@ class Unirgy_Dropship_Adminhtml_ShipmentController extends Mage_Adminhtml_Contro
                                 $kribha_amount = ($total_amount1+$itemised_total_shippingcost+$_payoutData['cod_fee'])*0.97 - $vendor_amount;
                             }
                             else {
-                                $vendor_amount = (($total_amount+$itemised_total_shippingcost)*(1-($commission_amount/100)*(1+0.1236)));
+                                $vendor_amount = (($total_amount+$itemised_total_shippingcost)*(1-($commission_amount/100)*(1+$service_tax)));
                                 //$kribha_amount = (($total_amount1+$itemised_total_shippingcost) - $vendor_amount);
                                 //change to accomodate 3% Payment gateway charges on dated 20-12-12
 
@@ -517,7 +551,6 @@ class Unirgy_Dropship_Adminhtml_ShipmentController extends Mage_Adminhtml_Contro
                                 $kribha_amount = ((($total_amount1+$base_shipping_amount)*0.97) - $vendor_amount);
                             }
                         //}
-
                     $payoutAdjust = $payoutAdjust-$vendor_amount;
 
                     $write = Mage::getSingleton('core/resource')->getConnection('shipmentpayout_write');
@@ -550,7 +583,10 @@ class Unirgy_Dropship_Adminhtml_ShipmentController extends Mage_Adminhtml_Contro
                         );
             $_email = Mage::getModel('core/email_template');
             $_email->sendTransactional($templateId, $sender, $_vendorEmail, $_vendorName, $varsVendorEmail, $storeId);
+
         }
+
+
     }
     public function refundTodo($shipment_id_value,$shipentId)
         {
