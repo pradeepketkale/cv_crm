@@ -144,7 +144,7 @@ class Mage_Adminhtml_Promo_QuoteController extends Mage_Adminhtml_Controller_Act
 
                //code added by swati
                 $writedb= Mage::getSingleton('core/resource')->getConnection('core_write');
-                $insert = "INSERT INTO `coupon_code`(`coupon_name`, `member_name`, `date`, `amount`,`coupon_code`) VALUES ('".$data['name']."','".$userUsername."','".$data['from_date']."','".$data['discount_amount']."','".$data['coupon_code']."') ";
+                $insert = "INSERT INTO `coupon_code_cv`(`coupon_name`, `member_name`, `date`, `amount`,`coupon_code`) VALUES ('".$data['name']."','".$userUsername."','".$data['from_date']."','".$data['discount_amount']."','".$data['coupon_code']."') ";
                  $vendortResult=   $writedb->query($insert);
                  $writedb->closeConnection();
 
