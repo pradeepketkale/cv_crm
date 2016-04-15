@@ -106,12 +106,12 @@ class Mage_Adminhtml_Sales_Order_ShipmentController extends Mage_Adminhtml_Contr
         Mage::register('current_shipment', $shipment);
         return $shipment;
     }
-	
-    public function indexAction() {
-    	if ($order = $this->_initShipment()) {
     
-    		echo $this->getLayout()->createBlock('adminhtml/sales_order_shipment')->toHtml();
-    	}
+    public function indexAction() {
+        if ($order = $this->_initShipment()) {
+    
+            echo $this->getLayout()->createBlock('adminhtml/sales_order_shipment')->toHtml();
+        }
     }
     
     public function multipleprintAction() {
@@ -261,18 +261,18 @@ class Mage_Adminhtml_Sales_Order_ShipmentController extends Mage_Adminhtml_Contr
 public function addTrackAction()
     {
         try {
-	   $shipmentId = $this->getRequest()->getParam('shipment_id');
+       $shipmentId = $this->getRequest()->getParam('shipment_id');
            $readConn = Mage::getSingleton('core/resource')->getConnection('core_read');
-	   $getquery = "SELECT * FROM `sales_flat_shipment_track` WHERE `parent_id` = '".$shipmentId."'";
-	   $resultCheck = $readConn->query($getquery)->fetch();	
+       $getquery = "SELECT * FROM `sales_flat_shipment_track` WHERE `parent_id` = '".$shipmentId."'";
+       $resultCheck = $readConn->query($getquery)->fetch(); 
             $carrier = $this->getRequest()->getPost('carrier');
             $number  = $this->getRequest()->getPost('number');
             $title  = $this->getRequest()->getPost('title');
             $courier_name = $this->getRequest()->getPost('courier_name');
-	    if($resultCheck['number'])
-	    {
+        if($resultCheck['number'])
+        {
                 Mage::throwException($this->__('You cannot add duplicate tracking number'));
-            }	
+            }   
             if (empty($carrier)) {
                 Mage::throwException($this->__('The carrier needs to be specified.'));
             }
@@ -280,13 +280,13 @@ public function addTrackAction()
                 Mage::throwException($this->__('Tracking number cannot be empty.'));
             }
             if (empty($courier_name)) {
-            	Mage::throwException($this->__('Courier name cannot be empty.'));
+                Mage::throwException($this->__('Courier name cannot be empty.'));
             }
             if ($shipment = $this->_initShipment()) {
                 $track = Mage::getModel('sales/order_shipment_track')
                     ->setNumber($number)
                     ->setCarrierCode($carrier)
-                	->setCourierName($courier_name)
+                    ->setCourierName($courier_name)
                     ->setTitle($title);
                 $shipment->addTrack($track)
                     ->save();
@@ -315,27 +315,264 @@ public function addTrackAction()
         }
         $this->getResponse()->setBody($response);
     }
+
+
+    /*--------
+        SendDNXT authentication
+        Author: pbketkale@gmail.com
+    ----------*/
+
+    public function getSenddToken(){
+        $lifetime = 7776000; // 90 days
+        $cacheSenddLoginKey = 'Craftsvilla-Sendd-Login-Token';
+        if($cacheContent = Mage::app()->loadCache($cacheSenddLoginKey)){
+            $token = $cacheContent; //echo $token; exit;
+        } else {
+            $token = $this->senddLogin();
+            if($token){
+                Mage::app()->saveCache($token, $cacheSenddLoginKey, $tags, $lifetime);
+            }
+        }
+        return $token;
+
+    }
+
+    public function senddLogin(){
+        
+        $errorArr = array();
+        $model= Mage::getStoreConfig('craftsvilla_config/sendd');
+        $url = $model['base_url'].'rest-auth/login/';
+        $email = $model['email'];
+        $password  = $model['password'];
+
+        $input = array('email' => $email, 'password' => $password);
+        $input = json_encode($input);
+
+        $count = 3;
+        while($count >0){ // try api calls 3 times
+            $curl = curl_init();
+            curl_setopt_array($curl, array(
+                CURLOPT_URL => $url,
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => "",
+                CURLOPT_MAXREDIRS => -1,
+                CURLOPT_TIMEOUT => 300,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => "POST",
+                CURLOPT_POSTFIELDS => $input,
+                CURLOPT_HTTPHEADER => array("cache-control: no-cache","content-type: application/json"),
+            ));
+            $result = curl_exec($curl);
+            $result = json_decode($result);
+            $error = curl_error($curl);
+            $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+            curl_close($curl);
+
+            if($httpCode == 200 && $result->key ){
+                return $result->key;
+            }
+            $count--;
+        } 
+
+        $errorArr[] = "The error http status code : " . $httpCode;
+        if($result){
+            foreach ($result as $key=>$value){
+               $errorArr[] =  $key." : ".$value[0];
+            }
+        }
+        if($error){
+            $errorArr[] = $error;
+        }
+
+        $issue = 'Unable to get the access token of Sendd APIs!';
+        return $this->sendErrorEmail($errorArr, $issue);
+
+    }
+
+    public function sendErrorEmail($errors, $issue, $shipmentId ='', $vendorId =''){
+        //echo "sent the mail";
+        date_default_timezone_set('Asia/Kolkata');
+        $errorTiming = date("Y-m-d h:i:sa");
+        $courierName = 'India Post';
+
+        $serverInfo  = json_encode($_SERVER);
+
+        $errorMessage = json_encode($errors);
+        $errorTable = "";
+        $errorTable .="<div>";
+        $errorTable .="<p>".$issue.".The Status is shown below table.</p>";
+        $errorTable .="<table border='1' cellpadding='2px'>";
+        $errorTable .="<th>Courier Name</th><th>Shipment Id</th><th>Reason</th>";
+        $errorTable .="<tr><td>".$courierName."</td><td>".$shipmentId."</td><td>".$errorMessage."</td></tr>";
+        $errorTable .="<tr><td colspan=3>".$serverInfo."</td></tr>";
+        $errorTable .="</table></div>";
+
+        $mail = Mage::getModel('core/email');
+        $mail->setToName('Craftsvilla');
+        $mail->setToEmail('awb.errors@craftsvilla.com');
+        //$mail->setToEmail('pradeep.k@iksula.com');
+        $mail->setBody($errorTable);
+        $mail->setSubject($courierName.' Awb Number Creation Issue at '.$errorTiming);
+        $mail->setFromEmail('dileswar@craftsvilla.com');
+        $mail->setFromName("Craftsvilla");
+        $mail->setType('html');
+        $mail->send();
+        $awberrorCourierName = $courierName;
+        $writedb = Mage::getSingleton('core/resource')->getConnection('core_write');
+        $updateAwbError = "INSERT INTO `courier_awb_error`(`shipment_id`, `vendor_id`, `courier`, `error`) VALUES ('".$shipmentId."','".$vendorId."','".$awberrorCourierName."', '".$errorMessage."') ";
+        $writedb->query($updateAwbError);
+        $writedb->closeConnection();
+
+        return NULL;
+    }
+
+    public function removeSenddLoginKey(){
+        $cacheSenddLoginKey = 'Craftsvilla-Sendd-Login-Token';
+        Mage::app()->removeCache($cacheSenddLoginKey);
+        return;
+    }
+
+    /*--------
+        API Call to SendDNXT when shipment tracking is deleted
+        This API is called when order is COD and courier is India Post - on shipment track remove action
+        Author: pbketkale@gmail.com (outsourced agent)
+    ----------*/
+
+    public function cancelShipmentIndiaPost($trackId, $shipmentId){
+
+        $track = Mage::getModel('sales/order_shipment_track')->load($trackId);
+
+        if(intval($track->getId()) > 0 && intval($shipmentId) > 0){
+
+
+            $order = Mage::getModel('sales/order_shipment')->load($shipmentId)->getOrder(); 
+            if($order->getIncrementId() > 0){
+
+                $payment_method = $order->getPayment()->getMethodInstance()->getTitle();
+                if(strtolower($payment_method) == strtolower('Cash On Delivery') && strtolower($track->getCourierName()) == 'india post'){
+
+                    // get authenitication token
+                    $token =  $this->getSenddToken();
+
+                    if(!$token){
+                        return NULL;
+                    }
+
+                    $requestBody = array('tracking_number'=>$track->getNumber());
+                    $model= Mage::getStoreConfig('craftsvilla_config/sendd');
+                    $url = $model['base_url'].'core/api/v1/shipment/cancel/';
+
+                    $inputHeader = 'Token '.$token;
+                   
+                    // try api calls 3 times
+                    $calls = 3;
+                    do{
+                        $ch = curl_init();
+                        curl_setopt($ch, CURLOPT_URL, $url);
+                        curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+                        curl_setopt($ch, CURLOPT_HEADER, FALSE);
+                        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PATCH");
+                        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($requestBody));
+                        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                          "Content-Type: application/json",
+                          "Authorization: Token ".$token
+                        ));
+
+                        $result = curl_exec($ch);
+                        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+                        $response = json_decode($result);
+
+                        curl_close($ch);
+
+                        if($httpCode == 200){
+                            if($response->status == NULL){
+                                return $response;
+                            } else {
+                                return $response->status;
+                            }
+                        }
+                        if($httpCode == 400){
+                            break;
+                        }
+
+                        if($httpCode == 401){
+                            $this->removeSenddLoginKey();
+                            $token = $this->getSenddToken();
+                            if(!$token){
+                                return NULL;
+                            }
+                            $inputHeader = 'Token '.$token;                                         
+                            $calls--;
+                            continue;
+                        }        
+                    }while($calls > 0); 
+                }
+                else{
+                    return "Not Applicable";
+                }
+            }
+            else{
+                return null;
+            }
+        }
+    }
+
+
     /**
      * Remove tracking number from shipment
      */
     public function removeTrackAction()
     {
+
+          
         $trackId    = $this->getRequest()->getParam('track_id');
-        $shipmentId = $this->getRequest()->getParam('shipment_id');
+        $setStatusShipment = $shipmentId = $this->getRequest()->getParam('shipment_id'); 
+
         $track = Mage::getModel('sales/order_shipment_track')->load($trackId);
         if ($track->getId()) {
+
             try {
                 if ($shipmentId = $this->_initShipment()) {
+                    /* 
+                    Added by Pradeep (assigned by Dileswar) - 29 March 2016
+                    Set shipment status to Processing so vendor can accept and assign new shipment
+                    */
+                    $statusProcessing = Unirgy_Dropship_Model_Source::SHIPMENT_STATUS_PROCESSING;
+                    $shipmentStatus = Mage::getModel('sales/order_shipment')->load($setStatusShipment)->setUdropshipStatus($statusProcessing)->save();
+
                     $track->delete();
 
                     $this->loadLayout();
-                    $response = $this->getLayout()->getBlock('shipment_tracking')->toHtml();
+
+                    // call to senddnxt API for cancelling cod order
+                    try{
+
+                        $status = $this->cancelShipmentIndiaPost($trackId, $shipmentId);
+
+                        if($status != "CA" && $status != 'Not Applicable' && $status != ''){
+                            $response = array(
+                                'error'     => true,
+                                'message'   => $this->__('Response from sendDNXT for Indiapost - '.$status),
+                            );
+                        } 
+                        else{
+                            $response = $this->getLayout()->getBlock('shipment_tracking')->toHtml();    
+                        }                        
+
+                    }catch(Exception $e){
+                        $response = array(
+                            'error'     => true,
+                            'message'   => $this->__('Error in SendDNXT API call.'),
+                        );
+                    }
+
                 } else {
                     $response = array(
                         'error'     => true,
                         'message'   => $this->__('Cannot initialize shipment for delete tracking number.'),
                     );
                 }
+
             } catch (Exception $e) {
                 $response = array(
                     'error'     => true,
@@ -473,420 +710,420 @@ public function addTrackAction()
             return false;
         }
     }
-	
-	public function codshipmentsAction()
+    
+    public function codshipmentsAction()
     {
-		$shipmentData = Mage::getModel('sales/order_shipment')->getCollection();
-		$shipmentData->getSelect()->join(array('b'=>'sales_flat_order_address'), 'b.parent_id=main_table.order_id')
-								  ->join(array('d'=>'sales_flat_shipment_track'), 'd.parent_id=main_table.entity_id','d.number')
-								  ->join(array('c'=>'sales_flat_order'),'c.entity_id=main_table.order_id','c.base_discount_amount')
-								  ->where('main_table.udropship_status = 24 AND b.address_type = "shipping"');
-					//echo $shipmentData->getSelect()->__toString();			  exit;
-		$shipmentreport = $shipmentData->getData();
-		$filename = "CODShipmentReport"."_".date("Y-m-d");
-		$outputreport = "";
-	    $list = array("Waybill","Order No","Consignee Name","City","State","Country","Address","Pincode","Phone","Mobile","Weight","Payment Mode","Package Amount","Cod Amount","Product To Be Shipped","Shipping Client","Shipping Client Address","Shipping Client Phone");
-    	$numfields = sizeof($list);
-		for($k =0; $k < $numfields;  $k++) { 
-			$outputreport .= $list[$k];
-			if ($k < ($numfields-1)) $outputreport .= ", ";
-		}
-		$outputreport .= "\n";
-		foreach($shipmentreport as $_shipmentreport)
-	    {
-			$shipmentmodel = Mage::getModel('sales/order_shipment')->getCollection()->addAttributeToFilter('order_id', $_shipmentreport['order_id']);
-			$shipmentcount = $shipmentmodel->count();
-			$incrementid = $_shipmentreport['increment_id'];
-			$shipment = Mage::getModel('sales/order_shipment')->loadByIncrementId($incrementid);
-			$orderitem = Mage::getModel('sales/order_shipment_item')->getCollection();
-			
-			$orderitem->getSelect()->join(array('a'=>'sales_flat_order_item'),'a.item_id=main_table.order_item_id')
-			                      ->where('main_table.parent_id='.$shipment['entity_id'])
-								  ->columns('SUM(a.base_discount_amount) AS amount');
-					//echo $orderitem->getSelect()->__toString();			  exit;
-			$orderitemdata = $orderitem->getData();
-			foreach($orderitemdata as $_orderitemdata)
-			{
-			  $discountamount = $_orderitemdata['amount'];
-			
-			}
-				$countryModel = Mage::getModel('directory/country')->loadByCode($_shipmentreport['country_id']);
-					$countryName = $countryModel->getName();
-					$paymentmode = 'COD';
-					$vendorid=$_shipmentreport['udropship_vendor'];
-					$vendor = Mage::getModel('udropship/vendor')->load($vendorid);
-					$shippingclient = $vendor->getVendorName();
-					$street = $vendor['street'];
-					$city = $vendor->getCity();
-					$zipcode = $vendor->getZip();
-					
-					$vtelephone = $vendor->getTelephone();
-					$custom = Zend_Json::decode($vendor->getCustomVarsCombined());
-					$codfee = $custom['cod_fee'];
-					$amountCOD = $_shipmentreport['base_total_value'] + $_shipmentreport['itemised_total_shippingcost'] - $discountamount + $codfee;	
-				
-					for($m =0; $m < sizeof($list); $m++) 
-					{
-								$fieldvalue = $list[$m];
-								if($fieldvalue == "Waybill")
-								{
-									$outputreport .= $_shipmentreport['number'];
-								}
-									
-								if($fieldvalue == "Order No")
-								{
-									$outputreport .= $_shipmentreport['increment_id'];
-								}
-								
-								if($fieldvalue == "Consignee Name")
-								{
-									$outputreport .=  $_shipmentreport['firstname'].' '.$_shipmentreport['lastname'];
-								}
-									
-								if($fieldvalue == "City")
-								{
-									$outputreport .= $_shipmentreport['city'];
-								}
-								
-								if($fieldvalue == "State")
-								{
-									$outputreport .= $_shipmentreport['region'];
-								}
-								
-								if($fieldvalue == "Country")
-								{
-									$outputreport .= $countryName;
-								}
-								if($fieldvalue == "Address")
-								{
-									$outputreport .= '"'.$_shipmentreport['street'].", ".$_shipmentreport['city'].", ".$_shipmentreport['region'].", ".$countryName.", ".$_shipmentreport['postcode'].'"';
-								}
-								if($fieldvalue == "Pincode")
-								{
-									$outputreport .= $_shipmentreport['postcode'];
-								}
-								if($fieldvalue == "Phone")
-								{
-									$outputreport .= $_shipmentreport['telephone'];
-								}
-								if($fieldvalue == "Mobile")
-								{
-									$outputreport .= $_shipmentreport['telephone'];
-								}
-								if($fieldvalue == "Weight")
-								{
-									$outputreport .= '';
-								}
-								if($fieldvalue == "Payment Mode")
-								{
-									$outputreport .= $paymentmode;
-								}
-								if($fieldvalue == "Package Amount")
-								{
-									$outputreport .= $amountCOD;
-								}
-								if($fieldvalue == "Cod Amount")
-								{
-									$outputreport .= $amountCOD;
-								}
-								if($fieldvalue == "Product To Be Shipped")
-								{
-									$outputreport .= 'Handicraft Item';
-								}
-								if($fieldvalue == "Shipping Client")
-								{
-									$outputreport .= $shippingclient;
-								}
-								if($fieldvalue == "Shipping Client Address")
-								{
-									$outputreport .= '"'.$street.", ".$city.", ".$zipcode.'"';
-								}
-								if($fieldvalue == "Shipping Client Phone")
-								{
-									$outputreport .= $vtelephone;
-								}						
-								if ($m < ($numfields-1))
-								{
-									$outputreport .= ",";
-								}
-		   	}
-						  
-				
-		    	$outputreport .= "\n";
-		}
-		
-				header("Content-type: text/x-csv");
-				header("Content-Disposition: attachment; filename=$filename.csv");
-				header("Pragma: no-cache");
-				header("Expires: 0");
-				echo $outputreport;
+        $shipmentData = Mage::getModel('sales/order_shipment')->getCollection();
+        $shipmentData->getSelect()->join(array('b'=>'sales_flat_order_address'), 'b.parent_id=main_table.order_id')
+                                  ->join(array('d'=>'sales_flat_shipment_track'), 'd.parent_id=main_table.entity_id','d.number')
+                                  ->join(array('c'=>'sales_flat_order'),'c.entity_id=main_table.order_id','c.base_discount_amount')
+                                  ->where('main_table.udropship_status = 24 AND b.address_type = "shipping"');
+                    //echo $shipmentData->getSelect()->__toString();              exit;
+        $shipmentreport = $shipmentData->getData();
+        $filename = "CODShipmentReport"."_".date("Y-m-d");
+        $outputreport = "";
+        $list = array("Waybill","Order No","Consignee Name","City","State","Country","Address","Pincode","Phone","Mobile","Weight","Payment Mode","Package Amount","Cod Amount","Product To Be Shipped","Shipping Client","Shipping Client Address","Shipping Client Phone");
+        $numfields = sizeof($list);
+        for($k =0; $k < $numfields;  $k++) { 
+            $outputreport .= $list[$k];
+            if ($k < ($numfields-1)) $outputreport .= ", ";
+        }
+        $outputreport .= "\n";
+        foreach($shipmentreport as $_shipmentreport)
+        {
+            $shipmentmodel = Mage::getModel('sales/order_shipment')->getCollection()->addAttributeToFilter('order_id', $_shipmentreport['order_id']);
+            $shipmentcount = $shipmentmodel->count();
+            $incrementid = $_shipmentreport['increment_id'];
+            $shipment = Mage::getModel('sales/order_shipment')->loadByIncrementId($incrementid);
+            $orderitem = Mage::getModel('sales/order_shipment_item')->getCollection();
+            
+            $orderitem->getSelect()->join(array('a'=>'sales_flat_order_item'),'a.item_id=main_table.order_item_id')
+                                  ->where('main_table.parent_id='.$shipment['entity_id'])
+                                  ->columns('SUM(a.base_discount_amount) AS amount');
+                    //echo $orderitem->getSelect()->__toString();             exit;
+            $orderitemdata = $orderitem->getData();
+            foreach($orderitemdata as $_orderitemdata)
+            {
+              $discountamount = $_orderitemdata['amount'];
+            
+            }
+                $countryModel = Mage::getModel('directory/country')->loadByCode($_shipmentreport['country_id']);
+                    $countryName = $countryModel->getName();
+                    $paymentmode = 'COD';
+                    $vendorid=$_shipmentreport['udropship_vendor'];
+                    $vendor = Mage::getModel('udropship/vendor')->load($vendorid);
+                    $shippingclient = $vendor->getVendorName();
+                    $street = $vendor['street'];
+                    $city = $vendor->getCity();
+                    $zipcode = $vendor->getZip();
+                    
+                    $vtelephone = $vendor->getTelephone();
+                    $custom = Zend_Json::decode($vendor->getCustomVarsCombined());
+                    $codfee = $custom['cod_fee'];
+                    $amountCOD = $_shipmentreport['base_total_value'] + $_shipmentreport['itemised_total_shippingcost'] - $discountamount + $codfee;    
+                
+                    for($m =0; $m < sizeof($list); $m++) 
+                    {
+                                $fieldvalue = $list[$m];
+                                if($fieldvalue == "Waybill")
+                                {
+                                    $outputreport .= $_shipmentreport['number'];
+                                }
+                                    
+                                if($fieldvalue == "Order No")
+                                {
+                                    $outputreport .= $_shipmentreport['increment_id'];
+                                }
+                                
+                                if($fieldvalue == "Consignee Name")
+                                {
+                                    $outputreport .=  $_shipmentreport['firstname'].' '.$_shipmentreport['lastname'];
+                                }
+                                    
+                                if($fieldvalue == "City")
+                                {
+                                    $outputreport .= $_shipmentreport['city'];
+                                }
+                                
+                                if($fieldvalue == "State")
+                                {
+                                    $outputreport .= $_shipmentreport['region'];
+                                }
+                                
+                                if($fieldvalue == "Country")
+                                {
+                                    $outputreport .= $countryName;
+                                }
+                                if($fieldvalue == "Address")
+                                {
+                                    $outputreport .= '"'.$_shipmentreport['street'].", ".$_shipmentreport['city'].", ".$_shipmentreport['region'].", ".$countryName.", ".$_shipmentreport['postcode'].'"';
+                                }
+                                if($fieldvalue == "Pincode")
+                                {
+                                    $outputreport .= $_shipmentreport['postcode'];
+                                }
+                                if($fieldvalue == "Phone")
+                                {
+                                    $outputreport .= $_shipmentreport['telephone'];
+                                }
+                                if($fieldvalue == "Mobile")
+                                {
+                                    $outputreport .= $_shipmentreport['telephone'];
+                                }
+                                if($fieldvalue == "Weight")
+                                {
+                                    $outputreport .= '';
+                                }
+                                if($fieldvalue == "Payment Mode")
+                                {
+                                    $outputreport .= $paymentmode;
+                                }
+                                if($fieldvalue == "Package Amount")
+                                {
+                                    $outputreport .= $amountCOD;
+                                }
+                                if($fieldvalue == "Cod Amount")
+                                {
+                                    $outputreport .= $amountCOD;
+                                }
+                                if($fieldvalue == "Product To Be Shipped")
+                                {
+                                    $outputreport .= 'Handicraft Item';
+                                }
+                                if($fieldvalue == "Shipping Client")
+                                {
+                                    $outputreport .= $shippingclient;
+                                }
+                                if($fieldvalue == "Shipping Client Address")
+                                {
+                                    $outputreport .= '"'.$street.", ".$city.", ".$zipcode.'"';
+                                }
+                                if($fieldvalue == "Shipping Client Phone")
+                                {
+                                    $outputreport .= $vtelephone;
+                                }                       
+                                if ($m < ($numfields-1))
+                                {
+                                    $outputreport .= ",";
+                                }
+            }
+                          
+                
+                $outputreport .= "\n";
+        }
+        
+                header("Content-type: text/x-csv");
+                header("Content-Disposition: attachment; filename=$filename.csv");
+                header("Pragma: no-cache");
+                header("Expires: 0");
+                echo $outputreport;
                 exit;
-	          try{
-				     $this->_redirect('*/sales_shipment/index');
-	             } 
-			 catch(Exception $e)
-			 {
-	          echo $e->getMessage();
-	         }		 
-	 
-	}
-	public function codshipmentManifestAction(){
-		
-		$shipmentData = Mage::getModel('sales/order_shipment')->getCollection();
-		$shipmentData->getSelect()->join(array('b'=>'sales_flat_order_address'), 'b.parent_id=main_table.order_id')
-								  ->join(array('d'=>'sales_flat_shipment_track'), 'd.parent_id=main_table.entity_id','d.number')
-								  ->join(array('c'=>'sales_flat_order'),'c.entity_id=main_table.order_id','c.base_discount_amount')
-								  ->where('main_table.udropship_status = 27 AND main_table.updated_at < DATE_SUB(NOW(),INTERVAL 3 DAY) AND b.address_type = "shipping"');
-					//echo $shipmentData->getSelect()->__toString();			  exit;
-		$shipmentreport = $shipmentData->getData();
-		$filename = "CODShipmentdelayedpickupReport-craftsvilla"."_".date("Y-m-d");
-		$outputreport = "";
-	    $list = array("Waybill","Order No","Consignee Name","City","State","Country","Address","Pincode","Phone","Mobile","Weight","Payment Mode","Package Amount","Cod Amount","Product To Be Shipped","Shipping Client","Shipping Client Address","Shipping Client Phone");
-    	$numfields = sizeof($list);
-		for($k =0; $k < $numfields;  $k++) { 
-			$outputreport .= $list[$k];
-			if ($k < ($numfields-1)) $outputreport .= ", ";
-		}
-		$outputreport .= "\n";
-		foreach($shipmentreport as $_shipmentreport)
-	    {
-			$shipmentmodel = Mage::getModel('sales/order_shipment')->getCollection()->addAttributeToFilter('order_id', $_shipmentreport['order_id']);
-			$shipmentcount = $shipmentmodel->count();
-			$incrementid = $_shipmentreport['increment_id'];
-			$shipment = Mage::getModel('sales/order_shipment')->loadByIncrementId($incrementid);
-			$orderitem = Mage::getModel('sales/order_shipment_item')->getCollection();
-			
-			$orderitem->getSelect()->join(array('a'=>'sales_flat_order_item'),'a.item_id=main_table.order_item_id')
-			                      ->where('main_table.parent_id='.$shipment['entity_id'])
-								  ->columns('SUM(a.base_discount_amount) AS amount');
-					//echo $orderitem->getSelect()->__toString();			  exit;
-			$orderitemdata = $orderitem->getData();
-			foreach($orderitemdata as $_orderitemdata)
-			{
-			  $discountamount = $_orderitemdata['amount'];
-			
-			}
-				$countryModel = Mage::getModel('directory/country')->loadByCode($_shipmentreport['country_id']);
-					$countryName = $countryModel->getName();
-					$paymentmode = 'COD';
-					$vendorid=$_shipmentreport['udropship_vendor'];
-					$vendor = Mage::getModel('udropship/vendor')->load($vendorid);
-					$shippingclient = $vendor->getVendorName();
-					$street = $vendor['street'];
-					$city = $vendor->getCity();
-					$zipcode = $vendor->getZip();
-					
-					$vtelephone = $vendor->getTelephone();
-					$custom = Zend_Json::decode($vendor->getCustomVarsCombined());
-					$codfee = $custom['cod_fee'];
-					$amountCOD = $_shipmentreport['base_total_value'] + $_shipmentreport['itemised_total_shippingcost'] - $discountamount + $codfee;	
-				
-					for($m =0; $m < sizeof($list); $m++) 
-					{
-								$fieldvalue = $list[$m];
-								if($fieldvalue == "Waybill")
-								{
-									$outputreport .= $_shipmentreport['number'];
-								}
-									
-								if($fieldvalue == "Order No")
-								{
-									$outputreport .= $_shipmentreport['increment_id'];
-								}
-								
-								if($fieldvalue == "Consignee Name")
-								{
-									$outputreport .=  $_shipmentreport['firstname'].' '.$_shipmentreport['lastname'];
-								}
-									
-								if($fieldvalue == "City")
-								{
-									$outputreport .= $_shipmentreport['city'];
-								}
-								
-								if($fieldvalue == "State")
-								{
-									$outputreport .= $_shipmentreport['region'];
-								}
-								
-								if($fieldvalue == "Country")
-								{
-									$outputreport .= $countryName;
-								}
-								if($fieldvalue == "Address")
-								{
-									$outputreport .= '"'.$_shipmentreport['street'].", ".$_shipmentreport['city'].", ".$_shipmentreport['region'].", ".$countryName.", ".$_shipmentreport['postcode'].'"';
-								}
-								if($fieldvalue == "Pincode")
-								{
-									$outputreport .= $_shipmentreport['postcode'];
-								}
-								if($fieldvalue == "Phone")
-								{
-									$outputreport .= $_shipmentreport['telephone'];
-								}
-								if($fieldvalue == "Mobile")
-								{
-									$outputreport .= $_shipmentreport['telephone'];
-								}
-								if($fieldvalue == "Weight")
-								{
-									$outputreport .= '';
-								}
-								if($fieldvalue == "Payment Mode")
-								{
-									$outputreport .= $paymentmode;
-								}
-								if($fieldvalue == "Package Amount")
-								{
-									$outputreport .= $amountCOD;
-								}
-								if($fieldvalue == "Cod Amount")
-								{
-									$outputreport .= $amountCOD;
-								}
-								if($fieldvalue == "Product To Be Shipped")
-								{
-									$outputreport .= 'Handicraft Item';
-								}
-								if($fieldvalue == "Shipping Client")
-								{
-									$outputreport .= $shippingclient;
-								}
-								if($fieldvalue == "Shipping Client Address")
-								{
-									$outputreport .= '"'.$street.", ".$city.", ".$zipcode.'"';
-								}
-								if($fieldvalue == "Shipping Client Phone")
-								{
-									$outputreport .= $vtelephone;
-								}						
-								if ($m < ($numfields-1))
-								{
-									$outputreport .= ",";
-								}
-		   	}
-						  
-				
-		    	$outputreport .= "\n";
-		}
-		
-				header("Content-type: text/x-csv");
-				header("Content-Disposition: attachment; filename=$filename.csv");
-				header("Pragma: no-cache");
-				header("Expires: 0");
-				echo $outputreport;
+              try{
+                     $this->_redirect('*/sales_shipment/index');
+                 } 
+             catch(Exception $e)
+             {
+              echo $e->getMessage();
+             }       
+     
+    }
+    public function codshipmentManifestAction(){
+        
+        $shipmentData = Mage::getModel('sales/order_shipment')->getCollection();
+        $shipmentData->getSelect()->join(array('b'=>'sales_flat_order_address'), 'b.parent_id=main_table.order_id')
+                                  ->join(array('d'=>'sales_flat_shipment_track'), 'd.parent_id=main_table.entity_id','d.number')
+                                  ->join(array('c'=>'sales_flat_order'),'c.entity_id=main_table.order_id','c.base_discount_amount')
+                                  ->where('main_table.udropship_status = 27 AND main_table.updated_at < DATE_SUB(NOW(),INTERVAL 3 DAY) AND b.address_type = "shipping"');
+                    //echo $shipmentData->getSelect()->__toString();              exit;
+        $shipmentreport = $shipmentData->getData();
+        $filename = "CODShipmentdelayedpickupReport-craftsvilla"."_".date("Y-m-d");
+        $outputreport = "";
+        $list = array("Waybill","Order No","Consignee Name","City","State","Country","Address","Pincode","Phone","Mobile","Weight","Payment Mode","Package Amount","Cod Amount","Product To Be Shipped","Shipping Client","Shipping Client Address","Shipping Client Phone");
+        $numfields = sizeof($list);
+        for($k =0; $k < $numfields;  $k++) { 
+            $outputreport .= $list[$k];
+            if ($k < ($numfields-1)) $outputreport .= ", ";
+        }
+        $outputreport .= "\n";
+        foreach($shipmentreport as $_shipmentreport)
+        {
+            $shipmentmodel = Mage::getModel('sales/order_shipment')->getCollection()->addAttributeToFilter('order_id', $_shipmentreport['order_id']);
+            $shipmentcount = $shipmentmodel->count();
+            $incrementid = $_shipmentreport['increment_id'];
+            $shipment = Mage::getModel('sales/order_shipment')->loadByIncrementId($incrementid);
+            $orderitem = Mage::getModel('sales/order_shipment_item')->getCollection();
+            
+            $orderitem->getSelect()->join(array('a'=>'sales_flat_order_item'),'a.item_id=main_table.order_item_id')
+                                  ->where('main_table.parent_id='.$shipment['entity_id'])
+                                  ->columns('SUM(a.base_discount_amount) AS amount');
+                    //echo $orderitem->getSelect()->__toString();             exit;
+            $orderitemdata = $orderitem->getData();
+            foreach($orderitemdata as $_orderitemdata)
+            {
+              $discountamount = $_orderitemdata['amount'];
+            
+            }
+                $countryModel = Mage::getModel('directory/country')->loadByCode($_shipmentreport['country_id']);
+                    $countryName = $countryModel->getName();
+                    $paymentmode = 'COD';
+                    $vendorid=$_shipmentreport['udropship_vendor'];
+                    $vendor = Mage::getModel('udropship/vendor')->load($vendorid);
+                    $shippingclient = $vendor->getVendorName();
+                    $street = $vendor['street'];
+                    $city = $vendor->getCity();
+                    $zipcode = $vendor->getZip();
+                    
+                    $vtelephone = $vendor->getTelephone();
+                    $custom = Zend_Json::decode($vendor->getCustomVarsCombined());
+                    $codfee = $custom['cod_fee'];
+                    $amountCOD = $_shipmentreport['base_total_value'] + $_shipmentreport['itemised_total_shippingcost'] - $discountamount + $codfee;    
+                
+                    for($m =0; $m < sizeof($list); $m++) 
+                    {
+                                $fieldvalue = $list[$m];
+                                if($fieldvalue == "Waybill")
+                                {
+                                    $outputreport .= $_shipmentreport['number'];
+                                }
+                                    
+                                if($fieldvalue == "Order No")
+                                {
+                                    $outputreport .= $_shipmentreport['increment_id'];
+                                }
+                                
+                                if($fieldvalue == "Consignee Name")
+                                {
+                                    $outputreport .=  $_shipmentreport['firstname'].' '.$_shipmentreport['lastname'];
+                                }
+                                    
+                                if($fieldvalue == "City")
+                                {
+                                    $outputreport .= $_shipmentreport['city'];
+                                }
+                                
+                                if($fieldvalue == "State")
+                                {
+                                    $outputreport .= $_shipmentreport['region'];
+                                }
+                                
+                                if($fieldvalue == "Country")
+                                {
+                                    $outputreport .= $countryName;
+                                }
+                                if($fieldvalue == "Address")
+                                {
+                                    $outputreport .= '"'.$_shipmentreport['street'].", ".$_shipmentreport['city'].", ".$_shipmentreport['region'].", ".$countryName.", ".$_shipmentreport['postcode'].'"';
+                                }
+                                if($fieldvalue == "Pincode")
+                                {
+                                    $outputreport .= $_shipmentreport['postcode'];
+                                }
+                                if($fieldvalue == "Phone")
+                                {
+                                    $outputreport .= $_shipmentreport['telephone'];
+                                }
+                                if($fieldvalue == "Mobile")
+                                {
+                                    $outputreport .= $_shipmentreport['telephone'];
+                                }
+                                if($fieldvalue == "Weight")
+                                {
+                                    $outputreport .= '';
+                                }
+                                if($fieldvalue == "Payment Mode")
+                                {
+                                    $outputreport .= $paymentmode;
+                                }
+                                if($fieldvalue == "Package Amount")
+                                {
+                                    $outputreport .= $amountCOD;
+                                }
+                                if($fieldvalue == "Cod Amount")
+                                {
+                                    $outputreport .= $amountCOD;
+                                }
+                                if($fieldvalue == "Product To Be Shipped")
+                                {
+                                    $outputreport .= 'Handicraft Item';
+                                }
+                                if($fieldvalue == "Shipping Client")
+                                {
+                                    $outputreport .= $shippingclient;
+                                }
+                                if($fieldvalue == "Shipping Client Address")
+                                {
+                                    $outputreport .= '"'.$street.", ".$city.", ".$zipcode.'"';
+                                }
+                                if($fieldvalue == "Shipping Client Phone")
+                                {
+                                    $outputreport .= $vtelephone;
+                                }                       
+                                if ($m < ($numfields-1))
+                                {
+                                    $outputreport .= ",";
+                                }
+            }
+                          
+                
+                $outputreport .= "\n";
+        }
+        
+                header("Content-type: text/x-csv");
+                header("Content-Disposition: attachment; filename=$filename.csv");
+                header("Pragma: no-cache");
+                header("Expires: 0");
+                echo $outputreport;
                 exit;
-	          try{
-				     $this->_redirect('*/sales_shipment/index');
-	             } 
-			 catch(Exception $e)
-			 {
-	          echo $e->getMessage();
-	         }		 
-	 
-	
-		}
+              try{
+                     $this->_redirect('*/sales_shipment/index');
+                 } 
+             catch(Exception $e)
+             {
+              echo $e->getMessage();
+             }       
+     
+    
+        }
 public function requestpikuparamexAction()
-	{
-	 $shipmentid = $this->getRequest()->getPost('shipment_ids',array());
-	 $account=Mage::getStoreConfig('courier/general/account_number');
-	 foreach ($shipmentid as $shipment_id)
-	 {
-	 	$shipment = Mage::getModel('sales/order_shipment')->load($shipment_id);
-	 	$shipid = $shipment['increment_id'];
-	 	$orderid = $shipment['order_id'];
-	 	$udropshipvendor = $shipment['udropship_vendor'];
-	 	$vendor = Mage::getModel('udropship/vendor')->load($udropshipvendor);
-	 	$vendoraddress = $vendor['street'];
-	 	$vendorname = $vendor['vendor_name'];
-	 	$vendorcity = $vendor['city'];
-	 	$vendorcountry_id = $vendor['country_id'];
-	 	$vendorphone = $vendor['telephone'];
-	 	$vendorregion = $vendor['region'];
-	 	$vendorcountry = $vendor['country_id'];
-	 	$vendorzip = $vendor['zip'];
-	 	$countryModel = Mage::getModel('directory/country')->loadByCode($vendorcountry_id);
-		$vendorcountryName = $countryModel->getName();
-	 	$orderaddress = Mage::getModel('sales/order_address')->getCollection()
-	 	                                                    ->addFieldToFilter('address_type','shipping')
-	 	                                                     ->addAttributeToFilter('parent_id',$orderid);
-	 	 //echo '<pre>';print_r($orderaddress->getData());exit;
-	 	foreach ($orderaddress as $_orderaddress)
-	 	{
-	 	  $custfirstname = $_orderaddress['firstname'];
-	 	  $custlastname = $_orderaddress['lastname'];
-	 	  $custname = $custfirstname.' '.$custlastname;
-	 	  $custstreet = $_orderaddress['street'];
-	 	  $custcity = $_orderaddress['city'];
-	 	  $custregion = $_orderaddress['region'];
-	 	  $custcountryid = $_orderaddress['country_id'];
-	 	  $custphone = $_orderaddress['telephone'];
-	 	  $custpostcode = $_orderaddress['postcode'];
-	 	  $countryModel = Mage::getModel('directory/country')->loadByCode($custcountryid);
-		  $custcountryName = $countryModel->getName();
-		  
-	 	  
-	 	}  
-    	 $read = Mage::getSingleton('core/resource')->getConnection('core_read');
-		  $pincodeQuery = "SELECT * FROM `checkout_cod_craftsvilla` where `pincode` = '".$custpostcode."' AND `carrier` like '%Aramex%'";
-		  $rquery = $read->query($pincodeQuery)->fetch();
-		  $vendpincodeQuery = "SELECT * FROM `checkout_cod_craftsvilla` where `pincode` = '".$vendorzip."' AND `carrier` like '%Aramex%'";
-		  $vendquery = $read->query($vendpincodeQuery)->fetch();
-		  $vendcod = $vendquery['is_cod'];
-		  $cod = $rquery['is_cod'];
-		  if(is_null($cod) || ($cod == '') || ($cod != '0'))
-		  {
-		  	Mage::getSingleton('core/session')->addError("The customer's pickup pincode is not serviceable by Logistic Service Provider");
-		  }
-		  elseif (is_null($vendcod) || ($vendcod == '') || ($vendcod != '0'))
-	 	{
-		  	Mage::getSingleton('core/session')->addError("The vendor's pickup pincode is not serviceable by Logistic Service Provider");
-		  }
-		  else {
-	 	 $storeId = Mage::app()->getStore()->getId();	 
-	        $templateId='request_pickup_Aramex_template';
-	        	$sender = Array('name'  => 'Craftsvilla',
-							'email' => 'customercare@craftsvilla.com');
-							$translate  = Mage::getSingleton('core/translate');
-							$translate->setTranslateInline(false);
-							$_email = Mage::getModel('core/email_template');
-							$mailSubject = 'Request Pickup from Craftsvilla.com';
-												
-	            
-						$vars = Array('custname'=>$custname, 'custstreet'=>$custstreet, 'custcity'=>$custcity,
-						               'region' => $custregion,'custphone'=>$custphone,'custpostcode'=>$custpostcode,'custcountry'=>$custcountryName,
-						                'vendorstreet'=>$vendoraddress,'vendname'=>$vendorname,'vendorcity'=>$vendorcity,'vendorregion'=>$vendorregion,
-						                'vendpostcode'=>$vendorzip,'vendcountry'=>$vendorcountryName,'vendphone'=>$vendorphone,'shipmentId'=>$shipid,
-						                 'accountnumber'=>$account);		
-						
-					$_email->setDesignConfig(array('area'=>'frontend', 'store'=>$storeId))
-								->setTemplateSubject($mailSubject)
-								->sendTransactional($templateId, $sender, 'dhaval.Rao@aramex.com', $recname, $vars, $storeId);
-								$translate->setTranslateInline(true);
-						$_email->setDesignConfig(array('area'=>'frontend', 'store'=>$storeId))
-								->setTemplateSubject($mailSubject)
-								->sendTransactional($templateId, $sender, 'Sandeep.Bhitade@aramex.com', $recname, $vars, $storeId);
-								$translate->setTranslateInline(true);
-						$_email->setDesignConfig(array('area'=>'frontend', 'store'=>$storeId))
-								->setTemplateSubject($mailSubject)
-								->sendTransactional($templateId, $sender, 'customercare@craftsvilla.com', $recname, $vars, $storeId);
-								$translate->setTranslateInline(true);
-				if ($shipment->getUdropshipStatus() !== Unirgy_Dropship_Model_Source::SHIPMENT_STATUS_PENDPICKUP) {
-					$shipment->setUdropshipStatus(Unirgy_Dropship_Model_Source::SHIPMENT_STATUS_PENDPICKUP);
-					Mage::helper('udropship')->addShipmentComment($shipment,
-							  ('Request Pickup for this shipment has been sent to the Logistic Service Provider. '));
-				}
-				$shipment->save();
-	         Mage::getSingleton('core/session')->addSuccess("Your request has been successfully submitted");
+    {
+     $shipmentid = $this->getRequest()->getPost('shipment_ids',array());
+     $account=Mage::getStoreConfig('courier/general/account_number');
+     foreach ($shipmentid as $shipment_id)
+     {
+        $shipment = Mage::getModel('sales/order_shipment')->load($shipment_id);
+        $shipid = $shipment['increment_id'];
+        $orderid = $shipment['order_id'];
+        $udropshipvendor = $shipment['udropship_vendor'];
+        $vendor = Mage::getModel('udropship/vendor')->load($udropshipvendor);
+        $vendoraddress = $vendor['street'];
+        $vendorname = $vendor['vendor_name'];
+        $vendorcity = $vendor['city'];
+        $vendorcountry_id = $vendor['country_id'];
+        $vendorphone = $vendor['telephone'];
+        $vendorregion = $vendor['region'];
+        $vendorcountry = $vendor['country_id'];
+        $vendorzip = $vendor['zip'];
+        $countryModel = Mage::getModel('directory/country')->loadByCode($vendorcountry_id);
+        $vendorcountryName = $countryModel->getName();
+        $orderaddress = Mage::getModel('sales/order_address')->getCollection()
+                                                            ->addFieldToFilter('address_type','shipping')
+                                                             ->addAttributeToFilter('parent_id',$orderid);
+         //echo '<pre>';print_r($orderaddress->getData());exit;
+        foreach ($orderaddress as $_orderaddress)
+        {
+          $custfirstname = $_orderaddress['firstname'];
+          $custlastname = $_orderaddress['lastname'];
+          $custname = $custfirstname.' '.$custlastname;
+          $custstreet = $_orderaddress['street'];
+          $custcity = $_orderaddress['city'];
+          $custregion = $_orderaddress['region'];
+          $custcountryid = $_orderaddress['country_id'];
+          $custphone = $_orderaddress['telephone'];
+          $custpostcode = $_orderaddress['postcode'];
+          $countryModel = Mage::getModel('directory/country')->loadByCode($custcountryid);
+          $custcountryName = $countryModel->getName();
+          
+          
+        }  
+         $read = Mage::getSingleton('core/resource')->getConnection('core_read');
+          $pincodeQuery = "SELECT * FROM `checkout_cod_craftsvilla` where `pincode` = '".$custpostcode."' AND `carrier` like '%Aramex%'";
+          $rquery = $read->query($pincodeQuery)->fetch();
+          $vendpincodeQuery = "SELECT * FROM `checkout_cod_craftsvilla` where `pincode` = '".$vendorzip."' AND `carrier` like '%Aramex%'";
+          $vendquery = $read->query($vendpincodeQuery)->fetch();
+          $vendcod = $vendquery['is_cod'];
+          $cod = $rquery['is_cod'];
+          if(is_null($cod) || ($cod == '') || ($cod != '0'))
+          {
+            Mage::getSingleton('core/session')->addError("The customer's pickup pincode is not serviceable by Logistic Service Provider");
+          }
+          elseif (is_null($vendcod) || ($vendcod == '') || ($vendcod != '0'))
+        {
+            Mage::getSingleton('core/session')->addError("The vendor's pickup pincode is not serviceable by Logistic Service Provider");
+          }
+          else {
+         $storeId = Mage::app()->getStore()->getId();    
+            $templateId='request_pickup_Aramex_template';
+                $sender = Array('name'  => 'Craftsvilla',
+                            'email' => 'customercare@craftsvilla.com');
+                            $translate  = Mage::getSingleton('core/translate');
+                            $translate->setTranslateInline(false);
+                            $_email = Mage::getModel('core/email_template');
+                            $mailSubject = 'Request Pickup from Craftsvilla.com';
+                                                
+                
+                        $vars = Array('custname'=>$custname, 'custstreet'=>$custstreet, 'custcity'=>$custcity,
+                                       'region' => $custregion,'custphone'=>$custphone,'custpostcode'=>$custpostcode,'custcountry'=>$custcountryName,
+                                        'vendorstreet'=>$vendoraddress,'vendname'=>$vendorname,'vendorcity'=>$vendorcity,'vendorregion'=>$vendorregion,
+                                        'vendpostcode'=>$vendorzip,'vendcountry'=>$vendorcountryName,'vendphone'=>$vendorphone,'shipmentId'=>$shipid,
+                                         'accountnumber'=>$account);        
+                        
+                    $_email->setDesignConfig(array('area'=>'frontend', 'store'=>$storeId))
+                                ->setTemplateSubject($mailSubject)
+                                ->sendTransactional($templateId, $sender, 'dhaval.Rao@aramex.com', $recname, $vars, $storeId);
+                                $translate->setTranslateInline(true);
+                        $_email->setDesignConfig(array('area'=>'frontend', 'store'=>$storeId))
+                                ->setTemplateSubject($mailSubject)
+                                ->sendTransactional($templateId, $sender, 'Sandeep.Bhitade@aramex.com', $recname, $vars, $storeId);
+                                $translate->setTranslateInline(true);
+                        $_email->setDesignConfig(array('area'=>'frontend', 'store'=>$storeId))
+                                ->setTemplateSubject($mailSubject)
+                                ->sendTransactional($templateId, $sender, 'customercare@craftsvilla.com', $recname, $vars, $storeId);
+                                $translate->setTranslateInline(true);
+                if ($shipment->getUdropshipStatus() !== Unirgy_Dropship_Model_Source::SHIPMENT_STATUS_PENDPICKUP) {
+                    $shipment->setUdropshipStatus(Unirgy_Dropship_Model_Source::SHIPMENT_STATUS_PENDPICKUP);
+                    Mage::helper('udropship')->addShipmentComment($shipment,
+                              ('Request Pickup for this shipment has been sent to the Logistic Service Provider. '));
+                }
+                $shipment->save();
+             Mage::getSingleton('core/session')->addSuccess("Your request has been successfully submitted");
        }
-	 }
+     }
        try{
-				     $this->_redirect('*/sales_shipment/index');
-	             } 
-			 catch(Exception $e)
-			 {
-	          echo $e->getMessage();
-	         }		 
-	 }
+                     $this->_redirect('*/sales_shipment/index');
+                 } 
+             catch(Exception $e)
+             {
+              echo $e->getMessage();
+             }       
+     }
 }
