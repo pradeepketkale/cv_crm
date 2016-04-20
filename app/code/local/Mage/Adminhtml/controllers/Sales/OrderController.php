@@ -1451,7 +1451,7 @@ public function suspectfraudAction()
 		$user = Mage::getSingleton('admin/session');
 		$userEmail = $user->getUser()->getEmail();
         $userName = $user->getUser()->getName();
-	if($userEmail == "santoshc@craftsvilla.com" || $userEmail == "bhimraj@craftsvilla.com" || $userEmail == "Seemag@craftsvilla.com" || $userEmail == "monica@craftsvilla.com" || $userEmail == "manoj@craftsvilla.com" || $userEmail == "Rohit@craftsvilla.com" || $userEmail == "tribhuvan@craftsvilla.com" || $userEmail == "dilipcscare@craftsvilla.com" || $userEmail == "eulalia.fernandes@craftsvilla.com" || $userEmail == "gaurav@craftsvilla.com" || $userEmail == "niraj@craftsvilla.com")
+	if($userEmail == "surekhak@craftsvilla.com" || $userEmail == "rajm@craftsvilla.com" || $userEmail == "swapnil@craftsvilla.com" || $userEmail == "pritit@craftsvilla.com" || $userEmail == "anilp@craftsvilla.com" || $userEmail == "jitesh@craftsvilla.com" || $userEmail == "santoshc@craftsvilla.com" || $userEmail == "bhimraj@craftsvilla.com" || $userEmail == "Seemag@craftsvilla.com" || $userEmail == "monica@craftsvilla.com" || $userEmail == "manoj@craftsvilla.com" || $userEmail == "Rohit@craftsvilla.com" || $userEmail == "tribhuvan@craftsvilla.com" || $userEmail == "dilipcscare@craftsvilla.com" || $userEmail == "eulalia.fernandes@craftsvilla.com" || $userEmail == "gaurav@craftsvilla.com" || $userEmail == "niraj@craftsvilla.com")
 		{
 		$orderIds = $this->getRequest()->getPost('order_ids');
 		$order = Mage::getModel('sales/order')->load($orderIds); //load order             
@@ -1860,7 +1860,7 @@ public function changePaymentMethodAction()
 	{
 		$user = Mage::getSingleton('admin/session');
 		$userEmail = $user->getUser()->getEmail();
-	if($userEmail == "santoshc@craftsvilla.com" || $userEmail == "bhimraj@craftsvilla.com" || $userEmail == "Seemag@craftsvilla.com" || $userEmail == "monica@craftsvilla.com" || $userEmail == "manoj@craftsvilla.com" || $userEmail == "Rohit@craftsvilla.com" || $userEmail == "tribhuvan@craftsvilla.com" || $userEmail == "dilipcscare@craftsvilla.com" || $userEmail == "eulalia.fernandes@craftsvilla.com" || $userEmail == "gaurav@craftsvilla.com" || $userEmail == "niraj@craftsvilla.com")
+	if($userEmail == "surekhak@craftsvilla.com" || $userEmail == "rajm@craftsvilla.com" || $userEmail == "swapnil@craftsvilla.com" || $userEmail == "pritit@craftsvilla.com" || $userEmail == "anilp@craftsvilla.com" || $userEmail == "jitesh@craftsvilla.com" || $userEmail == "santoshc@craftsvilla.com" || $userEmail == "bhimraj@craftsvilla.com" || $userEmail == "Seemag@craftsvilla.com" || $userEmail == "monica@craftsvilla.com" || $userEmail == "manoj@craftsvilla.com" || $userEmail == "Rohit@craftsvilla.com" || $userEmail == "tribhuvan@craftsvilla.com" || $userEmail == "dilipcscare@craftsvilla.com" || $userEmail == "eulalia.fernandes@craftsvilla.com" || $userEmail == "gaurav@craftsvilla.com" || $userEmail == "niraj@craftsvilla.com")
 		{
 		$orderIds = $this->getRequest()->getPost('order_ids');
 		$order = Mage::getModel('sales/order')->load($orderIds); //load order  
