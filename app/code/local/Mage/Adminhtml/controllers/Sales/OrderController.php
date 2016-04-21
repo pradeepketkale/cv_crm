@@ -1843,7 +1843,7 @@ protected function createawb($id)
 		if($changezip){ $changezipup = $changezip; } else { $changezipup = $getPostcode; }
 		if($changecity){ $changecityup = $changecity; } else { $changecityup = $getCity; }
 		if($changeCountry){ $changeCountryup = $changeCountry; } else { $changeCountryup = $getCountryId; }
-		if($changestate1){ $changestateup = $changestate; } else { $changestateup = $getRegion; }
+		if($changestate1){ $changestateup = $changestate1; } else { $changestateup = $getRegion; }
 		if($changeRegionid){ $changeRegionidup = $changeRegionid; } else { $changeRegionidup = $getRegionId; }
 
 $writeUp = Mage::getSingleton('core/resource')->getConnection('core_write');
