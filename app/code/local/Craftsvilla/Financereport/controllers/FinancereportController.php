@@ -92,7 +92,7 @@ class Craftsvilla_Financereport_FinancereportController extends Mage_Core_Contro
 		when 33 then 'partially recieved'
 		when 36 then 'Damage/Lost in Transit'
 		end as ustatus,
-		case sp.`shipmentpayout_status` when 0 then 'Unpaid'when 1 then 'Paid' when 2 then 'Refunded' end as payoutstatus,sfs.`created_at` AS shipment_datec, sfst.`number` AS awb_number, sfs.`updated_at` AS shipment_update, `sp`.`citibank_utr`, sp.`shipmentpayout_update_time` AS payment_updated_date, `sfs`.`udropship_vendor` AS vendor_name, sfs.`base_total_value` as SubTotal, sp.`payment_amount` AS payment_amount, sp.`commission_amount` AS comission_amount,sfst.`courier_name`
+		case sp.`shipmentpayout_status` when 0 then 'Unpaid'when 1 then 'Paid' when 2 then 'Refunded' end as payoutstatus,sfs.`created_at` AS shipment_datec, sfst.`number` AS awb_number, sfs.`updated_at` AS shipment_update, `sp`.`citibank_utr`, sp.`shipmentpayout_update_time` AS payment_updated_date, `sfs`.`udropship_vendor` AS vendor_name, sfs.`base_total_value` as SubTotal,sfs.`base_shipping_amount` as Shipping, sp.`payment_amount` AS payment_amount, sp.`commission_amount` AS comission_amount,sfst.`courier_name`
 		FROM `sales_flat_shipment` as sfs
 		LEFT JOIN `sales_flat_order` AS sfo ON `sfs`.`order_id` = `sfo`.`entity_id`
 		LEFT JOIN `sales_flat_shipment_track` AS sfst ON `sfs`.`entity_id` = `sfst`.`parent_id`
@@ -114,6 +114,7 @@ class Craftsvilla_Financereport_FinancereportController extends Mage_Core_Contro
             'Payment Updated Date',
             'Vendor Name',
             'SubTotal',
+            'Shipping Amount',
             'Payment Amount',
             'Comission Amount',
             'Courier Name'
@@ -1348,7 +1349,7 @@ WHERE " . $sWhere;
 					when 33 then 'partially recieved'
 					when 36 then 'Damage/Lost in Transit'
 					end as ustatus,
-					case sp.`shipmentpayout_status` when 0 then 'Unpaid'when 1 then 'Paid' when 2 then 'Refunded' end as payoutstatus,sfs.`created_at` AS shipment_datec, sfst.`number` AS awb_number, sfs.`updated_at` AS shipment_update, `sp`.`citibank_utr`, sp.`shipmentpayout_update_time` AS payment_updated_date, `sfs`.`udropship_vendor` AS vendor_name, sfs.`base_total_value` as SubTotal, sp.`payment_amount` AS payment_amount, sp.`commission_amount` AS comission_amount,sfst.`courier_name`
+					case sp.`shipmentpayout_status` when 0 then 'Unpaid'when 1 then 'Paid' when 2 then 'Refunded' end as payoutstatus,sfs.`created_at` AS shipment_datec, sfst.`number` AS awb_number, sfs.`updated_at` AS shipment_update, `sp`.`citibank_utr`, sp.`shipmentpayout_update_time` AS payment_updated_date, `sfs`.`udropship_vendor` AS vendor_name, sfs.`base_total_value` as SubTotal,sfs.`base_shipping_amount` as Shipping, sp.`payment_amount` AS payment_amount, sp.`commission_amount` AS comission_amount,sfst.`courier_name`
 					FROM `sales_flat_shipment` as sfs
 					LEFT JOIN `sales_flat_order` AS sfo ON `sfs`.`order_id` = `sfo`.`entity_id`
 					LEFT JOIN `sales_flat_shipment_track` AS sfst ON `sfs`.`entity_id` = `sfst`.`parent_id`
@@ -1370,6 +1371,7 @@ WHERE " . $sWhere;
             'Payment Updated Date',
             'Vendor Name',
             'SubTotal',
+            'Shipping Amount',
             'Payment Amount',
             'Comission Amount',
             'Courier Name'
