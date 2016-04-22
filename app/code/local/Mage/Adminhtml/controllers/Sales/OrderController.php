@@ -1856,6 +1856,7 @@ Mage::getSingleton('adminhtml/session')->addSuccess(Mage::helper('adminhtml')->_
 $this->_redirect('*/*/');	
 }
 
+
 public function changePaymentMethodAction()
 	{
 		$user = Mage::getSingleton('admin/session');
