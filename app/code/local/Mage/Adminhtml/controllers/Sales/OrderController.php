@@ -1451,7 +1451,7 @@ public function suspectfraudAction()
 		$user = Mage::getSingleton('admin/session');
 		$userEmail = $user->getUser()->getEmail();
         $userName = $user->getUser()->getName();
-	if($userEmail == "santoshc@craftsvilla.com" || $userEmail == "bhimraj@craftsvilla.com" || $userEmail == "Seemag@craftsvilla.com" || $userEmail == "monica@craftsvilla.com" || $userEmail == "manoj@craftsvilla.com" || $userEmail == "Rohit@craftsvilla.com" || $userEmail == "tribhuvan@craftsvilla.com" || $userEmail == "dilipcscare@craftsvilla.com" || $userEmail == "eulalia.fernandes@craftsvilla.com" || $userEmail == "gaurav@craftsvilla.com" || $userEmail == "niraj@craftsvilla.com")
+	if($userEmail == "surekhak@craftsvilla.com" || $userEmail == "rajm@craftsvilla.com" || $userEmail == "swapnil@craftsvilla.com" || $userEmail == "pritit@craftsvilla.com" || $userEmail == "anilp@craftsvilla.com" || $userEmail == "jitesh@craftsvilla.com" || $userEmail == "santoshc@craftsvilla.com" || $userEmail == "bhimraj@craftsvilla.com" || $userEmail == "Seemag@craftsvilla.com" || $userEmail == "monica@craftsvilla.com" || $userEmail == "manoj@craftsvilla.com" || $userEmail == "Rohit@craftsvilla.com" || $userEmail == "tribhuvan@craftsvilla.com" || $userEmail == "dilipcscare@craftsvilla.com" || $userEmail == "eulalia.fernandes@craftsvilla.com" || $userEmail == "gaurav@craftsvilla.com" || $userEmail == "niraj@craftsvilla.com")
 		{
 		$orderIds = $this->getRequest()->getPost('order_ids');
 		$order = Mage::getModel('sales/order')->load($orderIds); //load order             
@@ -1843,7 +1843,7 @@ protected function createawb($id)
 		if($changezip){ $changezipup = $changezip; } else { $changezipup = $getPostcode; }
 		if($changecity){ $changecityup = $changecity; } else { $changecityup = $getCity; }
 		if($changeCountry){ $changeCountryup = $changeCountry; } else { $changeCountryup = $getCountryId; }
-		if($changestate1){ $changestateup = $changestate; } else { $changestateup = $getRegion; }
+		if($changestate1){ $changestateup = $changestate1; } else { $changestateup = $getRegion; }
 		if($changeRegionid){ $changeRegionidup = $changeRegionid; } else { $changeRegionidup = $getRegionId; }
 
 $writeUp = Mage::getSingleton('core/resource')->getConnection('core_write');
@@ -1856,11 +1856,12 @@ Mage::getSingleton('adminhtml/session')->addSuccess(Mage::helper('adminhtml')->_
 $this->_redirect('*/*/');	
 }
 
+
 public function changePaymentMethodAction()
 	{
 		$user = Mage::getSingleton('admin/session');
 		$userEmail = $user->getUser()->getEmail();
-	if($userEmail == "santoshc@craftsvilla.com" || $userEmail == "bhimraj@craftsvilla.com" || $userEmail == "Seemag@craftsvilla.com" || $userEmail == "monica@craftsvilla.com" || $userEmail == "manoj@craftsvilla.com" || $userEmail == "Rohit@craftsvilla.com" || $userEmail == "tribhuvan@craftsvilla.com" || $userEmail == "dilipcscare@craftsvilla.com" || $userEmail == "eulalia.fernandes@craftsvilla.com" || $userEmail == "gaurav@craftsvilla.com" || $userEmail == "niraj@craftsvilla.com")
+	if($userEmail == "surekhak@craftsvilla.com" || $userEmail == "rajm@craftsvilla.com" || $userEmail == "swapnil@craftsvilla.com" || $userEmail == "pritit@craftsvilla.com" || $userEmail == "anilp@craftsvilla.com" || $userEmail == "jitesh@craftsvilla.com" || $userEmail == "santoshc@craftsvilla.com" || $userEmail == "bhimraj@craftsvilla.com" || $userEmail == "Seemag@craftsvilla.com" || $userEmail == "monica@craftsvilla.com" || $userEmail == "manoj@craftsvilla.com" || $userEmail == "Rohit@craftsvilla.com" || $userEmail == "tribhuvan@craftsvilla.com" || $userEmail == "dilipcscare@craftsvilla.com" || $userEmail == "eulalia.fernandes@craftsvilla.com" || $userEmail == "gaurav@craftsvilla.com" || $userEmail == "niraj@craftsvilla.com")
 		{
 		$orderIds = $this->getRequest()->getPost('order_ids');
 		$order = Mage::getModel('sales/order')->load($orderIds); //load order  

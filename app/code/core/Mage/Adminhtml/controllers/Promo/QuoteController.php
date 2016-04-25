@@ -99,6 +99,9 @@ class Mage_Adminhtml_Promo_QuoteController extends Mage_Adminhtml_Controller_Act
                 $id ? Mage::helper('salesrule')->__('Edit Rule')
                     : Mage::helper('salesrule')->__('New Rule'))
             ->renderLayout();
+            $writedb= Mage::getSingleton('core/resource')->getConnection('core_write');
+             /*   $insert1 = "INSERT INTO `coupon_code`(`coupon_name`, `member_name`, `date`, `amount`,`coupon_code`) VALUES ('".$data['name']."','".$data['description']."','".$data['from_date']."','".$data['discount_amount']."','".$data['coupon_code']."') ";
+                 $vendortResult=   $writedb->query($insert1);*/
 
     }
 
@@ -133,6 +136,24 @@ class Mage_Adminhtml_Promo_QuoteController extends Mage_Adminhtml_Controller_Act
                         Mage::throwException(Mage::helper('salesrule')->__('Wrong rule specified.'));
                     }
                 }
+                $userArray = Mage::getSingleton('admin/session')->getData();
+// get individual data
+            $user = Mage::getSingleton('admin/session');
+
+            $userUsername = $user->getUser()->getUsername();
+
+               //code added by swati
+                $writedb= Mage::getSingleton('core/resource')->getConnection('core_write');
+                $insert = "INSERT INTO `coupon_code_cv`(`coupon_name`, `member_name`, `date`, `amount`,`coupon_code`) VALUES ('".$data['name']."','".$userUsername."','".now()."','".$data['discount_amount']."','".$data['coupon_code']."') ";
+                 $vendortResult=   $writedb->query($insert);
+                 $writedb->closeConnection();
+
+
+                //send
+
+              //  echo '<pre>'; print_r($vendortResult);exit;
+
+
 
                 $session = Mage::getSingleton('adminhtml/session');
 
