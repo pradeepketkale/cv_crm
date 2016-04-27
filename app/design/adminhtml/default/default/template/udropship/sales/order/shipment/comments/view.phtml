@@ -21,15 +21,20 @@
 	$_shippingAddress_value = $_order_id->getShippingAddress();
 	$country_id_value = $_shippingAddress_value->getCountry_id();
 	$autoRefundedamount = Mage::helper('udropship')->getrefundCv($_entity->getId());	
-    $user = Mage::getSingleton('admin/session')->getUser(); //Added by Ankit for restriction on Damage/Lost in Transit
-    $user = $user->email; //Added by Ankit for restriction on Damage/Lost in Transit
+        $user = Mage::getSingleton('admin/session')->getUser(); //Added by Ankit for restriction on Damage/Lost in Transit
+        $user = $user->email; //Added by Ankit for restriction on Damage/Lost in Transit
 ?>
+        <!-- Add code for prevent change status when its set Canceled (6)/COD RTO (25) -->
+	<?php $checkShipementStatus = array('6','25');
+	      $shipmentStatusId = $this->getEntity()->getUdropshipStatus() ;
+	?>
+	
 <div id="comments_block">
     <span class="field-row">
         <label class="normal" for="comment_status"><?php echo Mage::helper('sales')->__('Status') ?></label><br/>
-        <select name="comment[status]" class="select" id="comment_status" onchange="showfield(this.options[this.selectedIndex].value)">
-		
-        <?php 
+        <select name="comment[status]" class="select" id="comment_status" onchange="showfield(this.options[this.selectedIndex].value)" <?php if(in_array($shipmentStatusId,$checkShipementStatus)) echo 'disabled' ?>>
+	
+	<?php 
 
 foreach (Mage::getSingleton('udropship/source')->setPath('shipment_statuses')->toOptionHash() as $_code=>$_label):
         		/*
@@ -148,7 +153,13 @@ foreach (Mage::getSingleton('udropship/source')->setPath('shipment_statuses')->t
     </form> 
 <script type="text/javascript">
 function submitComment() {
-    if (validateShipmentStatusSubmit()) {
+  var currentStatusId = '<?php echo $shipmentStatusId ?>';
+  if(currentStatusId == '25' || currentStatusId == '6')
+  {
+	alert('Futher Modification not allow at this stage.');
+	return false ;
+  }
+    else if (validateShipmentStatusSubmit()) {
         submitAndReloadArea($('comments_block').parentNode, '<?php echo $this->getUrl('udropshipadmin/adminhtml_shipment/addComment', array('shipment_id'=>$_entity->getId())) ?>')
     }
 }
