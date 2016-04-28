@@ -153,7 +153,7 @@ foreach (Mage::getSingleton('udropship/source')->setPath('shipment_statuses')->t
     </form> 
 <script type="text/javascript">
 function submitComment() {
-  var currentStatusId = '<?php echo $shipmentStatusId ?>';
+  var currentStatusId = '<?php echo $shipmentStatusId ?>'; //alert(currentStatusId);
   if(currentStatusId == '25' || currentStatusId == '6')
   {
 	alert('Futher Modification not allow at this stage.');

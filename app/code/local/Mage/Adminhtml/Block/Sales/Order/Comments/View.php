@@ -63,7 +63,7 @@ class Mage_Adminhtml_Block_Sales_Order_Comments_View extends Mage_Adminhtml_Bloc
             ->setData(array(
                 'id'      => 'submit_comment_button',
                 'label'   => Mage::helper('sales')->__('Submit Comment'),
-                'disabled' => true,
+              //  'disabled' => true,
                 'class'   => 'save'
             ));
         } else {
