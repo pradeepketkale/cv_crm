@@ -559,7 +559,7 @@ class Craftsvilla_Shipmentpayout_Adminhtml_ShipmentpayoutController extends Mage
 
 		    		if($fieldvalue == "BENE_AC_NO")
 		    		{
-		    			$output .= $vendors->getBankAcNumber();
+		    			$output .=  "'".$vendors->getBankAcNumber();
 		    		}
 
 		    		if($fieldvalue == "IFSC_CODE")
