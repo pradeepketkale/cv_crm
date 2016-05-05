@@ -331,7 +331,6 @@ class Craftsvilla_Shipmentpayout_Adminhtml_ShipmentpayoutController extends Mage
 
     	foreach($shipmentpayout_report1_arr as $shipmentpayout_report1_val)
 	    {
-
 			$merchantIdnew = $this->getMerchantIdCv($shipmentpayout_report1_val['udropship_vendor']);
 			$vendors = Mage::helper('udropship')->getVendor($shipmentpayout_report1_val['udropship_vendor']);
 	    	if(($shipmentpayout_report1_val['udropship_vendor'] != '' && ($merchantIdnew!= '')) )
@@ -472,9 +471,9 @@ class Craftsvilla_Shipmentpayout_Adminhtml_ShipmentpayoutController extends Mage
 		    			$sqlQuery = "select courier_name from `sales_flat_shipment_track` where LOWER(`courier_name`) = 'dhl_int' AND parent_id = " .$shipmentpayout_report1_val['entity_id'];
 		    			$result = $readOrderCntry->query($sqlQuery)->fetch();
 		    			if($result){
-		    				$total_amount = $total_amount - $shipmentpayout_report1_val['base_shipping_amount'];
-		    				$vendor_amount = (($total_amount)*(1-($commission_amount/100)*(1+$service_tax)));
-		    				$kribha_amount = ((($total_amount)*1.00) - $vendor_amount) + 1000;
+		    				$total_amount1 = $total_amount - $shipmentpayout_report1_val['base_shipping_amount'];
+		    				$vendor_amount = (($total_amount1)*(1-($commission_amount/100)*(1+$service_tax)));
+		    				$kribha_amount = ((($total_amount)*1.00) - $vendor_amount) ;
 		    				$shipmentType = "KYC";
 		    			}else {
 		    				$vendor_amount = (($total_amount)*(1-($commission_amount/100)*(1+$service_tax)));
