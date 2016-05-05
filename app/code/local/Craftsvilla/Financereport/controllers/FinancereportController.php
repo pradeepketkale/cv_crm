@@ -50,7 +50,7 @@ class Craftsvilla_Financereport_FinancereportController extends Mage_Core_Contro
         $paymentCond = ($_GET['paymentstatus'] != 'all' ? "AND sp.shipmentpayout_status =" . $_GET['paymentstatus'] : '');
         $CourierCond = ($_GET['couriername'] != 'all' ? "AND upper(sfst.courier_name)='" . strtoupper($_GET['couriername']) . "' " : '');
 
-        $sWhere = "sfop.`method` = 'cashondelivery' " . $ustatusCond . ' ' . $paymentCond . ' ' . $CourierCond . ' ';
+        $sWhere = "sfop.`method` = 'cashondelivery' AND sfst.number!='' " . $ustatusCond . ' ' . $paymentCond . ' ' . $CourierCond . ' ';
         if (isset($_GET['startdate']) && isset($_GET['enddate'])) {
             $sWhere .= "and sfo.created_at >= '" . $_GET['startdate'] . "' and sfo.created_at <= '" . $_GET['enddate'] . "'";
         }
