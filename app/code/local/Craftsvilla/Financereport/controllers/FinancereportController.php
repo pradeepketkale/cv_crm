@@ -512,10 +512,13 @@ class Craftsvilla_Financereport_FinancereportController extends Mage_Core_Contro
             $upper_limit = $upper_limit + 5000;
 
         }
-
+        fclose($fp);
         header('Content-Type: text/csv');
         header('Content-Disposition: attachment;filename=' . $filename . '.csv');
-        fclose($fp);
+        header('Expires: 0');
+        header('Cache-Control: must-revalidate');
+        header('Pragma: public');
+        header('Content-Length: ' . filesize($filePathOfCsv));
         readfile($filePathOfCsv, false);
         unlink($filePathOfCsv);
         exit;
