@@ -48,7 +48,7 @@ class Craftsvilla_Financereport_FinancereportController extends Mage_Core_Contro
         );
         $ustatusCond = ($_GET['ustatus'] != 'all' ? "AND sfs.udropship_status=" . $ustatus[$_GET['ustatus']] : '');
         $paymentCond = ($_GET['paymentstatus'] != 'all' ? "AND sp.shipmentpayout_status =" . $_GET['paymentstatus'] : '');
-        $CourierCond = ($_GET['couriername'] != 'all' ? "AND sfst.courier_name='" . $_GET['couriername'] . "' " : '');
+        $CourierCond = ($_GET['couriername'] != 'all' ? "AND upper(sfst.courier_name)='" . strtoupper($_GET['couriername']) . "' " : '');
 
         $sWhere = "sfop.`method` = 'cashondelivery' " . $ustatusCond . ' ' . $paymentCond . ' ' . $CourierCond . ' ';
         if (isset($_GET['startdate']) && isset($_GET['enddate'])) {
@@ -455,11 +455,12 @@ WHERE " . $sWhere;
 
         $filePathOfCsv = Mage::getBaseDir('media') . DS . $filename . '.csv';
         unlink($filePathOfCsv);
-        $fp = fopen($filePathOfCsv, 'w+');
+        $fp = fopen($filePathOfCsv, 'w');
         fputcsv($fp, $headerArray);
         fclose($fp);
         while ($flag) {
             unset($rResult);
+            unset($sqlLimit);
             $readQuery     = Mage::getSingleton('core/resource')->getConnection('custom_db');
             $sqlLimit      = " LIMIT " . $lower_limit . "," . $upper_limit;
             $sqlFinalQuery = $sqlQuery . $sqlLimit;
@@ -478,7 +479,7 @@ WHERE " . $sWhere;
                 $sqlVendorName = "select `vendor_id`,`vendor_name` from `udropship_vendor` where `vendor_id` in (" . $inCondition . ")";
                 //echo $sqlVendorName;exit;
                 $rVendor       = $readQuery->query($sqlVendorName)->fetchAll();
-
+                $readQuery->closeConnection();
                 foreach ($rResult as $key1 => $value1) {
                     foreach ($rVendor as $key => $value) {
                         if ($value['vendor_id'] == $value1['vendor_name']) {
@@ -509,7 +510,7 @@ WHERE " . $sWhere;
             fclose($fp);
             $lower_limit = $upper_limit + 1;
             $upper_limit = $upper_limit + 5000;
-            $readQuery->closeConnection();
+
         }
 
         header('Content-Type: text/csv');
@@ -1390,7 +1391,43 @@ WHERE " . $sWhere;
             $sWhere .= "and date(sfo.`created_at`) >= '" . $_GET['startdate'] . "' and date(sfo.`created_at`) <= '" . $_GET['enddate'] . "'";
         }
 
-        $sQuery   = "SELECT sfo.`increment_id` AS order_id, date(sfo.`created_at`) AS order_date,sfs.`increment_id` AS shipment_id,date(sfs.`created_at`) AS shipment_date, uv.`vendor_name` AS vendor_name,uv.`street` AS seller_address, uv.`custom_vars_combined` AS pan,'' as tin,dcr.`default_name` AS vendor_state,(sfs.`base_total_value`+sfs.`base_shipping_amount`) as GMV, sfop.`method` as payment_method, concat(sfoa.`firstname` ,' ',sfoa.`lastname`) as customer_name,sfoa.`region` as customer_region, concat(sfoa.`street` ,', ',sfoa.`city`) as customer_address from `sales_flat_shipment` as sfs
+        $sQuery   = "SELECT sfo.`increment_id` AS order_id, date(sfo.`created_at`) AS order_date,sfs.`increment_id` AS shipment_id,date(sfs.`created_at`) AS shipment_date,
+                    case sfs.`udropship_status`
+                    when 0 then 'pending'
+                    when 1 then 'shipped to customer'
+                    when 2 then 'partial'
+                    when 8 then 'pendingpickup'
+                    when 9 then 'ack'
+                    when 10 then 'exported'
+                    when 3 then 'ready'
+                    when 4 then 'onhold'
+                    when 5 then 'backorder'
+                    when 6 then 'cancelled'
+                    when 7 then 'delivered'
+                    when 11 then 'processing'
+                    when 12 then 'refundintiated'
+                    when 13 then 'not delivered'
+                    when 14 then 'charge_back'
+                    when 15 then 'shipped craftsvilla'
+                    when 16 then 'qc_rejected'
+                    when 17 then 'received'
+                    when 18 then 'out of stock'
+                    when 19 then 'partial refund initiated'
+                    when 20 then 'dispute raised'
+                    when 21 then 'shipment delayed'
+                    when 22 then 'partially shipped'
+                    when 23 then 'refund to do'
+                    when 24 then 'Accepted'
+                    when 25 then 'COD RTO'
+                    when 26 then 'Returned By Customer'
+                    when 27 then 'Mainfest Shared'
+                    when 28 then 'COD SHIPMENT PICKED UP'
+                    when 30 then 'Packing slip printed'
+                    when 31 then 'Handed to courier'
+                    when 32 then 'Returned Recieved from customer'
+                    when 33 then 'partially recieved'
+                    when 36 then 'Damage/Lost in Transit'
+                    end as ustatus, uv.`vendor_name` AS vendor_name,uv.`street` AS seller_address, uv.`custom_vars_combined` AS pan,'' as tin,dcr.`default_name` AS vendor_state,(sfs.`base_total_value`+sfs.`base_shipping_amount`) as GMV, sfop.`method` as payment_method, concat(sfoa.`firstname` ,' ',sfoa.`lastname`) as customer_name,sfoa.`region` as customer_region, concat(sfoa.`street` ,', ',sfoa.`city`) as customer_address from `sales_flat_shipment` as sfs
 LEFT JOIN `sales_flat_order` AS sfo ON `sfs`.`order_id` = `sfo`.`entity_id`
 LEFT JOIN `udropship_vendor` AS uv ON `sfs`.`udropship_vendor` = `uv`.`vendor_id`
 LEFT JOIN `sales_flat_order_payment` AS sfop ON `sfo`.`entity_id` = `sfop`.`parent_id`
@@ -1403,6 +1440,7 @@ where " . $sWhere;
             'Order Date',
             'Shipment Id',
             'Shipment Date',
+            'Status',
             'Seller Name',
             'Seller Address',
             'Seller Pan',
@@ -1415,6 +1453,7 @@ where " . $sWhere;
             'Customer Address'
         );
         $filename = "SateWise_" . $_GET['startdate'] . "_to_" . $_GET['enddate'];
+        //echo ($sQuery);exit;
         Craftsvilla_Financereport_FinancereportController::downloadCSV($filename, $sQuery, $head, false, true);
     }
 }
