@@ -12,7 +12,7 @@
 	function getData(){
 		var startdate=document.myForm.startdate.value;
 		var enddate=document.myForm.enddate.value;
-		console.log(startdate);
+		//console.log(startdate);
 		if (startdate==null || startdate==""){
 			alert("Start Date can't be blank");
 			return false;
@@ -33,6 +33,7 @@
 		}
 
 		$('.loader').css('visibility', 'visible');
+		$('.chartContainer').css('visibility', 'collapse');
 		var request = $.ajax({
 					url: "/financereport/financereport/getGmvMnv?startdate="+startdate + "&enddate="+enddate,
 					type: "GET",
@@ -42,6 +43,7 @@
 				request.done(function(msg) {
 					$("#mybox").html(msg);
 					$('.loader').css('visibility', 'collapse');
+					$('.chartContainer').css('visibility', 'visible');
 					var result = JSON.parse(msg);
 					console.log(result);
 					var chart = new CanvasJS.Chart("chartContainer", {
@@ -134,7 +136,6 @@
 							</tr>
 						</table>
 					</form>
-
 				</div>
 			</div>
 		</div>
@@ -142,6 +143,6 @@
 <!-- 	<div id="mybox">
  -->
  <div id= "loader" style="height: 300px; width: 40%; margin-top: 100px;margin-left: 49%; visibility: collapse;" class="loader"> </div>
- <div id="chartContainer" style="height: 300px; width: 40%; margin-top: 100px;margin-left: 30%;"></div>
+ <div id="chartContainer" class="chartContainer" style="height: 300px; width: 40%; margin-top: 100px;margin-left: 30%;"></div>
 </body>
 </html>
