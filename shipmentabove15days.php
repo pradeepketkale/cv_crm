@@ -59,7 +59,7 @@ if($k < 2)
 				{
 				//echo $_item['product_id'];exit;
 				$product = Mage::helper('catalog/product')->loadnew($_item['product_id']);
-				try{				
+				try{
 				$image="<img src='".Mage::helper('catalog/image')->init($product, 'image')->resize(166, 166)."' alt='' width='154' border='0' style='float:left; border:2px solid #ccc; margin:0 20px 20px;' />";				}catch(Exception $e){}
 				$customerShipmentItemHtml .= "<tr><td style='font-size: 13px;height: 26px;padding: 11px;vertical-align:top;background:#F2F2F2;color:#CE3D49;'>".$image."</td><td style='font-size: 13px;height: 26px;padding: 11px;vertical-align:top;background:#F2F2F2;color:#CE3D49;'>".$_shipmentId."</td><td style='font-size: 13px;height: 26px;padding: 11px;vertical-align:top;background:#F2F2F2;color:#CE3D49;'>".$_item['sku']."</td><td style='font-size: 13px;height: 26px;padding: 11px;vertical-align:top;background:#F2F2F2;color:#CE3D49;'>".$_item->getName()."</td><td style='font-size: 13px;height: 26px;padding: 11px;vertical-align:top;background:#F2F2F2;color:#CE3D49;'>".$currencysym .$_item->getPrice()."</td></tr>";
 				}
@@ -67,9 +67,9 @@ if($k < 2)
 				$vars = array('shipmentid'=>$_shipmentId,
 							'vendorShopName'=>$vendorName,
 							'selleremail' => $vendorEmail,
-							'sellerTelephone' => $vendorTelephone,					
+							'sellerTelephone' => $vendorTelephone,
 							'customershipmentitemdetail' =>	$customerShipmentItemHtml,
-							'custfirstname' => $name		
+							'custfirstname' => $name
 							);
 				//print_r($vars);exit;
 				$emailCanceled->setDesignConfig(array('area'=>'frontend', 'store'=>$storeId))
@@ -99,9 +99,16 @@ if($k < 2)
 								->setCreatedAt(NOW())
 								->save();
 				$shipment25102014->addComment($comment25102014);
-		
+
 				$queryUpdateForClosingbalance = "update `udropship_vendor` set `closing_balance`='".$closingBalance."'  WHERE `vendor_id`= '".$vendorId."'";
-				$write->query($queryUpdateForClosingbalance);		
+				$write->query($queryUpdateForClosingbalance);
+
+				//Added by Ankit for Panalty Invoice Implementation
+				$today = date("Y-m-d H:i:s");
+				$queryUpdatePenalty = "INSERT INTO `udropship_vendor_penalty_cv`(`penalty_id`, `increment_id`, `penalty_amount`, `penalty_waiveoff`, `created_at`, `updated_at`) VALUES ('DEFAULT','".$_shipmentId."','".$penaltyAmount."','0','".$today."','".$today."' )";
+				$write->query($queryUpdatePenalty);
+				$write->closeConnection();
+				//End Ankit Addtion
 
 			$message = "Craftsvilla.com : Your Shipment ".$_shipmentId." Status Has Been Changed To Out Of Stock Automatically By System !";
 			$body = "Dear ".$vendorName." <br/>Your shipment ".$_shipmentId." has been changed to out of stock  because of delay in shipping the product. You have been charged penalty of Rs.".$penaltyAmount." based on your shipment value . If you have any question please email to us at places@craftsvilla.com !";

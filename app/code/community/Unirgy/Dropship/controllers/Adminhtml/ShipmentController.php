@@ -811,6 +811,7 @@ $customerShipaddressHtml = "<table border='0' width='750px'><tr><td style='font-
             $read = Mage::getSingleton('core/resource')->getConnection('udropship_read');
             $getClosingblncQuery = "SELECT `email`,`vendor_name`,`closing_balance` FROM `udropship_vendor` where `vendor_id` = '".$vendorAttn."'";
             $getClosingblncResult = $read->query($getClosingblncQuery)->fetch();
+            $read->closeConnection();
             $closingBalance = $getClosingblncResult['closing_balance'];
             $vendorName = $getClosingblncResult['vendor_name'];
             $vendorEmail = $getClosingblncResult['email'];
@@ -823,7 +824,13 @@ $customerShipaddressHtml = "<table border='0' width='750px'><tr><td style='font-
 
             $queryUpdateForClosingbalance = "update `udropship_vendor` set `closing_balance`='".$closingBalance."'  WHERE `vendor_id`= '".$vendorAttn."'";
             $write->query($queryUpdateForClosingbalance);
+            //Added by Ankit for Panalty Invoice Implementation
+            $today = date("Y-m-d H:i:s");
+            $queryUpdatePenalty = "INSERT INTO `udropship_vendor_penalty_cv`(`penalty_id`, `increment_id`, `penalty_amount`, `penalty_waiveoff`, `created_at`, `updated_at`) VALUES ('DEFAULT','".$_shipmentId."','".$penaltyAmount."','0','".$today."','".$today."' )";
 
+            $write->query($queryUpdatePenalty);
+            $write->closeConnection();
+            //End Ankit Addition
             $vars = array('penaltyprice'=>$penaltyAmount,
                           'shipmentid'=>$_shipmentId,
                           'vendorShopName'=>$vendorName
