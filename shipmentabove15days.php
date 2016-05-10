@@ -103,12 +103,13 @@ if($k < 2)
 				$queryUpdateForClosingbalance = "update `udropship_vendor` set `closing_balance`='".$closingBalance."'  WHERE `vendor_id`= '".$vendorId."'";
 				$write->query($queryUpdateForClosingbalance);
 
-				//Added by Ankit for Panalty Invoice Implementation
-				$today = date("Y-m-d H:i:s");
-				$queryUpdatePenalty = "INSERT INTO `udropship_vendor_penalty_cv`(`penalty_id`, `increment_id`, `penalty_amount`, `penalty_waiveoff`, `created_at`, `updated_at`) VALUES ('DEFAULT','".$_shipmentId."','".$penaltyAmount."','0','".$today."','".$today."' )";
-				$write->query($queryUpdatePenalty);
-				$write->closeConnection();
-				//End Ankit Addtion
+			//Added by Ankit for Panalty Invoice Implementation
+            $today = date("Y-m-d H:i:s");
+            $queryUpdatePenalty = "INSERT INTO `udropship_vendor_penalty_cv`(`penalty_id`, `increment_id`, `penalty_amount`, `penalty_waiveoff`, `created_at`, `updated_at`, `created_by`, `updated_by`) VALUES ('DEFAULT','".$_shipmentId."','".$penaltyAmount."','N','".$today."','".$today."','script','script' )";
+
+            $write->query($queryUpdatePenalty);
+            $write->closeConnection();
+            //End Ankit Addition
 
 			$message = "Craftsvilla.com : Your Shipment ".$_shipmentId." Status Has Been Changed To Out Of Stock Automatically By System !";
 			$body = "Dear ".$vendorName." <br/>Your shipment ".$_shipmentId." has been changed to out of stock  because of delay in shipping the product. You have been charged penalty of Rs.".$penaltyAmount." based on your shipment value . If you have any question please email to us at places@craftsvilla.com !";

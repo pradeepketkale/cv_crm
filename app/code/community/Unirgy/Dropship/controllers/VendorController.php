@@ -510,7 +510,7 @@ public function disputeAction()
 					$write->query($queryUpdateForClosingbalance);
                     //Added by Ankit for Panalty Invoice Implementation
                     $today = date("Y-m-d H:i:s");
-                    $queryUpdatePenalty = "INSERT INTO `udropship_vendor_penalty_cv`(`penalty_id`, `increment_id`, `penalty_amount`, `penalty_waiveoff`, `created_at`, `updated_at`) VALUES ('DEFAULT','".$_shipmentId."','".$penaltyAmount."','0','".$today."','".$today."' )";
+                    $queryUpdatePenalty = "INSERT INTO `udropship_vendor_penalty_cv`(`penalty_id`, `increment_id`, `penalty_amount`, `penalty_waiveoff`, `created_at`, `updated_at`, `created_by`, `updated_by`) VALUES ('DEFAULT','".$_shipmentId."','".$penaltyAmount."','N','".$today."','".$today."','Vendor','Vendor' )";
                     $write->query($queryUpdatePenalty);
                     $write->closeConnection();
                     //End Ankit Addtion
@@ -5209,7 +5209,7 @@ public function internationShipmentAction()
 					$write->query($queryUpdateForClosingbalance);
                     //Added by Ankit for Panalty Invoice Implementation
                     $today = date("Y-m-d H:i:s");
-                    $queryUpdatePenalty = "INSERT INTO `udropship_vendor_penalty_cv`(`penalty_id`, `increment_id`, `penalty_amount`, `penalty_waiveoff`, `created_at`, `updated_at`) VALUES ('DEFAULT','".$_shipmentId."','".$penaltyAmount."','0','".$today."','".$today."' )";
+                    $queryUpdatePenalty = "INSERT INTO `udropship_vendor_penalty_cv`(`penalty_id`, `increment_id`, `penalty_amount`, `penalty_waiveoff`, `created_at`, `updated_at`, `created_by`, `updated_by`) VALUES ('DEFAULT','".$_shipmentId."','".$penaltyAmount."','N','".$today."','".$today."','Vendor','Vendor' )";
                     $write->query($queryUpdatePenalty);
                     $write->closeConnection();
                     //End Ankit Addtion
