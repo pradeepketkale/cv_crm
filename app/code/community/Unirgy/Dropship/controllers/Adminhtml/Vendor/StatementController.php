@@ -31,7 +31,7 @@ class Unirgy_Dropship_Adminhtml_Vendor_StatementController extends Mage_Adminhtm
 
     public function newPostAction()
     {
-		
+
 		if (!$this->getRequest()->isPost()) {
             $this->_redirect('new');
             return;
@@ -44,7 +44,7 @@ class Unirgy_Dropship_Adminhtml_Vendor_StatementController extends Mage_Adminhtm
         $dateFormat = Mage::app()->getLocale()->getDateFormat(Mage_Core_Model_Locale::FORMAT_TYPE_SHORT);
         $dateFrom = Mage::app()->getLocale()->date($dateFrom, $dateFormat, null, false)->toString('yyyy-MM-dd');
         $dateTo = Mage::app()->getLocale()->date($dateTo, $dateFormat, null, false)->addDay(1)->toString('yyyy-MM-dd');
-		
+
         if ($this->getRequest()->getParam('all_vendors')) {
             $vendors = Mage::getModel('udropship/vendor')->getCollection()
                 ->addFieldToFilter('status', 'A')
@@ -54,7 +54,7 @@ class Unirgy_Dropship_Adminhtml_Vendor_StatementController extends Mage_Adminhtm
         }
         $period = $this->getRequest()->getParam('statement_period');
 		if (!$period) {
-             
+
 			$period = date('ym', strtotime($dateFrom));
 			/*echo '$period'.$period;
 			$statementData = Mage::getModel('udropship/vendor_statement')->getCollection();
@@ -68,11 +68,11 @@ class Unirgy_Dropship_Adminhtml_Vendor_StatementController extends Mage_Adminhtm
 			$lastStatementId = $lastStatement[0]['statement_id'];
 			if($lastStatementId == '')
 			{
-				$lastStatementId = '13137'; 
-				//$lastStatementId = '159'; 
-				
-			} 				
-				
+				$lastStatementId = '13137';
+				//$lastStatementId = '159';
+
+			}
+
         }
 
         $n = sizeof($vendors);
@@ -83,11 +83,11 @@ class Unirgy_Dropship_Adminhtml_Vendor_StatementController extends Mage_Adminhtm
         $generator1 = Mage::getModel('udropship/pdf_statement');
 		$statementId = $lastStatementId+1;
         foreach ($vendors as $vId) {
-			
+
             echo "Vendor ID {$vId} (".(++$i)."/{$n}): ";
             try {
                 $statement = Mage::getModel('udropship/vendor_statement');
-				
+
                 if ($statement->load($statementId, 'statement_id')->getId()) {
                     echo "<span style='color:#888'>ALREADY EXISTS</span>.<br/>";
                     continue;
@@ -103,7 +103,7 @@ class Unirgy_Dropship_Adminhtml_Vendor_StatementController extends Mage_Adminhtm
                     'statement_filename' => "invoice-{$vId}-{$statementId}.pdf",
                     'created_at' => now(),
                 ));
-			   
+
                 if(is_null($statement->fetchOrders()))
 					{
 						echo "<span style='color:#0F0'>NOT CREATED</span>.<br/>";
@@ -113,25 +113,25 @@ class Unirgy_Dropship_Adminhtml_Vendor_StatementController extends Mage_Adminhtm
 				$statement->save();
 				 $generator = Mage::getModel('udropship/pdf_statement')->before();
             	 $statement = Mage::getModel('udropship/vendor_statement');
-            
+
                  $statement = Mage::getModel('udropship/vendor_statement')->load($statement->load($statementId, 'statement_id')->getId());
                 if (!$statement->getId()) {
                     continue;
                 }
                 //$generator->addStatement($statement);
                 $generator->addStatementCraftsvilla($statement);
-			
-			
+
+
 			$pdf = $generator->getPdf();
-			
+
 			if (empty($pdf->pages)) {
                 Mage::throwException(Mage::helper('udropship')->__('No statements found to print'));
             }
 		//Commented by Dileswar on dated 08-03-2013 for stopping statement order total report
 
 		    //$generator->insertTotalsPage()->after();
-			
-			
+
+
 			// To sotore the pdf files in folder
 			$statement->getVendorId();
 			$pdf = $generator->getPdf();
@@ -140,12 +140,12 @@ class Unirgy_Dropship_Adminhtml_Vendor_StatementController extends Mage_Adminhtm
 			$io = new Varien_Io_File();
         	$io->setAllowCreateFolders(true);
        		$io->open(array('path' => Mage::getBaseDir('media') . DS . 'statementreport/'.$statement->getVendorId()));
-			
+
 			//$io->streamOpen('invoice-'.$statement->getVendorId().'-'.$dateMonth.'-'.$dateYear.'.pdf');
 			$io->streamOpen('invoice-'.$vId.'-'.$statementId.'.pdf');
 			$io->streamWrite($pdf->render());
 			$io->streamClose();
-			$statementId++;	
+			$statementId++;
             echo "<span style='color:#0F0'>DONE</span>.<br/>";
 			}
 
@@ -154,7 +154,7 @@ class Unirgy_Dropship_Adminhtml_Vendor_StatementController extends Mage_Adminhtm
                 echo "<span style='color:#F00'>ERROR</span>: ".$e->getMessage()."<br/>";
                 continue;
             }
-            
+
         }
 
         $redirectUrl = Mage::helper('adminhtml')->getUrl('udropshipadmin/adminhtml_vendor_statement');
@@ -174,7 +174,7 @@ class Unirgy_Dropship_Adminhtml_Vendor_StatementController extends Mage_Adminhtm
 
         $this->renderLayout();
     }
-    
+
     public function saveAction()
     {
         if ( $this->getRequest()->getPost() ) {
@@ -182,7 +182,7 @@ class Unirgy_Dropship_Adminhtml_Vendor_StatementController extends Mage_Adminhtm
             $hlp = Mage::helper('udropship');
             try {
                 if (($id = $this->getRequest()->getParam('id')) > 0
-                    && ($statement = Mage::getModel('udropship/vendor_statement')->load($id)) 
+                    && ($statement = Mage::getModel('udropship/vendor_statement')->load($id))
                     && $statement->getId()
                 ) {
                     $statement->setNotes($this->getRequest()->getParam('notes'));
@@ -201,7 +201,7 @@ class Unirgy_Dropship_Adminhtml_Vendor_StatementController extends Mage_Adminhtm
                         }
                         $statement->finishStatement();
                     }
-                     
+
                     $statement->save();
                     if ($this->getRequest()->getParam('refresh_flag')) {
                         $statement->fetchOrders()->save();
@@ -246,13 +246,15 @@ class Unirgy_Dropship_Adminhtml_Vendor_StatementController extends Mage_Adminhtm
     }
    public function statementRdr1Action()
 	{
-	/*$year = Mage::app()->getLocale()->date()->get(Zend_date::YEAR);	
+	/*$year = Mage::app()->getLocale()->date()->get(Zend_date::YEAR);
 	$selectedMonth = $this->getRequest()->getParam('selected_month');
-	$statementQuery =  Mage::getSingleton('core/resource')->getConnection('core_read');	
+	$statementQuery =  Mage::getSingleton('core/resource')->getConnection('core_read');
 	$selectedMonthData =$statementQuery->fetchAll("SELECT `statement_id`,`increment_id`,`created_at` FROM `sales_flat_shipment` where MONTH(`created_at`) = ".$selectedMonth." AND YEAR(`created_at`) = ".$year." AND `statement_id` IS NOT NULL ORDER BY `statement_id` DESC");
 */	/*echo '<pre>';
 	print_r($selectedMonthData);exit;*/
 	$selectedMonth = $this->getRequest()->getParam('selected_month');
+
+
 	$year = Mage::app()->getLocale()->date()->get(Zend_date::YEAR);
 		$monthNum = Mage::app()->getLocale()->date()->get(Zend_date::MONTH);
         for ($i = 0; $i < 12; $i++) {
@@ -266,37 +268,42 @@ class Unirgy_Dropship_Adminhtml_Vendor_StatementController extends Mage_Adminhtm
 				$_year = $year;
 			}
           	$_montharray[$i] = $_monthNum;
-			$_yeararray[$i] = $_year.'-';
+          	if(strlen($_montharray[$i]) < 2){
+          		$_montharray[$i] = '0'.$_montharray[$i];
+          	}
+			//$_yeararray[$i] = $_year.'-';
+			$_yeararray[$i] = $_year;
 		}
+		$currentMonth  = date('Y-m-d',mktime(0, 0, 0, $_montharray[$selectedMonth]  , date("t")-7, $_yeararray[$selectedMonth]));
+		$previousMonth = date('Y-m-d',mktime(0, 0, 0, $_montharray[$selectedMonth]-1, date("t")-6,   $_yeararray[$selectedMonth]));
+	$statementQuery =  Mage::getSingleton('core/resource')->getConnection('core_read');
+	/*$selectedMonthData =$statementQuery->fetchAll("SELECT `statement_id`,`increment_id`,`created_at`,`udropship_vendor` FROM `sales_flat_shipment` where MONTH(`created_at`) = '".$_montharray[$selectedMonth]."' AND YEAR(`created_at`) = '".$_yeararray[$selectedMonth]."' AND `statement_id` IS NOT NULL ORDER BY `statement_id` DESC");*/
+	$selectedMonthData =$statementQuery->fetchAll("SELECT `statement_id`,`increment_id`,`updated_at`,`udropship_vendor` FROM `sales_flat_shipment` where `updated_at` > '".$previousMonth." 00:00:01' AND `updated_at` <= '".$currentMonth." 23:59:59' AND `statement_id` IS NOT NULL ORDER BY `statement_id` DESC");
+	//print_r($selectedMonthData);exit;
 
-	$statementQuery =  Mage::getSingleton('core/resource')->getConnection('core_read');	
-	$selectedMonthData =$statementQuery->fetchAll("SELECT `statement_id`,`increment_id`,`created_at`,`udropship_vendor` FROM `sales_flat_shipment` where MONTH(`created_at`) = '".$_montharray[$selectedMonth]."' AND YEAR(`created_at`) = '".$_yeararray[$selectedMonth]."' AND `statement_id` IS NOT NULL ORDER BY `statement_id` DESC");
-	/*echo '<pre>';
-	print_r($selectedMonthData);exit;*/
 
-			
-				
+
 	//For CSV
 	$filename = "RDR1"."-".$selectedMonth."-".$year;
 	$output = "";
 	$fieldlist1 = array("ParentKey","LineNum","ItemDescription","ShipDate","AccountCode","TaxCode","UnitPrice","LocationCode");
 	$fieldlist = array("DocNum","LineNum","Dscription","ShipDate","AcctCode","TaxCode","PriceBefDi","LocCode");
-	
-	
+
+
 	$numfields = sizeof($fieldlist1);
-	for($k =0; $k < $numfields;  $k++) { 
+	for($k =0; $k < $numfields;  $k++) {
 			$output .= $fieldlist1[$k];
 			if ($k < ($numfields-1)) $output .= ",";
 		}
 	$output .= "\n";
-	
+
 	$numfields = sizeof($fieldlist);
-	for($k =0; $k < $numfields;  $k++) { 
+	for($k =0; $k < $numfields;  $k++) {
 			$output .= $fieldlist[$k];
 			if ($k < ($numfields-1)) $output .= ",";
 		}
 	$output .= "\n";
-	
+
 	$lineNum = 0;
 	$lastStatementId = 0;
 	$lastday = date("Ymd",mktime(0, 0, 0,$_montharray[$selectedMonth]+1,0,$_yeararray[$selectedMonth]));
@@ -308,7 +315,7 @@ class Unirgy_Dropship_Adminhtml_Vendor_StatementController extends Mage_Adminhtm
 				$date = str_replace('-','',substr($createdDate,0,10));
 				//$commissionCsv = str_replace(',','',$this->getCommission($shipmenttId));
 				$commissionCsv = str_replace(',','',Mage::getModel('udropship/vendor_statement')->getCommission($shipmenttId));
-				
+
 				if($lastStatementId == $statementId)
 				{
 					$lineNum++;
@@ -316,75 +323,75 @@ class Unirgy_Dropship_Adminhtml_Vendor_StatementController extends Mage_Adminhtm
 				else{
 					$lineNum = 0;
 				}
-				$lastStatementId = $statementId;		
-					
-				for($m =0; $m < sizeof($fieldlist); $m++) 
+				$lastStatementId = $statementId;
+
+				for($m =0; $m < sizeof($fieldlist); $m++)
 				{
 						$fieldvalue = $fieldlist[$m];
 						if($fieldvalue == "DocNum")
 						{
 							$output .= $statementId;
 						}
-						
+
 						if($fieldvalue == "LineNum")
 						{
 							$output .= $lineNum;
 						}
-						
+
 						if($fieldvalue == "Dscription")
 						{
 							$output .= $shipmenttId;
 						}
-						
+
 						if($fieldvalue == "ShipDate")
 						{
 							$output .= $lastday;
 						}
-							
+
 						if($fieldvalue == "AcctCode")
 						{
 							$output .= '40101003';
 						}
-							
+
 						if($fieldvalue == "TaxCode")
 						{
 							$output .= 'Service';
 						}
-							
+
 						if($fieldvalue == "PriceBefDi")
 						{
 							$output .= $commissionCsv;
 						}
-							
+
 						if($fieldvalue == "LocCode")
 						{
 							$output .= '2';
 						}
-							
+
 						if ($m < ($numfields-1))
 						{
 							$output .= ",";
 						}
-						
+
 					}
 		    	$output .= "\n";
-				
-				
+
+
 			}
     	// Send the CSV file to the browser for download
-	
+
 		header("Content-type: text/x-csv");
 		header("Content-Disposition: attachment; filename=$filename.csv");
 		echo $output;
 		exit;
-				
+
 	}
-	
+
 	public function getCommission($shipmentId)
 	{
-		
+
 		$hlp = Mage::helper('udropship');
-		
+
 		$po = Mage::getModel('sales/order_shipment')->loadByIncrementId($shipmentId);
         $service_tax = $hlp->getServicetaxCv($shipmentId);
 		$order = array(
@@ -422,7 +429,7 @@ class Unirgy_Dropship_Adminhtml_Vendor_StatementController extends Mage_Adminhtm
 				$lastFinalbaseshipamt = $this->baseShippngAmountByOrder($orderid,$orderBaseShippingamount);
 		    	$commission_amount = $order['com_percent'];
 		    	$itemised_total_shippingcost = $order['itemised_total_shippingcost'];
-				
+
 		    	$vendors = Mage::helper('udropship')->getVendor($order['udropship_vendor']);
 		    	$couponCodeId = Mage::getModel('salesrule/coupon')->load($_order->getCouponCode(), 'code');
 				$_resultCoupon = Mage::getModel('salesrule/rule')->load($couponCodeId->getRuleId());
@@ -432,7 +439,7 @@ class Unirgy_Dropship_Adminhtml_Vendor_StatementController extends Mage_Adminhtm
 					$discountAmountCoupon = $_order->getBaseDiscountAmount();
 					$disCouponcode = $_order->getCouponCode();
 				}
-		    		
+
 		    	//$gen_random_number = "K".$this->gen_rand();
 
     			if($order['order_created_at']<='2012-07-02 23:59:59')
@@ -450,21 +457,21 @@ class Unirgy_Dropship_Adminhtml_Vendor_StatementController extends Mage_Adminhtm
 		    	else {
 		    		if($vendors->getManageShipping() == "imanage")
 			    	{
-						
+
 			    		$vendor_amount = ($total_amount*(1-($commission_amount/100)*(1+0.1236)));
 						//$kribha_amount = ($total_amount1 - $vendor_amount)+$itemised_total_shippingcost+$shipmentpayout_report1_val['cod_fee'];
 						//change to accomodate 3% Payment gateway charges on dated 20-12-12
 						$kribha_amount = ($total_amount1+$itemised_total_shippingcost+$order['cod_fee'])*1.00 - $vendor_amount;
 			    	}
 			    	else {
-						
+
 						$vendor_amount = (($total_amount+$itemised_total_shippingcost+$discountAmountCoupon)*(1-($commission_amount/100)*(1+$service_tax)));
 						//$kribha_amount = (($total_amount1+$itemised_total_shippingcost) - $vendor_amount);
 						//change to accomodate 3% Payment gateway charges on dated 20-12-12
-				    	// Below line commented by dileswar on dated 18-02-2013 from $itemised_total_shippingcost To $base_shipping_amount***/////////////	
+				    	// Below line commented by dileswar on dated 18-02-2013 from $itemised_total_shippingcost To $base_shipping_amount***/////////////
 						//$kribha_amount = ((($total_amount1+$itemised_total_shippingcost)*0.97) - $vendor_amount);
 						if($getCountryResult == 'IN')
-						{	
+						{
 							$kribha_amount = ((($total_amount1+$base_shipping_amount+$discountAmountCoupon)*1.00) - $vendor_amount);
 						}
 						else
@@ -477,24 +484,24 @@ class Unirgy_Dropship_Adminhtml_Vendor_StatementController extends Mage_Adminhtm
 						// Below line commented by dileswar on dated 18-02-2013 from $itemised_total_shippingcost To $base_shipping_amount***/////////////
 				 		//$kribha_amount = ((($total_amount1+$itemised_total_shippingcost+$order['cod_fee'])*1.00) - $vendor_amount);
 						//$kribha_amount = ((($total_amount1+$base_shipping_amount+$order['cod_fee'])*1.00) - $vendor_amount);
-			    		
+
 					}
 		    	}
 					if (is_null($order['com_percent'])) {
 						$order['com_percent'] = $this->getVendor()->getCommissionPercent();
 					}
-					
+
 					$order['com_percent'] *= 1;
 
-					
+
 					$order['com_amount'] = $kribha_amount/1.1236;
-					
+
 					// $order['amounts']['total_payout'] = $vendor_amount;
-					
+
 					return number_format($order['com_amount'],2);
-		
-	} 
-	
+
+	}
+
 	public function baseShippngAmountByOrder($orderId,$orderBaseShippingamount)
 		{
 		$readOrder = Mage::getSingleton('core/resource')->getConnection('core_read');
@@ -504,12 +511,12 @@ class Unirgy_Dropship_Adminhtml_Vendor_StatementController extends Mage_Adminhtm
 		$lastFinalshipamt = $orderBaseShippingamount/$shipcnt;
 		return $lastFinalshipamt;
 		}
-	
+
 	public function statementOrdrAction()
 	{
-		
+
 		$selectedMonth = $this->getRequest()->getParam('selected_month');
-	
+
 		$year = Mage::app()->getLocale()->date()->get(Zend_date::YEAR);
 		$monthNum = Mage::app()->getLocale()->date()->get(Zend_date::MONTH);
         for ($i = 0; $i < 12; $i++) {
@@ -525,111 +532,111 @@ class Unirgy_Dropship_Adminhtml_Vendor_StatementController extends Mage_Adminhtm
           	$_montharray[$i] = $_monthNum;
 			$_yeararray[$i] = $_year.'-';
 		}
-		
-		
-	$statementQuery =  Mage::getSingleton('core/resource')->getConnection('core_read');	
+
+
+	$statementQuery =  Mage::getSingleton('core/resource')->getConnection('core_read');
 	$selectedMonthData =$statementQuery->fetchAll("SELECT `statement_id`,`increment_id`,`created_at`,`udropship_vendor` FROM `sales_flat_shipment` where MONTH(`created_at`) = '".$_montharray[$selectedMonth]."' AND YEAR(`created_at`) = '".$_yeararray[$selectedMonth]."' AND `statement_id` IS NOT NULL ORDER BY `statement_id` DESC");
 	/*echo '<pre>';
 	print_r($selectedMonthData);exit;*/
-	
-			
-				
+
+
+
 	//For CSV
 	$filename = "ORDR"."-".$selectedMonth."-".$year;
 	$output = "";
 	$fieldlist1 = array("DocNum","HandWritten","DocType","DocDate","DocDueDate","CardCode","TaxDate");
 	$fieldlist = array("DocNum","HandWrtten","DocType","DocDate","DocDueDate","CardCode","TaxDate");
-	
-	
+
+
 	$numfields = sizeof($fieldlist1);
-	for($k =0; $k < $numfields;  $k++) { 
+	for($k =0; $k < $numfields;  $k++) {
 			$output .= $fieldlist1[$k];
 			if ($k < ($numfields-1)) $output .= ",";
 		}
 	$output .= "\n";
-	
+
 	$numfields = sizeof($fieldlist);
-	for($k =0; $k < $numfields;  $k++) { 
+	for($k =0; $k < $numfields;  $k++) {
 			$output .= $fieldlist[$k];
 			if ($k < ($numfields-1)) $output .= ",";
 		}
 	$output .= "\n";
-	
+
 	$lineNum = 0;
 	$lastStatementId = 0;
-	
+
 	$lastday = date("Ymd",mktime(0, 0, 0,$_montharray[$selectedMonth]+1,0,$_yeararray[$selectedMonth]));
-	
-			
+
+
 			foreach($selectedMonthData as $_selectedMonthData)
 			{
-					
+
 				$statementId =  $_selectedMonthData['statement_id'];
 				$shipmenttId  =  $_selectedMonthData['increment_id'];
 				$createdDate  =  $_selectedMonthData['created_at'];
 				$vendorId	= 	$_selectedMonthData['udropship_vendor'];
 				$date = str_replace('-','',substr($createdDate,0,10));
-				
+
 				if($lastStatementId != $statementId) {
-		
-				for($m =0; $m < sizeof($fieldlist); $m++) 
+
+				for($m =0; $m < sizeof($fieldlist); $m++)
 				{
 						$fieldvalue = $fieldlist[$m];
 						if($fieldvalue == "DocNum")
 						{
 							$output .= $statementId;
 						}
-						
+
 						if($fieldvalue == "HandWritten")
 						{
 							$output .= 'tYES';
 						}
-						
+
 						if($fieldvalue == "DocType")
 						{
 							$output .= 'S';
 						}
-						
+
 						if($fieldvalue == "DocDate")
 						{
 							$output .= $lastday;
 						}
-							
+
 						if($fieldvalue == "DocDueDate")
 						{
 							$output .= $lastday;
 						}
-							
+
 						if($fieldvalue == "CardCode")
 						{
 							$output .= 'KCS'.$vendorId;
 						}
-							
+
 						if($fieldvalue == "TaxDate")
 						{
 							$output .= $lastday;
 						}
-							
+
 						if ($m < ($numfields-1))
 						{
 							$output .= ",";
 						}
-						
+
 					}
 		    		$output .= "\n";
-				
+
 					}
 					$lastStatementId = $statementId;
 			}
     	// Send the CSV file to the browser for download
-	
+
 		header("Content-type: text/x-csv");
 		header("Content-Disposition: attachment; filename=$filename.csv");
 		echo $output;
 		exit;
-				
+
 	}
-	
+
     public function payoutGridAction()
     {
         $this->getResponse()->setBody(
@@ -638,7 +645,7 @@ class Unirgy_Dropship_Adminhtml_Vendor_StatementController extends Mage_Adminhtm
                 ->toHtml()
         );
     }
-    
+
     public function rowGridAction()
     {
         $this->getResponse()->setBody(
@@ -647,7 +654,7 @@ class Unirgy_Dropship_Adminhtml_Vendor_StatementController extends Mage_Adminhtm
                 ->toHtml()
         );
     }
-    
+
     public function adjustmentGridAction()
     {
         $this->getResponse()->setBody(
@@ -714,7 +721,7 @@ class Unirgy_Dropship_Adminhtml_Vendor_StatementController extends Mage_Adminhtm
         }
         $this->_redirect('*/*/index');
     }
-    
+
     public function massRefreshAction()
     {
         $objIds = (array)$this->getRequest()->getParam('statement');
@@ -756,15 +763,15 @@ class Unirgy_Dropship_Adminhtml_Vendor_StatementController extends Mage_Adminhtm
                 //$generator->addStatement($statement);
                 $generator->addStatementCraftsvilla($statement);
             }
-			
+
 			$pdf = $generator->getPdf();
-			
+
 			if (empty($pdf->pages)) {
                 Mage::throwException(Mage::helper('udropship')->__('No statements found to print'));
             }
-            
+
 			//Commented by Dileswar on dated 08-03-2013 for stopping statement order total report
-			
+
 			//$generator->insertTotalsPage()->after();
 			Mage::helper('udropship')->sendDownload('statements.pdf', $pdf->render(), 'application/x-pdf');
         }

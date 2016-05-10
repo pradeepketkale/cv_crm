@@ -291,7 +291,7 @@ class Craftsvilla_Shipmentpayout_Adminhtml_ShipmentpayoutController extends Mage
 
     	$shipmentpayout_report1 = Mage::getModel('shipmentpayout/shipmentpayout')->getCollection();
       	$shipmentpayout_report1->getSelect()
-      			->join(array('a'=>'sales_flat_shipment'), 'a.increment_id=main_table.shipment_id', array('order_entid'=>'order_id','udropship_vendor', 'subtotal'=>'base_total_value', 'commission_percent'=>'commission_percent', 'itemised_total_shippingcost'=>'itemised_total_shippingcost','cod_fee'=>'cod_fee','base_shipping_amount'=>'base_shipping_amount'))
+      			->join(array('a'=>'sales_flat_shipment'), 'a.increment_id=main_table.shipment_id', array('order_entid'=>'order_id','udropship_vendor', 'subtotal'=>'base_total_value', 'commission_percent'=>'commission_percent', 'itemised_total_shippingcost'=>'itemised_total_shippingcost','cod_fee'=>'cod_fee','base_shipping_amount'=>'base_shipping_amount','entity_id'=>'entity_id'))
       			->join(array('b'=>'sales_flat_shipment_grid'), 'b.increment_id=main_table.shipment_id', array('order_created_at'))
       			->joinLeft('sales_flat_order_payment', 'b.order_id = sales_flat_order_payment.parent_id','method')
       			->joinLeft('sales_flat_shipment_track', 'a.entity_id = sales_flat_shipment_track.parent_id','courier_name')
@@ -300,7 +300,8 @@ class Craftsvilla_Shipmentpayout_Adminhtml_ShipmentpayoutController extends Mage
 				//->joinLeft('salesrule_coupon', 'salesrule.rule_id = salesrule_coupon.rule_id','code')
 
 				//->where('main_table.type = "Adjusted Against Refund"');
-				->where('main_table.citibank_utr != "" AND main_table.shipmentpayout_status=0 AND a.udropship_status IN (1,17) AND sales_flat_order_payment.method IN ("secureebs_standard","purchaseorder","ccavenue_standard","avenues_standard","payucheckout_shared","free")');// a.udropship_status IN (1,15,17)
+				->where('main_table.citibank_utr != "" AND main_table.shipmentpayout_status=0 AND a.udropship_status IN (1,17) AND sales_flat_order_payment.method IN ("secureebs_standard","purchaseorder","ccavenue_standard","avenues_standard","payucheckout_shared","free") AND sales_flat_shipment_track.number!=""');
+				//->limit(20);// a.udropship_status IN (1,15,17)
 				//->where('main_table.shipmentpayout_update_time <= "'.$selected_date_val.' 23:59:59" AND main_table.citibank_utr != "" AND main_table.shipmentpayout_status=0 AND a.udropship_status = 1 AND sales_flat_order_payment.method IN ("secureebs_standard","purchaseorder","ccavenue_standard")');// a.udropship_status IN (1,15,17)
 
       	/*echo "Query:".$shipmentpayout_report1->getSelect()->__toString();
@@ -327,9 +328,9 @@ class Craftsvilla_Shipmentpayout_Adminhtml_ShipmentpayoutController extends Mage
 		/*echo "<pre>";
 		print_r($shipmentpayout_report1_arr);
 		exit();*/
+
     	foreach($shipmentpayout_report1_arr as $shipmentpayout_report1_val)
 	    {
-
 			$merchantIdnew = $this->getMerchantIdCv($shipmentpayout_report1_val['udropship_vendor']);
 			$vendors = Mage::helper('udropship')->getVendor($shipmentpayout_report1_val['udropship_vendor']);
 	    	if(($shipmentpayout_report1_val['udropship_vendor'] != '' && ($merchantIdnew!= '')) )
@@ -350,6 +351,8 @@ class Craftsvilla_Shipmentpayout_Adminhtml_ShipmentpayoutController extends Mage
 				// Below Two lines added By Dileswar for Adding Discount coupon on dated 25-07-2013
 				$disCouponcode = '';
 				$discountAmountCoupon = 0;
+
+
 				$_orderCurrencyCode = $order->getOrderCurrencyCode();
 				if(($_orderCurrencyCode != 'INR') && (strtotime($shipmentpayout_report1_val['order_created_at']) >= strtotime($_liveDate)))
 					$total_amount = $shipmentpayout_report1_val['subtotal']/1.5;
@@ -444,6 +447,42 @@ class Craftsvilla_Shipmentpayout_Adminhtml_ShipmentpayoutController extends Mage
 			  //   	}
 
 		   //  	}
+		    	//Modifed for kribha and vendor amount for those shipments whose UTR is not assigned with new Method
+		    	if ($kribha_amount== 0 && $vendor_amount == 0){
+		    		$_orderCurrencyCode = $order->getOrderCurrencyCode();
+		    		if(($_orderCurrencyCode != 'INR') && (strtotime($shipmentpayout_report1_val['order_created_at']) >= strtotime($_liveDate))){
+		    			$subTotal = $shipmentpayout_report1_val['subtotal']/1.5 ;
+		    		} else {
+		    			$subTotal = $shipmentpayout_report1_val['subtotal'];
+		    		}
+		    		$total_amount = $subTotal+$shipmentpayout_report1_val['base_shipping_amount']+$discountAmountCoupon;
+    				$hlp = Mage::helper('udropship');
+    		        $commission_amount = $hlp->getVendorCommission($vendorId, $shipmentpayout_report1_val['shipment_id']);
+    		        $service_tax = $hlp->getServicetaxCv($shipmentpayout_report1_val['shipment_id']);
+    		        $readOrderCntry = Mage::getSingleton('core/resource')->getConnection('core_read');
+    		        $getCountryOf = $readOrderCntry->query("SELECT `country_id` FROM `sales_flat_order_address` WHERE `parent_id` = '".$shipmentpayout_report1_val['order_entid']."' AND `address_type` = 'shipping'")->fetch();
+    		        $getCountryResult = $getCountryOf['country_id'];
+
+		    		if($getCountryResult == 'IN'){
+		    			$vendor_amount = (($total_amount)*(1-($commission_amount/100)*(1+$service_tax)));
+		    			$kribha_amount = ((($total_amount)*1.00) - $vendor_amount);
+		    			$shipmentType = "IN";
+		    		}else{
+		    			$sqlQuery = "select courier_name from `sales_flat_shipment_track` where LOWER(`courier_name`) = 'dhl_int' AND parent_id = " .$shipmentpayout_report1_val['entity_id'];
+		    			$result = $readOrderCntry->query($sqlQuery)->fetch();
+		    			if($result){
+		    				$total_amount1 = $total_amount - $shipmentpayout_report1_val['base_shipping_amount'];
+		    				$vendor_amount = (($total_amount1)*(1-($commission_amount/100)*(1+$service_tax)));
+		    				$kribha_amount = ((($total_amount)*1.00) - $vendor_amount) ;
+		    				$shipmentType = "KYC";
+		    			}else {
+		    				$vendor_amount = (($total_amount)*(1-($commission_amount/100)*(1+$service_tax)));
+		    				$kribha_amount = ((($total_amount)*1.00) - $vendor_amount);
+		    				$shipmentType = "Non IN KYC";
+		    			}
+		    			$readOrderCntry->closeConnection();
+		    		}
+		    	}
 
 				/*if(($vendor_amount+$closingbalance) > 0)
 						{
@@ -525,7 +564,7 @@ class Craftsvilla_Shipmentpayout_Adminhtml_ShipmentpayoutController extends Mage
 
 		    		if($fieldvalue == "BENE_AC_NO")
 		    		{
-		    			$output .= $vendors->getBankAcNumber();
+		    			$output .=  "'".$vendors->getBankAcNumber();
 		    		}
 
 		    		if($fieldvalue == "IFSC_CODE")
@@ -1452,12 +1491,12 @@ class Craftsvilla_Shipmentpayout_Adminhtml_ShipmentpayoutController extends Mage
 		$date_diff  = $diff->days;
 		$finaldate = '';
 
-		if($date_diff >=30){
+		if($date_diff >=25){
 			//echo ">30";
 			$finaldate = date_format($selected_date_val1,'Y-m-d') ;
 		}else {
 			//echo "<30";
-			$finaldate = date_sub($datetemp, date_interval_create_from_date_string('30 days')); //30 Days difference
+			$finaldate = date_sub($datetemp, date_interval_create_from_date_string('25 days')); //25 Days difference
 			$finaldate = date_format($finaldate,'Y-m-d');
 		}
 		//echo( "Difference :".$date_diff . " Finale Date: ". $finaldate); exit;

@@ -127,9 +127,9 @@ include('session.php');
 					</div>
 
 					<div class="col-1-3 padding_top" >
-						<a href="#">
+						<a href="HandlingRdr.php">
 						<div class="container_inner1 bg5 ">
-						<h3>Upcoming</h3>
+						<h3>Handing charges invoice - RDR</h3>
 
 						</div>
 						</a>
@@ -139,9 +139,9 @@ include('session.php');
 					</div>
 
 					<div class="col-1-3 padding_top" >
-						<a href="#">
+						<a href="HandlingOrdr.php">
 						<div class="container_inner1 bg3 ">
-						<h3>Upcoming</h3>
+						<h3>Handing charges invoice - ORDR</h3>
 
 						</div>
 						</a>

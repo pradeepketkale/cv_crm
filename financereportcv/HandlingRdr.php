@@ -32,74 +32,16 @@ include('session.php');
 		var table;
 		$(document).ready(function(){
 
-			$( "#start" ).datepicker({
-				showOn: "button",
-				changeMonth: true,
-				changeYear: true,
-				buttonImage: "img/cal.png",
-				buttonImageOnly: true,
-				dateFormat: 'yy-mm-dd',
-
-			});
-
-			$( "#end" ).datepicker({
-				showOn: "button",
-				changeMonth: true,
-				changeYear: true,
-				buttonImage: "img/cal.png",
-				buttonImageOnly: true,
-				dateFormat: 'yy-mm-dd',
-			});
-
-
-
-// table.on( 'xhr', function () {
-// 				    var data = table.ajax.url();
-// 				    alert( 'Search term was: '+ data.search.value );
-// 				} );
-
-var $tableSel = $('#example');
-$('#csv').on('click', function () {
-	var data = table.ajax.params();
-	data['exportcsv'] = true;
-	//alert (JSON.stringify(data));
-	document.location.href="/financereport/financereport/reportcod/?"+ jQuery.param( data );
-} );
-
 $('#downloadcsv').on('click', function () {
 
-	var startdate=document.myForm.startdate.value;
-	var enddates=document.myForm.enddates.value;
-
-	if (startdate==null || startdate==""){
-		alert("Start Date can't be blank");
-		return false;
-	}else if(enddates==null || enddates==""){
-		alert("End date can't be blank");
-		return false;
-	}
-	var date1 = new Date(startdate);
-	var date2 = new Date(enddates);
-	var timeDiff = (date2.getTime() - date1.getTime());
-	var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
-	if (diffDays >=31){
-		alert("You are exceeding date Range..Please correct");
-		return false;
-	} else if (diffDays<0 ) {
-		alert("You are entering Wrong dates");
-		return false;
-	}
 	//console.log(jQuery.param( data1 ));
 	var data1 = [];
-	data1['startdate'] = $( "#start" ).val();// "2014-01-01";
-	data1['enddate'] = $( "#end" ).val();//"2016-01-01";
 	data1['exportcsv'] = true;
-	data1['ustatus'] = $( "#ustatus" ).val();
-	data1['paymentstatus'] = $( "#paymentstatus" ).val();
-	data1['couriername'] = $( "#couriername" ).val();
+	data1['month'] = $( "#month" ).val();
+	data1['year'] = $( "#year" ).val();
 	// console.log(data1);
 	/*alert("/financereport/financereport/downloadcod/?startdate="+$( "#start" ).val() + "&enddate="+$( "#end" ).val() +"&ustatus="+$( "#ustatus" ).val() +"&paymentstatus="+$( "#paymentstatus" ).val() +"&couriername="+$( "#couriername" ).val());*/
-	document.location.href="/financereport/financereport/downloadcod/?startdate="+$( "#start" ).val() + "&enddate="+$( "#end" ).val() +"&ustatus="+$( "#ustatus" ).val() +"&paymentstatus="+$( "#paymentstatus" ).val() +"&couriername="+$( "#couriername" ).val();
+	document.location.href="/financereport/financereport/handlingRdr/?month="+$( "#month" ).val() + "&year="+$( "#year" ).val();
 } );
 
 $('.btnhdsh').hide();
@@ -343,115 +285,51 @@ var normalizeDate = function (dateString) {
 		   	<div class="col-1-1">
 		   		<div class="container-wrapper2">
 		   			<div style="width:100%; height:auto;padding:10px;border:1px solid #e1e1e1;border-radius:5px;">
-		   				<h2>COD Report </h2>
+		   				<h2>Handling Charges for RDR </h2>
 		   				<form action='#' method='POST' onsubmit="return validateform()" name="myForm" id="myForm">
-		   					<table  width="100%" border="0" cellspacing="0" cellpadding="0" class="tbl_rptjen">
-
-		   						<tr>
-
-		   							<td style="text-align:left;">
-		   								<b>Start Date :</b>
-		   								<input type="text"  tabindex="15" maxlength="4" size="9" value="" class="field text datpik" name="startdate" id="start" required>
-		   							</td>
-
-		   							<td style="text-align:left;">
-		   								<b>End Date : </b><input type="text"  tabindex="15" maxlength="4" size="9" value="" class="field text datpik" name="enddates" id="end" required>
-		   							</td>
-		   						</tr>
-
-
-							<!-- <tr>
-
-								<td colspan="2" align="center">
-									<button id="filter" class="btn btn-submit" type='submit' style='margin-right:15px;' > Submit </button>
-								</td>
-							</tr> -->
-						</table>
+		   					<table  width="50%" border="0" cellspacing="0" cellpadding="0" class="tbl_rptjen">
+							</table>
 					</form>
-
-					<!----pradeep -->
-
-					<table border="0" width="100%" cellspacing="0" cellpadding="0" style="width:90%;padding:0px; margin:0 auto;">
+					<table border="0" width="50%" cellspacing="0" cellpadding="0" >
 						<tr>
-							<td><b>Udropship Status:</b></td>
+							<td><b>Month</b></td>
 							<td>
-								<select id="ustatus" form="myForm" style="margin-right:3em; width:15em">
-									<option value="all">ALL</option>
-									<option value="pending">pending</option>
-									<option value="shipped to customer">shipped to customer</option>
-									<option value="partial">partial</option>
-									<option value="pendingpickup">pendingpickup</option>
-									<option value="ack">ack</option>
-									<option value="exported">exported</option>
-									<option value="ready">ready</option>
-									<option value="onhold">onhold</option>
-									<option value="backorder">backorder</option>
-									<option value="cancelled">cancelled</option>
-									<option value="delivered">delivered</option>
-									<option value="processing">processing</option>
-									<option value="refundintiated">refundintiated</option>
-									<option value="not delivered">not delivered</option>
-									<option value="charge_back">charge_back</option>
-									<option value="shipped craftsvilla">shipped craftsvilla</option>
-									<option value="qc_rejected">qc_rejected</option>
-									<option value="received">received</option>
-									<option value="out of stock">out of stock</option>
-									<option value="partial refund initiated">partial refund initiated</option>
-									<option value="dispute raised">dispute raised</option>
-									<option value="shipment delayed">shipment delayed</option>
-									<option value="partially shipped">partially shipped</option>
-									<option value="refund to do">refund to do</option>
-									<option value="Accepted">Accepted</option>
-									<option value="Returned By Customer">Returned By Customer</option>
-									<option value="Returned To Seller">Returned To Seller</option>
-									<option value="Mainfest Shared">Mainfest Shared</option>
-									<option value="COD SHIPMENT PICKED UP">COD SHIPMENT PICKED UP</option>
-									<option value="Packing slip printed">Packing slip printed</option>
-									<option value="Handed to courier">Handed to courier</option>
-									<option value="Returned Recieved from customer">Returned Recieved from customer</option>
-									<option value="partially recieved">partially recieved</option>
-									<option value="Damage/Lost in Transit">Damage/Lost in Transit</option>
+								<select  id="month" form="myForm" style="width: 150px;" >
+									<option value="1">Jan</option>
+									<option value="2">Feb</option>
+									<option value="3">March</option>
+									<option value="4">April</option>
+									<option value="5">May</option>
+									<option value="6">June</option>
+									<option value="7">July</option>
+									<option value="8">Aug</option>
+									<option value="9">Sept</option>
+									<option value="10">Oct</option>
+									<option value="11">Nov</option>
+									<option value="12">Dec</option>
 								</select>
 
 							</td>
-							<td><b>Payment Status:</b></td>
+							<td><b>Year:</b></td>
 							<td>
-								<select id="paymentstatus" form="myForm" style="margin-right:3em; width:6em">
-									<option value="all">ALL</option>
-									<option value="0">Unpaid</option>
-									<option value="1">Paid</option>
-									<option value="2">Refunded</option>
-								</select>
-
-							</td>
-							<td><b>Courier name:</b></td>
-							<td>
-								<select id="couriername" form="myForm" style="margin-right:3em; width:10em">
-									<option value="all">ALL</option>
-									<option value="Aramex">Aramex</option>
-									<option value="Fedex">Fedex</option>
-									<option value="Dtdc">Dtdc</option>
-									<option value="India Post">India Post</option>
-									<option value="EcomExpress">EcomExpress</option>
-									<option value="Dhl_int">DHL International</option>
+								<select id="year" form="myForm" style="width: 100px;" >
+									<option value="2014">2014</option>
+									<option value="2015">2015</option>
+									<option value="2016">2016</option>
+									<option value="2017">2017</option>
+									<option value="2018">2018</option>
+									<option value="2019">2019</option>
+									<option value="2020">2020</option>
+									<option value="2021">2021</option>
 								</select>
 
 							</td>
 						</tr>
 
 						<tr>
-
-							<td colspan="2" align="right">
-
-								<button id="filter" class="btn btn-submit" type='submit' form="myForm"  style='margin-right:15px;margin-left:30%;margin-top:1em;' > Show Data </button>
-
+							<td colspan="4" align="center">
+								<button id="downloadcsv" class="btn btn-submit" type='submit' style='margin-right:15px;margin-top:1em;' > Download CSV </button>
 							</td>
-							<td colspan="4" align="left">
-								<button id="downloadcsv" class="btn btn-submit" type='submit' style='margin-right:15px;margin-left:20%;margin-top:1em;' > Download CSV </button>
-							</td>
-
-
-
 						</tr>
 					</table>
 					<!---pradeep -->
@@ -462,53 +340,6 @@ var normalizeDate = function (dateString) {
 			</div>
 			<div class="clear"></div>
 		</div>
-	</div>
-	<div class="grid grid-pad">
-
-		<table id="example" class="display btnhdsh" cellspacing="0" width="100%">
-			<button id="csv" class="btn btn-submit btnhdsh" type='submit' style="margin-bottom:10px;"> Convert To CSV  </button>
-			<thead >
-				<tr>
-					<th>Order Id</th>
-					<th>Order Date</th>
-					<th>Shipment Id</th>
-					<th>Udropship Status</th>
-					<th>Payout Status</th>
-					<th>Shipment Date</th>
-					<th>Awb Number</th>
-					<th>Shipment Update</th>
-					<th>UTR Number</th>
-					<th>Payment Updated Date</th>
-					<th>Vendor Name</th>
-					<th>SubTotal</th>
-					<th>Payment Amount</th>
-					<th>Comission Amount</th>
-					<th>Courier Name</th>
-				</tr>
-
-			</thead>
-			<tfoot >
-				<tr class="aaa">
-					<th>Order Id</th>
-					<th>Order Date</th>
-					<th>Shipment Id</th>
-					<th>Udropship Status</th>
-					<th>Payout Status</th>
-					<th>Shipment Date</th>
-					<th>Awb Number</th>
-					<th>Shipment Update</th>
-					<th>UTR Number</th>
-					<th>Payment Updated Date</th>
-					<th>Vendor Name</th>
-					<th>SubTotal</th>
-					<th>Payment Amount</th>
-					<th>Comission Amount</th>
-					<th>Courier Name</th>
-				</tr>
-
-			</tfoot>
-		</table>
-
 	</div>
 </body>
 </html>
