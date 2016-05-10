@@ -1501,6 +1501,7 @@ public function changeordertocodAction()
 		$orderIds = $this->getRequest()->getPost('order_ids');
 		$order = Mage::getModel('sales/order')->load($orderIds); //load order
 		//echo '<pre>';print_r($order);exit;
+		$payment = $order->getPayment();
 		$entityIdSus = $order->getEntityId();
         $createdAt=now();
         $amount=$order->getBaseGrandTotal();
@@ -1516,6 +1517,8 @@ public function changeordertocodAction()
 		$comment = "AWRP, status changes to $status Status CODAG";
 		$isCustomerNotified = false; //whether customer to be notified
 		$order->setState($state, $status, $comment, $isCustomerNotified);
+		$payment->setMethod('cashondelivery');
+		$payment->save();         		
 		$order->save();
 		$order->sendNewOrderEmail();
         
