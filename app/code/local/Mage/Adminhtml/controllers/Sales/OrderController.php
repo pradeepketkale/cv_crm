@@ -1490,6 +1490,53 @@ public function suspectfraudAction()
 		
 
 	}
+
+public function changeordertocodAction()
+	{
+		$user = Mage::getSingleton('admin/session');
+		$userEmail = $user->getUser()->getEmail();
+        $userName = $user->getUser()->getName();
+	if($userEmail == "dileswar@craftsvilla.com" || $userEmail == "pravin.craftsvilla@gmail.com" || $userEmail == "suraj.craftsvilla92@gmail.com" || $userEmail == "ajaysharma.craftsvilla@gmail.com" || $userEmail == "akbar.craftsvilla@gmail.com" || $userEmail == "sagar.craftsvilla@gmail.com" || $userEmail == "monica@craftsvilla.com" || $userEmail == "manoj@craftsvilla.com" || $userEmail == "Surajg@craftsvilla.com" || $userEmail == "Pravind@craftsvilla.com" || $userEmail == "akbar@craftsvilla.com" || $userEmail == "ajays@craftsvilla.com")
+		{
+		$orderIds = $this->getRequest()->getPost('order_ids');
+		$order = Mage::getModel('sales/order')->load($orderIds); //load order
+		//echo '<pre>';print_r($order);exit;
+		$entityIdSus = $order->getEntityId();
+        $createdAt=now();
+        $amount=$order->getBaseGrandTotal();
+		    if($entityIdSus == ''){
+		        Mage::getSingleton('adminhtml/session')->addError(Mage::helper('adminhtml')->__("Please select only Payu order"));
+					$this->_redirectUrl('/index.php/kribhasanvi/sales_order/index/');
+		    }
+
+		$incrementId = $order->getIncrementId();
+		$custemail = $order->getCustomerEmail();
+		$state = 'processing';
+		$status = $state;
+		$comment = "AWRP, status changes to $status Status CODAG";
+		$isCustomerNotified = false; //whether customer to be notified
+		$order->setState($state, $status, $comment, $isCustomerNotified);
+		$order->save();
+		$order->sendNewOrderEmail();
+        
+        $statsconn=Mage::getSingleton('core/resource')->getConnection('core_write');
+        $insertAgentProcessingOrdersCv="INSERT INTO agent_processing_orders_cv (`order_id`,`agent_name`,`created_at`,`amount`,`payment_method`) VALUES('".$incrementId."','".$userName."','".$createdAt."','".$amount."','".$payment_method."');";
+        $resAgentProcessingOrdersCv= $statsconn->query($insertAgentProcessingOrdersCv);
+        $statsconn->closeConnection();
+
+		Mage::getSingleton('adminhtml/session')->addSuccess(Mage::helper('adminhtml')->__("This Order No:- ".$incrementId." Status has changes to processing.."));
+		$this->_redirectUrl('/index.php/kribhasanvi/sales_order/index/');
+		}
+	else{
+			Mage::getSingleton('adminhtml/session')->addError(Mage::helper('adminhtml')->__("You are not authorised to do this action, Please contact technical team ! "));
+			$this->_redirectUrl('/index.php/kribhasanvi/sales_order/index/');
+		}		
+		//$this->_redirect('*/sales_order/view');
+		
+
+	}
+
+
 	
 	public function sentpayuInvoiceAction()
 	{
