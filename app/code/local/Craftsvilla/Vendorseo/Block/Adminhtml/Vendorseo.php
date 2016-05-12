@@ -13,5 +13,4 @@ class Craftsvilla_Vendorseo_Block_Adminhtml_Vendorseo extends Mage_Adminhtml_Blo
 	parent::__construct();
 	
 	}
-
 }

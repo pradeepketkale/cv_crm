@@ -9,5 +9,11 @@ class Craftsvilla_Vendorseo_Helper_Data extends Mage_Core_Helper_Abstract
         return trim($result['vendor_name']);
        
     }
+    
+    public function getVendorSeoData($id) {
+        $vendorSeoData = Mage::getModel("vendorseo/vendorseo")->getCollection();
+        $vendorSeoData->addFieldToFilter('vendor_id',array('eq'=> $id)) ;
+        return $vendorSeoData ;
+    }
 }
 	 

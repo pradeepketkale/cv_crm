@@ -10,7 +10,7 @@ class Craftsvilla_Vendorseo_Block_Adminhtml_Vendorseo_Edit_Tab_Form extends Mage
 				$read = Mage::getSingleton('core/resource')->getConnection('core_read');
 				$query = "select vendor_id, vendor_name from vendor_info_craftsvilla where vendor_name is not null and vendor_name <> '' order by vendor_name asc";
 				$result = $read->query($query)->fetchAll();
-                                $read->closeConnection();
+                $read->closeConnection();
 				$vendor_name = array('-1' => "Please select vendor.");
 
 				foreach ($result as $key => $value) {
@@ -18,60 +18,83 @@ class Craftsvilla_Vendorseo_Block_Adminhtml_Vendorseo_Edit_Tab_Form extends Mage
 				}
 
 				$fieldset = $form->addFieldset("vendorseo_form", array("legend"=>Mage::helper("vendorseo")->__("Item information")));
-
-				//$fieldset->addField("vendor_name", "text", array(
-				//"label" => Mage::helper("vendorseo")->__("Name"),
-				//"name" => "vendor_name",
-				//
-				//));
-				
+                 
+				if($this->getRequest()->getParam('id')) {
+								$flag = true;
+				 } else {
+								$flag = false;
+				 }
 				
 				$vendorDropdown = $fieldset->addField('vendor_id', 'select', array(
 				  'label' => Mage::helper('vendorseo')->__('Vendor Name'),
 				  'name' => 'vendor_name',
 				  'values' => $vendor_name,
 				  'onchange'  => 'onchangeShowData(this)',
+				  'disabled' => $flag,
 				));
-
+				
+				
+				
 				$selectScript = '
-						var reloadurl = "'.$this->getUrl("getdata").'vendor_id/" + document.getElementById("meta_title").value;
-						reloadurl = "'.Mage::helper("adminhtml")->getUrl("admin_vendorseo/adminhtml_vendorseo/getdata").'";
+				      var vendorId = ele.value ;
+						var reloadurl = "'.$this->getUrl("*/*/getSeoData").'";
 						new Ajax.Request(reloadurl, {
-				            method: "get",
-				            onLoading: function (transport) {
-				                
-				            },
-				            onComplete: function(transport) {				            	
-				            	document.getElementById("meta_title").value = "Pradeep";
-                            	document.getElementById("meta_description").value = "Pradeep";
-                            	document.getElementById("meta_keywords").value = "Pradeep";
-				            }
-				        });				                        
-                            
-				';
+										method: "get",
+										requestHeaders: {Accept: "application/json"},
+										parameters: {v_id:vendorId},
+										onLoading: function (response) {
+										  
+										},
+										onSuccess: function(transport) {
+										  var response = transport.responseText.evalJSON(true);
+										  document.getElementById("meta_title").value = response.meta_title;
+										  document.getElementById("meta_description").value = response.meta_description;
+										  document.getElementById("meta_keywords").value = response.meta_keywords;
+										  tinyMCE.activeEditor.setContent(response.vendor_description);
+										},
+										onFailure: function(transport) {
+										
+										}
+					    });
+						
+				    ';
 				$vendorDropdown->setAfterElementHtml('
-                        <script type = "text/javascript">
-                        function onchangeShowData(ele) { '.$selectScript.'			        
-                        }
-                        </script>
-                    ');
+				<script type = "text/javascript">
+						function onchangeShowData(ele) { '.$selectScript.'}
+				</script>
+				');
 			
 				$fieldset->addField("meta_title", "text", array(
 				"label" => Mage::helper("vendorseo")->__("Meta Title"),
 				"name" => "meta_title",
 				));
 			
-				$fieldset->addField("meta_description", "text", array(
+				$fieldset->addField("meta_description", "textarea", array(
 				"label" => Mage::helper("vendorseo")->__("Meta Description"),
 				"name" => "meta_description",
 				));
-			
+				
 				$fieldset->addField("meta_keywords", "text", array(
 				"label" => Mage::helper("vendorseo")->__("Meta Keywords"),
 				"name" => "meta_keywords",
 				));
-					
-
+				
+				//$fieldset->addField("vendor_description", "textarea", array(
+				//"label" => Mage::helper("vendorseo")->__("Description"),
+				//"name" => "vendor_description",
+				//));
+				
+				$wysiwygConfig = Mage::getSingleton('cms/wysiwyg_config');
+				$fieldset->addField('vendor_description', 'editor', array(
+				    'name'      => 'vendor_description',
+				    'label'     => Mage::helper('vendorseo')->__('Description'),
+				    'title'     => Mage::helper('vendorseo')->__('Description'),
+				    'style'     => 'height: 15em;',
+				    'wysiwyg'   => true,
+				    'required'  => false,
+				    'config'    => $wysiwygConfig
+				));
+				
 				if (Mage::getSingleton("adminhtml/session")->getVendorseoData())
 				{
 					$form->setValues(Mage::getSingleton("adminhtml/session")->getVendorseoData());
@@ -81,5 +104,13 @@ class Craftsvilla_Vendorseo_Block_Adminhtml_Vendorseo_Edit_Tab_Form extends Mage
 				    $form->setValues(Mage::registry("vendorseo_data")->getData());
 				}
 				return parent::_prepareForm();
+		}
+		
+		protected function _prepareLayout()
+		{
+		    parent::_prepareLayout();
+		    if (Mage::getSingleton('cms/wysiwyg_config')->isEnabled()) {
+			$this->getLayout()->getBlock('head')->setCanLoadTinyMce(true);
+		    }
 		}
 }

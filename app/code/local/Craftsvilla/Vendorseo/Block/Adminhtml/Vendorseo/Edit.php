@@ -17,9 +17,6 @@ class Craftsvilla_Vendorseo_Block_Adminhtml_Vendorseo_Edit extends Mage_Adminhtm
 					"onclick"   => "saveAndContinueEdit()",
 					"class"     => "save",
 				), -100);
-
-
-
 				$this->_formScripts[] = "
 
 							function saveAndContinueEdit(){
@@ -31,14 +28,19 @@ class Craftsvilla_Vendorseo_Block_Adminhtml_Vendorseo_Edit extends Mage_Adminhtm
 		public function getHeaderText()
 		{
 				if( Mage::registry("vendorseo_data") && Mage::registry("vendorseo_data")->getId() ){
-
-				    return Mage::helper("vendorseo")->__("Edit Item '%s'", $this->htmlEscape(Mage::registry("vendorseo_data")->getVendorName()));
-
+				return Mage::helper("vendorseo")->__("Edit Item '%s'", $this->htmlEscape(Mage::registry("vendorseo_data")->getVendorName()));
 				} 
 				else{
-
-				     return Mage::helper("vendorseo")->__("Add Item");
-
+				return Mage::helper("vendorseo")->__("Add Item");
 				}
 		}
+		protected function _prepareLayout()
+		{
+				// Load Wysiwyg on demand and Prepare layout
+				if (Mage::getSingleton('cms/wysiwyg_config')->isEnabled() && ($block = $this->getLayout()->getBlock('head')))
+				{
+				$block->setCanLoadTinyMce(true);
+				}
+				parent::_prepareLayout();
+        }
 }

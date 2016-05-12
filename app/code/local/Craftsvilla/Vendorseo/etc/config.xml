@@ -64,40 +64,36 @@
   </admin>
   <adminhtml>
 	<menu>
-	  <vendorseo module="vendorseo">
-		<title>Vendorseo</title>
-		<sort_order>100</sort_order>
-		<children>
-		  <vendorseo module="vendorseo">
-		    <title>Manage Vendorseo</title>
-			<sort_order>0</sort_order>
-			<action>admin_vendorseo/adminhtml_vendorseo</action>
-		  </vendorseo>
-		</children>
-	  </vendorseo>
+	 <sales>
+		  <children>
+			  <vendorseo module="vendorseo">
+				 <title>Manage Vendorseo</title>
+				<sort_order>742</sort_order>
+				<action>admin_vendorseo/adminhtml_vendorseo</action>
+			  </vendorseo>
+			</children>
+	 </sales>
 	</menu>
+		
 	<acl>
 	  <resources>
 		<all>
 		  <title>Allow Everything</title>
 		</all>
 		<admin>
-		  <children>
-			<vendorseo translate="title" module="vendorseo">
-			  <title>Vendorseo</title>
-			  <sort_order>1000</sort_order>
-			  <children>
-		  <vendorseo translate="title">
-			<title>Manage Vendorseo</title>
-			<sort_order>0</sort_order>
-		  </vendorseo>
+		  <sales>
+			<children>
+				  <vendorseo translate="title">
+					<title>Manage Vendorseo</title>
+					<sort_order>742</sort_order>
+				  </vendorseo>
 			  </children>
-			</vendorseo>
-		  </children>
+		  </sales>
 		</admin>
 	  </resources>
 	</acl>
-	<layout>
+	
+   <layout>
 	  <updates>
 		<vendorseo>
 		  <file>vendorseo.xml</file>
