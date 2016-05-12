@@ -50,55 +50,55 @@ class Craftsvilla_Financereport_FinancereportController extends Mage_Core_Contro
         $paymentCond = ($_GET['paymentstatus'] != 'all' ? "AND sp.shipmentpayout_status =" . $_GET['paymentstatus'] : '');
         $CourierCond = ($_GET['couriername'] != 'all' ? "AND upper(sfst.courier_name)='" . strtoupper($_GET['couriername']) . "' " : '');
 
-        $sWhere = "sfop.`method` = 'cashondelivery' " . $ustatusCond . ' ' . $paymentCond . ' ' . $CourierCond . ' ';
-        if (isset($_GET['startdate']) && isset($_GET['enddate'])) {
+        $sWhere = "sfop.`method` = 'cashondelivery' AND sfst.number!='' " . $ustatusCond . ' ' . $paymentCond . ' ' . $CourierCond . ' ';
+        if (isset($_GET['startdate']) && isset($_GET['endDate'])) {
             $sWhere .= "and sfo.created_at >= '" . $_GET['startdate'] . "' and sfo.created_at <= '" . $_GET['enddate'] . "'";
         }
 
         $sQuery   = "SELECT sfo.`increment_id` AS order_id, sfo.`created_at` AS order_date, sfs.`increment_id` AS shipment_id,
-		case sfs.`udropship_status`
-		when 0 then 'pending'
-		when 1 then 'shipped to customer'
-		when 2 then 'partial'
-		when 8 then 'pendingpickup'
-		when 9 then 'ack'
-		when 10 then 'exported'
-		when 3 then 'ready'
-		when 4 then 'onhold'
-		when 5 then 'backorder'
-		when 6 then 'cancelled'
-		when 7 then 'delivered'
-		when 11 then 'processing'
-		when 12 then 'refundintiated'
-		when 13 then 'not delivered'
-		when 14 then 'charge_back'
-		when 15 then 'shipped craftsvilla'
-		when 16 then 'qc_rejected'
-		when 17 then 'received'
-		when 18 then 'out of stock'
-		when 19 then 'partial refund initiated'
-		when 20 then 'dispute raised'
-		when 21 then 'shipment delayed'
-		when 22 then 'partially shipped'
-		when 23 then 'refund to do'
-		when 24 then 'Accepted'
-		when 25 then 'COD RTO'
-		when 26 then 'Returned By Customer'
-		when 27 then 'Mainfest Shared'
-		when 28 then 'COD SHIPMENT PICKED UP'
-		when 30 then 'Packing slip printed'
-		when 31 then 'Handed to courier'
-		when 32 then 'Returned Recieved from customer'
-		when 33 then 'partially recieved'
-		when 36 then 'Damage/Lost in Transit'
-		end as ustatus,
-		case sp.`shipmentpayout_status` when 0 then 'Unpaid'when 1 then 'Paid' when 2 then 'Refunded' end as payoutstatus,sfs.`created_at` AS shipment_datec, sfst.`number` AS awb_number, sfs.`updated_at` AS shipment_update, `sp`.`citibank_utr`, sp.`shipmentpayout_update_time` AS payment_updated_date, `sfs`.`udropship_vendor` AS vendor_name, sfs.`base_total_value` as SubTotal,sfs.`base_shipping_amount` as Shipping, sp.`payment_amount` AS payment_amount, sp.`commission_amount` AS comission_amount,sfst.`courier_name`
-		FROM `sales_flat_shipment` as sfs
-		LEFT JOIN `sales_flat_order` AS sfo ON `sfs`.`order_id` = `sfo`.`entity_id`
-		LEFT JOIN `sales_flat_shipment_track` AS sfst ON `sfs`.`entity_id` = `sfst`.`parent_id`
-		LEFT JOIN `shipmentpayout` AS sp ON `sfs`.`increment_id` = `sp`.`shipment_id`
-		LEFT JOIN `sales_flat_order_payment` AS sfop ON `sfs`.`order_id` = `sfop`.`parent_id`
-		WHERE " . $sWhere;
+        case sfs.`udropship_status`
+        when 0 then 'pending'
+        when 1 then 'shipped to customer'
+        when 2 then 'partial'
+        when 8 then 'pendingpickup'
+        when 9 then 'ack'
+        when 10 then 'exported'
+        when 3 then 'ready'
+        when 4 then 'onhold'
+        when 5 then 'backorder'
+        when 6 then 'cancelled'
+        when 7 then 'delivered'
+        when 11 then 'processing'
+        when 12 then 'refundintiated'
+        when 13 then 'not delivered'
+        when 14 then 'charge_back'
+        when 15 then 'shipped craftsvilla'
+        when 16 then 'qc_rejected'
+        when 17 then 'received'
+        when 18 then 'out of stock'
+        when 19 then 'partial refund initiated'
+        when 20 then 'dispute raised'
+        when 21 then 'shipment delayed'
+        when 22 then 'partially shipped'
+        when 23 then 'refund to do'
+        when 24 then 'Accepted'
+        when 25 then 'COD RTO'
+        when 26 then 'Returned By Customer'
+        when 27 then 'Mainfest Shared'
+        when 28 then 'COD SHIPMENT PICKED UP'
+        when 30 then 'Packing slip printed'
+        when 31 then 'Handed to courier'
+        when 32 then 'Returned Recieved from customer'
+        when 33 then 'partially recieved'
+        when 36 then 'Damage/Lost in Transit'
+        end as ustatus,
+        case sp.`shipmentpayout_status` when 0 then 'Unpaid'when 1 then 'Paid' when 2 then 'Refunded' end as payoutstatus,sfs.`created_at` AS shipment_datec, sfst.`number` AS awb_number, sfs.`updated_at` AS shipment_update, `sp`.`citibank_utr`, sp.`shipmentpayout_update_time` AS payment_updated_date, `sfs`.`udropship_vendor` AS vendor_name, sfs.`base_total_value` as SubTotal,sfs.`base_shipping_amount` as Shipping, sp.`payment_amount` AS payment_amount, sp.`commission_amount` AS comission_amount,sfst.`courier_name`
+        FROM `sales_flat_shipment` as sfs
+        LEFT JOIN `sales_flat_order` AS sfo ON `sfs`.`order_id` = `sfo`.`entity_id`
+        LEFT JOIN `sales_flat_shipment_track` AS sfst ON `sfs`.`entity_id` = `sfst`.`parent_id`
+        LEFT JOIN `shipmentpayout` AS sp ON `sfs`.`increment_id` = `sp`.`shipment_id`
+        LEFT JOIN `sales_flat_order_payment` AS sfop ON `sfs`.`order_id` = `sfop`.`parent_id`
+        WHERE " . $sWhere;
         //LEFT JOIN `udropship_vendor` AS uv ON `sfs`.`udropship_vendor` = `uv`.`vendor_id`
         //echo $sQuery;exit;
         $head     = array(
@@ -121,7 +121,7 @@ class Craftsvilla_Financereport_FinancereportController extends Mage_Core_Contro
         );
         $filename = "Finance_report_" . $_GET['startdate'] . "_to_" . $_GET['enddate'];
         Craftsvilla_Financereport_FinancereportController::downloadCSV($filename, $sQuery, $head, true);
-   }
+    }
 
 
     public function reportcodAction()
@@ -220,14 +220,14 @@ class Craftsvilla_Financereport_FinancereportController extends Mage_Core_Contro
 
         /* Total data set length */
         $sQuery       = "
-SELECT count( sfo.`increment_id` ) AS order_id
-FROM `sales_flat_shipment` AS sfs
-LEFT JOIN `sales_flat_order` AS sfo ON `sfs`.`order_id` = `sfo`.`entity_id`
-LEFT JOIN `sales_flat_shipment_track` AS sfst ON `sfs`.`entity_id` = `sfst`.`parent_id`
-LEFT JOIN `shipmentpayout` AS sp ON `sfs`.`increment_id` = `sp`.`shipment_id`
-LEFT JOIN `udropship_vendor` AS uv ON `sfs`.`udropship_vendor` = `uv`.`vendor_id`
-LEFT JOIN `sales_flat_order_payment` AS sfop ON `sfo`.`entity_id` = `sfop`.`parent_id`
-WHERE " . $sWhere;
+        SELECT count( sfo.`increment_id` ) AS order_id
+        FROM `sales_flat_shipment` AS sfs
+        LEFT JOIN `sales_flat_order` AS sfo ON `sfs`.`order_id` = `sfo`.`entity_id`
+        LEFT JOIN `sales_flat_shipment_track` AS sfst ON `sfs`.`entity_id` = `sfst`.`parent_id`
+        LEFT JOIN `shipmentpayout` AS sp ON `sfs`.`increment_id` = `sp`.`shipment_id`
+        LEFT JOIN `udropship_vendor` AS uv ON `sfs`.`udropship_vendor` = `uv`.`vendor_id`
+        LEFT JOIN `sales_flat_order_payment` AS sfop ON `sfo`.`entity_id` = `sfop`.`parent_id`
+        WHERE " . $sWhere;
         $aResultTotal = $readQuery->query($sQuery)->fetchAll();
         $iTotal       = (int) $aResultTotal[0][order_id];
 
@@ -294,51 +294,51 @@ WHERE " . $sWhere;
          * Get data to display
          */
         $sQuery = "SELECT sfo.`increment_id` AS order_id, sfo.`created_at` AS order_date, sfs.`increment_id` AS shipment_id,
-case sfs.`udropship_status`
-when 0 then 'pending'
-when 1 then 'shipped to customer'
-when 2 then 'partial'
-when 8 then 'pendingpickup'
-when 9 then 'ack'
-when 10 then 'exported'
-when 3 then 'ready'
-when 4 then 'onhold'
-when 5 then 'backorder'
-when 6 then 'cancelled'
-when 7 then 'delivered'
-when 11 then 'processing'
-when 12 then 'refundintiated'
-when 13 then 'not delivered'
-when 14 then 'charge_back'
-when 15 then 'shipped craftsvilla'
-when 16 then 'qc_rejected'
-when 17 then 'received'
-when 18 then 'out of stock'
-when 19 then 'partial refund initiated'
-when 20 then 'dispute raised'
-when 21 then 'shipment delayed'
-when 22 then 'partially shipped'
-when 23 then 'refund to do'
-when 24 then 'Accepted'
-when 25 then 'COD RTO'
-when 26 then 'Returned By Customer'
-when 27 then 'Mainfest Shared'
-when 28 then 'COD SHIPMENT PICKED UP'
-when 30 then 'Packing slip printed'
-when 31 then 'Handed to courier'
-when 32 then 'Returned Recieved from customer'
-when 33 then 'partially recieved'
-when 36 then 'Damage/Lost in Transit'
-end as ustatus,
-case sp.`shipmentpayout_status` when 0 then 'Unpaid'when 1 then 'Paid' when 2 then 'Refunded' end as payoutstatus,sfs.`created_at` AS shipment_datec, sfst.`number` AS awb_number, sfs.`updated_at` AS shipment_update, `utr`.`utrno`, sp.`shipmentpayout_update_time` AS payment_updated_date, uv.`vendor_name` AS vendor_name, sfs.`base_total_value` as SubTotal, sp.`payment_amount` AS payment_amount, sp.`commission_amount` AS comission_amount,sfst.`courier_name`
-FROM `sales_flat_shipment` as sfs
-LEFT JOIN `sales_flat_order` AS sfo ON `sfs`.`order_id` = `sfo`.`entity_id`
-LEFT JOIN `sales_flat_shipment_track` AS sfst ON `sfs`.`entity_id` = `sfst`.`parent_id`
-LEFT JOIN `shipmentpayout` AS sp ON `sfs`.`increment_id` = `sp`.`shipment_id`
-LEFT JOIN `udropship_vendor` AS uv ON `sfs`.`udropship_vendor` = `uv`.`vendor_id`
-LEFT JOIN `sales_flat_order_payment` AS sfop ON `sfo`.`entity_id` = `sfop`.`parent_id`
-LEFT JOIN `utrreport` AS utr ON `sp`.`citibank_utr` = `utr`.`utrno`
-WHERE " . $sWhere . " " . $sOrder . " " . $sLimit;
+        case sfs.`udropship_status`
+        when 0 then 'pending'
+        when 1 then 'shipped to customer'
+        when 2 then 'partial'
+        when 8 then 'pendingpickup'
+        when 9 then 'ack'
+        when 10 then 'exported'
+        when 3 then 'ready'
+        when 4 then 'onhold'
+        when 5 then 'backorder'
+        when 6 then 'cancelled'
+        when 7 then 'delivered'
+        when 11 then 'processing'
+        when 12 then 'refundintiated'
+        when 13 then 'not delivered'
+        when 14 then 'charge_back'
+        when 15 then 'shipped craftsvilla'
+        when 16 then 'qc_rejected'
+        when 17 then 'received'
+        when 18 then 'out of stock'
+        when 19 then 'partial refund initiated'
+        when 20 then 'dispute raised'
+        when 21 then 'shipment delayed'
+        when 22 then 'partially shipped'
+        when 23 then 'refund to do'
+        when 24 then 'Accepted'
+        when 25 then 'COD RTO'
+        when 26 then 'Returned By Customer'
+        when 27 then 'Mainfest Shared'
+        when 28 then 'COD SHIPMENT PICKED UP'
+        when 30 then 'Packing slip printed'
+        when 31 then 'Handed to courier'
+        when 32 then 'Returned Recieved from customer'
+        when 33 then 'partially recieved'
+        when 36 then 'Damage/Lost in Transit'
+        end as ustatus,
+        case sp.`shipmentpayout_status` when 0 then 'Unpaid'when 1 then 'Paid' when 2 then 'Refunded' end as payoutstatus,sfs.`created_at` AS shipment_datec, sfst.`number` AS awb_number, sfs.`updated_at` AS shipment_update, `utr`.`utrno`, sp.`shipmentpayout_update_time` AS payment_updated_date, uv.`vendor_name` AS vendor_name, sfs.`base_total_value` as SubTotal, sp.`payment_amount` AS payment_amount, sp.`commission_amount` AS comission_amount,sfst.`courier_name`
+        FROM `sales_flat_shipment` as sfs
+        LEFT JOIN `sales_flat_order` AS sfo ON `sfs`.`order_id` = `sfo`.`entity_id`
+        LEFT JOIN `sales_flat_shipment_track` AS sfst ON `sfs`.`entity_id` = `sfst`.`parent_id`
+        LEFT JOIN `shipmentpayout` AS sp ON `sfs`.`increment_id` = `sp`.`shipment_id`
+        LEFT JOIN `udropship_vendor` AS uv ON `sfs`.`udropship_vendor` = `uv`.`vendor_id`
+        LEFT JOIN `sales_flat_order_payment` AS sfop ON `sfo`.`entity_id` = `sfop`.`parent_id`
+        LEFT JOIN `utrreport` AS utr ON `sp`.`citibank_utr` = `utr`.`utrno`
+        WHERE " . $sWhere . " " . $sOrder . " " . $sLimit;
 
         //echo ($sQuery);exit;
 
@@ -366,15 +366,15 @@ WHERE " . $sWhere . " " . $sOrder . " " . $sLimit;
             //          $fp = fopen('php://output', 'w');
             //          fputcsv($fp, $head);
             //          foreach ($rResult as $line) {
-            // 	fputcsv($fp, array_values($line));
-            // 	    }
-            // 	    fclose($fp);
-            // 	    exit;
+            //  fputcsv($fp, array_values($line));
+            //      }
+            //      fclose($fp);
+            //      exit;
             $readQuery->closeConnection();
             $filename = "Finance_report_" . $_GET['startdate'] . "_to_" . $_GET['enddate'];
             Craftsvilla_Financereport_FinancereportController::downloadCSV($filename, $sQuery, $head, true);
             exit;
-            /*	$file = fopen('demosaved.csv', 'w');
+            /*  $file = fopen('demosaved.csv', 'w');
             fputcsv($file, $head);
             foreach ($rResult as $row)
             {
@@ -411,14 +411,14 @@ WHERE " . $sWhere . " " . $sOrder . " " . $sLimit;
         }
         /* Data set length after filtering */
         $sQuery = "
-SELECT count( sfo.`increment_id` ) AS order_id
-FROM `sales_flat_shipment` AS sfs
-LEFT JOIN `sales_flat_order` AS sfo ON `sfs`.`order_id` = `sfo`.`entity_id`
-LEFT JOIN `sales_flat_shipment_track` AS sfst ON `sfs`.`entity_id` = `sfst`.`parent_id`
-LEFT JOIN `shipmentpayout` AS sp ON `sfs`.`increment_id` = `sp`.`shipment_id`
-LEFT JOIN `udropship_vendor` AS uv ON `sfs`.`udropship_vendor` = `uv`.`vendor_id`
-LEFT JOIN `sales_flat_order_payment` AS sfop ON `sfo`.`entity_id` = `sfop`.`parent_id`
-WHERE " . $sWhere;
+    SELECT count( sfo.`increment_id` ) AS order_id
+    FROM `sales_flat_shipment` AS sfs
+    LEFT JOIN `sales_flat_order` AS sfo ON `sfs`.`order_id` = `sfo`.`entity_id`
+    LEFT JOIN `sales_flat_shipment_track` AS sfst ON `sfs`.`entity_id` = `sfst`.`parent_id`
+    LEFT JOIN `shipmentpayout` AS sp ON `sfs`.`increment_id` = `sp`.`shipment_id`
+    LEFT JOIN `udropship_vendor` AS uv ON `sfs`.`udropship_vendor` = `uv`.`vendor_id`
+    LEFT JOIN `sales_flat_order_payment` AS sfop ON `sfo`.`entity_id` = `sfop`.`parent_id`
+    WHERE " . $sWhere;
 
         $rResultFilterTotal = $readQuery->query($sQuery)->fetchAll();
         $iFilteredTotal     = (int) $rResultFilterTotal[0]['order_id']; // count($rResult);
@@ -490,17 +490,17 @@ WHERE " . $sWhere;
                     $rResult[$key1]["comission_amount"] = $realcommision;
                 }
             }
-            if ($statewise){
-            	foreach ($rResult as $key => $value) {
-            		$combined_date = json_decode($value['pan']);
-            		$rResult[$key]['tin'] = $combined_date->vat_tin_no;
-					$rResult[$key]['pan'] = $combined_date->pan_number;
-					$rResult[$key]['customer_address'] = preg_replace('/\s+/', ' ', trim($value['customer_address']));
-					$rResult[$key]['seller_address'] = preg_replace('/\s+/', ' ', trim($value['seller_address']));
-            		$hlp               = Mage::helper('udropship');
-                    $discountAmount = $hlp->getDiscountamt($rResult[$key]['shipment_id']);
-                    $rResult[$key]['GMV'] = $rResult[$key]['GMV'] - $discountAmount;
-            	}
+            if ($statewise) {
+                foreach ($rResult as $key => $value) {
+                    $combined_date                     = json_decode($value['pan']);
+                    $rResult[$key]['tin']              = $combined_date->vat_tin_no;
+                    $rResult[$key]['pan']              = $combined_date->pan_number;
+                    $rResult[$key]['customer_address'] = preg_replace('/\s+/', ' ', trim($value['customer_address']));
+                    $rResult[$key]['seller_address']   = preg_replace('/\s+/', ' ', trim($value['seller_address']));
+                    $hlp                               = Mage::helper('udropship');
+                    $discountAmount                    = $hlp->getDiscountamt($rResult[$key]['shipment_id']);
+                    $rResult[$key]['GMV']              = $rResult[$key]['GMV'] - $discountAmount;
+                }
             }
 
             $fp = fopen($filePathOfCsv, 'a');
@@ -512,10 +512,13 @@ WHERE " . $sWhere;
             $upper_limit = $upper_limit + 5000;
 
         }
-
+        fclose($fp);
         header('Content-Type: text/csv');
         header('Content-Disposition: attachment;filename=' . $filename . '.csv');
-        fclose($fp);
+        header('Expires: 0');
+        header('Cache-Control: must-revalidate');
+        header('Pragma: public');
+        header('Content-Length: ' . filesize($filePathOfCsv));
         readfile($filePathOfCsv, false);
         unlink($filePathOfCsv);
         exit;
@@ -567,13 +570,13 @@ WHERE " . $sWhere;
 
         /* Total data set length */
         $sQuery       = "
-SELECT count(sfs.`entity_id`) AS shipment_id
-FROM `sales_flat_shipment` as sfs
-LEFT JOIN `sales_flat_shipment_track` AS sfst ON `sfs`.`entity_id` = `sfst`.`parent_id`
-LEFT JOIN `udropship_vendor` AS uv ON `sfs`.`udropship_vendor` = `uv`.`vendor_id`
-LEFT JOIN `shipmentpayout` AS sp ON `sfs`.`increment_id` = `sp`.`shipment_id`
-LEFT JOIN `utrreport` AS utr ON `sp`.`citibank_utr` = `utr`.`utrno`
-WHERE " . $sWhere;
+        SELECT count(sfs.`entity_id`) AS shipment_id
+        FROM `sales_flat_shipment` as sfs
+        LEFT JOIN `sales_flat_shipment_track` AS sfst ON `sfs`.`entity_id` = `sfst`.`parent_id`
+        LEFT JOIN `udropship_vendor` AS uv ON `sfs`.`udropship_vendor` = `uv`.`vendor_id`
+        LEFT JOIN `shipmentpayout` AS sp ON `sfs`.`increment_id` = `sp`.`shipment_id`
+        LEFT JOIN `utrreport` AS utr ON `sp`.`citibank_utr` = `utr`.`utrno`
+        WHERE " . $sWhere;
         $aResultTotal = $readQuery->query($sQuery)->fetchAll();
 
         $iTotal = intval($aResultTotal[0][shipment_id]);
@@ -613,12 +616,12 @@ WHERE " . $sWhere;
          * Get data to display
          */
         $sQuery = "SELECT sfs.`increment_id` AS shipment_id , sfst.`number` AS awb_number, uv.`vendor_name` AS merchant_name, uv.`vendor_id` AS merchand_id, `sfs`.`base_total_value` AS amount,  `utr`.`payin_date` AS pay_in_date, `utr`.`utrno` AS utr_number, `sp`.`shipmentpayout_update_time`
-FROM `sales_flat_shipment` as sfs
-LEFT JOIN `sales_flat_shipment_track` AS sfst ON `sfs`.`entity_id` = `sfst`.`parent_id`
-LEFT JOIN `udropship_vendor` AS uv ON `sfs`.`udropship_vendor` = `uv`.`vendor_id`
-LEFT JOIN `shipmentpayout` AS sp ON `sfs`.`increment_id` = `sp`.`shipment_id`
-LEFT JOIN `utrreport` AS utr ON `sp`.`citibank_utr` = `utr`.`utrno`
-WHERE " . $sWhere . " " . $sOrder . " " . $sLimit;
+        FROM `sales_flat_shipment` as sfs
+        LEFT JOIN `sales_flat_shipment_track` AS sfst ON `sfs`.`entity_id` = `sfst`.`parent_id`
+        LEFT JOIN `udropship_vendor` AS uv ON `sfs`.`udropship_vendor` = `uv`.`vendor_id`
+        LEFT JOIN `shipmentpayout` AS sp ON `sfs`.`increment_id` = `sp`.`shipment_id`
+        LEFT JOIN `utrreport` AS utr ON `sp`.`citibank_utr` = `utr`.`utrno`
+        WHERE " . $sWhere . " " . $sOrder . " " . $sLimit;
 
         //var_dump($rResult);exit;
         if ($is_csv == "true") {
@@ -638,7 +641,7 @@ WHERE " . $sWhere . " " . $sOrder . " " . $sLimit;
             // $fp = fopen('php://output', 'w');
             // fputcsv($fp, $head);
             // foreach ($rResult as $line) {
-            // 	fputcsv($fp, array_values($line));
+            //  fputcsv($fp, array_values($line));
             // }
             // fclose($fp);
             // exit;
@@ -651,13 +654,13 @@ WHERE " . $sWhere . " " . $sOrder . " " . $sLimit;
         $rResult = $readQuery->query($sQuery)->fetchAll();
         /* Data set length after filtering */
         $sQuery  = "
-SELECT count(sfs.`entity_id`) AS shipment_id
-FROM `sales_flat_shipment` as sfs
-LEFT JOIN `sales_flat_shipment_track` AS sfst ON `sfs`.`entity_id` = `sfst`.`parent_id`
-LEFT JOIN `udropship_vendor` AS uv ON `sfs`.`udropship_vendor` = `uv`.`vendor_id`
-LEFT JOIN `shipmentpayout` AS sp ON `sfs`.`increment_id` = `sp`.`shipment_id`
-LEFT JOIN `utrreport` AS utr ON `sp`.`citibank_utr` = `utr`.`utrno`
-WHERE " . $sWhere;
+        SELECT count(sfs.`entity_id`) AS shipment_id
+        FROM `sales_flat_shipment` as sfs
+        LEFT JOIN `sales_flat_shipment_track` AS sfst ON `sfs`.`entity_id` = `sfst`.`parent_id`
+        LEFT JOIN `udropship_vendor` AS uv ON `sfs`.`udropship_vendor` = `uv`.`vendor_id`
+        LEFT JOIN `shipmentpayout` AS sp ON `sfs`.`increment_id` = `sp`.`shipment_id`
+        LEFT JOIN `utrreport` AS utr ON `sp`.`citibank_utr` = `utr`.`utrno`
+        WHERE " . $sWhere;
 
         $rResultFilterTotal = $readQuery->query($sQuery)->fetchAll();
         $iFilteredTotal     = intval($rResultFilterTotal[0]['shipment_id']); // count($rResult);
@@ -709,11 +712,11 @@ WHERE " . $sWhere;
         $statementQuery = Mage::getSingleton('core/resource')->getConnection('custom_db');
         try {
             $selectedMonthData = $statementQuery->fetchAll("SELECT sfs.`order_id`,sfs.`statement_id` as statement_id ,sfs.`increment_id` as increment_id,sfs.`created_at` as created_at,sfs.`updated_at` as updated_at,sfs.`udropship_vendor` as udropship_vendor,sfs.`base_total_value` as base_total_value,uv.`vendor_name` as uname,sfs.`base_shipping_amount` AS `shipping_amount` FROM `sales_flat_shipment` as sfs
-			LEFT JOIN `sales_flat_order_payment` as sfop
-			ON sfs.`order_id` = sfop.`parent_id`
-			LEFT JOIN `udropship_vendor` as uv ON sfs.`udropship_vendor` = uv.`vendor_id`
-			where sfs.updated_at>=" . $dateFrom . " AND sfs.updated_at <=" . $dateTo . " AND
-			((sfop.`method` =  'cashondelivery'  AND sfs.`udropship_status` = '7') OR ( sfop.`method` != 'cashondelivery' AND sfs.`udropship_status` = '1')) ");
+             LEFT JOIN `sales_flat_order_payment` as sfop
+             ON sfs.`order_id` = sfop.`parent_id`
+             LEFT JOIN `udropship_vendor` as uv ON sfs.`udropship_vendor` = uv.`vendor_id`
+             where sfs.updated_at>=" . $dateFrom . " AND sfs.updated_at <=" . $dateTo . " AND
+             ((sfop.`method` =  'cashondelivery'  AND sfs.`udropship_status` = '7') OR ( sfop.`method` != 'cashondelivery' AND sfs.`udropship_status` = '1')) ");
         }
         catch (Exception $e) {
             echo "Error";
@@ -917,7 +920,7 @@ WHERE " . $sWhere;
         ->join(array('a'=>'sales_flat_shipment'), 'a.increment_id=main_table.shipment_id', array('udropship_vendor', 'subtotal'=>'base_total_value', 'commission_percent'=>'commission_percent', 'itemised_total_shippingcost'=>'itemised_total_shippingcost','cod_fee'=>'cod_fee','base_shipping_amount'=>'base_shipping_amount'))
         ->join(array('b'=>'sales_flat_shipment_grid'), 'b.increment_id=main_table.shipment_id', array('order_created_at'))
         ->joinLeft('sales_flat_order_payment', 'b.order_id = sales_flat_order_payment.parent_id','method')
-        ->where('main_table.shipmentpayout_status=0 AND a.udropship_status IN (7) AND `sales_flat_order_payment`.method = "cashondelivery" AND main_table.citibank_utr != "" ') ;      	*/
+        ->where('main_table.shipmentpayout_status=0 AND a.udropship_status IN (7) AND `sales_flat_order_payment`.method = "cashondelivery" AND main_table.citibank_utr != "" ') ;       */
         /*echo "Query:".$shipmentpayout_report1->getSelect()->__toString();
         exit();*/
 
@@ -1072,7 +1075,7 @@ WHERE " . $sWhere;
                 $write->query($queyVendor);
 
                 }
-                }	*/
+                }   */
 
                 for ($m = 0; $m < sizeof($fieldlist); $m++) {
                     $fieldvalue = $fieldlist[$m];
@@ -1314,49 +1317,49 @@ WHERE " . $sWhere;
         }
 
         $sQuery   = "SELECT sfo.`increment_id` AS order_id, sfo.`created_at` AS order_date, sfs.`increment_id` AS shipment_id,
-					case sfs.`udropship_status`
-					when 0 then 'pending'
-					when 1 then 'shipped to customer'
-					when 2 then 'partial'
-					when 8 then 'pendingpickup'
-					when 9 then 'ack'
-					when 10 then 'exported'
-					when 3 then 'ready'
-					when 4 then 'onhold'
-					when 5 then 'backorder'
-					when 6 then 'cancelled'
-					when 7 then 'delivered'
-					when 11 then 'processing'
-					when 12 then 'refundintiated'
-					when 13 then 'not delivered'
-					when 14 then 'charge_back'
-					when 15 then 'shipped craftsvilla'
-					when 16 then 'qc_rejected'
-					when 17 then 'received'
-					when 18 then 'out of stock'
-					when 19 then 'partial refund initiated'
-					when 20 then 'dispute raised'
-					when 21 then 'shipment delayed'
-					when 22 then 'partially shipped'
-					when 23 then 'refund to do'
-					when 24 then 'Accepted'
-					when 25 then 'COD RTO'
-					when 26 then 'Returned By Customer'
-					when 27 then 'Mainfest Shared'
-					when 28 then 'COD SHIPMENT PICKED UP'
-					when 30 then 'Packing slip printed'
-					when 31 then 'Handed to courier'
-					when 32 then 'Returned Recieved from customer'
-					when 33 then 'partially recieved'
-					when 36 then 'Damage/Lost in Transit'
-					end as ustatus,
-					case sp.`shipmentpayout_status` when 0 then 'Unpaid'when 1 then 'Paid' when 2 then 'Refunded' end as payoutstatus,sfs.`created_at` AS shipment_datec, sfst.`number` AS awb_number, sfs.`updated_at` AS shipment_update, `sp`.`citibank_utr`, sp.`shipmentpayout_update_time` AS payment_updated_date, `sfs`.`udropship_vendor` AS vendor_name, sfs.`base_total_value` as SubTotal,sfs.`base_shipping_amount` as Shipping, sp.`payment_amount` AS payment_amount, sp.`commission_amount` AS comission_amount,sfst.`courier_name`
-					FROM `sales_flat_shipment` as sfs
-					LEFT JOIN `sales_flat_order` AS sfo ON `sfs`.`order_id` = `sfo`.`entity_id`
-					LEFT JOIN `sales_flat_shipment_track` AS sfst ON `sfs`.`entity_id` = `sfst`.`parent_id`
-					LEFT JOIN `shipmentpayout` AS sp ON `sfs`.`increment_id` = `sp`.`shipment_id`
-					LEFT JOIN `sales_flat_order_payment` AS sfop ON `sfs`.`order_id` = `sfop`.`parent_id`
-					WHERE " . $sWhere;
+    case sfs.`udropship_status`
+    when 0 then 'pending'
+    when 1 then 'shipped to customer'
+    when 2 then 'partial'
+    when 8 then 'pendingpickup'
+    when 9 then 'ack'
+    when 10 then 'exported'
+    when 3 then 'ready'
+    when 4 then 'onhold'
+    when 5 then 'backorder'
+    when 6 then 'cancelled'
+    when 7 then 'delivered'
+    when 11 then 'processing'
+    when 12 then 'refundintiated'
+    when 13 then 'not delivered'
+    when 14 then 'charge_back'
+    when 15 then 'shipped craftsvilla'
+    when 16 then 'qc_rejected'
+    when 17 then 'received'
+    when 18 then 'out of stock'
+    when 19 then 'partial refund initiated'
+    when 20 then 'dispute raised'
+    when 21 then 'shipment delayed'
+    when 22 then 'partially shipped'
+    when 23 then 'refund to do'
+    when 24 then 'Accepted'
+    when 25 then 'COD RTO'
+    when 26 then 'Returned By Customer'
+    when 27 then 'Mainfest Shared'
+    when 28 then 'COD SHIPMENT PICKED UP'
+    when 30 then 'Packing slip printed'
+    when 31 then 'Handed to courier'
+    when 32 then 'Returned Recieved from customer'
+    when 33 then 'partially recieved'
+    when 36 then 'Damage/Lost in Transit'
+    end as ustatus,
+    case sp.`shipmentpayout_status` when 0 then 'Unpaid'when 1 then 'Paid' when 2 then 'Refunded' end as payoutstatus,sfs.`created_at` AS shipment_datec, sfst.`number` AS awb_number, sfs.`updated_at` AS shipment_update, `sp`.`citibank_utr`, sp.`shipmentpayout_update_time` AS payment_updated_date, `sfs`.`udropship_vendor` AS vendor_name, sfs.`base_total_value` as SubTotal,sfs.`base_shipping_amount` as Shipping, sp.`payment_amount` AS payment_amount, sp.`commission_amount` AS comission_amount,sfst.`courier_name`
+    FROM `sales_flat_shipment` as sfs
+    LEFT JOIN `sales_flat_order` AS sfo ON `sfs`.`order_id` = `sfo`.`entity_id`
+    LEFT JOIN `sales_flat_shipment_track` AS sfst ON `sfs`.`entity_id` = `sfst`.`parent_id`
+    LEFT JOIN `shipmentpayout` AS sp ON `sfs`.`increment_id` = `sp`.`shipment_id`
+    LEFT JOIN `sales_flat_order_payment` AS sfop ON `sfs`.`order_id` = `sfop`.`parent_id`
+    WHERE " . $sWhere;
         //LEFT JOIN `udropship_vendor` AS uv ON `sfs`.`udropship_vendor` = `uv`.`vendor_id`
         //echo $sQuery;exit;
         $head     = array(
@@ -1383,7 +1386,7 @@ WHERE " . $sWhere;
 
     public function statewiseAction()
     {
-        $vendorCond = ($_GET['vstate'] != 'all' ? "AND uv.`region_id` =" . $_GET['vstate'] : '');
+        $vendorCond   = ($_GET['vstate'] != 'all' ? "AND uv.`region_id` =" . $_GET['vstate'] : '');
         $customerCond = ($_GET['cstate'] != 'all' ? "AND sfoa.`region_id` =" . $_GET['cstate'] : '');
 
         $sWhere = "sfoa.`address_type` = 'billing' " . $vendorCond . ' ' . $customerCond . ' ';
@@ -1392,51 +1395,51 @@ WHERE " . $sWhere;
         }
 
         $sQuery   = "SELECT sfo.`increment_id` AS order_id, date(sfo.`created_at`) AS order_date,sfs.`increment_id` AS shipment_id,date(sfs.`created_at`) AS shipment_date,
-                    case sfs.`udropship_status`
-                    when 0 then 'pending'
-                    when 1 then 'shipped to customer'
-                    when 2 then 'partial'
-                    when 8 then 'pendingpickup'
-                    when 9 then 'ack'
-                    when 10 then 'exported'
-                    when 3 then 'ready'
-                    when 4 then 'onhold'
-                    when 5 then 'backorder'
-                    when 6 then 'cancelled'
-                    when 7 then 'delivered'
-                    when 11 then 'processing'
-                    when 12 then 'refundintiated'
-                    when 13 then 'not delivered'
-                    when 14 then 'charge_back'
-                    when 15 then 'shipped craftsvilla'
-                    when 16 then 'qc_rejected'
-                    when 17 then 'received'
-                    when 18 then 'out of stock'
-                    when 19 then 'partial refund initiated'
-                    when 20 then 'dispute raised'
-                    when 21 then 'shipment delayed'
-                    when 22 then 'partially shipped'
-                    when 23 then 'refund to do'
-                    when 24 then 'Accepted'
-                    when 25 then 'COD RTO'
-                    when 26 then 'Returned By Customer'
-                    when 27 then 'Mainfest Shared'
-                    when 28 then 'COD SHIPMENT PICKED UP'
-                    when 30 then 'Packing slip printed'
-                    when 31 then 'Handed to courier'
-                    when 32 then 'Returned Recieved from customer'
-                    when 33 then 'partially recieved'
-                    when 36 then 'Damage/Lost in Transit'
-                    end as ustatus, uv.`vendor_name` AS vendor_name,uv.`street` AS seller_address, uv.`custom_vars_combined` AS pan,'' as tin,dcr.`default_name` AS vendor_state,(sfs.`base_total_value`+sfs.`base_shipping_amount`) as GMV, sfop.`method` as payment_method, concat(sfoa.`firstname` ,' ',sfoa.`lastname`) as customer_name,sfoa.`region` as customer_region, concat(sfoa.`street` ,', ',sfoa.`city`) as customer_address from `sales_flat_shipment` as sfs
-LEFT JOIN `sales_flat_order` AS sfo ON `sfs`.`order_id` = `sfo`.`entity_id`
-LEFT JOIN `udropship_vendor` AS uv ON `sfs`.`udropship_vendor` = `uv`.`vendor_id`
-LEFT JOIN `sales_flat_order_payment` AS sfop ON `sfo`.`entity_id` = `sfop`.`parent_id`
-LEFT JOIN `sales_flat_order_address` as sfoa ON sfoa.`parent_id` = sfo.`entity_id`
-LEFT JOIN `directory_country_region` as dcr ON uv.`region_id` = dcr.`region_id`
-where " . $sWhere;
+    case sfs.`udropship_status`
+    when 0 then 'pending'
+    when 1 then 'shipped to customer'
+    when 2 then 'partial'
+    when 8 then 'pendingpickup'
+    when 9 then 'ack'
+    when 10 then 'exported'
+    when 3 then 'ready'
+    when 4 then 'onhold'
+    when 5 then 'backorder'
+    when 6 then 'cancelled'
+    when 7 then 'delivered'
+    when 11 then 'processing'
+    when 12 then 'refundintiated'
+    when 13 then 'not delivered'
+    when 14 then 'charge_back'
+    when 15 then 'shipped craftsvilla'
+    when 16 then 'qc_rejected'
+    when 17 then 'received'
+    when 18 then 'out of stock'
+    when 19 then 'partial refund initiated'
+    when 20 then 'dispute raised'
+    when 21 then 'shipment delayed'
+    when 22 then 'partially shipped'
+    when 23 then 'refund to do'
+    when 24 then 'Accepted'
+    when 25 then 'COD RTO'
+    when 26 then 'Returned By Customer'
+    when 27 then 'Mainfest Shared'
+    when 28 then 'COD SHIPMENT PICKED UP'
+    when 30 then 'Packing slip printed'
+    when 31 then 'Handed to courier'
+    when 32 then 'Returned Recieved from customer'
+    when 33 then 'partially recieved'
+    when 36 then 'Damage/Lost in Transit'
+    end as ustatus, uv.`vendor_name` AS vendor_name,uv.`street` AS seller_address, uv.`custom_vars_combined` AS pan,'' as tin,dcr.`default_name` AS vendor_state,(sfs.`base_total_value`+sfs.`base_shipping_amount`) as GMV, sfop.`method` as payment_method, concat(sfoa.`firstname` ,' ',sfoa.`lastname`) as customer_name,sfoa.`region` as customer_region, concat(sfoa.`street` ,', ',sfoa.`city`) as customer_address from `sales_flat_shipment` as sfs
+    LEFT JOIN `sales_flat_order` AS sfo ON `sfs`.`order_id` = `sfo`.`entity_id`
+    LEFT JOIN `udropship_vendor` AS uv ON `sfs`.`udropship_vendor` = `uv`.`vendor_id`
+    LEFT JOIN `sales_flat_order_payment` AS sfop ON `sfo`.`entity_id` = `sfop`.`parent_id`
+    LEFT JOIN `sales_flat_order_address` as sfoa ON sfoa.`parent_id` = sfo.`entity_id`
+    LEFT JOIN `directory_country_region` as dcr ON uv.`region_id` = dcr.`region_id`
+    where " . $sWhere;
         //echo $sQuery;exit;
         $head     = array(
-        	'Order Id',
+            'Order Id',
             'Order Date',
             'Shipment Id',
             'Shipment Date',
@@ -1455,5 +1458,284 @@ where " . $sWhere;
         $filename = "SateWise_" . $_GET['startdate'] . "_to_" . $_GET['enddate'];
         //echo ($sQuery);exit;
         Craftsvilla_Financereport_FinancereportController::downloadCSV($filename, $sQuery, $head, false, true);
+    }
+
+    public function handlingRdrAction()
+    {
+        $month        = $_GET['month'];
+        $year         = $_GET['year'];
+        $currentMonth = date('Y-m-d', mktime(0, 0, 0, $month, date("t") - 7, $year));
+        if ($month == '1') {
+            $year--;
+        }
+        $previousMonth     = date('Y-m-d', mktime(0, 0, 0, $month - 1, date("t") - 6, $year));
+        $statementQuery    = Mage::getSingleton('core/resource')->getConnection('custom_db');
+        /*echo "SELECT sfs.`increment_id`,sfs.`created_at`,sfs.`udropship_vendor`,sfs.`updated_at` FROM `sales_flat_shipment` as sfs LEFT JOIN `sales_flat_order_payment` as sfop ON sfs.`order_id` = sfop.`parent_id` where sfs.updated_at>='".$previousMonth." 00:00:01' AND sfs.updated_at <='".$currentMonth." 23:59:59' AND ((sfop.`method` =  'cashondelivery'  AND sfs.`udropship_status` = '7'))";exit;*/
+        $selectedMonthData = $statementQuery->fetchAll("SELECT sfs.`increment_id`,sfs.`created_at`,sfs.`udropship_vendor`,sfs.`updated_at` FROM `sales_flat_shipment` as sfs LEFT JOIN `sales_flat_order_payment` as sfop ON sfs.`order_id` = sfop.`parent_id` where sfs.updated_at>='" . $previousMonth . " 00:00:01' AND sfs.updated_at <='" . $currentMonth . " 23:59:59' AND ((sfop.`method` =  'cashondelivery'  AND sfs.`udropship_status` = '7'))");
+        $statementQuery->closeConnection();
+
+        /*echo '<pre>';
+        print_r($selectedMonthData);*/
+
+        //For CSV
+        $filename   = "RDR1_shiphandling_" . $month . "-" . $year;
+        $output     = "";
+        $fieldlist1 = array(
+            "ParentKey",
+            "LineNum",
+            "ItemDescription",
+            "ShipDate",
+            "AccountCode",
+            "TaxCode",
+            "UnitPrice",
+            "LocationCode"
+        );
+        $fieldlist  = array(
+            "DocNum",
+            "LineNum",
+            "Dscription",
+            "ShipDate",
+            "AcctCode",
+            "TaxCode",
+            "PriceBefDi",
+            "LocCode"
+        );
+
+
+        $numfields = sizeof($fieldlist1);
+        for ($k = 0; $k < $numfields; $k++) {
+            $output .= $fieldlist1[$k];
+            if ($k < ($numfields - 1))
+                $output .= ",";
+        }
+        $output .= "\n";
+
+        $numfields = sizeof($fieldlist);
+        for ($k = 0; $k < $numfields; $k++) {
+            $output .= $fieldlist[$k];
+            if ($k < ($numfields - 1))
+                $output .= ",";
+        }
+        $output .= "\n";
+
+        $lineNum         = 0;
+        $lastStatementId = 0;
+        //$lastday = date("Ymd",mktime(0, 0, 0,$_montharray[$selectedMonth]+1,0,$_yeararray[$selectedMonth]));
+        $lastday         = str_replace('-', '', $neworderTo1);
+        foreach ($selectedMonthData as $_selectedMonthData) {
+            $statementId   = $_selectedMonthData['statement_id'];
+            $shipmenttId   = $_selectedMonthData['increment_id'];
+            //$updatedDate  =  $_selectedMonthData['created_at'];
+            $updatedDate   = $_selectedMonthData['updated_at'];
+            $date          = str_replace('-', '', substr($updatedDate, 0, 10));
+            //$commissionCsv = str_replace(',','',$this->getCommission($shipmenttId));
+            $commissionCsv = str_replace(',', '', Mage::getModel('udropship/vendor_statement')->getCommissionLogistic($shipmenttId));
+            if ($lastStatementId == $statementId) {
+                $lineNum++;
+            } else {
+                $lineNum = 0;
+            }
+            $lastStatementId = $statementId;
+
+            for ($m = 0; $m < sizeof($fieldlist); $m++) {
+                $fieldvalue = $fieldlist[$m];
+                if ($fieldvalue == "DocNum") {
+                    $output .= $statementId;
+                }
+
+                if ($fieldvalue == "LineNum") {
+                    $output .= $lineNum;
+                }
+
+                if ($fieldvalue == "Dscription") {
+                    $output .= $shipmenttId;
+                }
+
+                if ($fieldvalue == "ShipDate") {
+                    //$output .= $lastday;
+                    $output .= $updatedDate;
+                }
+
+                if ($fieldvalue == "AcctCode") {
+                    $output .= '40101003';
+                }
+
+                if ($fieldvalue == "TaxCode") {
+                    $output .= 'Service';
+                }
+
+                if ($fieldvalue == "PriceBefDi") {
+                    $output .= $commissionCsv;
+                }
+
+                if ($fieldvalue == "LocCode") {
+                    $output .= '2';
+                }
+
+                if ($m < ($numfields - 1)) {
+                    $output .= ",";
+                }
+
+            }
+            $output .= "\n";
+
+
+        }
+        //echo $output;exit;
+        // Send the CSV file to the browser for download
+
+        header("Content-type: text/x-csv");
+        header("Content-Disposition: attachment; filename=$filename.csv");
+        $filePathOfCsv = Mage::getBaseDir('media') . DS . 'misreport' . DS . $filename . '.csv';
+        $fp            = fopen($filePathOfCsv, 'w');
+        fputs($fp, $output);
+        fclose($fp);
+        echo $output;
+        //exit;
+    }
+
+    public function handlingORdrAction()
+    {
+        $month        = $_GET['month'];
+        $year         = $_GET['year'];
+        $currentMonth = date('Y-m-d', mktime(0, 0, 0, $month, date("t") - 7, $year));
+        if ($month == '1') {
+            $year--;
+        }
+        $previousMonth  = date('Y-m-d', mktime(0, 0, 0, $month - 1, date("t") - 6, $year));
+        $statementQuery = Mage::getSingleton('core/resource')->getConnection('custom_db');
+        /*echo "SELECT `statement_id`,`increment_id`,`created_at`,`udropship_vendor` FROM `sales_flat_shipment` as sfs LEFT JOIN `sales_flat_order_payment` as sfop ON sfs.`order_id` = sfop.`parent_id` where sfs.updated_at>='" . $previousMonth . " 00:00:01' AND sfs.updated_at <='" . $currentMonth . " 23:59:59' AND ((sfop.`method` =  'cashondelivery'  AND sfs.`udropship_status` = '7')) AND sfs.`statement_id` IS NOT NULL ORDER BY `statement_id` DESC ";
+        exit;*/
+        $selectedMonthData = $statementQuery->fetchAll("SELECT `statement_id`,`increment_id`,`created_at`,`udropship_vendor` FROM `sales_flat_shipment` as sfs LEFT JOIN `sales_flat_order_payment` as sfop ON sfs.`order_id` = sfop.`parent_id` where sfs.updated_at>='" . $previousMonth . " 00:00:01' AND sfs.updated_at <='" . $currentMonth . " 23:59:59' AND ((sfop.`method` =  'cashondelivery'  AND sfs.`udropship_status` = '7')) AND sfs.`statement_id` IS NOT NULL ORDER BY `statement_id` DESC ");
+        $statementQuery->closeConnection();
+
+        /*echo '<pre>';
+        print_r($selectedMonthData);*/
+
+        //For CSV
+        $filename   = "ORDR" . "-" . $selectedMonth . "-" . $year;
+        $output     = "";
+        $fieldlist1 = array(
+            "DocNum",
+            "HandWritten",
+            "DocType",
+            "DocDate",
+            "DocDueDate",
+            "CardCode",
+            "TaxDate"
+        );
+        $fieldlist  = array(
+            "DocNum",
+            "HandWritten",
+            "DocType",
+            "DocDate",
+            "DocDueDate",
+            "CardCode",
+            "TaxDate"
+        );
+
+
+        $numfields = sizeof($fieldlist1);
+        for ($k = 0; $k < $numfields; $k++) {
+            $output .= $fieldlist1[$k];
+            if ($k < ($numfields - 1))
+                $output .= ",";
+        }
+        $output .= "\n";
+
+        $numfields = sizeof($fieldlist);
+        for ($k = 0; $k < $numfields; $k++) {
+            $output .= $fieldlist[$k];
+            if ($k < ($numfields - 1))
+                $output .= ",";
+        }
+        $output .= "\n";
+
+        $lineNum         = 0;
+        $lastStatementId = 0;
+
+        $lastday = date("Ymd", mktime(0, 0, 0, $month + 1, 0, $year));
+
+
+        foreach ($selectedMonthData as $_selectedMonthData) {
+
+            $statementId = $_selectedMonthData['statement_id'];
+            $shipmenttId = $_selectedMonthData['increment_id'];
+            $createdDate = $_selectedMonthData['created_at'];
+            $vendorId    = $_selectedMonthData['udropship_vendor'];
+            $date        = str_replace('-', '', substr($createdDate, 0, 10));
+
+            if ($lastStatementId != $statementId) {
+
+                for ($m = 0; $m < sizeof($fieldlist); $m++) {
+                    $fieldvalue = $fieldlist[$m];
+                    if ($fieldvalue == "DocNum") {
+                        $output .= $statementId;
+                    }
+
+                    if ($fieldvalue == "HandWritten") {
+                        $output .= 'tYES';
+                    }
+
+                    if ($fieldvalue == "DocType") {
+                        $output .= 'S';
+                    }
+
+                    if ($fieldvalue == "DocDate") {
+                        $output .= $lastday;
+                    }
+
+                    if ($fieldvalue == "DocDueDate") {
+                        $output .= $lastday;
+                    }
+
+                    if ($fieldvalue == "CardCode") {
+                        $output .= 'KCS' . $vendorId;
+                    }
+
+                    if ($fieldvalue == "TaxDate") {
+                        $output .= $lastday;
+                    }
+
+                    if ($m < ($numfields - 1)) {
+                        $output .= ",";
+                    }
+
+                }
+                $output .= "\n";
+
+            }
+            $lastStatementId = $statementId;
+        }
+        // Send the CSV file to the browser for download
+
+        header("Content-type: text/x-csv");
+        header("Content-Disposition: attachment; filename=$filename.csv");
+        echo $output;
+        exit;
+    }
+
+    //API For GMV-NMV
+    public function getGmvMnvAction()
+    {   //var_dump($_GET);exit;
+        $startDate = $_GET['startdate'];
+        $endDate = $_GET['enddate'];
+        $result = array('gmv'=>'', 'nmv' => '', 'nmvcod' => '', 'nmvothers' => '');
+        $readQuery     = Mage::getSingleton('core/resource')->getConnection('custom_db');
+        $sqlnmv = "select
+                    sum(case when (sfs.udropship_status = 1 and sfop.method not in ('cashondelivery','free')) then (sfs.base_shipping_amount+sfs.base_total_value) else 0 end) as Prepaid,
+                    sum(case when (sfs.udropship_status = 7 and sfop.method = 'cashondelivery') then (sfs.base_shipping_amount+sfs.base_total_value) else 0 end) as COD
+                    from sales_flat_shipment sfs
+                    left join sales_flat_order_payment sfop
+                    on sfs.order_id = sfop.parent_id where sfs.created_at BETWEEN '".$startDate." 00:00:01' AND '".$endDate." 23:59:59' AND (sfs.base_shipping_amount+sfs.base_total_value) < 250000";
+        $resultNmv       = $readQuery->query($sqlnmv)->fetch();
+        $result['nmvcod'] = round(intval($resultNmv['COD']));
+        $result['nmvothers'] = round(intval($resultNmv['Prepaid']));
+        $result['nmv'] = round($resultNmv['COD'] + $resultNmv['Prepaid']);
+        $sqlgmv = "SELECT  sum(base_grand_total) as gmv from sales_flat_order where base_grand_total < 250000 and created_at BETWEEN '".$startDate." 00:00:01' AND '".$endDate." 23:59:59'";
+        $resultgmv       = $readQuery->query($sqlgmv)->fetch();
+        $result['gmv'] = round(intval($resultgmv['gmv']));
+        $readQuery->closeConnection();
+        echo (json_encode($result));
     }
 }

@@ -255,6 +255,11 @@ class EM_DeleteOrder_Block_Adminhtml_Sales_Order_Grid extends Mage_Adminhtml_Blo
              'label'=> Mage::helper('sales')->__('Suspected Fraud'),
              'url'  => $this->getUrl('*/sales_order/suspectfraud'),
         ));
+        
+        $this->getMassactionBlock()->addItem('changeordertocod', array(
+             'label'=> Mage::helper('sales')->__('Change order to COD'),
+             'url'  => $this->getUrl('*/sales_order/changeordertocod'),
+        ));
 		
 		$this->getMassactionBlock()->addItem('changePaymentMethod', array(
              'label'=> Mage::helper('sales')->__('Change Method To EBS'),

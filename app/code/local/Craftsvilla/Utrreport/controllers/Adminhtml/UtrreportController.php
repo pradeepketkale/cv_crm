@@ -171,7 +171,8 @@ public function assignAction()
 	->join(array('b'=>'sales_flat_shipment_grid'), 'b.increment_id=main_table.shipment_id', array('order_created_at'))
 	->joinLeft('sales_flat_order_payment','b.order_id = sales_flat_order_payment.parent_id','method')
 				//->where('main_table.type = "Adjusted Against Refund"');
-				->where('main_table.citibank_utr = "" AND (a.updated_at < DATE_SUB(NOW(),INTERVAL 8 DAY)) AND  main_table.shipmentpayout_status=0 AND a.udropship_status IN (1,17) AND sales_flat_order_payment.method IN ("secureebs_standard","purchaseorder","ccavenue_standard","avenues_standard","payucheckout_shared","free")');// a.udropship_status IN (1,15,17)
+				->where('main_table.citibank_utr = "" AND (a.updated_at < DATE_SUB(NOW(),INTERVAL 8 DAY)) AND  main_table.shipmentpayout_status=0 AND a.udropship_status IN (1,17) AND sales_flat_order_payment.method IN ("secureebs_standard","purchaseorder","ccavenue_standard","avenues_standard","payucheckout_shared","free")');
+				//->limit(100);// a.udropship_status IN (1,15,17)
 				//->where('b.increment_id' = '100001562');
 				//->where('main_table.shipmentpayout_update_time <= "'.$selected_date_val.' 23:59:59" AND main_table.citibank_utr != "" AND main_table.shipmentpayout_status=0 AND a.udropship_status = 1 AND sales_flat_order_payment.method IN ("secureebs_standard","purchaseorder","ccavenue_standard")');// a.udropship_status IN (1,15,17)
 
@@ -186,6 +187,7 @@ public function assignAction()
 				$utrNum = $utrreport->getUtrno();
 				$utrBalance = $utrreport->getBalance();
 				$strTest = "";
+				$_liveDate = "2012-08-21 00:00:00";
 				$readOrderCntry = Mage::getSingleton('core/resource')->getConnection('core_read');
 				foreach($shipmentpayout_report1_arr as $shipmentpayout_report1_val)
 				{
@@ -235,20 +237,26 @@ public function assignAction()
 						// 	$discountAmountCoupon = $lastFinaldiscountamt;
 						// }
 						//Modifying By Ankit due to latest shipping amount policy
-						// if($getCountryResult == 'IN')
-						// {
-							$total_amount = $shipmentpayout_report1_val['subtotal']+$shipmentpayout_report1_val['base_shipping_amount']+$discountAmountCoupon;
+						$_orderCurrencyCode = $order->getOrderCurrencyCode();
+						if(($_orderCurrencyCode != 'INR') && (strtotime($shipmentpayout_report1_val['order_created_at']) >= strtotime($_liveDate))){
+							$subTotal = $shipmentpayout_report1_val['subtotal']/1.5 ;
+						} else {
+							$subTotal = $shipmentpayout_report1_val['subtotal'];
+						}
+						 //if($getCountryResult == 'IN')
+						 //{
+							$total_amount = $subTotal+$shipmentpayout_report1_val['base_shipping_amount']+$discountAmountCoupon;
 						//}
 						if($shipmentpayout_report1_val['order_created_at']<='2012-07-02 23:59:59')
 						{
 							if($vendors->getManageShipping() == "imanage")
 							{
 								$vendor_amount = ($total_amount*(1-$commission_amount/100));
-								$kribha_amount = ($shipmentpayout_report1_val['subtotal'] - $vendor_amount)+$itemised_total_shippingcost+$shipmentpayout_report1_val['cod_fee'];
+								$kribha_amount = ($subTotal - $vendor_amount)+$itemised_total_shippingcost+$shipmentpayout_report1_val['cod_fee'];
 							}
 							else {
 								$vendor_amount = (($total_amount+$itemised_total_shippingcost)*(1-$commission_amount/100));
-								$kribha_amount = (($shipmentpayout_report1_val['subtotal']+$itemised_total_shippingcost) - $vendor_amount);
+								$kribha_amount = (($subTotal+$itemised_total_shippingcost) - $vendor_amount);
 							}
 						}
 						else {
@@ -267,9 +275,9 @@ public function assignAction()
 									$sqlQuery = "select courier_name from `sales_flat_shipment_track` where LOWER(`courier_name`) = 'dhl_int' AND parent_id = " .$shipmentpayout_report1_val['entity_id'];
 									$result = $readOrderCntry->query($sqlQuery)->fetch();
 									if($result){
-										$total_amount = $total_amount - $shipmentpayout_report1_val['base_shipping_amount'];
-										$vendor_amount = (($total_amount)*(1-($commission_amount/100)*(1+$service_tax)));
-										$kribha_amount = ((($total_amount)*1.00) - $vendor_amount) + 1000;
+										$total_amount1 = $total_amount - $shipmentpayout_report1_val['base_shipping_amount'];
+										$vendor_amount = (($total_amount1)*(1-($commission_amount/100)*(1+$service_tax)));
+										$kribha_amount = ((($total_amount)*1.00) - $vendor_amount);
 										$shipmentType = "KYC";
 									}else {
 										$vendor_amount = (($total_amount)*(1-($commission_amount/100)*(1+$service_tax)));

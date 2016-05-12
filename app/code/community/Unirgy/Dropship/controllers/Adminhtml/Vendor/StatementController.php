@@ -275,7 +275,7 @@ class Unirgy_Dropship_Adminhtml_Vendor_StatementController extends Mage_Adminhtm
 			$_yeararray[$i] = $_year;
 		}
 		$currentMonth  = date('Y-m-d',mktime(0, 0, 0, $_montharray[$selectedMonth]  , date("t")-7, $_yeararray[$selectedMonth]));
-		$previousMonth = date('Y-m-d',mktime(0, 0, 0, $_montharray[$selectedMonth]-1, date("t")-7,   $_yeararray[$selectedMonth]));
+		$previousMonth = date('Y-m-d',mktime(0, 0, 0, $_montharray[$selectedMonth]-1, date("t")-6,   $_yeararray[$selectedMonth]));
 	$statementQuery =  Mage::getSingleton('core/resource')->getConnection('core_read');
 	/*$selectedMonthData =$statementQuery->fetchAll("SELECT `statement_id`,`increment_id`,`created_at`,`udropship_vendor` FROM `sales_flat_shipment` where MONTH(`created_at`) = '".$_montharray[$selectedMonth]."' AND YEAR(`created_at`) = '".$_yeararray[$selectedMonth]."' AND `statement_id` IS NOT NULL ORDER BY `statement_id` DESC");*/
 	$selectedMonthData =$statementQuery->fetchAll("SELECT `statement_id`,`increment_id`,`updated_at`,`udropship_vendor` FROM `sales_flat_shipment` where `updated_at` > '".$previousMonth." 00:00:01' AND `updated_at` <= '".$currentMonth." 23:59:59' AND `statement_id` IS NOT NULL ORDER BY `statement_id` DESC");

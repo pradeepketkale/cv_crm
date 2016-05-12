@@ -25,12 +25,12 @@ class Craftsvilla_Shipmentpayout_Block_Adminhtml_Shipmentpayout_Grid extends Mag
       			->columns(array(
       						'base_discount_amount'=>$this->_getFlatExpressionColumn('base_discount_amount')
       			));
-      //$collection->getSelect()->order('a.increment_id DESC');			
+      //$collection->getSelect()->order('a.increment_id DESC');
       /*echo $collection->getSelect()->__toString();
       exit();*/
       /*echo "<pre>";
       print_r($collection->getData());
-      exit();*/					
+      exit();*/
       $this->setCollection($collection);
       return parent::_prepareCollection();
   }
@@ -49,14 +49,14 @@ class Craftsvilla_Shipmentpayout_Block_Adminhtml_Shipmentpayout_Grid extends Mag
           'align'     =>'left',
           'index'     => 'shipment_id',
       ));
-      
+
       $this->addColumn('order_id', array(
           'header'    => Mage::helper('shipmentpayout')->__('Order Id'),
           'align'     =>'left',
           'index'     => 'order_id',
-      	  'filter_index' => 'main_table.order_id'	
+      	  'filter_index' => 'main_table.order_id'
       ));
-      
+
       $this->addColumn('order_created_at', array(
           'header'    => Mage::helper('shipmentpayout')->__('Order Date'),
           'align'     =>'left',
@@ -64,7 +64,7 @@ class Craftsvilla_Shipmentpayout_Block_Adminhtml_Shipmentpayout_Grid extends Mag
           'type' 	  => 'datetime',
       ));
 
-	  	 
+
 		$this->addColumn('method', array(
 		    'header'    => Mage::helper('sales')->__('Payment Method Name'),
 		    'index'     => 'method',
@@ -86,18 +86,18 @@ class Craftsvilla_Shipmentpayout_Block_Adminhtml_Shipmentpayout_Grid extends Mag
           'index'     => 'shipmentpayout_status',
           'type'      => 'options',
           'options'   => array(
-		  	  2 => 'Refunded',	
+		  	  2 => 'Refunded',
               1 => 'Paid',
               0 => 'Unpaid',
           ),
       ));
-      
+
       $this->addColumn('citibank_utr', array(
           'header'    => Mage::helper('shipmentpayout')->__('CitiBank UTR No.'),
           'align'     =>'left',
           'index'     => 'citibank_utr',
       ));
-      
+
       $this->addColumn('udropship_status', array(
           'header'    => Mage::helper('shipmentpayout')->__('PO Status'),
           'align'     =>'left',
@@ -105,7 +105,7 @@ class Craftsvilla_Shipmentpayout_Block_Adminhtml_Shipmentpayout_Grid extends Mag
       	  'type' => 'options',
           'options' => Mage::getSingleton('udropship/source')->setPath('shipment_statuses')->toOptionHash(),
       ));
-      
+
       $this->addColumn('udropship_vendor', array(
           'header'    => Mage::helper('shipmentpayout')->__('Vendor'),
           'align'     =>'left',
@@ -120,7 +120,7 @@ class Craftsvilla_Shipmentpayout_Block_Adminhtml_Shipmentpayout_Grid extends Mag
           'index'     => 'refundtodo',
 		  'type'  	  => 'price',
 		  'currency'  => 'base_currency_code',
-          'currency_code' => Mage::getStoreConfig('currency/options/base'),	
+          'currency_code' => Mage::getStoreConfig('currency/options/base'),
       ));
       $this->addColumn('subtotal', array(
             'header' => Mage::helper('shipmentpayout')->__('Subtotal'),
@@ -130,7 +130,7 @@ class Craftsvilla_Shipmentpayout_Block_Adminhtml_Shipmentpayout_Grid extends Mag
             'currency' => 'base_currency_code',
             'currency_code' => Mage::getStoreConfig('currency/options/base'),
       ));
-        
+
      /* $this->addColumn('tax_amount', array(
             'header' => Mage::helper('shipmentpayout')->__('Tax Amount'),
             'index' => 'tax_amount',
@@ -157,7 +157,7 @@ class Craftsvilla_Shipmentpayout_Block_Adminhtml_Shipmentpayout_Grid extends Mag
             'currency' => 'base_currency_code',
             'currency_code' => Mage::getStoreConfig('currency/options/base'),
       ));
-	  
+
 	  $this->addColumn('commission_amount', array(
             'header' => Mage::helper('shipmentpayout')->__('Commission Amount'),
             'index' => 'commission_amount',
@@ -183,9 +183,9 @@ class Craftsvilla_Shipmentpayout_Block_Adminhtml_Shipmentpayout_Grid extends Mag
           'index'     => 'refunded_amount',
 		  'type'  	  => 'price',
 		  'currency'  => 'base_currency_code',
-          'currency_code' => Mage::getStoreConfig('currency/options/base'),	
+          'currency_code' => Mage::getStoreConfig('currency/options/base'),
       ));
-      
+
       /*$this->addColumn('base_discount_amount', array(
             'header' => Mage::helper('shipmentpayout')->__('Discount Amount'),
             'index' => 'base_discount_amount',
@@ -194,7 +194,7 @@ class Craftsvilla_Shipmentpayout_Block_Adminhtml_Shipmentpayout_Grid extends Mag
             'currency' => 'base_currency_code',
             'currency_code' => Mage::getStoreConfig('currency/options/base'),
       ));*/
-      
+
       /*$this->addColumn('commission_percent', array(
             'header' => Mage::helper('shipmentpayout')->__('Commission Percentage'),
             'index' => 'commission_percent',
@@ -204,18 +204,18 @@ class Craftsvilla_Shipmentpayout_Block_Adminhtml_Shipmentpayout_Grid extends Mag
 	   		'header' => Mage::helper('shipmentpayout')->__('Merchant_Id'),
 			'index'  => 'merchant_id_city',
 	   ));
-	   
+
 
 	  //Added By Dileswar On dated 30-03-2013 to add a extra column
-	  
-	  
+
+
 	  /* $this->addColumn('intshipingcost', array(
           'header'    => Mage::helper('shipmentpayout')->__('InterShippingCost'),
           'align'     =>'left',
           'index'     => 'intshipingcost',
 		  'type'  	  => 'price',
           'currency'  => 'base_currency_code',
-          'currency_code' => Mage::getStoreConfig('currency/options/base'),	
+          'currency_code' => Mage::getStoreConfig('currency/options/base'),
       ));*/
 	  $this->addColumn('adjustment',array(
 	  		'header'	=>Mage::helper('shipmentpayout')->__('Adjustment Amount'),
@@ -225,7 +225,7 @@ class Craftsvilla_Shipmentpayout_Block_Adminhtml_Shipmentpayout_Grid extends Mag
 			'currency'  => 'base_currency_code',
 			'currency_code' => Mage::getStoreConfig('currency/options/base'),
 	  ));
-	  
+
 	  $this->addColumn('comment',array(
 	  		'header'	=>Mage::helper('shipmentpayout')->__('Comment'),
 			'index'     => 'comment',
@@ -250,14 +250,14 @@ class Craftsvilla_Shipmentpayout_Block_Adminhtml_Shipmentpayout_Grid extends Mag
                 'index'     => 'stores',
                 'is_system' => true,
       ));
-        
+
       //$this->addExportType('*/*/exportShipmentpayoutCsv', Mage::helper('adminhtml')->__('CSV'));
       //$this->addExportType('*/*/exportShipmentpayoutXml', Mage::helper('adminhtml')->__('XML'));
 
-		
+
 	  $this->addExportType('*/*/exportCsv', Mage::helper('shipmentpayout')->__('CSV'));
 	  $this->addExportType('*/*/exportXml', Mage::helper('shipmentpayout')->__('XML'));
-	  
+
       return parent::_prepareColumns();
   }
 
@@ -265,7 +265,7 @@ class Craftsvilla_Shipmentpayout_Block_Adminhtml_Shipmentpayout_Grid extends Mag
     {
         $this->setMassactionIdField('shipmentpayout_id');
         $this->getMassactionBlock()->setFormFieldName('shipmentpayout');
-		
+
 		///$this->getMassactionBlock()->addItem('delete', array(
         ///     'label'    => Mage::helper('web')->__('Delete'),
         ///     'url'      => $this->getUrl('*/*/massDelete'),
@@ -273,9 +273,9 @@ class Craftsvilla_Shipmentpayout_Block_Adminhtml_Shipmentpayout_Grid extends Mag
         ///));
 
         //$statuses = Mage::getSingleton('shipmentpayout/status')->getOptionArray();
-       
+
         $statuses = array('2'=>'Refunded','1'=>'Paid', '0'=>'Unpaid');
-        
+
         array_unshift($statuses, array('label'=>'', 'value'=>''));
         $this->getMassactionBlock()->addItem('shipmentpayout_status', array(
              'label'=> Mage::helper('shipmentpayout')->__('Change status'),
@@ -292,8 +292,8 @@ class Craftsvilla_Shipmentpayout_Block_Adminhtml_Shipmentpayout_Grid extends Mag
                          'type' => 'date',
                          'class' => 'required-entry',
                          'format' 	  => 'yyyy-MM-dd',
-          				 'image' 	  => $this->getSkinUrl('images/grid-cal.gif'), 
-		  				 'input_format' => Varien_Date::DATE_INTERNAL_FORMAT, 
+          				 'image' 	  => $this->getSkinUrl('images/grid-cal.gif'),
+		  				 'input_format' => Varien_Date::DATE_INTERNAL_FORMAT,
                          'label' => Mage::helper('shipmentpayout')->__('Date')
                      ),array(
                          'name' => 'utrno',
@@ -302,7 +302,7 @@ class Craftsvilla_Shipmentpayout_Block_Adminhtml_Shipmentpayout_Grid extends Mag
                      )
              )
         ));
-        
+
         $this->getMassactionBlock()->addItem('report1', array(
              'label'=> Mage::helper('shipmentpayout')->__('Nodal Report'),
              'url'  => $this->getUrl('*/*/report1', array('_current'=>true)),
@@ -312,18 +312,18 @@ class Craftsvilla_Shipmentpayout_Block_Adminhtml_Shipmentpayout_Grid extends Mag
                          'type' => 'date',
                          'class' => 'required-entry',
                          'format' 	  => 'yyyy-MM-dd',
-          				 'image' 	  => $this->getSkinUrl('images/grid-cal.gif'), 
-		  				 'input_format' => Varien_Date::DATE_INTERNAL_FORMAT, 
+          				 'image' 	  => $this->getSkinUrl('images/grid-cal.gif'),
+		  				 'input_format' => Varien_Date::DATE_INTERNAL_FORMAT,
                          'label' => Mage::helper('shipmentpayout')->__('Date')
                      )
              )
         ));
-        
+
         $this->getMassactionBlock()->addItem('report2', array(
              'label'=> Mage::helper('shipmentpayout')->__('Report2'),
              'url'  => $this->getUrl('*/*/report2', array('_current'=>true)),
         ));
-		
+
 		$this->getMassactionBlock()->addItem('atxtreport', array(
              'label'=> Mage::helper('shipmentpayout')->__('Non-Nodal Report'),
              'url'  => $this->getUrl('*/*/atxtreport', array('_current'=>true)),
@@ -333,13 +333,13 @@ class Craftsvilla_Shipmentpayout_Block_Adminhtml_Shipmentpayout_Grid extends Mag
                          'type' => 'date',
                          'class' => 'required-entry',
                          'format' 	  => 'yyyy-MM-dd',
-          				 'image' 	  => $this->getSkinUrl('images/grid-cal.gif'), 
-		  				 'input_format' => Varien_Date::DATE_INTERNAL_FORMAT, 
+          				 'image' 	  => $this->getSkinUrl('images/grid-cal.gif'),
+		  				 'input_format' => Varien_Date::DATE_INTERNAL_FORMAT,
                          'label' => Mage::helper('shipmentpayout')->__('Date')
                      )
              )
         ));
-        
+
 		$this->getMassactionBlock()->addItem('codreport', array(
              'label'=> Mage::helper('shipmentpayout')->__('COD Report'),
              'url'  => $this->getUrl('*/*/codreport', array('_current'=>true)),
@@ -349,8 +349,8 @@ class Craftsvilla_Shipmentpayout_Block_Adminhtml_Shipmentpayout_Grid extends Mag
                          'type' => 'date',
                          'class' => 'required-entry',
                          'format' 	  => 'yyyy-MM-dd',
-          				 'image' 	  => $this->getSkinUrl('images/grid-cal.gif'), 
-		  				 'input_format' => Varien_Date::DATE_INTERNAL_FORMAT, 
+          				 'image' 	  => $this->getSkinUrl('images/grid-cal.gif'),
+		  				 'input_format' => Varien_Date::DATE_INTERNAL_FORMAT,
                          'label' => Mage::helper('shipmentpayout')->__('Date')
                      )
              )
@@ -365,8 +365,8 @@ class Craftsvilla_Shipmentpayout_Block_Adminhtml_Shipmentpayout_Grid extends Mag
                          'type' => 'date',
                          'class' => 'required-entry',
                          'format'     => 'yyyy-MM-dd',
-                   'image'    => $this->getSkinUrl('images/grid-cal.gif'), 
-               'input_format' => Varien_Date::DATE_INTERNAL_FORMAT, 
+                   'image'    => $this->getSkinUrl('images/grid-cal.gif'),
+               'input_format' => Varien_Date::DATE_INTERNAL_FORMAT,
                          'label' => Mage::helper('shipmentpayout')->__('Date')
                      )
              )
@@ -380,15 +380,15 @@ class Craftsvilla_Shipmentpayout_Block_Adminhtml_Shipmentpayout_Grid extends Mag
         //                 'type' => 'date',
         //                 'class' => 'required-entry',
        //                  'format' 	  => 'yyyy-MM-dd',
-         // 				 'image' 	  => $this->getSkinUrl('images/grid-cal.gif'), 
-		 // 				 'input_format' => Varien_Date::DATE_INTERNAL_FORMAT, 
+         // 				 'image' 	  => $this->getSkinUrl('images/grid-cal.gif'),
+		 // 				 'input_format' => Varien_Date::DATE_INTERNAL_FORMAT,
          //                'label' => Mage::helper('shipmentpayout')->__('Date')
                          //'values' => $statuses
          //            )
          //    )
        // ));
-	  
-	 // Added By Dileswar On dated 30-0-2013   
+
+	 // Added By Dileswar On dated 30-0-2013
 	   $this->getMassactionBlock()->addItem('refundedamount', array(
                  'label'=> Mage::helper('shipmentpayout')->__('Amount To Refund'),
                  'url'  => $this->getUrl('*/*/refundedamount', array('_current'=>true)),
@@ -403,23 +403,23 @@ class Craftsvilla_Shipmentpayout_Block_Adminhtml_Shipmentpayout_Grid extends Mag
 		$this->getMassactionBlock()->addItem('autorefund', array(
                  'label'=> Mage::helper('shipmentpayout')->__('Auto Refund'),
                  'url'  => $this->getUrl('*/*/autorefund', array('_current'=>true)),
-				 
-            ));	
-			
+
+            ));
+
 		$this->getMassactionBlock()->addItem('autorefundpayu', array(
                  'label'=> Mage::helper('shipmentpayout')->__('Auto Refund Payu'),
                  'url'  => $this->getUrl('*/*/autorefundpayu', array('_current'=>true)),
-				 
-            ));	
+
+            ));
 		$this->getMassactionBlock()->addItem('autorefundcod', array(
                  'label'=> Mage::helper('shipmentpayout')->__('Auto Refund Cod'),
                  'url'  => $this->getUrl('*/*/autorefundcod', array('_current'=>true)),
-				 
-            ));	
-			
+
+            ));
+
         return $this;
     }
-	
+
 
   	public function getRowUrl($row)
   	{
@@ -429,7 +429,7 @@ class Craftsvilla_Shipmentpayout_Block_Adminhtml_Shipmentpayout_Grid extends Mag
  	{
           return $this->getUrl('*/*/grid', array('_current' => true));
   	}
-  
+
 	protected function _getFlatExpressionColumn($key, $bypass=true)
     {
     	$result = $bypass ? $key : null;
