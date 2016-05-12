@@ -15,6 +15,12 @@ class Craftsvilla_Vendorseo_Block_Adminhtml_Vendorseo_Grid extends Mage_Adminhtm
 		protected function _prepareCollection()
 		{
 				$collection = Mage::getModel("vendorseo/vendorseo")->getCollection();
+				$collection->getSelect()->join( 
+					 array('t2'=>'udropship_vendor'),
+					 'main_table.vendor_id = t2.vendor_id',
+					  array('t2.vendor_name')
+					 );
+				
 				$this->setCollection($collection);
 				return parent::_prepareCollection();
 		}
@@ -27,23 +33,27 @@ class Craftsvilla_Vendorseo_Block_Adminhtml_Vendorseo_Grid extends Mage_Adminhtm
 			        "type" => "int",
 				"index" => "vendor_id",
 				));
-                
-				$this->addColumn("vendor_name", array(
-				"header" => Mage::helper("vendorseo")->__("Name"),
+               
+            $this->addColumn("vendor_name", array(
+				"header" => Mage::helper("vendorseo")->__("Vendor Name"),
 				"index" => "vendor_name",
 				));
+					
 				$this->addColumn("meta_title", array(
 				"header" => Mage::helper("vendorseo")->__("Meta Title"),
 				"index" => "meta_title",
 				));
+				
 				$this->addColumn("meta_description", array(
 				"header" => Mage::helper("vendorseo")->__("Meta Description"),
 				"index" => "meta_description",
 				));
+				
 				$this->addColumn("meta_keywords", array(
 				"header" => Mage::helper("vendorseo")->__("Meta Keywords"),
 				"index" => "meta_keywords",
 				));
+				
 			$this->addExportType('*/*/exportCsv', Mage::helper('sales')->__('CSV')); 
 			$this->addExportType('*/*/exportExcel', Mage::helper('sales')->__('Excel'));
 

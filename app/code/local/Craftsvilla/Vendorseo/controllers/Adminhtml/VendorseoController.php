@@ -98,7 +98,7 @@ class Craftsvilla_Vendorseo_Adminhtml_VendorseoController extends Mage_Adminhtml
 					         $vendorCheck = Mage::helper('vendorseo')->getVendorSeoData($vendor_id);
 								$vendorData  = $vendorCheck->getData()[0] ;
 								
-								$vendorName = Mage::helper('vendorseo')->getVendorNameById($vendor_id);
+								//$vendorName = Mage::helper('vendorseo')->getVendorNameById($vendor_id);
 								$metaTitle = $post_data['meta_title'];
 								$metaDescription = $post_data['meta_description'];
 								$metaKeywords = $post_data['meta_keywords'];
@@ -107,18 +107,18 @@ class Craftsvilla_Vendorseo_Adminhtml_VendorseoController extends Mage_Adminhtml
 								// check for update seodata from edit section
 								if($this->getRequest()->getParam("id")) {
 								 $model = Mage::getModel("vendorseo/vendorseo")->load($this->getRequest()->getParam("id"));
-								 $vendorName = $model->getVendorName();
+								 //$vendorName = $model->getVendorName();
 								 $vendor_id = $model->getVendorid();
 								} elseif(!empty($vendorData)) { // update seodata from select vendor from dropdown
 					          $id = $vendorData['id'];
 					          $model = Mage::getModel("vendorseo/vendorseo")->load($id);
-					          $vendorName = $model->getVendorName();
+					         // $vendorName = $model->getVendorName();
 								 $vendor_id = $model->getVendorid();
 					         } else { // new seo data
 								 $model = Mage::getModel("vendorseo/vendorseo");
 								}
 								$model->setData('vendor_id', $vendor_id);
-								$model->setData('vendor_name', $vendorName);
+								//$model->setData('vendor_name', $vendorName);
 								$model->setData('meta_title', $metaTitle);
 								$model->setData('meta_description', $metaDescription);
 								$model->setData('meta_keywords', $metaKeywords);

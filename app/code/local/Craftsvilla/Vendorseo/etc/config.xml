@@ -25,7 +25,7 @@
 		<class>Craftsvilla_Vendorseo_Model_Mysql4</class>
 		<entities>		  
 			  <vendorseo>
-				<table>vendorseo</table>
+				<table>cv_vendor</table>
 			  </vendorseo>
 		</entities>
 	  </vendorseo_mysql4>
