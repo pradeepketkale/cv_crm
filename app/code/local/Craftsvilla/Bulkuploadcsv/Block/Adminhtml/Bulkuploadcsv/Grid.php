@@ -5,19 +5,21 @@ class Craftsvilla_Bulkuploadcsv_Block_Adminhtml_Bulkuploadcsv_Grid extends Mage_
 {
   public function __construct()
   {
-      parent::__construct();
-	   $this->setId('bulkuploadcsvGrid');
-      $this->setDefaultSort('bulkuploadid');
-      $this->setDefaultDir('DESC');
-      $this->setSaveParametersInSession(true);
-	  $this->setUseAjax(true);
+    parent::__construct();
+    $this->setId('bulkuploadcsvGrid');
+    $this->setDefaultSort('bulkuploadid');
+    $this->setDefaultDir('DESC');
+    $this->setSaveParametersInSession(true);
+    $this->setDefaultLimit(50);
+    $this->setUseAjax(true);
   }
 
   protected function _prepareCollection()
   {
-      $collection = Mage::getModel('bulkuploadcsv/bulkuploadcsv')->getCollection();
-	  $this->setCollection($collection);
-	  return parent::_prepareCollection();
+    $collection = Mage::getModel('bulkuploadcsv/bulkuploadcsv')->getCollection();
+    $collection->getSelect()->limit(50);
+    $this->setCollection($collection);
+    return parent::_prepareCollection();
   }
 
   protected function _prepareColumns()
@@ -56,6 +58,7 @@ class Craftsvilla_Bulkuploadcsv_Block_Adminhtml_Bulkuploadcsv_Grid extends Mage_
 			  3 => 'Submitted',
 			  4 => 'Rejected',
 			  5 => 'Approved',
+        6 => 'Approved For Variants',
           ),
       ));
 	   $this->addColumn('vendor', array(
@@ -85,14 +88,15 @@ class Craftsvilla_Bulkuploadcsv_Block_Adminhtml_Bulkuploadcsv_Grid extends Mage_
           'header'    => Mage::helper('bulkuploadcsv')->__('Error Report'),
           'align'     =>'left',
           'index'     => 'errorreport',
-		  'type' => 'text',
+		      'renderer'  => 'Craftsvilla_Bulkuploadcsv_Block_Adminhtml_Bulkuploadcsv_Renderer_Error',
 		
       ));
+
 	   $this->addColumn('filepath', array(
-          'header'    => Mage::helper('bulkuploadcsv')->__('File Path'),
+          'header'    => Mage::helper('bulkuploadcsv')->__('Download File'),
           'align'     =>'left',
           'index'     => 'filepath',
-		  'type' => 'text',
+		      'renderer'  => 'Craftsvilla_Bulkuploadcsv_Block_Adminhtml_Bulkuploadcsv_Renderer_File',
 		
       ));
 	  
@@ -157,6 +161,6 @@ class Craftsvilla_Bulkuploadcsv_Block_Adminhtml_Bulkuploadcsv_Grid extends Mage_
 	public function getGridUrl()
  	{
           return $this->getUrl('*/*/grid', array('_current' => true));
-  	}
+  }
 
 }
