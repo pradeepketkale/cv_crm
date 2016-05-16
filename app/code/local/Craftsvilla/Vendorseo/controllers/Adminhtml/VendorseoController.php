@@ -79,7 +79,12 @@ class Craftsvilla_Vendorseo_Adminhtml_VendorseoController extends Mage_Adminhtml
 					  $id = $_GET['v_id'] ;
 					  $seoData = Mage::helper('vendorseo')->getVendorSeoData($id);
 					  $data = $seoData->getData();
-					  echo json_encode($data[0]);			  
+					  if(empty($data[0])) {
+								 $data['empty'] = 'Y';
+								echo json_encode($data);
+					  } else {
+					         echo json_encode($data[0]);
+					  }
 					  exit ;
 					 }
 		}
@@ -89,7 +94,7 @@ class Craftsvilla_Vendorseo_Adminhtml_VendorseoController extends Mage_Adminhtml
 
 			$post_data=$this->getRequest()->getPost();
 			
-		       
+		      
 			    if ($post_data) {
 				       
 				    
@@ -106,31 +111,31 @@ class Craftsvilla_Vendorseo_Adminhtml_VendorseoController extends Mage_Adminhtml
 								
 								// check for update seodata from edit section
 								if($this->getRequest()->getParam("id")) {
+										 
 								 $model = Mage::getModel("vendorseo/vendorseo")->load($this->getRequest()->getParam("id"));
-								 //$vendorName = $model->getVendorName();
-								 $vendor_id = $model->getVendorid();
-								} elseif(!empty($vendorData)) { // update seodata from select vendor from dropdown
-					          $id = $vendorData['id'];
-					          $model = Mage::getModel("vendorseo/vendorseo")->load($id);
-					         // $vendorName = $model->getVendorName();
-								 $vendor_id = $model->getVendorid();
-					         } else { // new seo data
-								 $model = Mage::getModel("vendorseo/vendorseo");
+							       try {
+										  $vendor_id =  $this->getRequest()->getParam("id");
+										  
+										  Mage::helper('vendorseo')->updateVendorSeoData($post_data,$vendor_id);
+										  }
+										  catch (Exception $e) {
+										  Mage::getSingleton("adminhtml/session")->addError($e->getMessage());
+										  }
+								
+								} else { // new seo data
+										  try {
+										  Mage::helper('vendorseo')->insertVendorSeoData($post_data,$vendor_id);
+										  }
+										  catch (Exception $e) {
+										  Mage::getSingleton("adminhtml/session")->addError($e->getMessage());
+										  }
 								}
-								$model->setData('vendor_id', $vendor_id);
-								//$model->setData('vendor_name', $vendorName);
-								$model->setData('meta_title', $metaTitle);
-								$model->setData('meta_description', $metaDescription);
-								$model->setData('meta_keywords', $metaKeywords);
-								$model->setData('vendor_description', $vendorDescription);
-								$model->save();
 								
-								
-								Mage::getSingleton("adminhtml/session")->addSuccess(Mage::helper("adminhtml")->__("Vendorseo was successfully saved"));
-								//Mage::getSingleton("adminhtml/session")->setVendorseoData(false);
+								Mage::getSingleton("adminhtml/session")->addSuccess(Mage::helper("adminhtml")->__("Vendor Seo Data was successfully saved"));
+								Mage::getSingleton("adminhtml/session")->setVendorseoData(false);
 								
 								if ($this->getRequest()->getParam("back")) {
-								$this->_redirect("*/*/edit", array("id" => $model->getId()));
+								$this->_redirect("*/*/edit", array("id" => $model->getVendorId()));
 								return;
 								}
 								$this->_redirect("*/*/");
@@ -155,7 +160,8 @@ class Craftsvilla_Vendorseo_Adminhtml_VendorseoController extends Mage_Adminhtml
 					try {
 						$model = Mage::getModel("vendorseo/vendorseo");
 						$model->setId($this->getRequest()->getParam("id"))->delete();
-						Mage::getSingleton("adminhtml/session")->addSuccess(Mage::helper("adminhtml")->__("Item was successfully deleted"));
+						//echo '<pre>'; print_r(Mage::registry("vendorseo_data")); exit ;
+						Mage::getSingleton("adminhtml/session")->addSuccess(Mage::helper("adminhtml")->__( "Vendor Seo Data was successfully deleted"));
 						$this->_redirect("*/*/");
 					} 
 					catch (Exception $e) {

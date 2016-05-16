@@ -68,7 +68,7 @@
 		  <children>
 			  <vendorseo module="vendorseo">
 				 <title>Manage Vendorseo</title>
-				<sort_order>742</sort_order>
+				<sort_order>999</sort_order>
 				<action>admin_vendorseo/adminhtml_vendorseo</action>
 			  </vendorseo>
 			</children>
@@ -85,7 +85,7 @@
 			<children>
 				  <vendorseo translate="title">
 					<title>Manage Vendorseo</title>
-					<sort_order>742</sort_order>
+					<sort_order>999</sort_order>
 				  </vendorseo>
 			  </children>
 		  </sales>

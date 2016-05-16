@@ -28,7 +28,7 @@ class Craftsvilla_Vendorseo_Block_Adminhtml_Vendorseo_Edit extends Mage_Adminhtm
 		public function getHeaderText()
 		{
 				if( Mage::registry("vendorseo_data") && Mage::registry("vendorseo_data")->getId() ){
-				return Mage::helper("vendorseo")->__("Edit Item '%s'", $this->htmlEscape(Mage::registry("vendorseo_data")->getVendorName()));
+				return Mage::helper("vendorseo")->__("Edit SeoData");
 				} 
 				else{
 				return Mage::helper("vendorseo")->__("Add Item");

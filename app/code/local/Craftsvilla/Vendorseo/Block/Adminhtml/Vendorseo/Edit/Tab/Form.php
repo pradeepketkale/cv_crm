@@ -6,19 +6,8 @@ class Craftsvilla_Vendorseo_Block_Adminhtml_Vendorseo_Edit_Tab_Form extends Mage
 				
 				$form = new Varien_Data_Form();
 				$this->setForm($form);
-
-				$read = Mage::getSingleton('core/resource')->getConnection('core_read');
-				$query = "select vendor_id, vendor_name from vendor_info_craftsvilla where vendor_name is not null and vendor_name <> '' order by vendor_name asc";
-				$result = $read->query($query)->fetchAll();
-                $read->closeConnection();
-				$vendor_name = array('-1' => "Please select vendor.");
-
-				foreach ($result as $key => $value) {
-					$vendor_name[$value['vendor_id']] = $value['vendor_name'];
-				}
-
-				$fieldset = $form->addFieldset("vendorseo_form", array("legend"=>Mage::helper("vendorseo")->__("Item information")));
-                 
+					 $fieldset = $form->addFieldset("vendorseo_form", array("legend"=>Mage::helper("vendorseo")->__("Seo Information")));
+					 $vendor_name = Mage::helper('vendorseo')->getVendorList();                 
 				if($this->getRequest()->getParam('id')) {
 								$flag = true;
 				 } else {
@@ -42,18 +31,29 @@ class Craftsvilla_Vendorseo_Block_Adminhtml_Vendorseo_Edit_Tab_Form extends Mage
 										method: "get",
 										requestHeaders: {Accept: "application/json"},
 										parameters: {v_id:vendorId},
-										onLoading: function (response) {
-										  
+										onLoading: function (transport) {
+										 
 										},
 										onSuccess: function(transport) {
-										  var response = transport.responseText.evalJSON(true);
+										  var response = transport.responseText.evalJSON();
+										
+										  if(response.empty == "Y"){
+										  document.getElementById("meta_title").value = "";
+										  document.getElementById("meta_description").value = "";
+										  document.getElementById("meta_keywords").value = "";
+										  tinyMCE.activeEditor.setContent("");		
+										  } else {   
 										  document.getElementById("meta_title").value = response.meta_title;
 										  document.getElementById("meta_description").value = response.meta_description;
 										  document.getElementById("meta_keywords").value = response.meta_keywords;
 										  tinyMCE.activeEditor.setContent(response.vendor_description);
+										  }
 										},
 										onFailure: function(transport) {
-										
+										  document.getElementById("meta_title").value = "";
+										  document.getElementById("meta_description").value = "";
+										  document.getElementById("meta_keywords").value = "";
+										  tinyMCE.activeEditor.setContent("");		
 										}
 					    });
 						

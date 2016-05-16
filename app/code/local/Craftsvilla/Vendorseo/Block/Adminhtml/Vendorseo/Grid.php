@@ -27,7 +27,7 @@ class Craftsvilla_Vendorseo_Block_Adminhtml_Vendorseo_Grid extends Mage_Adminhtm
 		protected function _prepareColumns()
 		{
 				$this->addColumn("vendor_id", array(
-				"header" => Mage::helper("vendorseo")->__("ID"),
+				"header" => Mage::helper("vendorseo")->__("Vendor ID"),
 				"align" =>"right",
 				"width" => "50px",
 			        "type" => "int",
