@@ -826,9 +826,9 @@ $customerShipaddressHtml = "<table border='0' width='750px'><tr><td style='font-
             $write->query($queryUpdateForClosingbalance);
             //Added by Ankit for Panalty Invoice Implementation
             $user = Mage::getSingleton('admin/session');
-            $userUsername = $user->getUser()->getUsername();
+            $userId = $user->getUser()->getUserId();
             $today = date("Y-m-d H:i:s");
-            $queryUpdatePenalty = "INSERT INTO `udropship_vendor_penalty_cv`(`penalty_id`, `increment_id`, `penalty_amount`, `penalty_waiveoff`, `created_at`, `updated_at`, `created_by`, `updated_by`) VALUES ('DEFAULT','".$_shipmentId."','".$penaltyAmount."','N','".$today."','".$today."','".$userUsername."','".$userUsername."' )";
+            $queryUpdatePenalty = "INSERT INTO `cv_udropship_vendor_penalty`(`penalty_id`, `increment_id`, `penalty_amount`, `penalty_waiveoff`, `created_by`, `created_at`, `updated_by`, `updated_at`) VALUES ('DEFAULT','".$_shipmentId."','".$penaltyAmount."','N','".$userId."','".$today."','".$userId."','".$today."' )";
 
             $write->query($queryUpdatePenalty);
             $write->closeConnection();
