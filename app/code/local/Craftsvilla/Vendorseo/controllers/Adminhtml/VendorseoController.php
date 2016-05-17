@@ -91,65 +91,60 @@ class Craftsvilla_Vendorseo_Adminhtml_VendorseoController extends Mage_Adminhtml
 
 		public function saveAction()
 		{
-
 			$post_data=$this->getRequest()->getPost();
-			
-		      
-			    if ($post_data) {
-				       
-				    
+			if ($post_data) {
 				try {
-								$vendor_id = (int)$post_data['vendor_name'];
-					         $vendorCheck = Mage::helper('vendorseo')->getVendorSeoData($vendor_id);
-								$vendorData  = $vendorCheck->getData()[0] ;
-								
-								//$vendorName = Mage::helper('vendorseo')->getVendorNameById($vendor_id);
-								$metaTitle = $post_data['meta_title'];
-								$metaDescription = $post_data['meta_description'];
-								$metaKeywords = $post_data['meta_keywords'];
-								$vendorDescription = $post_data['vendor_description'];
-								
-								// check for update seodata from edit section
-								if($this->getRequest()->getParam("id")) {
-										 
-								 $model = Mage::getModel("vendorseo/vendorseo")->load($this->getRequest()->getParam("id"));
-							       try {
-										  $vendor_id =  $this->getRequest()->getParam("id");
-										  
-										  Mage::helper('vendorseo')->updateVendorSeoData($post_data,$vendor_id);
-										  }
-										  catch (Exception $e) {
-										  Mage::getSingleton("adminhtml/session")->addError($e->getMessage());
-										  }
-								
-								} else { // new seo data
-										  try {
-										  Mage::helper('vendorseo')->insertVendorSeoData($post_data,$vendor_id);
-										  }
-										  catch (Exception $e) {
-										  Mage::getSingleton("adminhtml/session")->addError($e->getMessage());
-										  }
-								}
-								
-								Mage::getSingleton("adminhtml/session")->addSuccess(Mage::helper("adminhtml")->__("Vendor Seo Data was successfully saved"));
-								Mage::getSingleton("adminhtml/session")->setVendorseoData(false);
-								
-								if ($this->getRequest()->getParam("back")) {
-								$this->_redirect("*/*/edit", array("id" => $model->getVendorId()));
-								return;
-								}
-								$this->_redirect("*/*/");
-								return;
-								} 
+					$vendor_id = (int)$post_data['vendor_name'];
+					$vendorCheck = Mage::helper('vendorseo')->getVendorSeoData($vendor_id);
+					$vendorData  = $vendorCheck->getData()[0] ;
+
+					//$vendorName = Mage::helper('vendorseo')->getVendorNameById($vendor_id);
+					$metaTitle = $post_data['meta_title'];
+					$metaDescription = $post_data['meta_description'];
+					$metaKeywords = $post_data['meta_keywords'];
+					$vendorDescription = $post_data['vendor_description'];
+
+					// check for update seodata from edit section
+					if($this->getRequest()->getParam("id")) {
+							 
+					 $model = Mage::getModel("vendorseo/vendorseo")->load($this->getRequest()->getParam("id"));
+					   try {
+							  $vendor_id =  $this->getRequest()->getParam("id");
+							  
+							  Mage::helper('vendorseo')->updateVendorSeoData($post_data,$vendor_id);
+						  }
+						  catch (Exception $e) {
+						  Mage::getSingleton("adminhtml/session")->addError($e->getMessage());
+						  }
+
+					} else { // new seo data
+						  try {
+							  Mage::helper('vendorseo')->insertVendorSeoData($post_data,$vendor_id);
+						  }
+						  catch (Exception $e) {
+						  Mage::getSingleton("adminhtml/session")->addError($e->getMessage());
+						  }
+					}
+
+					Mage::getSingleton("adminhtml/session")->addSuccess(Mage::helper("adminhtml")->__("Vendor Seo Data was successfully saved"));
+					Mage::getSingleton("adminhtml/session")->setVendorseoData(false);
+
+					if ($this->getRequest()->getParam("back")) {
+					$this->_redirect("*/*/edit", array("id" => $model->getVendorId()));
+					return;
+					}
+					$this->_redirect("*/*/");
+					return;
+				} 
 				catch (Exception $e) {
-								Mage::getSingleton("adminhtml/session")->addError($e->getMessage());
-								Mage::getSingleton("adminhtml/session")->setVendorseoData($this->getRequest()->getPost());
-								$this->_redirect("*/*/edit", array("id" => $this->getRequest()->getParam("id")));
-								return;
-								}
-				     
+					Mage::getSingleton("adminhtml/session")->addError($e->getMessage());
+					Mage::getSingleton("adminhtml/session")->setVendorseoData($this->getRequest()->getPost());
+					$this->_redirect("*/*/edit", array("id" => $this->getRequest()->getParam("id")));
+					return;
 				}
-				$this->_redirect("*/*/");
+
+			}
+			$this->_redirect("*/*/");
 		}
 
 
