@@ -24,10 +24,10 @@ class Unirgy_Dropship_Model_Source extends Unirgy_Dropship_Model_Source_Abstract
     const ORDER_STATUS_PENDING  = 0;
     const ORDER_STATUS_NOTIFIED = 1;
     const ORDER_STATUS_CANCELED = 2;
-    
+
     /*
     *Craftsvilla Comment
-    *Added one extra status const SHIPMENT_STATUS_SHIPPED_CRAFTSVILLA = 15; 
+    *Added one extra status const SHIPMENT_STATUS_SHIPPED_CRAFTSVILLA = 15;
     *Added by Suresh on 31-05-2012
     */
     const SHIPMENT_STATUS_BLANK    = '';
@@ -49,8 +49,8 @@ class Unirgy_Dropship_Model_Source extends Unirgy_Dropship_Model_Source_Abstract
     const SHIPMENT_STATUS_SHIPPED_CRAFTSVILLA = 15;
     const SHIPMENT_STATUS_QC_REJECTED_CRAFTSVILLA = 16;
     const SHIPMENT_STATUS_RECEIVED_CRAFTSVILLA = 17;
-    
-   // dileswar added "Product Out Of Stock" coulmn to shipment status  on date 12-10-2012     
+
+   // dileswar added "Product Out Of Stock" coulmn to shipment status  on date 12-10-2012
     const SHIPMENT_STATUS_OUTOFSTOCK_CRAFTSVILLA = 18;
     const SHIPMENT_STATUS_PARTIALLY_REFUND_INITIATED = 19;  //added on 20-11-2012
     const SHIPMENT_STATUS_DISPUTE_RAISED = 20;  //added on 29-11-2012
@@ -68,9 +68,14 @@ class Unirgy_Dropship_Model_Source extends Unirgy_Dropship_Model_Source_Abstract
     const SHIPMENT_STATUS_PARTIALLY_RECIEVED = 33;
     const SHIPMENT_STATUS_REFUND_VOUCHER_REQUESTED = 34;
     const SHIPMENT_STATUS_REFUND_VOUCHER_SENT = 35;
-    const SHIPMENT_STATUS_DAMAGE_LOST_IN_TRANSIT = 36; 
+    const SHIPMENT_STATUS_DAMAGE_LOST_IN_TRANSIT = 36;
     const SHIPMENT_STATUS_PREPAID_RTO = 41;
-    
+    //adding RPU status on 16-05-2016 by sunita subhane
+    const SHIPMENT_STATUS_RETURN_REQUESTED = 37;
+    const SHIPMENT_STATUS_RETURN_IN_TRANSIT = 38;
+    const SHIPMENT_STATUS_RETURN_DELIVERED = 39;
+    const SHIPMENT_STATUS_RETURN_RTO = 40;
+
     const TRACK_STATUS_PENDING   = 'P';
     const TRACK_STATUS_CANCELED  = 'C';
     const TRACK_STATUS_READY     = 'R';
@@ -97,7 +102,7 @@ class Unirgy_Dropship_Model_Source extends Unirgy_Dropship_Model_Source_Abstract
     protected $_vendors = array();
     protected $_taxRegions = array();
     protected $_visiblePreferences = array();
-    
+
     public function toOptionHash($selector=false)
     {
         $hlp = Mage::helper('udropship');
@@ -114,7 +119,7 @@ class Unirgy_Dropship_Model_Source extends Unirgy_Dropship_Model_Source_Abstract
                 0 => $hlp->__('No'),
             );
             break;
-            
+
         case 'yesno_useconfig':
             $options = array(
                 -1 => $hlp->__('Use config'),
@@ -215,7 +220,7 @@ class Unirgy_Dropship_Model_Source extends Unirgy_Dropship_Model_Source_Abstract
                 self::SHIPMENT_STATUS_SHIPPED_CRAFTSVILLA   => $hlp->__('Shipped To Craftsvilla'),
                 self::SHIPMENT_STATUS_QC_REJECTED_CRAFTSVILLA   => $hlp->__('QC Rejected by Craftsvilla'),
                 self::SHIPMENT_STATUS_RECEIVED_CRAFTSVILLA   => $hlp->__('Received in Craftsvilla'),
-                //added By Dileswar 
+                //added By Dileswar
                 self::SHIPMENT_STATUS_OUTOFSTOCK_CRAFTSVILLA => $hlp->__('Product Out Of Stock'),
                 self::SHIPMENT_STATUS_PARTIALLY_REFUND_INITIATED  => $hlp->__('Partially Refund Initiated'),// dated 20-11-2012
                 self::SHIPMENT_STATUS_DISPUTE_RAISED  => $hlp->__('Dispute Raised'),// dated 20-11-2012
@@ -235,10 +240,14 @@ class Unirgy_Dropship_Model_Source extends Unirgy_Dropship_Model_Source_Abstract
                 self::SHIPMENT_STATUS_REFUND_VOUCHER_SENT => $hlp->__('Refund Voucher Sent'),
                 self::SHIPMENT_STATUS_DAMAGE_LOST_IN_TRANSIT => $hlp->__('Damage/Lost in transit'),
                 self::SHIPMENT_STATUS_PREPAID_RTO  => $hlp->__('PREPAID RTO'),
+                self::SHIPMENT_STATUS_RETURN_REQUESTED  => $hlp->__('Return Requested'),
+                self::SHIPMENT_STATUS_RETURN_IN_TRANSIT  => $hlp->__('Return In Transit'),
+                self::SHIPMENT_STATUS_RETURN_DELIVERED  => $hlp->__('Return Delivered'),
+                self::SHIPMENT_STATUS_RETURN_RTO  => $hlp->__('Return RTO'),
             );
-            
-            
-    
+
+
+
             if ($this->getPath() == 'initial_shipment_status') {
                 $options = array('999' => $hlp->__('* Default (global setting)')) + $options;
             }
@@ -256,7 +265,7 @@ class Unirgy_Dropship_Model_Source extends Unirgy_Dropship_Model_Source_Abstract
                 self::AUTO_SHIPMENT_COMPLETE_ANY => $hlp->__('At least one item shipped'),
             );
             break;
-            
+
         case 'udropship/vendor/pdf_use_font':
             $options = array(
                 '' => $hlp->__('* Magento Bundled Fonts'),
@@ -601,21 +610,21 @@ class Unirgy_Dropship_Model_Source extends Unirgy_Dropship_Model_Source_Abstract
                 'ADULT' => 'Adult',
             );
             break;
-        
+
         case 'manage_shipping':
             $options = array(
                 'vmanage' => 'vmanage',
                 'imanage' => 'imanage',
             );
             break;
-            
+
         case 'udropship/vendor/reassign_available_shipping':
             $options = array(
                 'all' => $hlp->__('All'),
                 'order' => $hlp->__('Limit by order shipping method'),
             );
             break;
-            
+
         case 'statement_po_type':
             $options = array(
                 'shipment' => $hlp->__('Shipment'),
@@ -624,7 +633,7 @@ class Unirgy_Dropship_Model_Source extends Unirgy_Dropship_Model_Source_Abstract
                 $options['po'] = $hlp->__('Purchase Order');
             }
             break;
-        
+
         case 'statement_subtotal_base':
             $options = array(
                 'price' => $hlp->__('Price'),
@@ -704,7 +713,7 @@ class Unirgy_Dropship_Model_Source extends Unirgy_Dropship_Model_Source_Abstract
          '5' => 'Home Decor',
          '6' => 'Jewellery',
          '9' => 'Bags',
-         '74' => 'Sarees',       
+         '74' => 'Sarees',
          '1070' => 'Home Furnishing',
          '2' => 'Other'
          );
@@ -725,7 +734,7 @@ class Unirgy_Dropship_Model_Source extends Unirgy_Dropship_Model_Source_Abstract
         switch ($this->getPath()) {
         case 'udropship/vendor/vendor_notification_field':
         case 'udropship/vendor/visible_preferences':
-            
+
             return $this->toOptionHash($selector);
         }
         return parent::toOptionArray($selector);
