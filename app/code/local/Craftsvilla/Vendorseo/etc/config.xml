@@ -77,17 +77,17 @@
 		
 	<acl>
 	 <resources>
-	 <all>
-	 <title>Allow Everything</title>
-	 </all>
-	 <admin>
-	 <children>
-	 <Craftsvilla_Vendorseo>
-	 <title>Manage Vendorseo</title>
-	 <sort_order>999</sort_order>
-	 </Craftsvilla_Vendorseo>
-	 </children>
-	 </admin>
+		<all>
+		  <title>Allow Everything</title>
+		</all>
+		<admin>
+		  <children>
+			 <Craftsvilla_Vendorseo>
+				<title>Manage Vendorseo</title>
+				<sort_order>999</sort_order>
+			 </Craftsvilla_Vendorseo>
+		  </children>
+		</admin>
 	 </resources>
 	</acl>
 	
