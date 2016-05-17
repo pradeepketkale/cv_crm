@@ -16,13 +16,18 @@
  */
 ?>
 <?php if ($_entity = $this->getEntity()): ?>
-<?php 
+<?php
    	$_order_id = $_entity->getOrder();
 	$_shippingAddress_value = $_order_id->getShippingAddress();
 	$country_id_value = $_shippingAddress_value->getCountry_id();
-	$autoRefundedamount = Mage::helper('udropship')->getrefundCv($_entity->getId());	
-        $user = Mage::getSingleton('admin/session')->getUser(); //Added by Ankit for restriction on Damage/Lost in Transit
-        $user = $user->email; //Added by Ankit for restriction on Damage/Lost in Transit
+    $autoRefundedamount = Mage::helper('udropship')->getrefundCv($_entity->getId());	
+    $user = Mage::getSingleton('admin/session')->getUser(); //Added by Ankit for restriction on Damage/Lost in Transit
+    $user = $user->email; //Added by Ankit for restriction on Damage/Lost in Transit
+
+	// $autoRefundedamount = Mage::helper('udropship')->getrefundCv($_entity->getId());
+ //    $user = Mage::getSingleton('admin/session')->getUser(); //Added by Ankit for restriction on Damage/Lost in Transit
+ //    $user = $user->email; //Added by Ankit for restriction on Damage/Lost in Transit
+
 ?>
         <!-- Add code for prevent change status when its set Canceled (6)/COD RTO (25) -->
 	<?php $checkShipementStatus = array('6','25');
@@ -32,11 +37,12 @@
 <div id="comments_block">
     <span class="field-row">
         <label class="normal" for="comment_status"><?php echo Mage::helper('sales')->__('Status') ?></label><br/>
-        <select name="comment[status]" class="select" id="comment_status" onchange="showfield(this.options[this.selectedIndex].value)" <?php if(in_array($shipmentStatusId,$checkShipementStatus)) echo 'disabled' ?>>
+
+       <select name="comment[status]" class="select" id="comment_status" onchange="showfield(this.options[this.selectedIndex].value)" <?php //if(in_array($shipmentStatusId,$checkShipementStatus)) echo 'disabled' ?>>
 	
 	<?php 
-
-foreach (Mage::getSingleton('udropship/source')->setPath('shipment_statuses')->toOptionHash() as $_code=>$_label):
+ 
+      foreach (Mage::getSingleton('udropship/source')->setPath('shipment_statuses')->toOptionHash() as $_code=>$_label):
         		/*
         		*Craftsvilla Comment
         		*Changed Shipped to Shipped To Customer and added one more condition Shipped To Craftsvilla
@@ -45,28 +51,28 @@ foreach (Mage::getSingleton('udropship/source')->setPath('shipment_statuses')->t
         		//if($_label == 'Processing' || $_label == 'Shipped' || $_label == 'Delivered' || $_label == 'Refund Initiated' || $_label == 'Not Delivered' || $_label == 'Charge Back' || $_label == 'Canceled'):
         		/*if($country_id_value != 'IN')
         		{*/
-					if($_label == '' || $_label == 'Processing' || $_label == 'Shipped To Customer' || $_label == 'Delivered' || $_label == 'Refund Initiated' || $_label == 'Partially Refund Initiated' || $_label == 'Not Delivered' || $_label == 'Charge Back' || $_label == 'Canceled' || $_label == 'Shipped To Craftsvilla' || $_label == 'QC Rejected by Craftsvilla' || $_label == 'Received in Craftsvilla' || $_label == 'Product Out Of Stock' || $_label == 'Dispute Raised' || $_label == 'Shipment Delayed' || $_label == 'Partially Shipped' || $_label == 'Refund To Do' || $_label == 'Accepted' || $_label == 'COD RTO' || $_label == 'Returned By Customer' || $_label == 'COD Manifest Shared' || $_label == 'COD Shipment Picked Up'|| $_label == 'Accept To Ship Directly To Customer'|| $_label == 'Pending Pickup' || $_label == 'Packing Slip Printed' || $_label == 'Handed To Courier' || $_label == 'Return Recieved From Customer' || $_label == 'Partially Recieved' || $_label == 'Refund Voucher Requested' || $_label == 'Refund Voucher Sent' || $_label == 'PREPAID RTO' || ($_label=='Damage/Lost in transit' && $user == "pravin@craftsvilla.com" || $user == "tarun@craftsvilla.com" || $user == "Ayeshab@craftsvilla.com" || $user == "roshan@craftsvilla.com")): //Modifed by Ankit for restriction on Damage/Lost in Transit
+					if($_label == '' || $_label == 'Processing' || $_label == 'Shipped To Customer' || $_label == 'Delivered' || $_label == 'Refund Initiated' || $_label == 'Partially Refund Initiated' || $_label == 'Not Delivered' || $_label == 'Charge Back' || $_label == 'Canceled' || $_label == 'Shipped To Craftsvilla' || $_label == 'QC Rejected by Craftsvilla' || $_label == 'Received in Craftsvilla' || $_label == 'Product Out Of Stock' || $_label == 'Dispute Raised' || $_label == 'Shipment Delayed' || $_label == 'Partially Shipped' || $_label == 'Refund To Do' || $_label == 'Accepted' || $_label == 'COD RTO' || $_label == 'Returned By Customer' || $_label == 'COD Manifest Shared' || $_label == 'COD Shipment Picked Up'|| $_label == 'Accept To Ship Directly To Customer'|| $_label == 'Pending Pickup' || $_label == 'Packing Slip Printed' || $_label == 'Handed To Courier' || $_label == 'Return Recieved From Customer' || $_label == 'Partially Recieved' || $_label == 'Refund Voucher Requested' || $_label == 'Refund Voucher Sent' || $_label == 'PREPAID RTO' || ($_label=='Damage/Lost in transit' && $user == "pravin@craftsvilla.com" || $user == "tarun@craftsvilla.com" || $user == "Ayeshab@craftsvilla.com" || $user == "roshan@craftsvilla.com") || $_label == 'Return Requested' || $_label == 'Return In Transit' || $_label == 'Return Delivered' || $_label == 'Return RTO'): //Modifed by Ankit for restriction on Damage/Lost in Transit
         ?>
             <option value="<?php echo $_code ?>"<?php if($_code==$this->getEntity()->getUdropshipStatus()): ?> selected="selected" <?php endif; ?>><?php echo $_label ?></option>
 
 
-        <?php 
-       			
+        <?php
+
 				endif;
-				
+
 				/*}
         		else {
         			if($_label == 'Processing' || $_label == 'Shipped To Customer' || $_label == 'Delivered' || $_label == 'Refund Initiated' || $_label == 'Not Delivered' || $_label == 'Charge Back' || $_label == 'Canceled'):
         ?>
             <option value="<?php echo $_code ?>"<?php if($_code==$this->getEntity()->getUdropshipStatus()): ?> selected="selected"<?php endif; ?>><?php echo $_label ?></option>
-        <?php 
+        <?php
         			endif;
-        		}*/	
+        		}*/
 				?><?php
-		
-			 
-        	  endforeach; 
-			  
+
+
+        	  endforeach;
+
         ?>
         </select>
 <!--mstart-->
@@ -82,34 +88,34 @@ foreach (Mage::getSingleton('udropship/source')->setPath('shipment_statuses')->t
 	<option value="Other">Others (Please add in remarks)</option>
 </select>
 <!--mend-->
-<br/> 
+<br/>
        <?php //echo $this->getUrl('udropshipadmin/adminhtml_qcreject/qcreject/', array('shipment_id'=>$_entity->getId()));exit; ?>
-        
+
 
 
 	<!--Added By Dileswar on dated 30-03-2013 for add a extra text box to get the refund amount-->
-<!--mstart-->	 
+<!--mstart-->
        <div id="div1" style="display: none" ><label for=''>Refund Amount of <font face="Tahoma" size="2" color="green"> Rs: <?php echo $autoRefundedamount?></label> </font><br><input type="text"  name="refundamount" value = "<?php echo $autoRefundedamount?>" id="refundamount" /></div>
 <!--mend-->
-         <div id="div2"></div>		
+         <div id="div2"></div>
 		<script type="text/javascript">
 		    $('comment_status').origValue = $('comment_status').value
 	    </script>
-        
+
         </span>
           <form name="qcreject" action="<?php echo $this->getUrl('udropshipadmin/adminhtml_shipment/qcreject/', array('shipment_id'=>$_entity->getId())); ?>" method="post" enctype="multipart/form-data">
          Attach Image: <input type="file" name="import_image" class="input-file" id="import_image"/>
                 <input type="submit" value="Send QC Reject" class="form-button" style="margin-top:5px"/>
                 <input name="form_key" type="hidden" value="<?php echo Mage::getSingleton('core/session')->getFormKey() ?>" />
                <!-- <textarea name="comment[comment]" rows="3" cols="5" style="height:3em; width:50%; display:none" id="comment_comment"></textarea>-->
-                
-        
-    
+
+
+
     <span class="field-row">
         <label class="normal" for="comment_comment"><?php echo Mage::helper('sales')->__('Comment Text') ?></label>
         <textarea name="comment[comment]" rows="3" cols="5" style="height:6em; width:99%;" id="comment_comment"></textarea>
     </span>
-   
+
     <div class="f-left">
         <input name="comment[is_vendor_notified]" type="checkbox" id="vendor_comment_notify" value="1" /><label class="normal" for="vendor_comment_notify"> <?php echo Mage::helper('sales')->__('Notify Vendor by Email') ?></label><br />
         <input name="comment[is_visible_to_vendor]" type="checkbox" id="comment_visible" value="1" /><label class="normal" for="comment_visible"> <?php echo Mage::helper('sales')->__('Visible to Vendor') ?></label><br />
@@ -150,16 +156,20 @@ foreach (Mage::getSingleton('udropship/source')->setPath('shipment_statuses')->t
         </li>
     <?php endforeach; ?>
     </ul>
-    </form> 
+    </form>
 <script type="text/javascript">
 function submitComment() {
-  var currentStatusId = '<?php echo $shipmentStatusId ?>'; //alert(currentStatusId);
-  if(currentStatusId == '25' || currentStatusId == '6')
-  {
-	alert('Futher Modification not allow at this stage.');
-	return false ;
-  }
-    else if (validateShipmentStatusSubmit()) {
+    // var currentStatusId = '<?php echo $shipmentStatusId ?>'; //alert(currentStatusId);
+    // if(currentStatusId == '25' || currentStatusId == '6')
+    // {
+    // alert('Futher Modification not allow at this stage.');
+    // return false ;
+    // }
+    // else if (validateShipmentStatusSubmit()) {
+    // submitAndReloadArea($('comments_block').parentNode, '<?php echo $this->getUrl('udropshipadmin/adminhtml_shipment/addComment', array('shipment_id'=>$_entity->getId())) ?>')
+    // }
+
+    if (validateShipmentStatusSubmit()) {
         submitAndReloadArea($('comments_block').parentNode, '<?php echo $this->getUrl('udropshipadmin/adminhtml_shipment/addComment', array('shipment_id'=>$_entity->getId())) ?>')
     }
 }
@@ -175,12 +185,12 @@ function validateShipmentStatusSubmit()
         case '<?php echo Unirgy_Dropship_Model_Source::SHIPMENT_STATUS_SHIPPED ?>':
             return confirm('<?php echo Mage::helper('udropship')->__('This will mark shipment as shipped to customer (and if possible change PO status as well).') ?>');
         case '<?php echo Unirgy_Dropship_Model_Source::SHIPMENT_STATUS_SHIPPED_CRAFTSVILLA ?>':
-            return confirm('<?php echo Mage::helper('udropship')->__('This will mark shipment as shipped to craftsvilla (and if possible change PO status as well).') ?>');    
+            return confirm('<?php echo Mage::helper('udropship')->__('This will mark shipment as shipped to craftsvilla (and if possible change PO status as well).') ?>');
         case '<?php echo Unirgy_Dropship_Model_Source::SHIPMENT_STATUS_OUTOFSTOCK_CRAFTSVILLA ?>':
             return confirm('<?php echo Mage::helper('udropship')->__('This will mark shipment as Product Out Of Stock') ?>');
 		case '<?php echo Unirgy_Dropship_Model_Source::SHIPMENT_STATUS_DELIVERED ?>':
             return confirm('<?php echo Mage::helper('udropship')->__('This will mark shipment as delivered (and if possible change PO status as well).') ?>');
-			
+
         default:
             return true;
     }
@@ -191,12 +201,12 @@ function showfield(name)
 
 		if(name==23)
 		{
-		
+
 		document.getElementById('div1').style.display = "block";
 		}
 
 		else
-		{ 
+		{
 		document.getElementById('div1').style.display = "none";
 		}
 		if(name==20)
@@ -205,7 +215,7 @@ function showfield(name)
 		document.getElementById('disputeremarks').style.display = "block";
 		}
 		else
-		{ 
+		{
 			document.getElementById('div2').innerHTML='';
 			document.getElementById('disputeremarks').style.display = "none";
 		}
