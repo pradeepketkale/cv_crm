@@ -1,26 +1,10 @@
 <?xml version="1.0"?>
 <layout version="1.1.0">
-  
- <!-- <default>
-	  <reference name="head">
-	    <action method="setCanLoadExtJs"><flag>1</flag></action>
-	    <action method="setCanLoadTinyMce"><flag>1</flag></action>
-	  </reference>
-  </default>-->
-  
   <vendorseo_adminhtml_vendorseo_index>
-    <!--<update handle="editor"/>-->
     <reference name="content">
       <block type="vendorseo/adminhtml_vendorseo" name="vendorseo" />
     </reference>
   </vendorseo_adminhtml_vendorseo_index>
-  
-  <!--<vendorseo_adminhtml_vendorseo_edit>
-	<update handle="vendorseo_adminhtml_vendorseo_index"/>
-  </vendorseo_adminhtml_vendorseo_edit>
-  
-  <vendorseo_adminhtml_vendorseo_new>
-      <update handle="vendorseo_adminhtml_vendorseo_index"/>
-  </vendorseo_adminhtml_vendorseo_new>-->
-  
 </layout>
+
+
