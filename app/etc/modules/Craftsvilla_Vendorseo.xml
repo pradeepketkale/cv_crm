@@ -4,7 +4,7 @@
     <Craftsvilla_Vendorseo>
       <active>true</active>
       <codePool>local</codePool>
-      <version>0.1.0</version>
+      <version>1.1.0</version>
     </Craftsvilla_Vendorseo>
   </modules>
 </config>

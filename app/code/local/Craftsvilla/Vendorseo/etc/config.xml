@@ -2,7 +2,7 @@
 <config>
   <modules>
     <Craftsvilla_Vendorseo>
-      <version>0.1.0</version>
+      <version>1.1.0</version>
     </Craftsvilla_Vendorseo>
   </modules>
   <global>
@@ -57,7 +57,7 @@
 	    <use>admin</use>
 		<args>
 		  <module>Craftsvilla_Vendorseo</module>
-		  <frontName>admin_vendorseo</frontName>
+		  <frontName>vendorseo</frontName>
 		</args>
 	  </vendorseo>
 	</routers>
@@ -69,7 +69,7 @@
 			  <vendorseo module="vendorseo">
 				 <title>Manage Vendorseo</title>
 				<sort_order>999</sort_order>
-				<action>admin_vendorseo/adminhtml_vendorseo</action>
+				<action>vendorseo/adminhtml_vendorseo</action>
 			  </vendorseo>
 			</children>
 	 </sales>
@@ -80,12 +80,17 @@
 		<all>
 		  <title>Allow Everything</title>
 		</all>
+		
 		<admin>
 		  <children>
-			 <Craftsvilla_Vendorseo>
-				<title>Manage Vendorseo</title>
-				<sort_order>999</sort_order>
-			 </Craftsvilla_Vendorseo>
+			 <sales>
+				<children>
+				  <Craftsvilla_Vendorseo>
+					 <title>Manage Vendorseo</title>
+					 <sort_order>999</sort_order>
+				  </Craftsvilla_Vendorseo>
+				  </children>
+			 </sales>
 		  </children>
 		</admin>
 	 </resources>
