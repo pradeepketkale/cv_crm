@@ -1,0 +1,73 @@
+<?xml version="1.0"?>
+<config>
+  <modules>
+    <Craftsvilla_Seovendor>
+      <version>0.1.0</version>
+    </Craftsvilla_Seovendor>
+  </modules>
+  <global>
+    <helpers>
+      <seovendor>
+        <class>Craftsvilla_Seovendor_Helper</class>
+      </seovendor>
+    </helpers>
+	<blocks>
+	  <seovendor>
+		<class>Craftsvilla_Seovendor_Block</class>
+	  </seovendor>
+	</blocks>
+  </global>
+  <admin>
+	<routers>
+	  <seovendor>
+	    <use>admin</use>
+		<args>
+		  <module>Craftsvilla_Seovendor</module>
+		  <frontName>admin_seovendor</frontName>
+		</args>
+	  </seovendor>
+	</routers>
+  </admin>
+  <adminhtml>
+	<menu>
+	  <seovendor module="seovendor">
+		<title>Seovendor</title>
+		<sort_order>100</sort_order>
+		<children>
+		  <seovendorbackend module="seovendor">
+			<title>Backend Page Title</title>
+			<sort_order>0</sort_order>
+			<action>admin_seovendor/adminhtml_seovendorbackend</action>
+		  </seovendorbackend>
+		</children>
+	  </seovendor>
+	</menu>
+	<acl>
+	  <resources>
+		<all>
+		  <title>Allow Everything</title>
+		</all>
+		<admin>
+		  <children>
+			<seovendor translate="title" module="seovendor">
+			  <title>Seovendor</title>
+			  <sort_order>1000</sort_order>
+			  <children>
+		  <seovendorbackend translate="title">
+			<title>Backend Page Title</title>
+		  </seovendorbackend>
+			  </children>
+			</seovendor>
+		  </children>
+		</admin>
+	  </resources>
+	</acl>
+	<layout>
+	  <updates>
+		<seovendor>
+		  <file>seovendor.xml</file>
+		</seovendor>
+	  </updates>
+	</layout>
+  </adminhtml>
+</config> 
