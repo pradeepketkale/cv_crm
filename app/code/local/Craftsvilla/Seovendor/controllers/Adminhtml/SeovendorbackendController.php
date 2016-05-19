@@ -31,7 +31,7 @@ class Craftsvilla_Seovendor_Adminhtml_SeovendorbackendController extends Mage_Ad
 				//$this->_title($this->__("Vendorseo"));
 				
 				$this->loadLayout();
-				$this->_setActiveMenu("seovendor/seovendor");
+				$this->_setActiveMenu("cms/seovendor");
 				$this->_addBreadcrumb(Mage::helper("adminhtml")->__("Vendorseo Manager"), Mage::helper("adminhtml")->__("Vendorseo Manager"));
 				$this->_addBreadcrumb(Mage::helper("adminhtml")->__("Vendorseo Description"), Mage::helper("adminhtml")->__("Vendorseo Description"));
 				
@@ -39,7 +39,7 @@ class Craftsvilla_Seovendor_Adminhtml_SeovendorbackendController extends Mage_Ad
 				$id = $this->getRequest()->getParam("id");
 				$model = Mage::getModel("seovendor/seovendor")->load($id);
 				
-				if ($model->getId()) {
+				if ($model->getVendorId()) {
 					
 						$model->setData($model->getData());
 						$model->save();
@@ -59,7 +59,7 @@ class Craftsvilla_Seovendor_Adminhtml_SeovendorbackendController extends Mage_Ad
 		{
 		
 			$this->loadLayout();
-			$this->_setActiveMenu("seovendor/seovendor");
+			$this->_setActiveMenu("cms/seovendor");
 		
 			$this->getLayout()->getBlock("head")->setCanLoadExtJs(true);
 		
@@ -90,65 +90,65 @@ class Craftsvilla_Seovendor_Adminhtml_SeovendorbackendController extends Mage_Ad
 			}
 		}
 		
-		public function saveAction()
-		{
-			$post_data = $this->getRequest()->getPost();
-			if ($post_data) {
-				try {
-					$vendor_id = (int)$post_data['vendor_name'];
-					//$vendorCheck = Mage::helper('seovendor')->getVendorSeoData($vendor_id);
-					//$vendorData  = $vendorCheck->getData()[0] ;
-		
-					//$vendorName = Mage::helper('seovendor')->getVendorNameById($vendor_id);
-					$metaTitle = $post_data['meta_title'];
-					$metaDescription = $post_data['meta_description'];
-					$metaKeywords = $post_data['meta_keywords'];
-					$vendorDescription = $post_data['vendor_description'];
-		
-					// check for update seodata from edit section
-					if($this->getRequest()->getParam("id")) {
-						 $model = Mage::getModel("seovendor/seovendor")->load($this->getRequest()->getParam("id"));
-					   try {
-							  $vendor_id =  $this->getRequest()->getParam("id");
-							  Mage::helper('seovendor')->updateVendorSeoData($post_data,$vendor_id);
-						  }
-						  catch (Exception $e) {
-						  Mage::getSingleton("adminhtml/session")->addError($e->getMessage());
-						  }
-					} else { // new seo data
-						  try {
-							  Mage::helper('seovendor')->insertVendorSeoData($post_data,$vendor_id);
-						  }
-						  catch (Exception $e) {
-						  Mage::getSingleton("adminhtml/session")->addError($e->getMessage());
-						  }
-					}
-		
-					Mage::getSingleton("adminhtml/session")->addSuccess(Mage::helper("adminhtml")->__("VendorSeo Data Was Successfully Saved"));
-					Mage::getSingleton("adminhtml/session")->setVendorseoData(false);
-		
-					if ($this->getRequest()->getParam("back")) {
-						if($this->getRequest()->getParam("id")) {
-							$this->_redirect("*/*/edit", array("id" => $model->getVendorId()));
-						} else {
-							$this->_redirect("*/*/edit", array("id" => $vendor_id));
-						}
-					return;
-					}
-					$this->_redirect("*/*/");
-					return;
-				} 
-				catch (Exception $e) {
-					Mage::getSingleton("adminhtml/session")->addError($e->getMessage());
-					Mage::getSingleton("adminhtml/session")->setVendorseoData($this->getRequest()->getPost());
-					$this->_redirect("*/*/edit", array("id" => $this->getRequest()->getParam("id")));
-					return;
-				}
-			}
-			Mage::getSingleton('adminhtml/session')->addError(Mage::helper('seovendor')->__('Unable to find item to save'));
-			
-			$this->_redirect("*/*/");
-		}
+		//public function saveAction()
+		//{
+		//	$post_data = $this->getRequest()->getPost();
+		//	if ($post_data) {
+		//		try {
+		//			$vendor_id = (int)$post_data['vendor_name'];
+		//			//$vendorCheck = Mage::helper('seovendor')->getVendorSeoData($vendor_id);
+		//			//$vendorData  = $vendorCheck->getData()[0] ;
+		//
+		//			//$vendorName = Mage::helper('seovendor')->getVendorNameById($vendor_id);
+		//			$metaTitle = $post_data['meta_title'];
+		//			$metaDescription = $post_data['meta_description'];
+		//			$metaKeywords = $post_data['meta_keywords'];
+		//			$vendorDescription = $post_data['vendor_description'];
+		//
+		//			// check for update seodata from edit section
+		//			if($this->getRequest()->getParam("id")) {
+		//				 $model = Mage::getModel("seovendor/seovendor")->load($this->getRequest()->getParam("id"));
+		//			   try {
+		//					  $vendor_id =  $this->getRequest()->getParam("id");
+		//					  Mage::helper('seovendor')->updateVendorSeoData($post_data,$vendor_id);
+		//				  }
+		//				  catch (Exception $e) {
+		//				  Mage::getSingleton("adminhtml/session")->addError($e->getMessage());
+		//				  }
+		//			} else { // new seo data
+		//				  try {
+		//					  Mage::helper('seovendor')->insertVendorSeoData($post_data,$vendor_id);
+		//				  }
+		//				  catch (Exception $e) {
+		//				  Mage::getSingleton("adminhtml/session")->addError($e->getMessage());
+		//				  }
+		//			}
+		//
+		//			Mage::getSingleton("adminhtml/session")->addSuccess(Mage::helper("adminhtml")->__("VendorSeo Data Was Successfully Saved"));
+		//			Mage::getSingleton("adminhtml/session")->setVendorseoData(false);
+		//
+		//			if ($this->getRequest()->getParam("back")) {
+		//				if($this->getRequest()->getParam("id")) {
+		//					$this->_redirect("*/*/edit", array("id" => $model->getVendorId()));
+		//				} else {
+		//					$this->_redirect("*/*/edit", array("id" => $vendor_id));
+		//				}
+		//			return;
+		//			}
+		//			$this->_redirect("*/*/");
+		//			return;
+		//		} 
+		//		catch (Exception $e) {
+		//			Mage::getSingleton("adminhtml/session")->addError($e->getMessage());
+		//			Mage::getSingleton("adminhtml/session")->setVendorseoData($this->getRequest()->getPost());
+		//			$this->_redirect("*/*/edit", array("id" => $this->getRequest()->getParam("id")));
+		//			return;
+		//		}
+		//	}
+		//	Mage::getSingleton('adminhtml/session')->addError(Mage::helper('seovendor')->__('Unable to find item to save'));
+		//	
+		//	$this->_redirect("*/*/");
+		//}
 		
 		public function deleteAction()
 		{
