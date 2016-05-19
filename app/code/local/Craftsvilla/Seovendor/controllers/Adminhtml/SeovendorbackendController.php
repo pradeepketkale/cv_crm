@@ -92,12 +92,12 @@ class Craftsvilla_Seovendor_Adminhtml_SeovendorbackendController extends Mage_Ad
 		
 		public function saveAction()
 		{
-			$post_data=$this->getRequest()->getPost();
+			$post_data = $this->getRequest()->getPost();
 			if ($post_data) {
 				try {
 					$vendor_id = (int)$post_data['vendor_name'];
-					$vendorCheck = Mage::helper('seovendor')->getVendorSeoData($vendor_id);
-					$vendorData  = $vendorCheck->getData()[0] ;
+					//$vendorCheck = Mage::helper('seovendor')->getVendorSeoData($vendor_id);
+					//$vendorData  = $vendorCheck->getData()[0] ;
 		
 					//$vendorName = Mage::helper('seovendor')->getVendorNameById($vendor_id);
 					$metaTitle = $post_data['meta_title'];
@@ -107,17 +107,14 @@ class Craftsvilla_Seovendor_Adminhtml_SeovendorbackendController extends Mage_Ad
 		
 					// check for update seodata from edit section
 					if($this->getRequest()->getParam("id")) {
-							 
-					 $model = Mage::getModel("seovendor/seovendor")->load($this->getRequest()->getParam("id"));
+						 $model = Mage::getModel("seovendor/seovendor")->load($this->getRequest()->getParam("id"));
 					   try {
 							  $vendor_id =  $this->getRequest()->getParam("id");
-							  
 							  Mage::helper('seovendor')->updateVendorSeoData($post_data,$vendor_id);
 						  }
 						  catch (Exception $e) {
 						  Mage::getSingleton("adminhtml/session")->addError($e->getMessage());
 						  }
-		
 					} else { // new seo data
 						  try {
 							  Mage::helper('seovendor')->insertVendorSeoData($post_data,$vendor_id);
@@ -147,8 +144,9 @@ class Craftsvilla_Seovendor_Adminhtml_SeovendorbackendController extends Mage_Ad
 					$this->_redirect("*/*/edit", array("id" => $this->getRequest()->getParam("id")));
 					return;
 				}
-		
 			}
+			Mage::getSingleton('adminhtml/session')->addError(Mage::helper('seovendor')->__('Unable to find item to save'));
+			
 			$this->_redirect("*/*/");
 		}
 		
