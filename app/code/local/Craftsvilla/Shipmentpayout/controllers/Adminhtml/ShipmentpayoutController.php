@@ -1496,7 +1496,7 @@ class Craftsvilla_Shipmentpayout_Adminhtml_ShipmentpayoutController extends Mage
 			$finaldate = date_format($selected_date_val1,'Y-m-d') ;
 		}else {
 			//echo "<30";
-			$finaldate = date_sub($datetemp, date_interval_create_from_date_string('25 days')); //25 Days difference
+			$finaldate = date_sub($datetemp, date_interval_create_from_date_string('20 days')); //20 Days difference
 			$finaldate = date_format($finaldate,'Y-m-d');
 		}
 		//echo( "Difference :".$date_diff . " Finale Date: ". $finaldate); exit;
@@ -1510,7 +1510,7 @@ class Craftsvilla_Shipmentpayout_Adminhtml_ShipmentpayoutController extends Mage
       			->join(array('b'=>'sales_flat_shipment_grid'), 'b.increment_id=main_table.shipment_id', array('order_created_at'))
       			->joinLeft('sales_flat_order_payment', 'b.order_id = sales_flat_order_payment.parent_id','method')
 				->where('main_table.shipmentpayout_status=0 AND a.udropship_status IN (7) AND `sales_flat_order_payment`.method = "cashondelivery" AND main_table.citibank_utr != "" and a.updated_at <= \''. $finaldate.'\'');
-      /*	echo "Query:".$shipmentpayout_report1->getSelect()->__toString();
+      	/*echo "Query:".$shipmentpayout_report1->getSelect()->__toString();
       	echo ($selected_date_val);
 		exit();*/
 

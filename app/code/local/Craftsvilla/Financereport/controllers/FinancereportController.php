@@ -1738,4 +1738,32 @@ class Craftsvilla_Financereport_FinancereportController extends Mage_Core_Contro
         $readQuery->closeConnection();
         echo (json_encode($result));
     }
+
+    //For AWB to Shipment Mapping CSV
+    public function awbToShipmentAction()
+    {   //var_dump($_POST);exit;
+        $data = $_POST;
+        $filename = "awb_shipment";
+        $filePathOfCsv = Mage::getBaseDir('media') . DS . $filename . '.csv';
+        $fp = fopen($filePathOfCsv, 'w');
+        fputcsv($fp, array("AWB Number","Shipment Number"));
+        foreach ($data as $key => $value) {
+            $readQuery = Mage::getSingleton('core/resource')->getConnection('custom_db');
+            $sql = "select  number , parent_id from sales_flat_shipment_track where number = '".$value."' ";
+            $result = $readQuery->query($sql)->fetch();
+            if($result){
+                //var_dump($result);exit;
+                fputcsv($fp, $result);
+            }
+        }
+        fclose($fp);
+        header('Content-Type: text/csv');
+        header('Content-Disposition: attachment;filename=' . $filename . '.csv');
+        header('Expires: 0');
+        header('Cache-Control: must-revalidate');
+        header('Pragma: public');
+        header('Content-Length: ' . filesize($filePathOfCsv));
+        readfile($filePathOfCsv, false);
+        unlink($filePathOfCsv);
+    }
 }
