@@ -1,19 +1,20 @@
 <?php
 class Craftsvilla_Seovendor_Adminhtml_SeovendorbackendController extends Mage_Adminhtml_Controller_Action
 {
-	  protected function _initAction()
-		{
-		$this->loadLayout()
-				 ->_setActiveMenu("seovendor/seovendor")
-				 ->_addBreadcrumb(Mage::helper("adminhtml")->__("Vendorseo  Manager"),Mage::helper("adminhtml")->__("Vendorseo Manager"));
-				return $this;
-		}
+	//  protected function _initAction()
+	//	{
+	//	$this->loadLayout()
+	//			 ->_setActiveMenu("cms/seovendor")
+	//			 ->_addBreadcrumb(Mage::helper("adminhtml")->__("Vendorseo  Manager"),Mage::helper("adminhtml")->__("Vendorseo Manager"));
+	//			return $this;
+	//	}
 	
 	 	public function indexAction() 
 		{
 				$this->_title($this->__("SeoVendor Manager"));
-				$this->_initAction();
-				$this->renderLayout();
+				$this->_setActiveMenu("cms/seovendor");
+				$this->_addBreadcrumb(Mage::helper("adminhtml")->__("Vendorseo  Manager"),Mage::helper("adminhtml")->__("Vendorseo Manager"));
+			  $this->renderLayout();
 		}
 		
 		public function gridAction()

@@ -20,18 +20,24 @@
 	
 	<adminhtml>
 		<menu>
-			<seovendor module="seovendor">
-			<title>VendorSeo</title>
-			<sort_order>100</sort_order>
-			<children>
-				<seovendorbackend module="seovendor">
-				<title>Manage Seo Data</title>
-				<sort_order>0</sort_order>
-				<action>seovendor/adminhtml_seovendorbackend</action>
-				</seovendorbackend>
-			</children>
-			</seovendor>
+			<cms>
+				<children>
+					<seovendor module="seovendor">
+					<title>VendorSeo</title>
+					<sort_order>100</sort_order>
+					<!--<children>
+						<seovendorbackend module="seovendor">
+						<title>Manage Seo Data</title>
+						<sort_order>0</sort_order>
+						<action>seovendor/adminhtml_seovendorbackend</action>
+						</seovendorbackend>
+					</children>-->
+					 <action>seovendor/adminhtml_seovendorbackend</action>
+					</seovendor>
+				</children>
+			</cms>
 		</menu>
+	
 		<acl>
 			<resources>
 			<all>
@@ -39,19 +45,18 @@
 			</all>
 			<admin>
 				<children>
-					<seovendor translate="title" module="seovendor">
-						<title>VendorSeo</title>
-						<sort_order>1000</sort_order>
-							<children>
-								<seovendorbackend translate="title">
-								<title>Manage Seo Data</title>
-								</seovendorbackend>
-							</children>
-					</seovendor>
+					<cms>
+						<children>
+							<seovendorbackend>
+							<title>Manage Seo Data</title>
+							</seovendorbackend>
+						</children>
+				  </cms>
 				</children>
 			</admin>
 			</resources>
 		</acl>
+		
 		<layout>
 			<updates>
 			<seovendor>
