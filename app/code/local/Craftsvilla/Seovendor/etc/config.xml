@@ -6,20 +6,63 @@
     </Craftsvilla_Seovendor>
   </modules>
  
-  <global>
-    <helpers>
-      <seovendor>
-        <class>Craftsvilla_Seovendor_Helper</class>
-      </seovendor>
-    </helpers>
-		
-		<blocks>
+ <admin>
+		<routers>
 			<seovendor>
-			<class>Craftsvilla_Seovendor_Block</class>
+				<use>admin</use>
+				<args>
+					<module>Craftsvilla_Seovendor</module>
+					<frontName>seovendor</frontName>
+				</args>
 			</seovendor>
-		</blocks>
+		</routers>
+	</admin>
 	
-		<models>
+	<adminhtml>
+		<menu>
+			<seovendor module="seovendor">
+			<title>VendorSeo</title>
+			<sort_order>100</sort_order>
+			<children>
+				<seovendorbackend module="seovendor">
+				<title>Manage Seo Data</title>
+				<sort_order>0</sort_order>
+				<action>seovendor/adminhtml_seovendorbackend</action>
+				</seovendorbackend>
+			</children>
+			</seovendor>
+		</menu>
+		<acl>
+			<resources>
+			<all>
+				<title>Allow Everything</title>
+			</all>
+			<admin>
+				<children>
+					<seovendor translate="title" module="seovendor">
+						<title>VendorSeo</title>
+						<sort_order>1000</sort_order>
+							<children>
+								<seovendorbackend translate="title">
+								<title>Manage Seo Data</title>
+								</seovendorbackend>
+							</children>
+					</seovendor>
+				</children>
+			</admin>
+			</resources>
+		</acl>
+		<layout>
+			<updates>
+			<seovendor>
+				<file>seovendor.xml</file>
+			</seovendor>
+			</updates>
+		</layout>
+  </adminhtml>
+	
+  <global>
+    <models>
 			<seovendor>
 				<class>Craftsvilla_Seovendor_Model</class>
 				<resourceModel>seovendor_mysql4</resourceModel>
@@ -54,60 +97,17 @@
 				</connection>
 			</seovendor_read>
 		</resources>
-	 </global>
-	
-		<admin>
-			<routers>
-				<seovendor>
-					<use>admin</use>
-					<args>
-						<module>Craftsvilla_Seovendor</module>
-						<frontName>seovendor</frontName>
-					</args>
-				</seovendor>
-			</routers>
-		</admin>
-	
-	<adminhtml>
-	<menu>
-	  <seovendor module="seovendor">
-		<title>VendorSeo</title>
-		<sort_order>100</sort_order>
-		<children>
-		  <seovendorbackend module="seovendor">
-			<title>Manage Seo Data</title>
-			<sort_order>0</sort_order>
-			<action>seovendor/adminhtml_seovendorbackend</action>
-		  </seovendorbackend>
-		</children>
-	  </seovendor>
-	</menu>
-	<acl>
-	  <resources>
-		<all>
-		  <title>Allow Everything</title>
-		</all>
-		<admin>
-		  <children>
-			<seovendor translate="title" module="seovendor">
-			  <title>VendorSeo</title>
-			  <sort_order>1000</sort_order>
-			  <children>
-		  <seovendorbackend translate="title">
-			<title>Manage Seo Data</title>
-		  </seovendorbackend>
-			  </children>
+  
+	  <blocks>
+			<seovendor>
+				<class>Craftsvilla_Seovendor_Block</class>
 			</seovendor>
-		  </children>
-		</admin>
-	  </resources>
-	</acl>
-	<layout>
-	  <updates>
-		<seovendor>
-		  <file>seovendor.xml</file>
-		</seovendor>
-	  </updates>
-	</layout>
-  </adminhtml>
+		</blocks>
+	
+		<helpers>
+      <seovendor>
+        <class>Craftsvilla_Seovendor_Helper</class>
+      </seovendor>
+    </helpers>
+	</global>
 </config> 
