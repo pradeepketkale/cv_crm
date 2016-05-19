@@ -13,6 +13,15 @@ class Craftsvilla_Vendorseo_Adminhtml_VendorseoController extends Mage_Adminhtml
 				$this->_initAction();
 				$this->renderLayout();
 		}
+		
+public function gridAction()
+{
+	 $this->loadLayout();
+	 $this->getResponse()->setBody(
+	 $this->getLayout()->createBlock('vendorseo/adminhtml_vendorseo_grid')->toHtml()
+	 );
+}
+	 
 		public function editAction()
 		{			    
 				//$this->_title($this->__("Vendorseo"));
