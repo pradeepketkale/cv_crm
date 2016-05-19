@@ -5,39 +5,79 @@
       <version>0.1.0</version>
     </Craftsvilla_Seovendor>
   </modules>
+ 
   <global>
     <helpers>
       <seovendor>
         <class>Craftsvilla_Seovendor_Helper</class>
       </seovendor>
     </helpers>
-	<blocks>
-	  <seovendor>
-		<class>Craftsvilla_Seovendor_Block</class>
-	  </seovendor>
-	</blocks>
-  </global>
-  <admin>
-	<routers>
-	  <seovendor>
-	    <use>admin</use>
-		<args>
-		  <module>Craftsvilla_Seovendor</module>
-		  <frontName>admin_seovendor</frontName>
-		</args>
-	  </seovendor>
-	</routers>
-  </admin>
-  <adminhtml>
+		
+		<blocks>
+			<seovendor>
+			<class>Craftsvilla_Seovendor_Block</class>
+			</seovendor>
+		</blocks>
+	
+		<models>
+			<seovendor>
+				<class>Craftsvilla_Seovendor_Model</class>
+				<resourceModel>seovendor_mysql4</resourceModel>
+			</seovendor>
+			<seovendor_mysql4>
+				<class>Craftsvilla_Seovendor_Model_Mysql4</class>
+				<entities>		  
+					<seovendor>
+					<table>cv_vendor</table>
+					</seovendor>
+				</entities>
+			</seovendor_mysql4>
+		</models>
+	
+		<resources>
+			<seovendor_setup>
+				<setup>
+					<module>Craftsvilla_Seovendor</module>
+				</setup>
+				<connection>
+					<use>core_setup</use>
+				</connection>
+			</seovendor_setup>
+			<seovendor_write>
+				<connection>
+					<use>core_write</use>
+				</connection>
+			</seovendor_write>
+			<seovendor_read>
+				<connection>
+					<use>core_read</use>
+				</connection>
+			</seovendor_read>
+		</resources>
+	 </global>
+	
+		<admin>
+			<routers>
+				<seovendor>
+					<use>admin</use>
+					<args>
+						<module>Craftsvilla_Seovendor</module>
+						<frontName>seovendor</frontName>
+					</args>
+				</seovendor>
+			</routers>
+		</admin>
+	
+	<adminhtml>
 	<menu>
 	  <seovendor module="seovendor">
-		<title>Seovendor</title>
+		<title>VendorSeo</title>
 		<sort_order>100</sort_order>
 		<children>
 		  <seovendorbackend module="seovendor">
-			<title>Backend Page Title</title>
+			<title>Manage Seo Data</title>
 			<sort_order>0</sort_order>
-			<action>admin_seovendor/adminhtml_seovendorbackend</action>
+			<action>seovendor/adminhtml_seovendorbackend</action>
 		  </seovendorbackend>
 		</children>
 	  </seovendor>
@@ -50,11 +90,11 @@
 		<admin>
 		  <children>
 			<seovendor translate="title" module="seovendor">
-			  <title>Seovendor</title>
+			  <title>VendorSeo</title>
 			  <sort_order>1000</sort_order>
 			  <children>
 		  <seovendorbackend translate="title">
-			<title>Backend Page Title</title>
+			<title>Manage Seo Data</title>
 		  </seovendorbackend>
 			  </children>
 			</seovendor>

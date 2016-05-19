@@ -2,7 +2,7 @@
 <layout version="0.1.0">
   <seovendor_adminhtml_seovendorbackend_index>
 	<reference name="content">
-	  <block type="seovendor/adminhtml_seovendorbackend" name="seovendorbackend" template="seovendor/seovendorbackend.phtml"/>
+	  <block type="seovendor/adminhtml_seovendorbackend" name="seovendorbackend"/>
 	</reference>
   </seovendor_adminhtml_seovendorbackend_index>
 </layout>
