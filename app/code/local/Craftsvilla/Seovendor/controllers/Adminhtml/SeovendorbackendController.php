@@ -12,6 +12,7 @@ class Craftsvilla_Seovendor_Adminhtml_SeovendorbackendController extends Mage_Ad
 	 	public function indexAction() 
 		{
 				$this->_title($this->__("SeoVendor Manager"));
+				$this->loadLayout();
 				$this->_setActiveMenu("cms/seovendor");
 				$this->_addBreadcrumb(Mage::helper("adminhtml")->__("Vendorseo  Manager"),Mage::helper("adminhtml")->__("Vendorseo Manager"));
 			  $this->renderLayout();
