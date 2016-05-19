@@ -26,69 +26,69 @@ class Craftsvilla_Seovendor_Adminhtml_SeovendorbackendController extends Mage_Ad
 			 );
 		}
 		
-		//public function editAction()
-		//{			    
-		//		//$this->_title($this->__("Vendorseo"));
-		//		
-		//		$this->loadLayout();
-		//		$this->_setActiveMenu("seovendor/seovendor");
-		//		$this->_addBreadcrumb(Mage::helper("adminhtml")->__("Vendorseo Manager"), Mage::helper("adminhtml")->__("Vendorseo Manager"));
-		//		$this->_addBreadcrumb(Mage::helper("adminhtml")->__("Vendorseo Description"), Mage::helper("adminhtml")->__("Vendorseo Description"));
-		//		
-		//				
-		//		$id = $this->getRequest()->getParam("id");
-		//		$model = Mage::getModel("seovendor/seovendor")->load($id);
-		//		
-		//		if ($model->getId()) {
-		//			
-		//				$model->setData($model->getData());
-		//				$model->save();
-		//				Mage::register("seovendor_data", $model);
-		//		} 
-		//		else {
-		//			Mage::getSingleton("adminhtml/session")->addError(Mage::helper("seovendor")->__("Item does not exist."));
-		//			$this->_redirect("*/*/");
-		//		}
-		//		$this->getLayout()->getBlock("head")->setCanLoadExtJs(true);
-		//		$this->_addContent($this->getLayout()->createBlock("seovendor/adminhtml_seovendor_edit"))
-		//		     ->_addLeft($this->getLayout()->createBlock("seovendor/adminhtml_seovendor_edit_tabs"));
-		//		$this->renderLayout();
-		//}
-		//
-		//public function newAction()
-		//{
-		//
-		//	$this->loadLayout();
-		//	$this->_setActiveMenu("seovendor/seovendor");
-		//
-		//	$this->getLayout()->getBlock("head")->setCanLoadExtJs(true);
-		//
-		//	$this->_addBreadcrumb(Mage::helper("adminhtml")->__("Vendorseo Manager"), Mage::helper("adminhtml")->__("Vendorseo Manager"));
-		//	$this->_addBreadcrumb(Mage::helper("adminhtml")->__("Vendorseo Description"), Mage::helper("adminhtml")->__("Vendorseo Description"));
-		//
-		//
-		//	$this->_addContent($this->getLayout()->createBlock("seovendor/adminhtml_seovendor_edit"))
-		//	     ->_addLeft($this->getLayout()->createBlock("seovendor/adminhtml_seovendor_edit_tabs"));
-		//
-		//	$this->renderLayout();
-		//
-		//}
-		//
-		//public function getSeoDataAction()
-		//{
-		//	if(isset($_GET['v_id'])) {
-		//	 $id = $_GET['v_id'] ;
-		//	 $seoData = Mage::helper('seovendor')->getVendorSeoData($id);
-		//	 $data = $seoData->getData();
-		//	 if(empty($data[0])) {
-		//				$data['empty'] = 'Y';
-		//			 echo json_encode($data);
-		//	 } else {
-		//					echo json_encode($data[0]);
-		//	 }
-		//	 exit ;
-		//	}
-		//}
+		public function editAction()
+		{			    
+				//$this->_title($this->__("Vendorseo"));
+				
+				$this->loadLayout();
+				$this->_setActiveMenu("seovendor/seovendor");
+				$this->_addBreadcrumb(Mage::helper("adminhtml")->__("Vendorseo Manager"), Mage::helper("adminhtml")->__("Vendorseo Manager"));
+				$this->_addBreadcrumb(Mage::helper("adminhtml")->__("Vendorseo Description"), Mage::helper("adminhtml")->__("Vendorseo Description"));
+				
+						
+				$id = $this->getRequest()->getParam("id");
+				$model = Mage::getModel("seovendor/seovendor")->load($id);
+				
+				if ($model->getId()) {
+					
+						$model->setData($model->getData());
+						$model->save();
+						Mage::register("seovendor_data", $model);
+				} 
+				else {
+					Mage::getSingleton("adminhtml/session")->addError(Mage::helper("seovendor")->__("Item does not exist."));
+					$this->_redirect("*/*/");
+				}
+				$this->getLayout()->getBlock("head")->setCanLoadExtJs(true);
+				$this->_addContent($this->getLayout()->createBlock("seovendor/adminhtml_seovendor_edit"))
+				     ->_addLeft($this->getLayout()->createBlock("seovendor/adminhtml_seovendor_edit_tabs"));
+				$this->renderLayout();
+		}
+		
+		public function newAction()
+		{
+		
+			$this->loadLayout();
+			$this->_setActiveMenu("seovendor/seovendor");
+		
+			$this->getLayout()->getBlock("head")->setCanLoadExtJs(true);
+		
+			$this->_addBreadcrumb(Mage::helper("adminhtml")->__("Vendorseo Manager"), Mage::helper("adminhtml")->__("Vendorseo Manager"));
+			$this->_addBreadcrumb(Mage::helper("adminhtml")->__("Vendorseo Description"), Mage::helper("adminhtml")->__("Vendorseo Description"));
+		
+		
+			$this->_addContent($this->getLayout()->createBlock("seovendor/adminhtml_seovendor_edit"))
+			     ->_addLeft($this->getLayout()->createBlock("seovendor/adminhtml_seovendor_edit_tabs"));
+		
+			$this->renderLayout();
+		
+		}
+		
+		public function getSeoDataAction()
+		{
+			if(isset($_GET['v_id'])) {
+			 $id = $_GET['v_id'] ;
+			 $seoData = Mage::helper('seovendor')->getVendorSeoData($id);
+			 $data = $seoData->getData();
+			 if(empty($data[0])) {
+						$data['empty'] = 'Y';
+					 echo json_encode($data);
+			 } else {
+							echo json_encode($data[0]);
+			 }
+			 exit ;
+			}
+		}
 		//
 		//public function saveAction()
 		//{
@@ -152,23 +152,23 @@ class Craftsvilla_Seovendor_Adminhtml_SeovendorbackendController extends Mage_Ad
 		//	$this->_redirect("*/*/");
 		//}
 		//
-		//public function deleteAction()
-		//{
-		//		if( $this->getRequest()->getParam("id") > 0 ) {
-		//			try {
-		//				$model = Mage::getModel("seovendor/seovendor");
-		//				$model->setId($this->getRequest()->getParam("id"))->delete();
-		//				//echo '<pre>'; print_r(Mage::registry("seovendor_data")); exit ;
-		//				Mage::getSingleton("adminhtml/session")->addSuccess(Mage::helper("adminhtml")->__( "VendorSeo Data Was Successfully Deleted"));
-		//				$this->_redirect("*/*/");
-		//			} 
-		//			catch (Exception $e) {
-		//				Mage::getSingleton("adminhtml/session")->addError($e->getMessage());
-		//				$this->_redirect("*/*/edit", array("id" => $this->getRequest()->getParam("id")));
-		//			}
-		//		}
-		//		$this->_redirect("*/*/");
-		//}
+		public function deleteAction()
+		{
+				if( $this->getRequest()->getParam("id") > 0 ) {
+					try {
+						$model = Mage::getModel("seovendor/seovendor");
+						$model->setId($this->getRequest()->getParam("id"))->delete();
+						//echo '<pre>'; print_r(Mage::registry("seovendor_data")); exit ;
+						Mage::getSingleton("adminhtml/session")->addSuccess(Mage::helper("adminhtml")->__( "VendorSeo Data Was Successfully Deleted"));
+						$this->_redirect("*/*/");
+					} 
+					catch (Exception $e) {
+						Mage::getSingleton("adminhtml/session")->addError($e->getMessage());
+						$this->_redirect("*/*/edit", array("id" => $this->getRequest()->getParam("id")));
+					}
+				}
+				$this->_redirect("*/*/");
+		}
 
 		
 		public function massRemoveAction()
