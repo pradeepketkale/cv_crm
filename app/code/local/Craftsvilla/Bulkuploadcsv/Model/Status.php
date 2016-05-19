@@ -16,7 +16,7 @@ class Craftsvilla_Bulkuploadcsv_Model_Status extends Varien_Object
 			self::STATUS_SUBMITTED   => Mage::helper('bulkuploadcsv')->__('Submitted'),
 			self::STATUS_REJECTED   => Mage::helper('bulkuploadcsv')->__('Rejected'),
 			self::STATUS_APPROVED => Mage::helper('bulkuploadcsv')->__('Approved'),
-            self::STATUS_APPROVED => Mage::helper('bulkuploadcsv')->__('Approved For Variants')
+            self::STATUS_APPROVED_VARIANTS => Mage::helper('bulkuploadcsv')->__('Approved For Variants')
         );
     }
 }

@@ -10,14 +10,12 @@ class Craftsvilla_Bulkuploadcsv_Block_Adminhtml_Bulkuploadcsv_Grid extends Mage_
     $this->setDefaultSort('bulkuploadid');
     $this->setDefaultDir('DESC');
     $this->setSaveParametersInSession(true);
-    $this->setDefaultLimit(50);
     $this->setUseAjax(true);
   }
 
   protected function _prepareCollection()
   {
     $collection = Mage::getModel('bulkuploadcsv/bulkuploadcsv')->getCollection();
-    $collection->getSelect()->limit(50);
     $this->setCollection($collection);
     return parent::_prepareCollection();
   }
