@@ -2,7 +2,7 @@
 <config>
   <modules>
     <Craftsvilla_Vendorseo>
-      <active>true</active>
+      <active>false</active>
       <codePool>local</codePool>
       <version>1.1.0</version>
     </Craftsvilla_Vendorseo>

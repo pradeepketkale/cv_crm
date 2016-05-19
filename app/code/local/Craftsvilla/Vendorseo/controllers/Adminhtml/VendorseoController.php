@@ -4,7 +4,9 @@ class Craftsvilla_Vendorseo_Adminhtml_VendorseoController extends Mage_Adminhtml
 {
 		protected function _initAction()
 		{
-				$this->loadLayout()->_setActiveMenu("vendorseo/vendorseo")->_addBreadcrumb(Mage::helper("adminhtml")->__("Vendorseo  Manager"),Mage::helper("adminhtml")->__("Vendorseo Manager"));
+		  $this->loadLayout()
+				 ->_setActiveMenu("vendorseo/vendorseo")
+				 ->_addBreadcrumb(Mage::helper("adminhtml")->__("Vendorseo  Manager"),Mage::helper("adminhtml")->__("Vendorseo Manager"));
 				return $this;
 		}
 		public function indexAction() 

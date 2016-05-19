@@ -21,16 +21,16 @@ class Unirgy_DropshipMicrosite_IndexController extends Mage_Core_Controller_Fron
     {
         $vendor = Mage::helper('umicrosite')->getCurrentVendor();
         if ($vendor) {
-            $vendorSeoData = Mage::helper('vendorseo')->getVendorSeoData($vendor->getId());
-            $seoData = $vendorSeoData->getData();
+            //$vendorSeoData = Mage::helper('vendorseo')->getVendorSeoData($vendor->getId());
+           // $seoData = $vendorSeoData->getData();
             $this->getLayout()->helper('page/layout')
                 ->applyHandle('two_columns_left');
             $this->loadLayout();
-            if(!empty($seoData)) {
-            $this->getLayout()->getBlock('head')->setTitle($seoData[0]['meta_title']);
-            $this->getLayout()->getBlock('head')->setDescription($seoData[0]['meta_description']);
-            $this->getLayout()->getBlock('head')->setKeywords($seoData[0]['meta_keywords']);
-            }
+            //if(!empty($seoData)) {
+            //$this->getLayout()->getBlock('head')->setTitle($seoData[0]['meta_title']);
+            //$this->getLayout()->getBlock('head')->setDescription($seoData[0]['meta_description']);
+            //$this->getLayout()->getBlock('head')->setKeywords($seoData[0]['meta_keywords']);
+            //}
             $this->renderLayout();
             return;
         }
