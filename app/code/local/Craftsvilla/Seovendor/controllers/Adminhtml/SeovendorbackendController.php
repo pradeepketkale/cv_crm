@@ -125,7 +125,7 @@ class Craftsvilla_Seovendor_Adminhtml_SeovendorbackendController extends Mage_Ad
 						  }
 					}
 
-					Mage::getSingleton("adminhtml/session")->addSuccess(Mage::helper("adminhtml")->__("Vendor Seo Data was successfully saved"));
+					Mage::getSingleton("adminhtml/session")->addSuccess(Mage::helper("adminhtml")->__("VendorSeo Data Was Successfully Saved"));
 					Mage::getSingleton("adminhtml/session")->setVendorseoData(false);
 
 					if ($this->getRequest()->getParam("back")) {
@@ -157,7 +157,7 @@ class Craftsvilla_Seovendor_Adminhtml_SeovendorbackendController extends Mage_Ad
 						$model = Mage::getModel("seovendor/seovendor");
 						$model->setId($this->getRequest()->getParam("id"))->delete();
 						//echo '<pre>'; print_r(Mage::registry("seovendor_data")); exit ;
-						Mage::getSingleton("adminhtml/session")->addSuccess(Mage::helper("adminhtml")->__( "Vendor Seo Data was successfully deleted"));
+						Mage::getSingleton("adminhtml/session")->addSuccess(Mage::helper("adminhtml")->__( "VendorSeo Data Was Successfully Deleted"));
 						$this->_redirect("*/*/");
 					} 
 					catch (Exception $e) {
@@ -174,10 +174,10 @@ class Craftsvilla_Seovendor_Adminhtml_SeovendorbackendController extends Mage_Ad
 			try {
 				$ids = $this->getRequest()->getPost('vendor_ids', array());
 				foreach ($ids as $id) {
-                      $model = Mage::getModel("seovendor/seovendor");
-					  $model->setId($id)->delete();
+					$model = Mage::getModel("seovendor/seovendor");
+					$model->setVendorId($id)->delete();
 				}
-				Mage::getSingleton("adminhtml/session")->addSuccess(Mage::helper("adminhtml")->__("Item(s) was successfully removed"));
+				Mage::getSingleton("adminhtml/session")->addSuccess(Mage::helper("adminhtml")->__("VendorSeo Data Was Successfully Removed"));
 			}
 			catch (Exception $e) {
 				Mage::getSingleton("adminhtml/session")->addError($e->getMessage());

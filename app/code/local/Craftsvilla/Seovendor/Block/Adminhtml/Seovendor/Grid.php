@@ -54,8 +54,8 @@ class Craftsvilla_Seovendor_Block_Adminhtml_Seovendor_Grid extends Mage_Adminhtm
 				"index" => "meta_keywords",
 				));
 				
-			$this->addExportType('*/*/exportCsv', Mage::helper('sales')->__('CSV')); 
-			$this->addExportType('*/*/exportExcel', Mage::helper('sales')->__('Excel'));
+		//	$this->addExportType('*/*/exportCsv', Mage::helper('sales')->__('CSV')); 
+		//	$this->addExportType('*/*/exportExcel', Mage::helper('sales')->__('Excel'));
 
 				return parent::_prepareColumns();
 		}
@@ -72,9 +72,9 @@ class Craftsvilla_Seovendor_Block_Adminhtml_Seovendor_Grid extends Mage_Adminhtm
 			$this->setMassactionIdField('vendor_id');
 			$this->getMassactionBlock()->setFormFieldName('vendor_ids');
 			$this->getMassactionBlock()->setUseSelectAll(true);
-			$this->getMassactionBlock()->addItem('remove_vendorseo', array(
+			$this->getMassactionBlock()->addItem('remove_seovendor', array(
 					 'label'=> Mage::helper('seovendor')->__('Remove Vendorseo'),
-					 'url'  => $this->getUrl('*/adminhtml_seovendor/massRemove'),
+					 'url'  => $this->getUrl('*/adminhtml_seovendorbackend/massRemove'),
 					 'confirm' => Mage::helper('seovendor')->__('Are you sure?')
 				));
 			return $this;
