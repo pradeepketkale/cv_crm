@@ -5,7 +5,13 @@ class Craftsvilla_Bulkuploadcsv_Block_Adminhtml_Bulkuploadcsv_Renderer_Error ext
   public function render(Varien_Object $row)
   {
     $value =  $row->getData($this->getColumn()->getIndex());
-    return "<a href ='".$value."'>Download Report</a>"; 
+    if(!empty($value)){
+    	return "<a href ='http://mediaserverclean.craftsvilla.com.s3.amazonaws.com/".$value."?t=".time()."'>Download Report</a>"; 	
+    }
+    else{
+    	return "No Report";
+    }
+    
   }
 
   

@@ -1749,7 +1749,7 @@ class Craftsvilla_Financereport_FinancereportController extends Mage_Core_Contro
         fputcsv($fp, array("AWB Number","Shipment Number"));
         foreach ($data as $key => $value) {
             $readQuery = Mage::getSingleton('core/resource')->getConnection('custom_db');
-            $sql = "select  number , parent_id from sales_flat_shipment_track where number = '".$value."' ";
+            $sql = "select sales_flat_shipment_track.number, sales_flat_shipment.increment_id from sales_flat_shipment left join sales_flat_shipment_track on sales_flat_shipment.entity_id = sales_flat_shipment_track.parent_id where sales_flat_shipment_track.number = '".$value."' ";
             $result = $readQuery->query($sql)->fetch();
             if($result){
                 //var_dump($result);exit;
