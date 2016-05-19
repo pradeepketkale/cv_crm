@@ -129,7 +129,11 @@ class Craftsvilla_Seovendor_Adminhtml_SeovendorbackendController extends Mage_Ad
 					Mage::getSingleton("adminhtml/session")->setVendorseoData(false);
 
 					if ($this->getRequest()->getParam("back")) {
-					$this->_redirect("*/*/edit", array("id" => $model->getVendorId()));
+						if($this->getRequest()->getParam("id")) {
+							$this->_redirect("*/*/edit", array("id" => $model->getVendorId()));
+						} else {
+							$this->_redirect("*/*/edit", array("id" => $vendor_id));
+						}
 					return;
 					}
 					$this->_redirect("*/*/");
