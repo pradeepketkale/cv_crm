@@ -1742,7 +1742,7 @@ class Craftsvilla_Financereport_FinancereportController extends Mage_Core_Contro
     //For AWB to Shipment Mapping CSV
     public function awbToShipmentAction()
     {   //var_dump($_POST);exit;
-        $data = $_POST;
+        $data = explode(",", $_POST['param']) ;
         $filename = "awb_shipment";
         $filePathOfCsv = Mage::getBaseDir('media') . DS . $filename . '.csv';
         $fp = fopen($filePathOfCsv, 'w');
@@ -1751,6 +1751,7 @@ class Craftsvilla_Financereport_FinancereportController extends Mage_Core_Contro
             $readQuery = Mage::getSingleton('core/resource')->getConnection('custom_db');
             $sql = "select sales_flat_shipment_track.number, sales_flat_shipment.increment_id from sales_flat_shipment left join sales_flat_shipment_track on sales_flat_shipment.entity_id = sales_flat_shipment_track.parent_id where sales_flat_shipment_track.number = '".$value."' ";
             $result = $readQuery->query($sql)->fetch();
+            $readQuery->closeConnection();
             if($result){
                 //var_dump($result);exit;
                 fputcsv($fp, $result);

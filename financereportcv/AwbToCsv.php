@@ -40,16 +40,17 @@ include('session.php');
                     var form = document.createElement("form");
                     form.setAttribute("method", 'POST');
                     form.setAttribute("action", "/financereport/financereport/awbToShipment");
+                    var dataString = '';
+                    data.forEach(function(value){
+                        dataString += value + ',';
+                    })
+                    dataString = dataString.substring(0,dataString.length-1);
+                    var hiddenField = document.createElement("input");
+                    hiddenField.setAttribute("type", "hidden");
+                    hiddenField.setAttribute("name", "param");
+                    hiddenField.setAttribute("value", dataString);
+                    form.appendChild(hiddenField);
 
-                    for(var key in data) {
-                      if(data.hasOwnProperty(key)) {
-                        var hiddenField = document.createElement("input");
-                        hiddenField.setAttribute("type", "hidden");
-                        hiddenField.setAttribute("name", key);
-                        hiddenField.setAttribute("value", data[key]);
-                        form.appendChild(hiddenField);
-                      }
-                    }
                     document.body.appendChild(form);
                     form.submit();
                     } else {
