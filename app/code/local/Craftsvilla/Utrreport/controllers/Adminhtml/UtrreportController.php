@@ -315,10 +315,12 @@ public function assignAction()
 									if($result){
 										$total_amount1 = $total_amount - $shipmentpayout_report1_val['base_shipping_amount'];
 										$vendor_amount = (($total_amount1)*(1-($commission_amount/100)*(1+$service_tax)));
+										$total_amount = ($subTotal*1.5)+$shipmentpayout_report1_val['base_shipping_amount']+$discountAmountCoupon; //For 1.5 Factor recovery
 										$kribha_amount = ((($total_amount)*1.00) - $vendor_amount);
 										$shipmentType = "KYC";
 									}else {
 										$vendor_amount = (($total_amount)*(1-($commission_amount/100)*(1+$service_tax)));
+										$total_amount = ($subTotal*1.5) + $shipmentpayout_report1_val['base_shipping_amount'] +$discountAmountCoupon; //For 1.5 Factor recovery
 										$kribha_amount = ((($total_amount)*1.00) - $vendor_amount);
 										$shipmentType = "Non IN KYC";
 									}
