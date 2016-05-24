@@ -49,6 +49,8 @@ include('session.php');
 					$('.chartContainer').css('visibility', 'visible');
 					var result = JSON.parse(msg);
 					console.log(result);
+					$('#totalOrder').text(result.totalOrder);
+					$('#totalShippedOrder').text(result.totalShippedOrder);
 					var chart = new CanvasJS.Chart("chartContainer", {
 						title:{
 							text: "GMV and NMV"
@@ -59,6 +61,11 @@ include('session.php');
 							type: "column",
 							dataPoints: [
 								{ label: "GMV",  y: result.gmv  },
+								{ label: "Dropped Order GMV", y: result.droppedGmv  },
+								{ label: "Shipped GMV", y: result.shippedGMV  },
+								{ label: "Cancelled Shipment", y: result.cancelledShipmentGmv  },
+								{ label: "RTO", y: result.rtoGmv  },
+								{ label: "Refund Initiated", y: result.refuntInitiatedGmv  },
 								{ label: "NMV", y: result.nmv  },
 								{ label: "NMV-COD", y: result.nmvcod },
 								{ label: "NMV-Others",  y: result.nmvothers  }
@@ -146,6 +153,7 @@ include('session.php');
 <!-- 	<div id="mybox">
  -->
  <div id= "loader" style="height: 300px; width: 40%; margin-top: 100px;margin-left: 49%; visibility: collapse;" class="loader"> </div>
- <div id="chartContainer" class="chartContainer" style="height: 300px; width: 40%; margin-top: 100px;margin-left: 30%;"></div>
+ <div id="chartContainer" class="chartContainer" style="height: 500px; width: 50%; margin-top: 100px;margin-left: 20%;"></div>
+ <div ><b>Total Order:</b><div id="totalOrder"> </div> <br><br><b>Total Shipped Order</b> <div id="totalShippedOrder"> </div></div>
 </body>
 </html>

@@ -1723,18 +1723,30 @@ class Craftsvilla_Financereport_FinancereportController extends Mage_Core_Contro
         $result = array('gmv'=>'', 'nmv' => '', 'nmvcod' => '', 'nmvothers' => '');
         $readQuery     = Mage::getSingleton('core/resource')->getConnection('custom_db');
         $sqlnmv = "select
-                    sum(case when (sfs.udropship_status = 1 and sfop.method not in ('cashondelivery','free')) then (sfs.base_shipping_amount+sfs.base_total_value) else 0 end) as Prepaid,
-                    sum(case when (sfs.udropship_status = 7 and sfop.method = 'cashondelivery') then (sfs.base_shipping_amount+sfs.base_total_value) else 0 end) as COD
-                    from sales_flat_shipment sfs
-                    left join sales_flat_order_payment sfop
-                    on sfs.order_id = sfop.parent_id where sfs.created_at BETWEEN '".$startDate." 00:00:01' AND '".$endDate." 23:59:59' AND (sfs.base_shipping_amount+sfs.base_total_value) < 250000";
+count(DISTINCT sfs.order_id) as TotalShippedOrder,
+sum(sfs.base_shipping_amount+sfs.base_total_value) as shippedGMV,
+sum(case when (sfs.udropship_status = 1 and sfop.method not in ('cashondelivery','free')) then (sfs.base_shipping_amount+sfs.base_total_value) else 0 end) as MnvPrepaid,
+sum(case when (sfs.udropship_status = 7 and sfop.method = 'cashondelivery') then (sfs.base_shipping_amount+sfs.base_total_value) else 0 end) as MnvCOD,
+sum(case when (sfs.udropship_status = 6) then (sfs.base_shipping_amount+sfs.base_total_value) else 0 end) as cancelledShipmentGmv,
+sum(case when (sfs.udropship_status IN (25,41)) then (sfs.base_shipping_amount+sfs.base_total_value) else 0 end) as rtoGmv,
+sum(case when (sfs.udropship_status = 12) then (sfs.base_shipping_amount+sfs.base_total_value) else 0 end) as refuntInitiatedGmv
+from sales_flat_shipment sfs
+left join sales_flat_order_payment sfop
+on sfs.order_id = sfop.parent_id where sfs.created_at BETWEEN '".$startDate." 00:00:01' AND '".$endDate." 23:59:59' AND (sfs.base_shipping_amount+sfs.base_total_value) < 250000";
         $resultNmv       = $readQuery->query($sqlnmv)->fetch();
-        $result['nmvcod'] = round(intval($resultNmv['COD']));
-        $result['nmvothers'] = round(intval($resultNmv['Prepaid']));
-        $result['nmv'] = round($resultNmv['COD'] + $resultNmv['Prepaid']);
-        $sqlgmv = "SELECT  sum(base_grand_total) as gmv from sales_flat_order where base_grand_total < 250000 and created_at BETWEEN '".$startDate." 00:00:01' AND '".$endDate." 23:59:59'";
+        $result['totalShippedOrder'] = round(intval($resultNmv['TotalShippedOrder']));
+        $result['shippedGMV'] = round(intval($resultNmv['shippedGMV']));
+        $result['cancelledShipmentGmv'] = round(intval($resultNmv['cancelledShipmentGmv']));
+        $result['rtoGmv'] = round(intval($resultNmv['rtoGmv']));
+        $result['refuntInitiatedGmv'] = round(intval($resultNmv['refuntInitiatedGmv']));
+        $result['nmvcod'] = round(intval($resultNmv['MnvCOD']));
+        $result['nmvothers'] = round(intval($resultNmv['MnvPrepaid']));
+        $result['nmv'] = round($resultNmv['MnvCOD'] + $resultNmv['MnvPrepaid']);
+        $sqlgmv = "SELECT  sum(base_grand_total) as gmv,count(*) as TotalOrder from sales_flat_order where base_grand_total < 250000 and created_at BETWEEN '".$startDate." 00:00:01' AND '".$endDate." 23:59:59'";
         $resultgmv       = $readQuery->query($sqlgmv)->fetch();
         $result['gmv'] = round(intval($resultgmv['gmv']));
+        $result['droppedGmv'] = round(intval($resultgmv['gmv']) - $result['shippedGMV']);
+        $result['totalOrder'] = round(intval($resultgmv['TotalOrder']));
         $readQuery->closeConnection();
         echo (json_encode($result));
     }
