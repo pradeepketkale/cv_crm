@@ -359,7 +359,7 @@ public function assignAction()
 
 							} else if ($utrBalance >= $total_amount) {
 								$strTest.= $shipmentpayout_report1_val['shipment_id'].",".$utrBalance.",".$total_amount.",".$vendor_amount.",".$kribha_amount.",".$closingbalance.",nill,$commission_amount,$service_tax,$shipmentType,$payu_commission,$pg\n";////////////////////
-								$utrBalance = $utrBalance - $total_amount;
+								$utrBalance = $utrBalance - ($total_amount - $payu_commission);
 								$write = Mage::getSingleton('core/resource')->getConnection('shipmentpayout_write');
 								$queryUpdate = "update shipmentpayout set `citibank_utr` = '".$utrNum."', `todo_payment_amount`= '".$vendor_amount."',`todo_commission_amount`= '".$kribha_amount."' WHERE shipment_id = '".$shipmentpayout_report1_val['shipment_id']."'";
 								$write->query($queryUpdate);
