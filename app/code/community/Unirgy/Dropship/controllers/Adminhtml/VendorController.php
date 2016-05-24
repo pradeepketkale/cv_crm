@@ -423,7 +423,8 @@ echo "</pre>";
                          
                          $remark = mysql_escape_string($this->getRequest()->getParam('disable_shop'));
                          $write = Mage::getSingleton('core/resource')->getConnection('core_write');
-                         $remarkinsertQuery = "INSERT INTO `vendoractivityremark` SET `vendorid`='".$vendorId[0]."',`vendorname`='".$vendorName."',`vendoractivity`='".$remark."', `created_at`='".$created_at."'"; 
+                         $vendor_name = mysql_real_escape_string(trim($vendorName));
+                         $remarkinsertQuery = "INSERT INTO `vendoractivityremark` SET `vendorid`='".$vendorId[0]."',`vendorname`='".$vendor_name."',`vendoractivity`='".$remark."', `created_at`='".$created_at."'"; 
                          $remarkinsertrow = $write->query($remarkinsertQuery);
       
                           $vars = Array('vendorName' =>$vendorName,
