@@ -1779,4 +1779,75 @@ on sfs.order_id = sfop.parent_id where sfs.created_at BETWEEN '".$startDate." 00
         readfile($filePathOfCsv, false);
         unlink($filePathOfCsv);
     }
+
+    public function preFormacodeAction(){
+        /*$mageFilename = 'app/Mage.php';
+        require_once $mageFilename;
+        umask(0);
+        Mage::app();
+        $con = mysql_connect("newserver2read.cpw1gtbr1jnd.ap-southeast-1.rds.amazonaws.com","poqfcwgwub","2gvrwogof9vnw");
+        mysql_select_db("nzkrqvrxme", $con);*/
+        //$obj =  "check_pay_to";
+        $vendor_id = $_POST['vendor_id'];
+        //$vendor_id = '460';
+        $obj1 = "custom_vars_combined";
+
+        //$vendor_id = '2000';
+        $sql = "SELECT *,`".$obj1."`FROM `udropship_vendor` WHERE `vendor_id` ='".$vendor_id."'";
+        $readQuery = Mage::getSingleton('core/resource')->getConnection('custom_db');
+        $result = $readQuery->query($sql)->fetch();
+        //var_dump($result);exit;
+        /*$result = mysql_query($sql,$con);
+        $sql_row=mysql_fetch_array($result);*/
+        //echo `<pre>`;
+        //print_r($sql_row);exit;
+        $sql_row = $result;
+        $data = $result;
+        //var_dump($data);exit;
+        $data = json_decode($result["custom_vars_combined"],true);
+        /*var_dump($result);exit;*/
+        $obj = $data['commission_percent'];
+        $obj2 = $data['check_pay_to'];
+        $obj3 = $data['bank_ac_number'];
+        $obj4 = $data['bank_ifsc_code'];
+        $obj5 = $data['bank_name'];
+        $obj6 = $data['bank_branch_address'];
+        //echo "merchant id". $obj4 = $data['merchant_id_city'];
+        //exit;
+        if ($data['merchant_id_city'] == '')
+        {
+        ?>
+        <center><h1>Annex 4</h1></center>
+        <p>For getting payment through NEFT/RTGS, update the your registered bank account details with Craftsvilla Handicrafts Private Limited (Craftsvilla.com)</p>
+        <table  height="50%" cellspacing="0" cellpadding="10" border="1" width="100%" style="border:1px solid #EAEAEA;">
+        <tr><td width="25%"><b>Shop Name</b></td>
+
+        <?php echo '<td>'.$sql_row['vendor_name'].'</td></tr>';?>
+        <tr><td width="25%"><b>Account Name</b></td>
+        <?php echo '<td>'.$obj2.'</td></tr>';?>
+        <tr><td width="25%"><b>Account Number</b></td>
+        <?php echo '<td>'.$obj3.'</td></tr>';?>
+        <tr><td width="25%"><b>IFSC Code</b></td>
+        <?php echo '<td>'.$obj4.'</td></tr>';?>
+        <tr><td width="25%"><b>Name Of Bank</b></td>
+        <?php echo '<td>'.$obj5.'</td></tr>';?>
+        <tr><td width="25%"><b>Branch Address</b></td>
+        <?php echo '<td>'.$obj6.'</td></tr>';?>
+        <tr><td width="25%"><b>Vendor Address</b></td>
+        <?php echo '<td>'.$sql_row["vendor_attn"].','.$sql_row["street"].','.$sql_row["city"].','.$sql_row["zip"].'</td></tr>';?>
+        <tr><td width="25%"><b>Commision Percentage</b></td>
+        <?php echo '<td>'.$obj.'</td></tr>';?>
+        <tr><td width="25%"><b>Agreement Date</b></td>
+        <?php echo '<td>'.$sql_row["created_at"].'</td></tr>';?>
+        <tr><td width ="25%"><b>NEFT Code</b></td>
+        <?php echo '<td>'.'NEFT'.str_replace(' ','',substr(strtoupper($sql_row["vendor_name"]),0,7)).$sql_row["vendor_id"].'</td></tr>';?>
+        </table>
+        <img width="25%" align="right" src="http://www.craftsvilla.com/media/udropship/default/signature-manoj-kribha.jpg">
+        <?php }
+
+        else
+                {
+                echo "Merchant Id Already available........";
+                }
+    }
 }
