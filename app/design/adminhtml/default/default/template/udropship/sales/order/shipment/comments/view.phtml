@@ -24,8 +24,8 @@
     $user = Mage::getSingleton('admin/session')->getUser(); //Added by Ankit for restriction on Damage/Lost in Transit
     $user = $user->email; //Added by Ankit for restriction on Damage/Lost in Transit
 ?>
-        <!-- Add code for prevent change status when its set Canceled (6)/COD RTO (25) -->
-<?php $checkShipementStatus = array('6','25');
+        <!-- Add code for prevent change status when its set refund initiated (12)/COD RTO (25) -->
+<?php $checkShipementStatus = array('12','25');
 			$shipmentStatusId = $this->getEntity()->getUdropshipStatus() ;
 			
 			$monthDiff =  strtotime(date("Y-m-d", strtotime($_order_id->getUpdatedAt())) . " +3 month");
@@ -164,7 +164,8 @@
 <script type="text/javascript">
 function submitComment() {
      var currentStatusId = '<?php echo $shipmentStatusId ?>'; //alert(currentStatusId);
-     if(currentStatusId == '25' || currentStatusId == '6')
+		 var monthCheck = '<?php echo $flag ?>' ;
+     if(currentStatusId == '25' || currentStatusId == '12' || monthCheck == '1')
      {
      alert('Futher Modification not allow at this stage.');
      return false ;
