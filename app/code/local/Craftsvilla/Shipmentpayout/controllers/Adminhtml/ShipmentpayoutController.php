@@ -1497,7 +1497,7 @@ class Craftsvilla_Shipmentpayout_Adminhtml_ShipmentpayoutController extends Mage
 			$finaldate = date_format($selected_date_val1,'Y-m-d') ;
 		}else {
 			//echo "<30";
-			$finaldate = date_sub($datetemp, date_interval_create_from_date_string('20 days')); //20 Days difference
+			$finaldate = date_sub($datetemp, date_interval_create_from_date_string('15 days')); //15 Days difference
 			$finaldate = date_format($finaldate,'Y-m-d');
 		}
 		//echo( "Difference :".$date_diff . " Finale Date: ". $finaldate); exit;
