@@ -23,22 +23,26 @@
     $autoRefundedamount = Mage::helper('udropship')->getrefundCv($_entity->getId());	
     $user = Mage::getSingleton('admin/session')->getUser(); //Added by Ankit for restriction on Damage/Lost in Transit
     $user = $user->email; //Added by Ankit for restriction on Damage/Lost in Transit
-
-	// $autoRefundedamount = Mage::helper('udropship')->getrefundCv($_entity->getId());
- //    $user = Mage::getSingleton('admin/session')->getUser(); //Added by Ankit for restriction on Damage/Lost in Transit
- //    $user = $user->email; //Added by Ankit for restriction on Damage/Lost in Transit
-
 ?>
         <!-- Add code for prevent change status when its set Canceled (6)/COD RTO (25) -->
-	<?php $checkShipementStatus = array('6','25');
-	      $shipmentStatusId = $this->getEntity()->getUdropshipStatus() ;
-	?>
+<?php $checkShipementStatus = array('6','25');
+			$shipmentStatusId = $this->getEntity()->getUdropshipStatus() ;
+			
+			$monthDiff =  strtotime(date("Y-m-d", strtotime($_order_id->getUpdatedAt())) . " +3 month");
+		  $finaldate =  date('Y-m-d H:i:s', $monthDiff);
+			$todaydate = date('Y-m-d H:i:s',strtotime(date('Y-m-d H:i:s', strtotime(NOW()))));
+			if($todaydate > $finaldate){
+				$flag = 1 ;
+			} else {
+				$flag = 0 ;
+			}
+?>
 	
 <div id="comments_block">
     <span class="field-row">
         <label class="normal" for="comment_status"><?php echo Mage::helper('sales')->__('Status') ?></label><br/>
 
-       <select name="comment[status]" class="select" id="comment_status" onchange="showfield(this.options[this.selectedIndex].value)" <?php //if(in_array($shipmentStatusId,$checkShipementStatus)) echo 'disabled' ?>>
+       <select name="comment[status]" class="select" id="comment_status" onchange="showfield(this.options[this.selectedIndex].value)" <?php if(in_array($shipmentStatusId,$checkShipementStatus) || $flag == '1') echo 'disabled' ?>>
 	
 	<?php 
  
@@ -159,19 +163,19 @@
     </form>
 <script type="text/javascript">
 function submitComment() {
-    // var currentStatusId = '<?php echo $shipmentStatusId ?>'; //alert(currentStatusId);
-    // if(currentStatusId == '25' || currentStatusId == '6')
-    // {
-    // alert('Futher Modification not allow at this stage.');
-    // return false ;
-    // }
-    // else if (validateShipmentStatusSubmit()) {
-    // submitAndReloadArea($('comments_block').parentNode, '<?php echo $this->getUrl('udropshipadmin/adminhtml_shipment/addComment', array('shipment_id'=>$_entity->getId())) ?>')
-    // }
+     var currentStatusId = '<?php echo $shipmentStatusId ?>'; //alert(currentStatusId);
+     if(currentStatusId == '25' || currentStatusId == '6')
+     {
+     alert('Futher Modification not allow at this stage.');
+     return false ;
+     }
+     else if (validateShipmentStatusSubmit()) {
+     submitAndReloadArea($('comments_block').parentNode, '<?php echo $this->getUrl('udropshipadmin/adminhtml_shipment/addComment', array('shipment_id'=>$_entity->getId())) ?>')
+     }
 
-    if (validateShipmentStatusSubmit()) {
-        submitAndReloadArea($('comments_block').parentNode, '<?php echo $this->getUrl('udropshipadmin/adminhtml_shipment/addComment', array('shipment_id'=>$_entity->getId())) ?>')
-    }
+    //if (validateShipmentStatusSubmit()) {
+    //    submitAndReloadArea($('comments_block').parentNode, '<?php echo $this->getUrl('udropshipadmin/adminhtml_shipment/addComment', array('shipment_id'=>$_entity->getId())) ?>')
+    //}
 }
 
 
