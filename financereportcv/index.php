@@ -10,20 +10,21 @@ if (isset($_POST['submit'])) {
 
 	if (empty($_POST['username']) || empty($_POST['password'])) {
 	$error = "Username or Password is invalid";
-	}
-	else
-	{
+	}else{
 	$username=$_POST['username'];
 	$password=$_POST['password'];
 	$password = md5("craftskufin2017".$password);
 	$ses_sql = "SELECT `user_id` FROM `finance_login` WHERE `user_email` = '".$username."' AND `user_password` = '".$password."'";
 	$query = mysql_query($ses_sql,$mainConnection);
 	$rows = mysql_num_rows($query);
-	if ($rows == 1) {
-		$user_id = mysql_fetch_assoc($query);
+	$user_id = mysql_fetch_assoc($query);
+	if ($rows == 1 && $user_id['user_id'] == "finance1@craftsvilla.com") {
+		$_SESSION['login_user']= $user_id['user_id']; // Initializing Session
+		header("location: preformacode.php"); // Redirecting To Other Page
+	} else if($rows == 1){
 		$_SESSION['login_user']= $user_id['user_id']; // Initializing Session
 		header("location: dashboard.php"); // Redirecting To Other Page
-	} else {
+	}else {
 		$error = "Username or Password is invalid";
 	}
 		mysql_close($mainConnection); // Closing Connection
@@ -40,42 +41,42 @@ if (isset($_POST['submit'])) {
 </head>
 <link rel="stylesheet" href="css/style.css"/>
 <body>
-	
+
 	<div class="wrapper_body">
 		<div class="login_body">
-				
+
 			<div class="login-form">
 				  <form action="" method='post'>
-					
+
 					<!---	<div class="logo-wrapper">
-						
+
 							<div class="logo"></div>
-							
+
 						</div> -->
 
 							<div style="border-bottom: 1px solid #e1e1e1;">
-							
+
 							<div class="logo"></div>
 
-						</div>	
+						</div>
 
 							<div class="form-area">
-						
+
 								<div class="group">
 									<input type="text" name='username' class="form-control" placeholder="Username">
 								</div>
 							<div class="group">
 								<input type="password" name='password' class="form-control" placeholder="Password">
 						  </div>
-						  
+
 						  <button type="submit" name='submit' class="btn btn-default btn-block btn_wdt">LOGIN</button>
 						</div>
 						<span style = "color:red";> <?php echo $error; ?></span>
 				  </form>
-		 
-			</div>	
+
+			</div>
 		</div>
 	</div>
-	
+
 </body>
 </html>
