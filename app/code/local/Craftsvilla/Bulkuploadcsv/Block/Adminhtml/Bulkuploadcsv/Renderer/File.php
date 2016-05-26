@@ -5,7 +5,7 @@ class Craftsvilla_Bulkuploadcsv_Block_Adminhtml_Bulkuploadcsv_Renderer_File exte
   public function render(Varien_Object $row)
   {
     $value =  $row->getData($this->getColumn()->getIndex());
-    return "<a href ='".Mage::getBaseDir('media').DS.'vendorcsv/'.$value."'>Download</a>"; 
+    return "<a href ='http://www.craftsvilla.com/media/vendorcsv/".$value."'>Download</a>"; 
   }
 
   
