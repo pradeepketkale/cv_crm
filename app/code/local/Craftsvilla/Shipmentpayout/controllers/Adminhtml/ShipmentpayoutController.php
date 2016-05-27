@@ -1817,7 +1817,7 @@ $this->_redirect('*/*/index');
 
     	$shipmentpayout_report1 = Mage::getModel('shipmentpayout/shipmentpayout')->getCollection();
       	$shipmentpayout_report1->getSelect()
-      			->join(array('a'=>'sales_flat_shipment'), 'a.increment_id=main_table.shipment_id', array('order_entid'=>'order_id','udropship_vendor', 'subtotal'=>'base_total_value', 'commission_percent'=>'commission_percent', 'itemised_total_shippingcost'=>'itemised_total_shippingcost','cod_fee'=>'cod_fee','base_shipping_amount'=>'base_shipping_amount'))
+      			->join(array('a'=>'sales_flat_shipment'),'a.increment_id=main_table.shipment_id', array('entity_id','order_entid'=>'order_id','udropship_vendor', 'subtotal'=>'base_total_value', 'commission_percent'=>'commission_percent', 'itemised_total_shippingcost'=>'itemised_total_shippingcost','cod_fee'=>'cod_fee','base_shipping_amount'=>'base_shipping_amount'))
       			->join(array('b'=>'sales_flat_shipment_grid'), 'b.increment_id=main_table.shipment_id', array('order_created_at'))
       			->joinLeft('sales_flat_order_payment', 'b.order_id = sales_flat_order_payment.parent_id','method')
       			//->joinLeft('sales_flat_shipment_track', 'a.entity_id = sales_flat_shipment_track.parent_id','courier_name')
@@ -1826,9 +1826,9 @@ $this->_redirect('*/*/index');
       	echo ($selected_date_val);
 		exit();*/
 
-      	$shipmentpayout_report1_arr = $shipmentpayout_report1->getData();
+      	/*$shipmentpayout_report1_arr = $shipmentpayout_report1->getData();
     	$filename = "PaypalReport"."_".$selected_date_val;
-		$output = "";
+		$output = "";*/
 
 		$fieldlist = array("Debit Account Number","Value Date","Customer Reference No","Beneficiary Name","Payment Type","Bene Account Number","Bank Code","Account type","Amount","Payment Details 1","Payment Details 2","Payment Details 3","Payment Details 4","Payable Location Code *","Payable Location Name *","Print Location Code *","Print Location Name *","Beneficiary Address 1","Beneficiary Address 2","Beneficiary Address 3","Beneficiary Address 4","Delivery Method","Cheque Number","Bene E-mail ID","Instrument Detail 1","Instrument Detail 2","Craftsvilla Commission","TYPE");
 
