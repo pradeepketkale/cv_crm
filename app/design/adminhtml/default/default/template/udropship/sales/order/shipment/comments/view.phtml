@@ -28,7 +28,7 @@
 <?php $checkShipementStatus = array('12','25');
 			$shipmentStatusId = $this->getEntity()->getUdropshipStatus() ;
 			
-			$monthDiff =  strtotime(date("Y-m-d", strtotime($_order_id->getUpdatedAt())) . " +3 month");
+			$monthDiff =  strtotime(date("Y-m-d", strtotime($_entity->getUpdatedAt())) . " +3 month");
 		  $finaldate =  date('Y-m-d H:i:s', $monthDiff);
 			$todaydate = date('Y-m-d H:i:s',strtotime(date('Y-m-d H:i:s', strtotime(NOW()))));
 			if($todaydate > $finaldate){
