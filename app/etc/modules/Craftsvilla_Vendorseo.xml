@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<config>
+  <modules>
+    <Craftsvilla_Vendorseo>
+      <active>false</active>
+      <codePool>local</codePool>
+      <version>1.1.0</version>
+    </Craftsvilla_Vendorseo>
+  </modules>
+</config>

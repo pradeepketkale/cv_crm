@@ -217,8 +217,8 @@ public function assignAction()
 						$discountAmountCoupon = 0;
 						//$lastFinalbaseshipamt = $this->baseShippngAmountByOrderUtr($shipmentpayout_report1_val['order_entid'],$orderBaseShippingAmount);
 
-						$getCountryOf = $readOrderCntry->query("SELECT `country_id` FROM `sales_flat_order_address` WHERE `parent_id` = '".$shipmentpayout_report1_val['order_entid']."' AND `address_type` = 'shipping'")->fetch();
-						$getCountryResult = $getCountryOf['country_id'];
+						/*$getCountryOf = $readOrderCntry->query("SELECT `country_id` FROM `sales_flat_order_address` WHERE `parent_id` = '".$shipmentpayout_report1_val['order_entid']."' AND `address_type` = 'shipping'")->fetch();
+						$getCountryResult = $getCountryOf['country_id'];*/
 						$vendorId = $shipmentpayout_report1_val['udropship_vendor'];
 						$base_shipping_amount = $shipmentpayout_report1_val['base_shipping_amount'];
 						$itemised_total_shippingcost = $shipmentpayout_report1_val['itemised_total_shippingcost'];
@@ -305,10 +305,19 @@ public function assignAction()
 							}
 							else {
 								//$vendor_amount = (($total_amount+$base_shipping_amount+$discountAmountCoupon)*(1-($commission_amount/100)*(1+0.1450)));
-								if($getCountryResult == 'IN'){
-									$vendor_amount = (($total_amount)*(1-($commission_amount/100)*(1+$service_tax)));
-									$kribha_amount = ((($total_amount)*1.00) - $vendor_amount) - $payu_commission;
-									$shipmentType = "IN";
+								if($_orderCurrencyCode == 'INR'){
+									$sqlQuery = "select courier_name from `sales_flat_shipment_track` where LOWER(`courier_name`) = 'dhl_int' AND parent_id = " .$shipmentpayout_report1_val['entity_id'];
+									$result = $readOrderCntry->query($sqlQuery)->fetch();
+									if($result){
+										$total_amount1 = $total_amount - $shipmentpayout_report1_val['base_shipping_amount'];
+										$vendor_amount = (($total_amount1)*(1-($commission_amount/100)*(1+$service_tax)));
+										$kribha_amount = ((($total_amount)*1.00) - $vendor_amount);
+										$shipmentType = "KYC";
+									}else {
+										$vendor_amount = (($total_amount)*(1-($commission_amount/100)*(1+$service_tax)));
+										$kribha_amount = ((($total_amount)*1.00) - $vendor_amount) - $payu_commission;
+										$shipmentType = "IN";
+									}
 								}else{
 									$sqlQuery = "select courier_name from `sales_flat_shipment_track` where LOWER(`courier_name`) = 'dhl_int' AND parent_id = " .$shipmentpayout_report1_val['entity_id'];
 									$result = $readOrderCntry->query($sqlQuery)->fetch();
@@ -359,7 +368,7 @@ public function assignAction()
 
 							} else if ($utrBalance >= $total_amount) {
 								$strTest.= $shipmentpayout_report1_val['shipment_id'].",".$utrBalance.",".$total_amount.",".$vendor_amount.",".$kribha_amount.",".$closingbalance.",nill,$commission_amount,$service_tax,$shipmentType,$payu_commission,$pg\n";////////////////////
-								$utrBalance = $utrBalance - $total_amount;
+								$utrBalance = $utrBalance - ($total_amount - $payu_commission);
 								$write = Mage::getSingleton('core/resource')->getConnection('shipmentpayout_write');
 								$queryUpdate = "update shipmentpayout set `citibank_utr` = '".$utrNum."', `todo_payment_amount`= '".$vendor_amount."',`todo_commission_amount`= '".$kribha_amount."' WHERE shipment_id = '".$shipmentpayout_report1_val['shipment_id']."'";
 								$write->query($queryUpdate);

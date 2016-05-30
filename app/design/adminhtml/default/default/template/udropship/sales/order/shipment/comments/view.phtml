@@ -20,18 +20,33 @@
    	$_order_id = $_entity->getOrder();
 	$_shippingAddress_value = $_order_id->getShippingAddress();
 	$country_id_value = $_shippingAddress_value->getCountry_id();
-	$autoRefundedamount = Mage::helper('udropship')->getrefundCv($_entity->getId());
+    $autoRefundedamount = Mage::helper('udropship')->getrefundCv($_entity->getId());	
     $user = Mage::getSingleton('admin/session')->getUser(); //Added by Ankit for restriction on Damage/Lost in Transit
     $user = $user->email; //Added by Ankit for restriction on Damage/Lost in Transit
 ?>
+        <!-- Add code for prevent change status when its set refund initiated (12)/COD RTO (25) -->
+<?php $checkShipementStatus = array('12','25');
+			$shipmentStatusId = $this->getEntity()->getUdropshipStatus() ;
+			
+			$monthDiff =  strtotime(date("Y-m-d", strtotime($_entity->getUpdatedAt())) . " +3 month");
+		  $finaldate =  date('Y-m-d H:i:s', $monthDiff);
+			$todaydate = date('Y-m-d H:i:s',strtotime(date('Y-m-d H:i:s', strtotime(NOW()))));
+			if($todaydate > $finaldate){
+				$flag = 1 ;
+			} else {
+				$flag = 0 ;
+			}
+?>
+	
 <div id="comments_block">
     <span class="field-row">
         <label class="normal" for="comment_status"><?php echo Mage::helper('sales')->__('Status') ?></label><br/>
-        <select name="comment[status]" class="select" id="comment_status" onchange="showfield(this.options[this.selectedIndex].value)">
 
-        <?php
-
-foreach (Mage::getSingleton('udropship/source')->setPath('shipment_statuses')->toOptionHash() as $_code=>$_label):
+       <select name="comment[status]" class="select" id="comment_status" onchange="showfield(this.options[this.selectedIndex].value)" <?php if(in_array($shipmentStatusId,$checkShipementStatus) || $flag == '1') echo 'disabled' ?>>
+	
+	<?php 
+ 
+      foreach (Mage::getSingleton('udropship/source')->setPath('shipment_statuses')->toOptionHash() as $_code=>$_label):
         		/*
         		*Craftsvilla Comment
         		*Changed Shipped to Shipped To Customer and added one more condition Shipped To Craftsvilla
@@ -148,9 +163,20 @@ foreach (Mage::getSingleton('udropship/source')->setPath('shipment_statuses')->t
     </form>
 <script type="text/javascript">
 function submitComment() {
-    if (validateShipmentStatusSubmit()) {
-        submitAndReloadArea($('comments_block').parentNode, '<?php echo $this->getUrl('udropshipadmin/adminhtml_shipment/addComment', array('shipment_id'=>$_entity->getId())) ?>')
-    }
+     var currentStatusId = '<?php echo $shipmentStatusId ?>'; //alert(currentStatusId);
+		 var monthCheck = '<?php echo $flag ?>' ;
+     if(currentStatusId == '25' || currentStatusId == '12' || monthCheck == '1')
+     {
+     alert('Futher Modification not allow at this stage.');
+     return false ;
+     }
+     else if (validateShipmentStatusSubmit()) {
+     submitAndReloadArea($('comments_block').parentNode, '<?php echo $this->getUrl('udropshipadmin/adminhtml_shipment/addComment', array('shipment_id'=>$_entity->getId())) ?>')
+     }
+
+    //if (validateShipmentStatusSubmit()) {
+    //    submitAndReloadArea($('comments_block').parentNode, '<?php echo $this->getUrl('udropshipadmin/adminhtml_shipment/addComment', array('shipment_id'=>$_entity->getId())) ?>')
+    //}
 }
 
 

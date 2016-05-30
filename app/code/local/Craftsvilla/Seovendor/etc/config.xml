@@ -1,0 +1,118 @@
+<?xml version="1.0"?>
+<config>
+  <modules>
+    <Craftsvilla_Seovendor>
+      <version>0.1.0</version>
+    </Craftsvilla_Seovendor>
+  </modules>
+ 
+ <admin>
+		<routers>
+			<seovendor>
+				<use>admin</use>
+				<args>
+					<module>Craftsvilla_Seovendor</module>
+					<frontName>seovendor</frontName>
+				</args>
+			</seovendor>
+		</routers>
+	</admin>
+	
+	<adminhtml>
+		<menu>
+			<cms>
+				<children>
+					<seovendor module="seovendor">
+					<title>VendorSeo</title>
+					<sort_order>100</sort_order>
+					<!--<children>
+						<seovendorbackend module="seovendor">
+						<title>Manage Seo Data</title>
+						<sort_order>0</sort_order>
+						<action>seovendor/adminhtml_seovendorbackend</action>
+						</seovendorbackend>
+					</children>-->
+					 <action>seovendor/adminhtml_seovendorbackend</action>
+					</seovendor>
+				</children>
+			</cms>
+		</menu>
+	
+		<acl>
+			<resources>
+			<all>
+				<title>Allow Everything</title>
+			</all>
+			<admin>
+				<children>
+					<cms>
+						<children>
+							<seovendorbackend>
+							<title>Manage Seo Data</title>
+							</seovendorbackend>
+						</children>
+				  </cms>
+				</children>
+			</admin>
+			</resources>
+		</acl>
+		
+		<layout>
+			<updates>
+			<seovendor>
+				<file>seovendor.xml</file>
+			</seovendor>
+			</updates>
+		</layout>
+  </adminhtml>
+	
+  <global>
+    <models>
+			<seovendor>
+				<class>Craftsvilla_Seovendor_Model</class>
+				<resourceModel>seovendor_mysql4</resourceModel>
+			</seovendor>
+			<seovendor_mysql4>
+				<class>Craftsvilla_Seovendor_Model_Mysql4</class>
+				<entities>		  
+					<seovendor>
+					<table>cv_vendor</table>
+					</seovendor>
+				</entities>
+			</seovendor_mysql4>
+		</models>
+	
+		<resources>
+			<seovendor_setup>
+				<setup>
+					<module>Craftsvilla_Seovendor</module>
+				</setup>
+				<connection>
+					<use>core_setup</use>
+				</connection>
+			</seovendor_setup>
+			<seovendor_write>
+				<connection>
+					<use>core_write</use>
+				</connection>
+			</seovendor_write>
+			<seovendor_read>
+				<connection>
+					<use>core_read</use>
+				</connection>
+			</seovendor_read>
+		</resources>
+  
+	  <blocks>
+			<seovendor>
+				<class>Craftsvilla_Seovendor_Block</class>
+			</seovendor>
+		</blocks>
+	
+		<helpers>
+      <seovendor>
+        <class>Craftsvilla_Seovendor_Helper</class>
+      </seovendor>
+    </helpers>
+	</global>
+</config> 
