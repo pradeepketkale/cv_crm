@@ -87,7 +87,12 @@
 		       <type>html</type>
 	   </disputeraisecustomer_bankaccount_details_vendor_template>
 
-
+	   <return_pickup_requested module="craftsvillaemail">
+				   <label>return_pickup_requested</label>
+				   <file>return_pickup_requested.html</file>
+				   <type>html</type>
+		</return_pickup_requested>	
+		
 		<Mail_Return_Survey module="craftsvillaemail">
 		       <label>Mail_Return_Survey</label>
 		       <file>Mail_Return_Survey.html</file>

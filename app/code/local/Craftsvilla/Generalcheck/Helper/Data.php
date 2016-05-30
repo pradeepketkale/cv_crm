@@ -279,9 +279,121 @@ public function productUpdateNotify_retry($productId)
 					}
 			
 			
-	}
+	}	
+     
+    /*--------
+        SendDNXT authentication
+        Author: pbketkale@gmail.com
+    ----------*/
 
-	
-                            
+    public function getSenddToken(){
+        $lifetime = 7776000; // 90 days
+        $cacheSenddLoginKey = 'Craftsvilla-Sendd-Login-Token';
+        if($cacheContent = Mage::app()->loadCache($cacheSenddLoginKey)){
+            $token = $cacheContent; //echo $token; exit;
+        } else {
+            $token = $this->senddLogin();
+            if($token){
+                Mage::app()->saveCache($token, $cacheSenddLoginKey, $tags, $lifetime);
+            }
+        }
+        return $token;
+
+    }
+
+    public function senddLogin(){
+        
+        $errorArr = array();
+        $model= Mage::getStoreConfig('craftsvilla_config/sendd');
+        $url = $model['base_url'].'rest-auth/login/';
+        $email = $model['email'];
+        $password  = $model['password'];
+
+        $input = array('email' => $email, 'password' => $password);
+        $input = json_encode($input);
+
+        $count = 3;
+        while($count >0){ // try api calls 3 times
+            $curl = curl_init();
+            curl_setopt_array($curl, array(
+                CURLOPT_URL => $url,
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => "",
+                CURLOPT_MAXREDIRS => -1,
+                CURLOPT_TIMEOUT => 300,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => "POST",
+                CURLOPT_POSTFIELDS => $input,
+                CURLOPT_HTTPHEADER => array("cache-control: no-cache","content-type: application/json"),
+            ));
+            $result = curl_exec($curl);
+            $result = json_decode($result);
+            $error = curl_error($curl);
+            $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+            curl_close($curl);
+
+            if($httpCode == 200 && $result->key ){
+                return $result->key;
+            }
+            $count--;
+        } 
+
+        $errorArr[] = "The error http status code : " . $httpCode;
+        if($result){
+            foreach ($result as $key=>$value){
+               $errorArr[] =  $key." : ".$value[0];
+            }
+        }
+        if($error){
+            $errorArr[] = $error;
+        }
+
+        $issue = 'Unable to get the access token of Sendd APIs!';
+        return $this->sendErrorEmail($errorArr, $issue);
+
+    }
+
+    public function sendErrorEmail($errors, $issue, $shipmentId ='', $vendorId =''){
+        //echo "sent the mail";
+        date_default_timezone_set('Asia/Kolkata');
+        $errorTiming = date("Y-m-d h:i:sa");
+        $courierName = 'India Post';
+
+        $serverInfo  = json_encode($_SERVER);
+
+        $errorMessage = json_encode($errors);
+        $errorTable = "";
+        $errorTable .="<div>";
+        $errorTable .="<p>".$issue.".The Status is shown below table.</p>";
+        $errorTable .="<table border='1' cellpadding='2px'>";
+        $errorTable .="<th>Courier Name</th><th>Shipment Id</th><th>Reason</th>";
+        $errorTable .="<tr><td>".$courierName."</td><td>".$shipmentId."</td><td>".$errorMessage."</td></tr>";
+        $errorTable .="<tr><td colspan=3>".$serverInfo."</td></tr>";
+        $errorTable .="</table></div>";
+
+        $mail = Mage::getModel('core/email');
+        $mail->setToName('Craftsvilla');
+        //$mail->setToEmail('awb.errors@craftsvilla.com');
+        $mail->setToEmail('swati.mule@craftsvilla.com');
+        $mail->setBody($errorTable);
+        $mail->setSubject($courierName.' Awb Number Creation Issue at '.$errorTiming);
+        $mail->setFromEmail('dileswar@craftsvilla.com');
+        $mail->setFromName("Craftsvilla");
+        $mail->setType('html');
+        $mail->send();
+        $awberrorCourierName = $courierName;
+        $writedb = Mage::getSingleton('core/resource')->getConnection('core_write');
+        $updateAwbError = "INSERT INTO `courier_awb_error`(`shipment_id`, `vendor_id`, `courier`, `error`) VALUES ('".$shipmentId."','".$vendorId."','".$awberrorCourierName."', '".$errorMessage."') ";
+        $writedb->query($updateAwbError);
+        $writedb->closeConnection();
+
+        return NULL;
+    }
+
+    public function removeSenddLoginKey(){
+        $cacheSenddLoginKey = 'Craftsvilla-Sendd-Login-Token';
+        Mage::app()->removeCache($cacheSenddLoginKey);
+        return;
+    }                       
 }
 	 
