@@ -464,24 +464,36 @@ class Craftsvilla_Shipmentpayout_Adminhtml_ShipmentpayoutController extends Mage
     		        $readOrderCntry = Mage::getSingleton('core/resource')->getConnection('core_read');
     		        $getCountryOf = $readOrderCntry->query("SELECT `country_id` FROM `sales_flat_order_address` WHERE `parent_id` = '".$shipmentpayout_report1_val['order_entid']."' AND `address_type` = 'shipping'")->fetch();
     		        $getCountryResult = $getCountryOf['country_id'];
-		    		if($getCountryResult == 'IN'){
-		    			$vendor_amount = (($total_amount)*(1-($commission_amount/100)*(1+$service_tax)));
-		    			$kribha_amount = ((($total_amount)*1.00) - $vendor_amount);
-		    			$shipmentType = "Non KYC";
-		    		}else{
+		    		if($_orderCurrencyCode == 'INR'){
 		    			$sqlQuery = "select courier_name from `sales_flat_shipment_track` where LOWER(`courier_name`) = 'dhl_int' AND parent_id = " .$shipmentpayout_report1_val['entity_id'];
 		    			$result = $readOrderCntry->query($sqlQuery)->fetch();
+		    			$readOrderCntry->closeConnection();
 		    			if($result){
 		    				$total_amount1 = $total_amount - $shipmentpayout_report1_val['base_shipping_amount'];
 		    				$vendor_amount = (($total_amount1)*(1-($commission_amount/100)*(1+$service_tax)));
 		    				$kribha_amount = ((($total_amount)*1.00) - $vendor_amount) ;
 		    				$shipmentType = "KYC";
 		    			}else {
+			    			$vendor_amount = (($total_amount)*(1-($commission_amount/100)*(1+$service_tax)));
+			    			$kribha_amount = ((($total_amount)*1.00) - $vendor_amount);
+			    			$shipmentType = "Non KYC";
+			    		}
+		    		}else{
+		    			$sqlQuery = "select courier_name from `sales_flat_shipment_track` where LOWER(`courier_name`) = 'dhl_int' AND parent_id = " .$shipmentpayout_report1_val['entity_id'];
+		    			$result = $readOrderCntry->query($sqlQuery)->fetch();
+		    			$readOrderCntry->closeConnection();
+		    			if($result){
+		    				$total_amount1 = $total_amount - $shipmentpayout_report1_val['base_shipping_amount'];
+		    				$vendor_amount = (($total_amount1)*(1-($commission_amount/100)*(1+$service_tax)));
+		    				$total_amount = ($subTotal*1.5)+$shipmentpayout_report1_val['base_shipping_amount']+$discountAmountCoupon; //For 1.5 Factor recovery
+		    				$kribha_amount = ((($total_amount)*1.00) - $vendor_amount) ;
+		    				$shipmentType = "KYC";
+		    			}else {
 		    				$vendor_amount = (($total_amount)*(1-($commission_amount/100)*(1+$service_tax)));
+		    				$total_amount = ($subTotal*1.5)+$shipmentpayout_report1_val['base_shipping_amount']+$discountAmountCoupon; //For 1.5 Factor recovery
 		    				$kribha_amount = ((($total_amount)*1.00) - $vendor_amount);
 		    				$shipmentType = "Non KYC";
 		    			}
-		    			$readOrderCntry->closeConnection();
 		    		}
 		    	}
 
@@ -1846,10 +1858,10 @@ $this->_redirect('*/*/index');
 		$output .= "\n";
 
 		/*echo "<pre>";
-		print_r($shipmentpayout_report1_arr);
+		print_r($shipmentpayout_report1);
 		exit();*/
 		$readOrderCntry = Mage::getSingleton('core/resource')->getConnection('core_read');
-    	foreach($shipmentpayout_report1_arr as $shipmentpayout_report1_val)
+    	foreach($shipmentpayout_report1 as $shipmentpayout_report1_val)
 	    {
 			$vendors = Mage::helper('udropship')->getVendor($shipmentpayout_report1_val['udropship_vendor']);
 			//var_dump($vendors);exit;
@@ -1881,8 +1893,8 @@ $this->_redirect('*/*/index');
 				// Below Two lines added By Dileswar for Adding Discount coupon on dated 25-07-2013
 				$disCouponcode = '';
 				$discountAmountCoupon = 0;
-				$getCountryOf = $readOrderCntry->query("SELECT `country_id` FROM `sales_flat_order_address` WHERE `parent_id` = '".$shipmentpayout_report1_val['order_entid']."' AND `address_type` = 'shipping'")->fetch();
-				$getCountryResult = $getCountryOf['country_id'];
+				/*$getCountryOf = $readOrderCntry->query("SELECT `country_id` FROM `sales_flat_order_address` WHERE `parent_id` = '".$shipmentpayout_report1_val['order_entid']."' AND `address_type` = 'shipping'")->fetch();
+				$getCountryResult = $getCountryOf['country_id'];*/
 				$_orderCurrencyCode = $order->getOrderCurrencyCode();
 				if(($_orderCurrencyCode != 'INR') && (strtotime($shipmentpayout_report1_val['order_created_at']) >= strtotime($_liveDate)))
 					$total_amount = $shipmentpayout_report1_val['subtotal']/1.5;
@@ -1891,7 +1903,7 @@ $this->_redirect('*/*/index');
 		        $commission_amount = $hlp->getVendorCommission($vendorId,$shipmentpayout_report1_val['shipment_id']);
 		        $service_tax = $hlp->getServicetaxCv($shipmentpayout_report1_val['shipment_id']);
 				//$commission_amount = 20;
-		    	$itemised_total_shippingcost = $shipmentpayout_report1_val['itemised_total_shippingcost'];
+		    	//$itemised_total_shippingcost = $shipmentpayout_report1_val['itemised_total_shippingcost'];
 		    	$base_shipping_amount = $shipmentpayout_report1_val['base_shipping_amount'];
 				$adjustmentAmount = $shipmentpayout_report1_val['adjustment'];
 				$shipmentpayoutStatus = $shipmentpayout_report1_val['shipmentpayout_status'];
@@ -1909,10 +1921,20 @@ $this->_redirect('*/*/index');
 					$disCouponcode = $order->getCouponCode();
 				}
 
-				if($getCountryResult == 'IN'){
-					$vendor_amount = (($total_amount+$base_shipping_amount+$discountAmountCoupon)*(1-($commission_amount/100)*(1+ $service_tax)));
-					$kribha_amount = ((($total_amount1+$base_shipping_amount+$discountAmountCoupon)) - $vendor_amount);
-					$type = 'Non KYC';
+				if($_orderCurrencyCode == 'INR'){
+					$sqlQuery = "select courier_name from `sales_flat_shipment_track` where LOWER(`courier_name`) = 'dhl_int' AND parent_id = " .$shipmentpayout_report1_val['entity_id'];
+					$result = $readOrderCntry->query($sqlQuery)->fetch();
+					$readOrderCntry->closeConnection();
+					if($result){
+						$total_amount2 = $total_amount +$discountAmountCoupon;
+						$vendor_amount = (($total_amount2)*(1-($commission_amount/100)*(1+$service_tax)));
+						$kribha_amount = $total_amount - $vendor_amount;
+						$type = 'KYC';
+					}else {
+						$vendor_amount = (($total_amount+$base_shipping_amount+$discountAmountCoupon)*(1-($commission_amount/100)*(1+ $service_tax)));
+						$kribha_amount = ((($total_amount1+$base_shipping_amount+$discountAmountCoupon)) - $vendor_amount);
+						$type = 'Non KYC';
+					}
 				}else{
 					$sqlQuery = "select courier_name from `sales_flat_shipment_track` where LOWER(`courier_name`) = 'dhl_int' AND parent_id = " .$shipmentpayout_report1_val['entity_id'];
 					$result = $readOrderCntry->query($sqlQuery)->fetch();
@@ -2115,6 +2137,7 @@ $this->_redirect('*/*/index');
 		//header("Content-type: text/x-csv");
 		//header("Content-Disposition: attachment; filename=$filename.csv");
 		//echo $output;
+		$filename = "paypalReport_".$finaldate;
 		$filePathOfCsv = Mage::getBaseDir('media').DS.'misreport'.DS.$filename.'.csv';
 		$fp=fopen($filePathOfCsv,'w');
 		fputs($fp, $output);
