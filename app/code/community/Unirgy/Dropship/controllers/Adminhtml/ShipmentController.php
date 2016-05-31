@@ -198,7 +198,9 @@ class Unirgy_Dropship_Adminhtml_ShipmentController extends Mage_Adminhtml_Contro
                 }
 
             //******Below cond. added By Dileswar  for call of below function on line 357 *****//
-                if($status == 12)
+
+                    
+                    if($status == 12)
                     {
                        $this->adjustmentRefundAmount($shipment_id_value,$shipmentId_value);
                     }
@@ -227,10 +229,9 @@ class Unirgy_Dropship_Adminhtml_ShipmentController extends Mage_Adminhtml_Contro
                     {
                        $this->deliver($shipment_id_value,$shipmentId_value);
                     }
-                    if($status == 37)
-                    {
-                       $this->returnrequested($shipment_id_value,$shipmentId_value);
-                    }
+
+                     
+
                 $comment = Mage::getModel('sales/order_shipment_comment')
                     ->setComment($commentText)
                     ->setIsCustomerNotified(isset($data['is_customer_notified']))
@@ -251,7 +252,7 @@ class Unirgy_Dropship_Adminhtml_ShipmentController extends Mage_Adminhtml_Contro
                 *Added by Suresh on 2-06-2012
                 */
 
-                if($status == 15 || $status == 16 || $status == 17 || $status == 18)
+                if($status == 15 || $status == 16 || $status == 17 || $status == 18 )
                 {
                     //$shipment->sendUpdateEmail('suresh.konda@craftsvilla.com', $data['comment']);
                     Mage::log("Sending email to $sendTo");
@@ -285,7 +286,7 @@ class Unirgy_Dropship_Adminhtml_ShipmentController extends Mage_Adminhtml_Contro
                         $mail->setBody('Shipment Id:#'.$shipment_id_value.'Shipment status changed to "Shipment Delayed"');
                         $mail->setSubject('Shipment Id:#'.$shipment_id_value.' Shipment status changed to "Shipment Delayed"');
                     }
-
+                    
 
 
                 $mail->setToName('Customercare');
@@ -1168,9 +1169,7 @@ public function disputeCustomerRemarks($shipment_id_value)
 
         $shipment1 = Mage::getModel('sales/order_shipment');
         $shipment = $shipment1->load($shipentId);
-            //$product = Mage::getModel('catalog/product')->load($product_id);
-            // echo '<pre>';print_r($product);exit;
-            //  echo '<pre>';print_r($shipment);exit;
+            
         $_orderId = $shipment->getOrderId();
         $orders  = Mage::getModel('sales/order')->load($_orderId);
         $orderId = $orders->getIncrementId();
@@ -1181,13 +1180,7 @@ public function disputeCustomerRemarks($shipment_id_value)
         $sender = Array('name'  => 'Craftsvilla',
                         'email' => 'places@craftsvilla.com');
         $emailrefunded = Mage::getModel('core/email_template');
-        
-
-        //$_address = $_order->getShippingAddress();
-
         $getName = $_order->getCustomerFirstname();
-        // $shipmentDetail = Mage::getModel('sales/order_shipment')->load($shipment);
-        
         $items = $shipment->getAllItems();
         $sku=array();
         $productName=array();
@@ -1201,20 +1194,14 @@ public function disputeCustomerRemarks($shipment_id_value)
              $qty[] =mysql_escape_string($_items->getQtyOrdered());
              $productImage="http://img1.craftsvilla.com/thumb/166x166".$_product->getImage();
         }
-       /*foreach($shipment->getAllTracks() as $tracknum)
-        {
-             $tracknums[]=$tracknum->getNumber();
-             $getCourierName[]=$tracknum->getCourierName();
-        }*/
-
-        
         
         $vendorId = $shipment['udropship_vendor']; //print_r($shipment['udropship_vendor']);//echo $vendorId;
-        $requestParams       =   array();
+        $requestParams  =   array();
         $readdb         =   Mage::getSingleton('core/resource')->getConnection('custom_db');
         $trackSql       =   "SELECT `number` FROM `sales_flat_shipment_track` WHERE `parent_id` = '$shipentId'";
         $trackInformation   =   $readdb->query($trackSql)->fetch();
         $readdb->closeConnection();
+        
         if(!empty($trackInformation))
         {
             $trackNumber                =   $trackInformation['number'];
@@ -1223,10 +1210,7 @@ public function disputeCustomerRemarks($shipment_id_value)
              
             #call sendd api if tracking number exists
             $response               =   $this->senddReverseOrder($jsonInput,$shipentId,$vendorId);
-
-            //
-
-            //echo "<pre>";print_r($response);exit;
+             
             if(count((array)$response)  == 0)
             {
                 return 'Please try again later';
@@ -1234,7 +1218,7 @@ public function disputeCustomerRemarks($shipment_id_value)
             
             $awb=   $response->partner_tracking_detail->tracking_number; 
             $shipping_docs      =   $response->partner_tracking_detail->shipping_docs;
-            $c_company          =   $response->partner_tracking_detail->company;
+            $c_company      =   $response->partner_tracking_detail->company;
             $created_at         =   $response->partner_tracking_detail->tracking_status_updates[0]->created_at;
             $updated_at         =   $response->partner_tracking_detail->tracking_status_updates[0]->updated_at;
             $message_status     =   $response->partner_tracking_detail->tracking_status_updates[0]->message;
@@ -1265,17 +1249,17 @@ public function disputeCustomerRemarks($shipment_id_value)
           //echo '<pre>';print_r($vars);exit;
 
             $emailrefunded->setDesignConfig(array('area'=>'frontend', 'store'=>$storeId))
-                     ->sendTransactional($templateId, $sender,$_orderBillingEmail, '', $vars, $storeId);
+                            ->sendTransactional($templateId, $sender,$_orderBillingEmail, '', $vars, $storeId);
 
             $shipment->setUdropshipStatus(37);
             Mage::helper('udropship')->addShipmentComment($shipment, ('Status has been changed to Return Requested from customer care agent'));
             $shipment->save();
 
-            $writedb         =   Mage::getSingleton('core/resource')->getConnection('core_write');
-            $updatereAwb ="INSERT INTO `sales_flat_shipment_reverse_track`(`shipment_id`, `reverse_awb_no`, `reverse_shipping_docs`,`courier_code`,`reverse_reason`,`created_at`,`updated_at`,`message`,`created_by`,`updated_by`) VALUES ('".$shipentId."','".$awb."','".$shipping_docs."','".$c_company."','".$reason."','".$created_at."','".$updated_at."','".$message_status."','1','1') ";
+            $writedb = Mage::getSingleton('core/resource')->getConnection('core_write');
+            $updatereAwb = "INSERT INTO `sales_flat_shipment_reverse_track`(`shipment_id`, `reverse_awb_no`, `reverse_shipping_docs`,`courier_code`,`reverse_reason`,`created_at`,`updated_at`,`message`,`created_by`,`updated_by`) VALUES ('".$shipentId."','".$awb."','".$shipping_docs."','".$c_company."','".$reason."','".$created_at."','".$updated_at."','".$message_status."','1','1') ";
         
-             $_updatereAwb       =   $writedb->query($updatereAwb);
-             $writedb->closeConnection();
+            $_updatereAwb = $writedb->query($updatereAwb);
+            $writedb->closeConnection();
         }
     }
     public function senddReverseOrder($jsonInput, $incrementId, $vendorId)
@@ -1311,12 +1295,12 @@ public function disputeCustomerRemarks($shipment_id_value)
                     ),
                 ));
                 $result = curl_exec($curl);
-                $response = json_decode($result);
-                //echo "<pre>"; print_r($response);exit; //print_r($response);
+                $response = json_decode($result); 
+                //echo "<pre>";print_r($response);exit; //print_r($response);
                 $error = curl_error($curl);
                 $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
                 curl_close($curl);
-                // echo "<pre>";print_r($response);exit;
+                 //echo "<pre>";print_r($response);exit;
                 if($httpCode == 200 || $httpCode == 201)
                 {       
                     return $response;
