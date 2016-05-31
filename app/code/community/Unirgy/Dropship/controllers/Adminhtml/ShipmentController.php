@@ -264,11 +264,7 @@ class Unirgy_Dropship_Adminhtml_ShipmentController extends Mage_Adminhtml_Contro
                         $mail->setBody('Shipment Id:#'.$shipment_id_value.' Shipment status changed to "QC Rejected by Craftsvilla"');
                         $mail->setSubject('Shipment Id:#'.$shipment_id_value.' Shipment status changed to "QC Rejected by Craftsvilla"');
                     }
-                    if($status == 37)
-                    {
-
-                       $this->returnrequested($shipment_id_value,$shipmentId_value);
-                    }
+                   
                     if($status == 17)
                     {
                         $mail->setBody('Shipment Id:#'.$shipment_id_value.' Shipment status changed to "Received in Craftsvilla"');
@@ -1224,7 +1220,7 @@ public function disputeCustomerRemarks($shipment_id_value)
             #call sendd api if tracking number exists
             $response               =   $this->senddReverseOrder($jsonInput,$shipentId,$vendorId);
 
-              // echo "<pre>";print_r($response);
+            //echo "<pre>";print_r($response);exit;
             if(count((array)$response)  == 0)
             {
                 return 'Please try again later';
@@ -1262,12 +1258,12 @@ public function disputeCustomerRemarks($shipment_id_value)
                             );
           //echo '<pre>';print_r($vars);exit;
 
-        $emailrefunded->setDesignConfig(array('area'=>'frontend', 'store'=>$storeId))
-                 ->sendTransactional($templateId, $sender,$_orderBillingEmail, '', $vars, $storeId);
+            $emailrefunded->setDesignConfig(array('area'=>'frontend', 'store'=>$storeId))
+                     ->sendTransactional($templateId, $sender,$_orderBillingEmail, '', $vars, $storeId);
 
-        $shipment->setUdropshipStatus(37);
-        Mage::helper('udropship')->addShipmentComment($shipment, ('Status has been changed to Return Requested from customer care agent'));
-        $shipment->save();
+            $shipment->setUdropshipStatus(37);
+            Mage::helper('udropship')->addShipmentComment($shipment, ('Status has been changed to Return Requested from customer care agent'));
+            $shipment->save();
 
             $writedb         =   Mage::getSingleton('core/resource')->getConnection('core_write');
             $updatereAwb ="INSERT INTO `sales_flat_shipment_reverse_track`(`shipment_id`, `reverse_awb_no`, `reverse_shipping_docs`,`courier_code`,`reverse_reason`,`created_at`,`updated_at`,`message`,`created_by`,`updated_by`) VALUES ('".$shipentId."','".$awb."','".$shipping_docs."','".$c_company."','".$reason."','".$created_at."','".$updated_at."','".$message_status."','1','1') ";
@@ -1309,7 +1305,8 @@ public function disputeCustomerRemarks($shipment_id_value)
                     ),
                 ));
                 $result = curl_exec($curl);
-                $response = json_decode($result); print_r($response);exit; //print_r($response);
+                $response = json_decode($result);
+                echo "<pre>"; print_r($response);exit; //print_r($response);
                 $error = curl_error($curl);
                 $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
                 curl_close($curl);
