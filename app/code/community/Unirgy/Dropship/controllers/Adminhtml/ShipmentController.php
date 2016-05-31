@@ -227,6 +227,10 @@ class Unirgy_Dropship_Adminhtml_ShipmentController extends Mage_Adminhtml_Contro
                     {
                        $this->deliver($shipment_id_value,$shipmentId_value);
                     }
+                    if($status == 37)
+                    {
+                       $this->returnrequested($shipment_id_value,$shipmentId_value);
+                    }
                 $comment = Mage::getModel('sales/order_shipment_comment')
                     ->setComment($commentText)
                     ->setIsCustomerNotified(isset($data['is_customer_notified']))
@@ -1220,6 +1224,8 @@ public function disputeCustomerRemarks($shipment_id_value)
             #call sendd api if tracking number exists
             $response               =   $this->senddReverseOrder($jsonInput,$shipentId,$vendorId);
 
+            //
+
             //echo "<pre>";print_r($response);exit;
             if(count((array)$response)  == 0)
             {
@@ -1228,7 +1234,7 @@ public function disputeCustomerRemarks($shipment_id_value)
             
             $awb=   $response->partner_tracking_detail->tracking_number; 
             $shipping_docs      =   $response->partner_tracking_detail->shipping_docs;
-            $c_company      =   $response->partner_tracking_detail->company;
+            $c_company          =   $response->partner_tracking_detail->company;
             $created_at         =   $response->partner_tracking_detail->tracking_status_updates[0]->created_at;
             $updated_at         =   $response->partner_tracking_detail->tracking_status_updates[0]->updated_at;
             $message_status     =   $response->partner_tracking_detail->tracking_status_updates[0]->message;
@@ -1306,7 +1312,7 @@ public function disputeCustomerRemarks($shipment_id_value)
                 ));
                 $result = curl_exec($curl);
                 $response = json_decode($result);
-                echo "<pre>"; print_r($response);exit; //print_r($response);
+                //echo "<pre>"; print_r($response);exit; //print_r($response);
                 $error = curl_error($curl);
                 $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
                 curl_close($curl);
