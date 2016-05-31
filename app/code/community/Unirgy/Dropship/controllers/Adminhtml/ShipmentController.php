@@ -1222,75 +1222,10 @@ public function disputeCustomerRemarks($shipment_id_value)
             $jsonInput              =   str_replace('\\/', '/', json_encode($requestParams));
              
             #call sendd api if tracking number exists
-            $generalcheck_hlp = Mage::helper('generalcheck');
-            $token      =   $generalcheck_hlp->getSenddToken() ;
+            $response               =   $this->senddReverseOrder($jsonInput,$shipentId,$vendorId);
 
-            if(!$token)
-            {
-                return NULL;
-            }
-        
-            $inputHeader = 'Token '.$token; //echo $inputHeader; exit;
-            $model= Mage::getStoreConfig('craftsvilla_config/sendd');
-            $url = $model['base_url'].'core/api/v1/shipment/reverse/';
-
-            $count = 3;
-            while($count > 0)
-            { 
-                $curl = curl_init();
-                curl_setopt_array($curl, array(
-                    CURLOPT_URL => $url,
-                    CURLOPT_RETURNTRANSFER => true,
-                    CURLOPT_ENCODING => "",
-                    CURLOPT_MAXREDIRS => -1,
-                    CURLOPT_TIMEOUT => 300,
-                    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                    CURLOPT_CUSTOMREQUEST => "POST",
-                    CURLOPT_POSTFIELDS => $jsonInput,
-                    CURLOPT_HTTPHEADER => array("cache-control: no-cache",
-                                                "content-type: application/json",
-                                                "Authorization : ".$inputHeader
-                    ),
-                ));
-                $result = curl_exec($curl);
-                $response = json_decode($result); #print_r($response); print_r($response);
-                $error = curl_error($curl);
-                $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-                curl_close($curl);
-                // echo "<pre>";print_r($response);exit;
-                if($httpCode == 200 || $httpCode == 201)
-                {       
-                    return $response;
-                }
-                if($httpCode == 401)
-                {
-                    $token = $this->getSenddToken();
-                    if(!$token)
-                    {
-                        return NULL;
-                    }
-                    $inputHeader = 'Token '.$token;
-                    $count--;
-                    continue;
-                }
-                $count--;
-            }   //echo "The count is: ".$count; exit;
-            $errorArr = array();        
-            //$errorArr[] = "The error http status code : " . $httpCode;
-            if($response)
-            {
-                $response = json_decode($result, true); 
-                $errorArr[] = $response ;
-            }
-            if($error)
-            {
-               $errorArr[] = $error; 
-            }            
-            $issue = "The Awb Number is not generated for Reverse";
-            return $this->sendErrorEmail($errorArr, $issue, $incrementId, $vendorId); 
-
-             // echo "<pre>";print_r($response);
-            if(count( (array)$response)  == 0)
+              // echo "<pre>";print_r($response);
+            if(count((array)$response)  == 0)
             {
                 return 'Please try again later';
             }
@@ -1341,5 +1276,74 @@ public function disputeCustomerRemarks($shipment_id_value)
              $writedb->closeConnection();
         }
     }
+    public function senddReverseOrder($jsonInput, $incrementId, $vendorId)
+    {
+            $generalcheck_hlp = Mage::helper('generalcheck');
+            $token      =   $generalcheck_hlp->getSenddToken() ;
+
+            if(!$token)
+            {
+                return NULL;
+            }
+        
+            $inputHeader = 'Token '.$token; //echo $inputHeader; exit;
+            $model= Mage::getStoreConfig('craftsvilla_config/sendd');
+            $url = $model['base_url'].'core/api/v1/shipment/reverse/';
+
+            $count = 3;
+            while($count > 0)
+            { 
+                $curl = curl_init();
+                curl_setopt_array($curl, array(
+                    CURLOPT_URL => $url,
+                    CURLOPT_RETURNTRANSFER => true,
+                    CURLOPT_ENCODING => "",
+                    CURLOPT_MAXREDIRS => -1,
+                    CURLOPT_TIMEOUT => 300,
+                    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                    CURLOPT_CUSTOMREQUEST => "POST",
+                    CURLOPT_POSTFIELDS => $jsonInput,
+                    CURLOPT_HTTPHEADER => array("cache-control: no-cache",
+                                                "content-type: application/json",
+                                                "Authorization : ".$inputHeader
+                    ),
+                ));
+                $result = curl_exec($curl);
+                $response = json_decode($result); print_r($response);exit; //print_r($response);
+                $error = curl_error($curl);
+                $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+                curl_close($curl);
+                // echo "<pre>";print_r($response);exit;
+                if($httpCode == 200 || $httpCode == 201)
+                {       
+                    return $response;
+                }
+                if($httpCode == 401)
+                {
+                    $token = $this->getSenddToken();
+                    if(!$token)
+                    {
+                        return NULL;
+                    }
+                    $inputHeader = 'Token '.$token;
+                    $count--;
+                    continue;
+                }
+                $count--;
+            }   //echo "The count is: ".$count; exit;
+            $errorArr = array();        
+            //$errorArr[] = "The error http status code : " . $httpCode;
+            if($response)
+            {
+                $response = json_decode($result, true); 
+                $errorArr[] = $response ;
+            }
+            if($error)
+            {
+               $errorArr[] = $error; 
+            }            
+            $issue = "The Awb Number is not generated for Reverse";
+            return $this->sendErrorEmail($errorArr, $issue, $incrementId, $vendorId); 
+        }
 }
 
