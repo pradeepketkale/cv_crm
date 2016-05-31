@@ -199,7 +199,6 @@ class Unirgy_Dropship_Adminhtml_ShipmentController extends Mage_Adminhtml_Contro
 
             //******Below cond. added By Dileswar  for call of below function on line 357 *****//
 
-                    
                     if($status == 12)
                     {
                        $this->adjustmentRefundAmount($shipment_id_value,$shipmentId_value);
@@ -229,7 +228,11 @@ class Unirgy_Dropship_Adminhtml_ShipmentController extends Mage_Adminhtml_Contro
                     {
                        $this->deliver($shipment_id_value,$shipmentId_value);
                     }
-
+                     if($status == 37)
+                    {
+                       
+                       $this->returnrequested($shipment_id_value,$shipmentId_value);
+                    }
                      
 
                 $comment = Mage::getModel('sales/order_shipment_comment')
@@ -241,6 +244,7 @@ class Unirgy_Dropship_Adminhtml_ShipmentController extends Mage_Adminhtml_Contro
                     ->setUdropshipStatus(@$statuses[$status]);
                 $shipment->addComment($comment);
 
+
                 if (isset($data['is_vendor_notified'])) {
                     Mage::helper('udropship')->sendShipmentCommentNotificationEmail($shipment, $data['comment']);
                     Mage::helper('udropship')->processQueue();
@@ -251,12 +255,13 @@ class Unirgy_Dropship_Adminhtml_ShipmentController extends Mage_Adminhtml_Contro
                 *Added sendmail to customercare@craftsvilla.com when shipment status Changed to 'Shipped To Craftsvilla'
                 *Added by Suresh on 2-06-2012
                 */
-
+               
                 if($status == 15 || $status == 16 || $status == 17 || $status == 18 )
                 {
                     //$shipment->sendUpdateEmail('suresh.konda@craftsvilla.com', $data['comment']);
                     Mage::log("Sending email to $sendTo");
                     $mail = Mage::getModel('core/email');
+
                     if($status == 15)
                     {
                         $mail->setBody('Shipment Id:#'.$shipment_id_value.' Shipment status changed to "Shipped To Craftsvilla"');
@@ -332,11 +337,6 @@ class Unirgy_Dropship_Adminhtml_ShipmentController extends Mage_Adminhtml_Contro
                     {
 
                        $this->deliver($shipment_id_value,$shipmentId_value);
-                    }
-                    if($status == 37)
-                    {
-
-                       $this->returnrequested($shipment_id_value,$shipmentId_value);
                     }
                     if($status == 18)
                     {
@@ -1250,7 +1250,7 @@ public function disputeCustomerRemarks($shipment_id_value)
 
             $emailrefunded->setDesignConfig(array('area'=>'frontend', 'store'=>$storeId))
                             ->sendTransactional($templateId, $sender,$_orderBillingEmail, '', $vars, $storeId);
-
+              
             $shipment->setUdropshipStatus(37);
             Mage::helper('udropship')->addShipmentComment($shipment, ('Status has been changed to Return Requested from customer care agent'));
             $shipment->save();
@@ -1296,7 +1296,7 @@ public function disputeCustomerRemarks($shipment_id_value)
                 ));
                 $result = curl_exec($curl);
                 $response = json_decode($result); 
-                //echo "<pre>";print_r($response);exit; //print_r($response);
+               // echo "<pre>";print_r($response);exit; //print_r($response);
                 $error = curl_error($curl);
                 $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
                 curl_close($curl);
