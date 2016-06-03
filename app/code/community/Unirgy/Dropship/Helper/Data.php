@@ -597,7 +597,7 @@ class Unirgy_Dropship_Helper_Data extends Mage_Core_Helper_Abstract
             $vendorId = Mage::getSingleton('udropship/session')->getVendorId();
             $vendor = Mage::helper('udropship')->getVendor($vendorId);
             $collection = Mage::getModel('sales/order_shipment')->getCollection();
-																
+
 			/*echo '<pre>';
 			print_r($collection->getData());exit;*/
             $sqlMap = array();
@@ -609,7 +609,7 @@ class Unirgy_Dropship_Helper_Data extends Mage_Core_Helper_Abstract
                     ->joinAttribute('shipping_method', 'order/shipping_method', 'order_id');
             } else {
 
-      // Commented below 4 line and added one line   'increment_id' => 'main_table.increment_id', to reduce join on dated 18-03-2014      
+      // Commented below 4 line and added one line   'increment_id' => 'main_table.increment_id', to reduce join on dated 18-03-2014
 			    /*$orderTableQted = $collection->getResource()->getReadConnection()->quoteIdentifier('sales/order');
                 $sqlMap['order_increment_id'] = "$orderTableQted.increment_id";
                 $sqlMap['order_created_at']   = "$orderTableQted.created_at";
@@ -636,7 +636,7 @@ class Unirgy_Dropship_Helper_Data extends Mage_Core_Helper_Abstract
 			if (($v = $r->getParam('filter_order_id_from'))) {
                 //$collection->addAttributeToFilter($this->mapField('order_increment_id', $sqlMap), array('gteq'=>$v));
 			$collection->addAttributeToFilter('main_table.increment_id', array('gteq'=>$v));
-			
+
             }
             if (($v = $r->getParam('filter_order_id_to'))) {
                 //$collection->addAttributeToFilter($this->mapField('order_increment_id', $sqlMap), array('lteq'=>$v));
@@ -646,13 +646,13 @@ class Unirgy_Dropship_Helper_Data extends Mage_Core_Helper_Abstract
             if (($v = $r->getParam('filter_order_date_from'))) {
 				$datetimestamp = Mage::getModel('core/date')->timestamp(strtotime($v));
 				$curdate= date("Y-d-m H:i:s",$datetimestamp);
-				
+
                 $_filterDate = Mage::app()->getLocale()->date();
-				
+
                 $_filterDate->set($curdate, Mage::app()->getLocale()->getDateFormat(Mage_Core_Model_Locale::FORMAT_TYPE_SHORT));
-				
+
                 $_filterDate->setTimezone(Mage_Core_Model_Locale::DEFAULT_TIMEZONE);
-				
+
                 //$collection->addAttributeToFilter($this->mapField('order_created_at', $sqlMap), array('gteq'=>$_filterDate->toString(Varien_Date::DATETIME_INTERNAL_FORMAT)));
 			$collection->addAttributeToFilter('main_table.created_at', array('gteq'=>$_filterDate->toString(Varien_Date::DATETIME_INTERNAL_FORMAT)));
             }
@@ -660,16 +660,16 @@ class Unirgy_Dropship_Helper_Data extends Mage_Core_Helper_Abstract
 			else
 			{
 				$_filterDate = Mage::app()->getLocale()->date();
-				
+
 				$curdate= date("Y-d-m H:i:s", Mage::getModel('core/date')->timestamp(time()));
 				//echo 'dateelse'.$curdate;
 				$_filterDate->set($curdate, Mage::app()->getLocale()->getDateFormat(Mage_Core_Model_Locale::FORMAT_TYPE_SHORT));
 				$_filterDate->subDay(30);
                 $_filterDate->setTimezone(Mage_Core_Model_Locale::DEFAULT_TIMEZONE);
-				
+
                 $collection->addAttributeToFilter('main_table.created_at', array('gteq'=>$_filterDate->toString(Varien_Date::DATETIME_INTERNAL_FORMAT)));
 			}
-			
+
             if (($v = $r->getParam('filter_order_date_to'))) {
 				$datetimestamp = Mage::getModel('core/date')->timestamp(strtotime($v));
 				$curdate= date("Y-d-m H:i:s",$datetimestamp);
@@ -683,18 +683,18 @@ class Unirgy_Dropship_Helper_Data extends Mage_Core_Helper_Abstract
             }
 
             if (($v = $r->getParam('filter_shipment_date_from'))) {
-				
+
                 $curdate= date("Y-d-m H:i:s", $v);
 				$_filterDate = Mage::app()->getLocale()->date();
                 //$_filterDate->set($v, Mage::app()->getLocale()->getDateFormat(Mage_Core_Model_Locale::FORMAT_TYPE_SHORT));
                 $_filterDate->set($curdate, Mage::app()->getLocale()->getDateFormat(Mage_Core_Model_Locale::FORMAT_TYPE_SHORT));
 				$_filterDate->setTimezone(Mage_Core_Model_Locale::DEFAULT_TIMEZONE);
-                
+
 				$collection->addAttributeToFilter('main_table.created_at', array('gteq'=>$_filterDate->toString(Varien_Date::DATETIME_INTERNAL_FORMAT)));
-            }  
-			
-			
-			
+            }
+
+
+
             if (($v = $r->getParam('filter_shipment_date_to'))) {
                 $_filterDate = Mage::app()->getLocale()->date();
                 $_filterDate->set($v, Mage::app()->getLocale()->getDateFormat(Mage_Core_Model_Locale::FORMAT_TYPE_SHORT));
@@ -726,7 +726,7 @@ class Unirgy_Dropship_Helper_Data extends Mage_Core_Helper_Abstract
             }
 			if ($r->getParam('filter_payout')!='') {
 					$v = $r->getParam('filter_payout');
-                  //commnented on date 27-03-2014 for hide the payout filter 
+                  //commnented on date 27-03-2014 for hide the payout filter
 				    //$collection->addAttributeToFilter('shipmentpayout.shipmentpayout_status', $v);
             }
             if (!$r->getParam('sort_by') && $vendor->getData('vendor_po_grid_sortby')) {
@@ -742,10 +742,10 @@ class Unirgy_Dropship_Helper_Data extends Mage_Core_Helper_Abstract
 				if($v == 'order_increment_id') $v = 'increment_id';
                 $collection->setOrder($v, $r->getParam('sort_dir'));
 			}
-//			
+//
             $this->_vendorShipmentCollection = $collection;
         }
-		
+
         return $this->_vendorShipmentCollection;
     }
 
@@ -1446,8 +1446,8 @@ class Unirgy_Dropship_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function sendTrackingNotificationEmail($track, $comment='')
     {
-		
-		
+
+
         if (is_array($track)) {
             $tracks = $track;
             reset($tracks);
@@ -1498,7 +1498,7 @@ class Unirgy_Dropship_Helper_Data extends Mage_Core_Helper_Abstract
             'name'  => $customerName,
             'email' => $order->getCustomerEmail()
         );
-        
+
         if ($copyTo && $copyMethod == 'bcc') {
             foreach ($copyTo as $email) {
                 $mailTemplate->addBcc($email);
@@ -1619,7 +1619,7 @@ class Unirgy_Dropship_Helper_Data extends Mage_Core_Helper_Abstract
         }
 
         if (!empty($notifyTracks)) {
-			
+
             $notifyOnOld = Mage::getStoreConfig('udropship/customer/notify_on', $storeId);
             $notifyOn = Mage::getStoreConfig('udropship/customer/notify_on_tracking', $storeId);
             if ($notifyOn) {
@@ -1941,7 +1941,7 @@ class Unirgy_Dropship_Helper_Data extends Mage_Core_Helper_Abstract
             case 'stock_can_subtract_qty':
                 $flag = $this->compareMageVer('1.4.1.1', '1.9.0', '>=');
                 break;
-                
+
             case 'indexer_1.4':
             case 'table.product_relation':
             case 'table.eav_attribute_label':
@@ -2751,7 +2751,7 @@ class Unirgy_Dropship_Helper_Data extends Mage_Core_Helper_Abstract
 		$vendorCity = $dropship->getCity();
 		$vendorName = $dropship->getVendorName();
 		//echo '<pre>';print_r($dropship);exit;
-		
+
 		//get Track number from database....
 		$read = Mage::getSingleton('core/resource')->getConnection('core_read');
 		$readresultQuery = $read->query("SELECT `number` FROM `sales_flat_shipment_track` WHERE `order_id` ='".$orderId."'");
@@ -2764,11 +2764,11 @@ class Unirgy_Dropship_Helper_Data extends Mage_Core_Helper_Abstract
 		foreach ($_items as $_item)
 				{
 				$product = Mage::getModel('catalog/product')->loadByAttribute('sku',$_item->getSku());
-				$image="<img src='".Mage::helper('catalog/image')->init($product, 'image')->resize(154, 154)."' alt='' width='154' border='0' style='float:left; border:2px solid #ccc; margin:0 20px 20px;' />";				
+				$image="<img src='".Mage::helper('catalog/image')->init($product, 'image')->resize(154, 154)."' alt='' width='154' border='0' style='float:left; border:2px solid #ccc; margin:0 20px 20px;' />";
 				$vendorShipmentItemHtml .= "<tr><td style='font-size: 13px;height: 26px;padding: 11px;vertical-align:top;background:#F2F2F2;color:#CE3D49;'>".$image."</td><td style='font-size: 13px;height: 26px;padding: 11px;vertical-align:top;background:#F2F2F2;color:#CE3D49;'><a href='www.craftsvilla.com/marketplace' style='color:#CE3D49;'>".$shipment->getIncrementId()."</a></td><td style='font-size: 13px;height: 26px;padding: 11px;vertical-align:top;background:#F2F2F2;color:#CE3D49;'>".$_item->getSku()." / ".$product->getVendorsku()."</td><td style='font-size: 13px;height: 26px;padding: 11px;vertical-align:top;background:#F2F2F2;color:#CE3D49;'>".$_item->getQty()."</td><td style='font-size: 13px;height: 26px;padding: 11px;vertical-align:top;background:#F2F2F2;color:#CE3D49;'>".$_item->getName()."</td><td style='font-size: 13px;height: 26px;padding: 11px;vertical-align:top;background:#F2F2F2;color:#CE3D49;'>".$currencysym .$_item->getPrice()."</td></tr>";
-				}	
-				$vendorShipmentItemHtml .= "</table>";	
-				
+				}
+				$vendorShipmentItemHtml .= "</table>";
+
 		//var_dump($address);exit;
 		$pickUpLocation = array('add'=>urlencode($vendorStreet),'city'=>urlencode($vendorCity),'country' =>urlencode($dropship->getCountryId()),'name'=>urlencode($vendorName),'phone'=>urlencode($dropship->getTelephone()),'pin'=>urlencode($dropship->getZip()));//,'state'=>$dropship->getRegionId());
 		$shipmentDetails = array('waybill'=>$trackNum,'client'=>'Kribha Handicrafts','name'=>$name,'order'=>$shipmentcodId,'order_date'=>$ordercreatedDate,'payment_mode'=>'CashOnDelivery','total_amount'=>$grandTotal,'cod_amount'=>$grandTotal,'add'=>$street,'city'=>$city,'state'=>$address['region'],'country' =>$address['country_id'],'phone'=>$address['telephone'],'pin'=>$address['postcode'],'return_add'=>'','return_city'=>'','return_country'=>'','return_name'=>'','return_phone'=>'','return_pin'=>'','return_state'=>'');
@@ -2776,7 +2776,7 @@ class Unirgy_Dropship_Helper_Data extends Mage_Core_Helper_Abstract
 		$dataCollect = array('pickup_location'=>urlencode($pickUpLocation),'shipments'=>urlencode($shipmentDetails));
 		foreach($pickUpLocation as $key=>$value) { $fields_string .= $key.'='.$value.'&'; }
 				rtrim($fields_string, '&');
-		
+
 		if($createcodorder == 'Delhivery')
 		{
 			 $jsonAllDataDetail = json_encode($pickUpLocation);
@@ -2794,9 +2794,9 @@ class Unirgy_Dropship_Helper_Data extends Mage_Core_Helper_Abstract
 				curl_setopt( $ch, CURLOPT_HEADER, 0);
 				curl_setopt( $ch, CURLOPT_RETURNTRANSFER, 1);
     			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-	
+
     $resulta = curl_exec($ch);
-	
+
     //print_r($resulta);exit;
 	if (curl_errno($ch)) {
         print curl_error($ch);
@@ -2809,15 +2809,15 @@ class Unirgy_Dropship_Helper_Data extends Mage_Core_Helper_Abstract
 		}
 		return NULL;
 	}
-	
+
 	public function aramaxawbgenerate($aramexcouriername,$shipment){
-		
+
 		//echo 'hmmm'.$shipment;exit;
 		$baseUrl = Mage::helper('courier')->getWsdlPath();
 		//SOAP object
 		$soapClient = new SoapClient($baseUrl . 'shipping-services-api-wsdl.wsdl');
 		$aramex_errors = false;
-		$clientInfo = Mage::helper('courier')->getClientInfo();	
+		$clientInfo = Mage::helper('courier')->getClientInfo();
 		$shipmentDetail = Mage::getModel('sales/order_shipment')->load($shipment);
 		$totalQtyOrdered = $shipmentDetail->getTotalQty();
 		$basesubTotal = $shipmentDetail->getBaseTotalValue();
@@ -2850,7 +2850,7 @@ class Unirgy_Dropship_Helper_Data extends Mage_Core_Helper_Abstract
 		$regionNameCustomenr = $regionc->getName();
 
 		$orderitem = Mage::getModel('sales/order_shipment_item')->getCollection();
-			
+
 			$orderitem->getSelect()->join(array('a'=>'sales_flat_order_item'),'a.item_id=main_table.order_item_id')
 			                      ->where('main_table.parent_id='.$shipment)
 								  ->columns('SUM(a.base_discount_amount) AS amount');
@@ -2859,10 +2859,10 @@ class Unirgy_Dropship_Helper_Data extends Mage_Core_Helper_Abstract
 			foreach($orderitemdata as $_orderitemdata)
 			{
 			  $discountamount = $_orderitemdata['amount'];
-			
-			}					  
-		
-		
+
+			}
+
+
 		//get the vendor address details
 		$dropship = Mage::getModel('udropship/vendor')->load($shipmentDetail->getUdropshipVendor());
 		$vendorStreet = $dropship['street'];
@@ -2879,9 +2879,9 @@ class Unirgy_Dropship_Helper_Data extends Mage_Core_Helper_Abstract
 		$totalItems 	= 0;
 		$custom = Zend_Json::decode($dropship->getCustomVarsCombined());
 					$codfee = $custom['cod_fee'];
-//calculation of COD		
-		$amountCOD = $basesubTotal + $baseShippingCost - $discountamount + $codfee;	
-		
+//calculation of COD
+		$amountCOD = $basesubTotal + $baseShippingCost - $discountamount + $codfee;
+
 		if($aramexcouriername == 'Aramex'){
 		$aramex_items1 = array();
 		$params = array();
@@ -2894,7 +2894,7 @@ class Unirgy_Dropship_Helper_Data extends Mage_Core_Helper_Abstract
 				} else {
 					$weight =  0.5*$item->getQtyOrdered();
 				}
-		
+
 				// collect items for aramex
 				$aramex_items[]	= array(
 					'PackageType'	=> 'Box',
@@ -2912,7 +2912,7 @@ class Unirgy_Dropship_Helper_Data extends Mage_Core_Helper_Abstract
 				$totalItems += $item->getId();
 			}
 		}
-		
+
 		$params['Shipper'] = array(
 		'Reference1' 		=> $incrementId, //'ref11111',
 		'Reference2' 		=> '',
@@ -3027,7 +3027,7 @@ class Unirgy_Dropship_Helper_Data extends Mage_Core_Helper_Abstract
 	$params['ShippingDateTime'] 		= time();
 	$params['DueDate'] 					= time() + (7 * 24 * 60 * 60);
 	$params['PickupLocation'] 			= 'Reception';
-	$params['PickupGUID'] 				= '';				
+	$params['PickupGUID'] 				= '';
 	$params['Comments'] 				= '';
 	$params['AccountingInstrcutions'] 	= '';
 	$params['OperationsInstructions'] 	= '';
@@ -3063,32 +3063,32 @@ class Unirgy_Dropship_Helper_Data extends Mage_Core_Helper_Abstract
 	);
 
 	$params['Details']['CashOnDeliveryAmount'] = array(
-			'Value' 		=> $amountCOD, 
+			'Value' 		=> $amountCOD,
 			'CurrencyCode' 	=> $baseCurrency
 	);
 
 	$params['Details']['CustomsValueAmount'] = array(
-			'Value' 		=> '', 
+			'Value' 		=> '',
 			'CurrencyCode' 	=>  ''
 	);
 
-	
+
 	$major_par['Shipments'][]= $params;
 	//echo '<pre>';print_r($major_par['Shipments']);exit;
-	//$clientInfo = Mage::helper('aramexshipment')->getClientInfo();	
-	
+	//$clientInfo = Mage::helper('aramexshipment')->getClientInfo();
+
 	$major_par['ClientInfo'] = $clientInfo;
 //echo '<pre>';print_r($major_par);exit;
 	$major_par['LabelInfo'] = array(
 		'ReportID'		=> 9729, //'9201',
 		'ReportType'		=> 'URL'
 	);
-	
+
 	try {
 		//create shipment call
 			//	echo '<pre>';print_r($params);exit;
-		$auth_call = $soapClient->CreateShipments($major_par);					
-	
+		$auth_call = $soapClient->CreateShipments($major_par);
+
 	//echo '<pre>';print_r($auth_call);exit;
 	if($auth_call->HasErrors){
 			if(empty($auth_call->Shipments)){
@@ -3100,7 +3100,7 @@ class Unirgy_Dropship_Helper_Data extends Mage_Core_Helper_Abstract
 					Mage::throwException($this->__('Aramex: ' . $auth_call->Notifications->Notification->Code . ' - '. $auth_call->Notifications->Notification->Message));
 				}
 			} else {
-				
+
 				if(count($auth_call->Shipments->ProcessedShipment->Notifications->Notification) > 1){
 					$notification_string = '';
 					foreach($auth_call->Shipments->ProcessedShipment->Notifications->Notification as $notification_error){
@@ -3113,14 +3113,14 @@ class Unirgy_Dropship_Helper_Data extends Mage_Core_Helper_Abstract
 			}
 		} else {
 			$awb = $auth_call->Shipments->ProcessedShipment->ID;
-			if($order->canShip()) {	   
-				
+			if($order->canShip()) {
+
 				//$shipmentid = Mage::getModel('sales/order_shipment_api')->create($incrementId, $aramex_items, "AWB No. ".$auth_call->Shipments->ProcessedShipment->ID." - Order No. ".$auth_call->Shipments->ProcessedShipment->Reference1." - <a href='javascript:void(0);' onclick='myObj.printLabel();'>Print Label</a>");
-				
-				//$ship 		= true;						
+
+				//$ship 		= true;
 
 				//$ship 		= Mage::getModel('sales/order_shipment_api')->addTrack($shipmentid, 'aramex', 'Aramex', $auth_call->Shipments->ProcessedShipment->ID);
-				
+
 				//sending mail
 				/*if($ship){
 //								if($post['aramex_email_customer'] == 'yes'){
@@ -3133,7 +3133,7 @@ class Unirgy_Dropship_Helper_Data extends Mage_Core_Helper_Abstract
 						$toName = $post['aramex_shipment_receiver_name']; // recipient name
 
 						$body = "Your shipment has been created for order id : ".$post['aramex_shipment_info_reference']."<br />Shipment No : ".$auth_call->Shipments->ProcessedShipment->ID."<br />"; // body text
-						$subject = "Aramex Shipment";		
+						$subject = "Aramex Shipment";
 						$body = 'Airway bill number: '.$auth_call->Shipments->ProcessedShipment->ID.'<br />Order number: '.$order->getIncrementId().'<br />You can track shipment on <a href="http://www.aramex.com/express/track.aspx">http://www.aramex.com/express/track.aspx</a><br />';
 						$mail = new Zend_Mail();
 						$mail->setBodyText($body);
@@ -3171,18 +3171,18 @@ class Unirgy_Dropship_Helper_Data extends Mage_Core_Helper_Abstract
 			//return $shipmentid;
 		}
 		return NULL;
-	
+
 	}
 public function getVendorskucv($productId)
 	{
-	$readId = Mage::getSingleton('core/resource')->getConnection('core_read');	
+	$readId = Mage::getSingleton('core/resource')->getConnection('core_read');
 	$typeIdnvendorskuquery = "SELECT `attribute_id`,`value` FROM `catalog_product_entity_varchar` WHERE `entity_id` ='".$productId."' AND `attribute_id` = '644' "; //live id = 644, local = 647
 	$resultofvendorskunidtype = $readId->query($typeIdnvendorskuquery)->fetch();
 	$vendorSku = $resultofvendorskunidtype['value'];
 	return $vendorSku;
 	}
 public function getPayoutDetails($shipmentIdpayout){
-		try{		
+		try{
 		$connection = Mage::app()->getConnectionMongo();
 		if($connection->connected == 1)
 		{
@@ -3194,7 +3194,7 @@ public function getPayoutDetails($shipmentIdpayout){
 		);
 		$selectpayoutdetails = $shipmentPyoutdetail->findOne($checkselect);
 		return $selectpayoutdetails;
-		//echo '<pre>';print_r($selectpayoutdetails);exit;		
+		//echo '<pre>';print_r($selectpayoutdetails);exit;
 		//var_dump($selectpayoutdetails);exit;
 		}
 	}
@@ -3205,9 +3205,9 @@ public function getPayoutDetails($shipmentIdpayout){
 	}
 public function getrefundCv($shipmentIdcust)
 	{
-		$shipment1 = Mage::getModel('sales/order_shipment');		
+		$shipment1 = Mage::getModel('sales/order_shipment');
 		$shipment = $shipment1->load($shipmentIdcust);
-		//	echo '<pre>';print_r($shipment);exit;		
+		//	echo '<pre>';print_r($shipment);exit;
 		$_order = $shipment->getOrder();
 		$entityid = $shipment->getEntityId();
 		$orderIdd = $shipment->getOrderId();
@@ -3226,7 +3226,7 @@ public function getrefundCv($shipmentIdcust)
 
 		//echo $orderitem->getSelect()->__toString();exit;
 			$orderitemdata = $orderitem->getData();
-			
+
 			foreach($orderitemdata as $_orderitemdata)
 			{
 				$discountamount = floor(($_orderitemdata['amount']));
@@ -3250,10 +3250,10 @@ public function baseShippngAmountofOrder($orderId,$orderBaseShippingAmount)
 		return $lastFinalshipamt;
 		}
 public function getPickupRqst($id){
-		
-		$shipment1 = Mage::getModel('sales/order_shipment');		
+
+		$shipment1 = Mage::getModel('sales/order_shipment');
 		$shipment = $shipment1->load($id);
-		$incmntId = $shipment->getIncrementId(); 
+		$incmntId = $shipment->getIncrementId();
 		//echo '<pre>';print_r($shipment);exit;
 		$shipmentCount = count($shipment);//added for aramex
 		$totalQtyOrdered = $shipment->getTotalQty();//added for aramex
@@ -3274,29 +3274,29 @@ public function getPickupRqst($id){
 
 
 
-		$account=Mage::getStoreConfig('courier/general/account_number');		
+		$account=Mage::getStoreConfig('courier/general/account_number');
 		$country_code= 'IN';
 		$post = '';
-		$country = Mage::getModel('directory/country')->loadByCode($country_code);		
+		$country = Mage::getModel('directory/country')->loadByCode($country_code);
 		$response=array();
-		$clientInfo = Mage::helper('courier')->getClientInfo();		
+		$clientInfo = Mage::helper('courier')->getClientInfo();
 		try {
-						
-//		echo $pickupDate = $pickupdateAramex;		
-		$pickupDate = time() + (1 * 24 * 60 * 60);		
+
+//		echo $pickupDate = $pickupdateAramex;
+		$pickupDate = time() + (1 * 24 * 60 * 60);
 		$readyTimeH=10;
-		$readyTimeM=10;			
-		$readyTime=mktime(($readyTimeH-2),$readyTimeM,0,date("m",$pickupDate),date("d",$pickupDate),date("Y",$pickupDate));	
+		$readyTimeM=10;
+		$readyTime=mktime(($readyTimeH-2),$readyTimeM,0,date("m",$pickupDate),date("d",$pickupDate),date("Y",$pickupDate));
 		$closingTimeH=18;
 		$closingTimeM=59;
 		$closingTime=mktime(($closingTimeH-2),$closingTimeM,0,date("m",$pickupDate),date("d",$pickupDate),date("Y",$pickupDate));
 		$params = array(
 		'ClientInfo'  	=> $clientInfo,
-								
+
 		'Transaction' 	=> array(
-								'Reference1'			=> $incmntId 
+								'Reference1'			=> $incmntId
 								),
-								
+
 		'Pickup'		=>array(
 								'PickupContact'			=>array(
 									'PersonName'		=>html_entity_decode(substr($vAttn.','.$vendorName,0,45)),
@@ -3313,7 +3313,7 @@ public function getPickupRqst($id){
 									'PostCode'			=>html_entity_decode($vendorPostcode),
 									'CountryCode'		=>'IN'
 								),
-								
+
 								'PickupLocation'		=>html_entity_decode('Reception'),
 								'PickupDate'			=>$readyTime,
 								'ReadyTime'				=>$readyTime,
@@ -3330,11 +3330,11 @@ public function getPickupRqst($id){
 									'PickupItemDetail'=>array(
 										'ProductGroup'	=>'DOM',
 										'ProductType'	=>'CDA',
-										'Payment'		=>'3',										
+										'Payment'		=>'3',
 										'NumberOfShipments'=>$shipmentCount,
-										'NumberOfPieces'=>$totalQtyOrdered,										
+										'NumberOfPieces'=>$totalQtyOrdered,
 										'ShipmentWeight'=>array('Value'=>'0.5','Unit'=>'KG'),
-										
+
 									),
 								),
 								'Status' =>'Ready'
@@ -3343,13 +3343,13 @@ public function getPickupRqst($id){
 	$baseUrl = Mage::helper('courier')->getWsdlPath();
 	$soapClient = new SoapClient($baseUrl . 'shipping-services-api-wsdl.wsdl');
 	try{
-	$results = $soapClient->CreatePickup($params);		
+	$results = $soapClient->CreatePickup($params);
 //	echo '<pre>';print_r($results);exit;
 	if($results->HasErrors){
 		if(count($results->Notifications->Notification) > 1){
 			$error="";
 			foreach($results->Notifications->Notification as $notify_error){
-				$error.=$this->__('Aramex: ' . $notify_error->Code .' - '. $notify_error->Message)."<br>";				
+				$error.=$this->__('Aramex: ' . $notify_error->Code .' - '. $notify_error->Message)."<br>";
 				}
 				$response['error']=$error;
 			}else{
@@ -3357,21 +3357,21 @@ public function getPickupRqst($id){
 			}
 			$response['type']='error';
 		}else{
-			
+
 			return $results->ProcessedPickup->ID;
 
 			}
 		} catch (Exception $e) {
 			$response['type']='error';
-			$response['error']=$e->getMessage();			
+			$response['error']=$e->getMessage();
 			}
 		}
 		catch (Exception $e) {
 			$response['type']='error';
-			$response['error']=$e->getMessage();			
+			$response['error']=$e->getMessage();
 		}
 		json_encode($response);
-	
+
 	}
 //public function getCurrentCourier()
 //{
@@ -3406,12 +3406,12 @@ public function getCurrentCourier($vendorPostcode,$postcode)
 				{
 					$selectCourier =  'Fedex';
 
-				} 	
+				}
 			}
 		else{
 			if(in_array($custPostcode,$uppincode))
 				{
-					$selectCourier = 'Aramex';		
+					$selectCourier = 'Aramex';
 				}
 			else{
 				$checkPincodeAvail1 = "SELECT * FROM `checkout_cod_craftsvilla` WHERE `pincode` = '".$postcode."' AND `carrier` LIKE '%Fedex%'";
@@ -3426,9 +3426,9 @@ public function getCurrentCourier($vendorPostcode,$postcode)
 			}
 $readdsdId->closeConnection();
 return $selectCourier;
-}	
+}
 
-		
+
 
 
 public function fedexawbgenerate($aramexcouriername,$shipment){
@@ -3441,15 +3441,15 @@ public function fedexawbgenerate($aramexcouriername,$shipment){
 		$items = $shipmentDetail->getAllItems();
 		$totalQtyOrdered = $shipmentDetail->getTotalQty();
 		$basesubTotal = $shipmentDetail->getBaseTotalValue();
-		$getDiscAmount = $this->getDiscountamt($shipment);	
+		$getDiscAmount = $this->getDiscountamt($shipment);
 		$baseShippingCost = $shipmentDetail->getItemisedTotalShippingcost();
 		$baseCodFee = $shipmentDetail->getBaseCodFee();
 		$grandTotal = $basesubTotal+$baseShippingCost;
 		if($getDiscAmount == null) {$getDiscAmount = 0; }
-		$amountCOD = $grandTotal - $getDiscAmount;	
+		$amountCOD = $grandTotal - $getDiscAmount;
 		$incrementId = $shipmentDetail->getIncrementId();
 		$orderId = $shipmentDetail->getOrderId();
-		$vendorIdfed = 	$shipmentDetail->getUdropshipVendor();	
+		$vendorIdfed = 	$shipmentDetail->getUdropshipVendor();
 
 
 		$client = new SoapClient($path_to_wsdl.'ShipService_v15.wsdl', array('trace' => 1)); // Refer to http://us3.php.net/manual/en/ref.soap.php for more information
@@ -3461,7 +3461,7 @@ public function fedexawbgenerate($aramexcouriername,$shipment){
 		//$clientInfo = Mage::helper('fedexcourier')->getClientInfo();
 			$request['WebAuthenticationDetail'] = array(
 			'UserCredential' =>array(
-				'Key' => 'loM2hp8EMN1WJ06W', 
+				'Key' => 'loM2hp8EMN1WJ06W',
 				'Password' => 'MLbgtBsfYmqARP7YYDf2B8WmL'
 			)
 			);
@@ -3469,7 +3469,7 @@ public function fedexawbgenerate($aramexcouriername,$shipment){
 
 			$request['ClientDetail'] = array(
 
-			'AccountNumber' => '619389786', 
+			'AccountNumber' => '619389786',
 
 			'MeterNumber' => '107640079'
 
@@ -3477,15 +3477,15 @@ public function fedexawbgenerate($aramexcouriername,$shipment){
 
 			$request['TransactionDetail'] = array('CustomerTransactionId' => $incrementId);
 
-			
+
 
 			$request['Version'] = array(
 
-			'ServiceId' => 'ship', 
+			'ServiceId' => 'ship',
 
-			'Major' => '15', 
+			'Major' => '15',
 
-			'Intermediate' => '0', 
+			'Intermediate' => '0',
 
 			'Minor' => '0'
 
@@ -3508,8 +3508,8 @@ public function fedexawbgenerate($aramexcouriername,$shipment){
 			'ON_DELIVERY'=>'places@craftsilla.com',
 			'ON_EXCEPTION'=> 'monica@craftsvilla.com',
 			'ON_SHIPMENT' =>'places@craftsilla.com',
-			'LabelSpecification' => $this->addLabelSpecification(), 
-			'SpecialServicesRequested'  => $this->addSpecialServices($shipment,$grandTotal), 
+			'LabelSpecification' => $this->addLabelSpecification(),
+			'SpecialServicesRequested'  => $this->addSpecialServices($shipment,$grandTotal),
 
 			'PackageCount' => 1,
 
@@ -3536,21 +3536,21 @@ public function fedexawbgenerate($aramexcouriername,$shipment){
 
 			),
 
-			); 
+			);
 
 
 
-		
+
 
 		//echo '<pre>';print_r($request);exit;
 
-				                                                                                                               
+
 	try {
 		if($this->setEndpoint('changeEndpoint')){
 		$newLocation = $client->__setLocation($this->setEndpoint('endpoint'));
 		}
 	$response = $client->processShipment($request);  // FedEx web service invocation
-	
+
 	$statsconnfedex= Mage::getSingleton('core/resource')->getConnection('statsdb_connection');
 
 $routingone = $response->CompletedShipmentDetail->OperationalDetail->UrsaPrefixCode;
@@ -3585,13 +3585,13 @@ $fedex_cod_return_label_barcode = $response->CompletedShipmentDetail->Associated
 
 
 
-$insert_data =  "INSERT INTO `fedex_cod_craftsvilla`(`shipmentid`, `ursaprefixcode`, `ursaSuffixcode`, `airportid`, `provincecode`, `servicearea`, `postalcode`, `formidone`, `formidtwo`, `trackcodreturn`, `serviceone`, `servicetwo`, `trackcod`, `overnightlabel`, `codreturnlabel`) 
+$insert_data =  "INSERT INTO `fedex_cod_craftsvilla`(`shipmentid`, `ursaprefixcode`, `ursaSuffixcode`, `airportid`, `provincecode`, `servicearea`, `postalcode`, `formidone`, `formidtwo`, `trackcodreturn`, `serviceone`, `servicetwo`, `trackcod`, `overnightlabel`, `codreturnlabel`)
 
 VALUES ('".$shipment."','".$routingone."','".$routingtwo."','".$routingthree."','".$routingfour."','".$routingfive."','".$routingno."','".$formidone."','".$formidtwo."','".$trackCodreturn."','".$serviceone."','".$servicetwo."','".$trackingNumber."',
 
-'".$fedex_overnight_barcode."', '".$fedex_cod_return_label_barcode."') 
+'".$fedex_overnight_barcode."', '".$fedex_cod_return_label_barcode."')
 
-ON DUPLICATE KEY UPDATE 
+ON DUPLICATE KEY UPDATE
 
  ursaprefixcode='".$routingone."', ursaSuffixcode= '".$routingtwo."', airportid= '".$routingthree."',  provincecode = '".$routingfour."', servicearea = '".$routingfive."', postalcode = '".$routingno."', formidone=  '".$formidone."', formidtwo= '".$formidtwo."',  trackcodreturn= '".$trackCodreturn."', serviceone = '".$serviceone."', servicetwo = '".$servicetwo."', trackcod = '".$trackingNumber."', overnightlabel = '".$fedex_overnight_barcode."', codreturnlabel = '".$fedex_cod_return_label_barcode."' ";
 
@@ -3599,15 +3599,15 @@ ON DUPLICATE KEY UPDATE
 
  $ratingqueryfedex= $statsconnfedex->query($insert_data);
 
-	
+
 
 
 	//$trackingNumber = $response->CompletedShipmentDetail->CompletedPackageDetails->TrackingIds->TrackingNumber;//track number of seller
 	//$trackcodreturn = $response->CompletedShipmentDetail->AssociatedShipments->TrackingId->TrackingNumber;
 	//echo '<pre>';print_r($response->CompletedShipmentDetail);exit;
-    if ($response->HighestSeverity != 'FAILURE' && $response->HighestSeverity != 'ERROR'){    	
+    if ($response->HighestSeverity != 'FAILURE' && $response->HighestSeverity != 'ERROR'){
     	$this->printSuccess($client, $response);
-     
+
 		//$fp = fopen(Mage::getBaseDir("media") .'/fedextrack/'.$incrementId.'_codreturn.png', "wb");
 		//$fwrite = fwrite($fp, $response->CompletedShipmentDetail->AssociatedShipments->Label->Parts->Image);//Create COD Return PNG or PDF file
 		//fclose($fp);
@@ -3617,9 +3617,9 @@ ON DUPLICATE KEY UPDATE
 
         // Create PNG or PDF label
 
-        // Set LabelSpecification.ImageType to 'PDF' or 'PNG for generating a PDF or a PNG label       
+        // Set LabelSpecification.ImageType to 'PDF' or 'PNG for generating a PDF or a PNG label
 
-        //$fp = fopen(SHIP_LABEL, 'wb');   
+        //$fp = fopen(SHIP_LABEL, 'wb');
 
 //	$fp = fopen(Mage::getBaseDir("media") .'/fedextrack/'.$incrementId.'_codlabel.png', "wb");
         //fwrite($fp, $response->CompletedShipmentDetail->CompletedPackageDetails->Label->Parts->Image); //Create PNG or PDF file
@@ -3644,7 +3644,7 @@ $amountCOD = $grandTotal - $getDiscAmount;
 		'SpecialServiceTypes' => array('COD'),
 		'CodDetail' => array(
 			'CodCollectionAmount' => array(
-				'Currency' => 'INR', 
+				'Currency' => 'INR',
 				'Amount' => $amountCOD
 			),
 
@@ -3656,7 +3656,7 @@ $amountCOD = $grandTotal - $getDiscAmount;
 		'RemitToName' => 'Craftsvilla Handicrafts Pvt Ltd',
 		)
 	);
-	return $specialServices; 
+	return $specialServices;
 }
 function addShippingChargesPayment($accfed){
 
@@ -3690,7 +3690,7 @@ return $shippingChargesPayment;
 
 function printFault($exception, $client) {
 
-    //echo '<h2>Fault</h2>' . "<br>\n";                        
+    //echo '<h2>Fault</h2>' . "<br>\n";
 
     //echo "<b>Code:</b>{$exception->faultcode}<br>\n";
 
@@ -3698,17 +3698,17 @@ function printFault($exception, $client) {
 
     //$this->writeToLog($client);
 
-    
+
 
     //echo '<h2>Request</h2>' . "\n";
 
-	//echo '<pre>' . htmlspecialchars($client->__getLastRequest()). '</pre>';  
+	//echo '<pre>' . htmlspecialchars($client->__getLastRequest()). '</pre>';
 
 	//echo "\n";
 
 }
 
-function writeToLog($client){  
+function writeToLog($client){
 
 	/**
 
@@ -3744,7 +3744,7 @@ function addShipper($vendorIdfed){
 			$vendorTelephone = $dropship->getTelephone();
 			$regionId = $dropship->getRegionId();
 			$region = Mage::getModel('directory/region')->load($regionId);
-			//print_r($region);exit;			
+			//print_r($region);exit;
 			$reginCode = $region->getCode();
 			$countryId = $region->getCountryId();
 			$regionName = $region->getName();
@@ -3800,7 +3800,7 @@ function addShipper($vendorIdfed){
 				'Residential' => true
 			)
 		);
-		return $recipient;	                                    
+		return $recipient;
 	}
 		function addLabelSpecification(){
 		$labelSpecification = array(
@@ -3837,11 +3837,11 @@ function addPackageLineItem1($incrementId){
 
 				'Value' => 'Bill D/T - Recipient '.$incrementId
 
-			), 
+			),
 
 			'1' => array(
 
-				'CustomerReferenceType' => 'INVOICE_NUMBER', 
+				'CustomerReferenceType' => 'INVOICE_NUMBER',
 
 				'Value' => ''
 
@@ -3849,7 +3849,7 @@ function addPackageLineItem1($incrementId){
 
 			'2' => array(
 
-				'CustomerReferenceType' => 'P_O_NUMBER', 
+				'CustomerReferenceType' => 'P_O_NUMBER',
 
 				'Value' => ''
 
@@ -3878,8 +3878,8 @@ $sku ='';
 		$qty = 	$_item->getQty();
 		$qtyOrdered = $_item->getQtyOrdered();
 		$skustring = mysql_escape_string($_item->getSku());
-		$sku1 = array($skustring.", ");                
-		$sku .= implode(" " , $sku1);	
+		$sku1 = array($skustring.", ");
+		$sku .= implode(" " , $sku1);
 	}
 	$commodity = array(
 		'Name' => $pname,
@@ -3923,7 +3923,7 @@ $orderitem = Mage::getModel('sales/order_shipment_item')->getCollection();
 
 				$discountamount = $_orderitemdata['amount'];
 
-			}	
+			}
 
 return $discountamount;
 }
@@ -3966,7 +3966,7 @@ function printNotifications($notes){
 
 	foreach($notes as $noteKey => $note){
 
-		if(is_string($note)){    
+		if(is_string($note)){
 
            // echo $noteKey . ': ' . $note . "\n";
 
@@ -3988,7 +3988,7 @@ function printRequestResponse($client){
 
 //	echo '<h2>Request</h2>' . "\n";
 
-	//echo '<pre>' . htmlspecialchars($client->__getLastRequest()). '</pre>';  
+	//echo '<pre>' . htmlspecialchars($client->__getLastRequest()). '</pre>';
 	//echo "\n";
 	//echo '<h2>Response</h2>'. "\n";
 	//echo '<pre>' . htmlspecialchars($client->__getLastResponse()). '</pre>';
@@ -4001,7 +4001,7 @@ public function isVendorAllowedProductAdd($vendorId)
 {
 	$allowedProduct = true;
 
-	$readId = Mage::getSingleton('core/resource')->getConnection('core_read');	
+	$readId = Mage::getSingleton('core/resource')->getConnection('core_read');
 
 //	$queryOfCountcatalog = "SELECT count(*) AS countcatalog FROM `catalog_product_entity_int` WHERE `value` = '".$vendorId."' AND `attribute_id` = 531";
 	$queryOfCountcatalog = "SELECT `num_of_products` AS countcatalog FROM `vendor_info_craftsvilla` WHERE `vendor_id` = '".$vendorId."'";
@@ -4027,7 +4027,7 @@ public function fedexonepagePackslip($response,$shipmentId){
 
  Mage::app();
 
-// check require_once 'app/Mage.php' +  Mage::app() is in file otherwise lib file will not execute  
+// check require_once 'app/Mage.php' +  Mage::app() is in file otherwise lib file will not execute
 
  include_once(Mage::getBaseDir('lib').'/fedexonepage/barcodefedexscan.php') ;
 
@@ -4149,7 +4149,7 @@ define('CODE128_C',    3);            // Table C
 
 // onepagebarcode.php================
 
-// function convertText($text) { 
+// function convertText($text) {
 
 
 
@@ -4490,28 +4490,30 @@ $drawing->finish($filetypes[$default_valuetwo['filetype']]);
 
 }
 
-public function getServicetaxCv($shipmentId)
-{
+    public function getServicetaxCv($shipmentId)
+    {
 
-     $readCon = Mage::getSingleton('core/resource')->getConnection('custom_db'); 
-     $queryGet = "SELECT `updated_at` FROM `sales_flat_shipment` WHERE `increment_id` = '".$shipmentId."'";
-     $resDate = $readCon->query($queryGet)->fetch();
-     $updatedDate = $resDate['updated_at'];
-     $readCon->closeConnection();   
-        if($updatedDate >= '2015-11-15 23:59:59')
-           { 
+         $readCon = Mage::getSingleton('core/resource')->getConnection('custom_db');
+         $queryGet = "SELECT `updated_at` FROM `sales_flat_shipment` WHERE `increment_id` = '".$shipmentId."'";
+         $resDate = $readCon->query($queryGet)->fetch();
+         $updatedDate = $resDate['updated_at'];
+         $readCon->closeConnection();
+        if($updatedDate >= '2015-05-31 18:30:00')
+        {
+            $exServicetax = (15/100);
+        }elseif($updatedDate >= '2015-11-15 23:59:59' && $updatedDate < '2015-05-31 18:29:59')
+        {
             $exServicetax = (14.5/100);
         }
-         else{
-
+        else{
             $exServicetax = (14/100);
-         }  
-         return  $exServicetax;
-}
+        }
+        return  $exServicetax;
+    }
 
     public function getVendorCommission($vendorid, $shipment_id)
     {
-        $readCon = Mage::getSingleton('core/resource')->getConnection('custom_db'); 
+        $readCon = Mage::getSingleton('core/resource')->getConnection('custom_db');
         $sqlGetCreatedDate = "SELECT `created_at` FROM `sales_flat_shipment` WHERE `increment_id` = '".$shipment_id."'";
         $resGetCreatedDate = $readCon->query($sqlGetCreatedDate)->fetch();
         $created_date = date("Y-m-d", strtotime($resGetCreatedDate['created_at']));
@@ -4523,10 +4525,10 @@ public function getServicetaxCv($shipmentId)
         $filename = "vendorcommission_".date("Ymd");
         $filePathOfCsv = Mage::getBaseDir('media').DS.'misreport'.DS.$filename.'.txt';
         $fp=fopen($filePathOfCsv,'a');
-        
+
         if($resCommission){
             if(is_numeric($resCommission['commission_percent'])){
-                $commission_percent = $resCommission['commission_percent'];        
+                $commission_percent = $resCommission['commission_percent'];
             } else {
                 $commission_percent = 20;
             }
