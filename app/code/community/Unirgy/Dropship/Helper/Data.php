@@ -4492,7 +4492,6 @@ $drawing->finish($filetypes[$default_valuetwo['filetype']]);
 
     public function getServicetaxCv($shipmentId)
     {
-
          $readCon = Mage::getSingleton('core/resource')->getConnection('custom_db');
          $queryGet = "SELECT `updated_at` FROM `sales_flat_shipment` WHERE `increment_id` = '".$shipmentId."'";
          $resDate = $readCon->query($queryGet)->fetch();
@@ -4539,5 +4538,162 @@ $drawing->finish($filetypes[$default_valuetwo['filetype']]);
         fputs($fp, $strTest);
         fclose($fp);
         return  $commission_percent;
+    }
+
+    /*
+        @author : sunita subhane
+        created on : 18 may 2016
+    */
+public function getServicesendd($customerPincode,$vendorPincode){
+            /*echo '<pre>';
+            $shipmentDetail = Mage::getModel('sales/order_shipment')->load($shipmentId);
+                print_r($shipmentDetail);
+            $incrementId = $shipmentDetail->getIncrementId();
+            $vendorId = $shipmentDetail->getUdropshipVendor();
+            $orderId = $shipmentDetail->getOrderId();
+
+            $order = Mage::getModel('sales/order')->load($orderId);
+             print_r($order); exit;
+            $customerPincode = $order->getShippingAddress()->getPostcode();
+
+            #$customerPincode = "400072";
+            //Vendor details
+            $vendorDetails = Mage::getModel('udropship/vendor')->load($vendorId);
+            $vendorPincode = $vendorDetails->getZip();
+            #$vendorPincode = "400076";
+            */
+            $requestParams = array(
+            'pickup_pincode'=> $customerPincode,
+            'delivery_pincode'=> $vendorPincode,
+            'cod'=> 'false',
+            );
+            $jsonInput = json_encode($requestParams); //echo "<pre>"; print_r($jsonInput); exit;
+            $token = $this->getSenddToken() ;
+            if(!$token){
+            return NULL;
+            }
+
+        $inputHeader = 'Token '.$token; //echo $inputHeader; exit;
+        $model= Mage::getStoreConfig('craftsvilla_config/sendd');
+
+        $url = $model['base_url'].'core/api/v2/order/serviceability/?pickup_pincode='.$customerPincode.'&delivery_pincode='.$vendorPincode.'&reverse=true&get_provider=false&cod=cod';
+
+        $count = 3;
+        while($count > 0){
+        $curl = curl_init();
+        curl_setopt_array($curl, array(
+        CURLOPT_URL => $url,
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => "",
+        CURLOPT_MAXREDIRS => -1,
+        CURLOPT_TIMEOUT => 300,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_HTTPHEADER => array("cache-control: no-cache",
+        "content-type: application/json",
+        "Authorization : ".$inputHeader
+        ),
+        ));
+        $result = curl_exec($curl);
+        $response = json_decode($result);
+        $error = curl_error($curl);
+        $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+        curl_close($curl);
+
+            if($httpCode == 200){
+                if($response->servicable == NULL){
+                        return NULL;
+                    } else {
+                return $response;
+                    }
+            }
+
+            if($httpCode == 401){
+                $token = $this->getSenddToken();
+                if(!$token){
+                    return NULL;
+                }
+                $inputHeader = 'Token '.$token;
+                $count--;
+                continue;
+            }
+            $count--;
+          }
+
+        if($response){
+        foreach ($response as $key=>$value){
+            $errorArr[] =  $key." : ".$value[0];
+        }
+        }
+        if($error){
+        $errorArr[] = $error;
+        } //var_dump($flag); exit;
+
+    }
+
+    public function getSenddToken(){
+        $lifetime = 7776000; // 90 days
+        $cacheSenddLoginKey = 'Craftsvilla-Sendd-Login-Token';
+        if($cacheContent = Mage::app()->loadCache($cacheSenddLoginKey)){
+            $token = $cacheContent; //echo $token; exit;
+        } else {
+            $token = $this->senddLogin();
+            if($token){
+                Mage::app()->saveCache($token, $cacheSenddLoginKey, $tags, $lifetime);
+            }
+        }
+        return $token;
+
+    }
+
+    public function senddLogin(){
+
+        $errorArr = array();
+        $model= Mage::getStoreConfig('craftsvilla_config/sendd');
+        $url = $model['base_url'].'rest-auth/login/';
+        $email = $model['email'];
+        $password  = $model['password'];
+
+        $input = array('email' => $email, 'password' => $password);
+        $input = json_encode($input);
+
+        $count = 3;
+        while($count >0){ // try api calls 3 times
+            $curl = curl_init();
+            curl_setopt_array($curl, array(
+                CURLOPT_URL => $url,
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => "",
+                CURLOPT_MAXREDIRS => -1,
+                CURLOPT_TIMEOUT => 300,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => "POST",
+                CURLOPT_POSTFIELDS => $input,
+                CURLOPT_HTTPHEADER => array("cache-control: no-cache","content-type: application/json"),
+            ));
+            $result = curl_exec($curl);
+            $result = json_decode($result);
+            $error = curl_error($curl);
+            $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+            curl_close($curl);
+
+            if($httpCode == 200 && $result->key ){
+                return $result->key;
+            }
+            $count--;
+        }
+
+        $errorArr[] = "The error http status code : " . $httpCode;
+        if($result){
+            foreach ($result as $key=>$value){
+               $errorArr[] =  $key." : ".$value[0];
+            }
+        }
+        if($error){
+            $errorArr[] = $error;
+        }
+
+        $issue = 'Unable to get the access token of Sendd APIs!';
+        return null;
+
     }
 }

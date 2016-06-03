@@ -1164,24 +1164,24 @@ public function disputeCustomerRemarks($shipment_id_value)
     public function returnrequested($shipment_id_value,$shipentId)
     {
         //send mail to customer
-        $storeId = Mage::app()->getStore()->getId();
-        $templateId = 'return_pickup_requested';
+        //$storeId = Mage::app()->getStore()->getId();
+        //$templateId = 'return_pickup_requested';
 
         $shipment1 = Mage::getModel('sales/order_shipment');
         $shipment = $shipment1->load($shipentId);
             
-        $_orderId = $shipment->getOrderId();
+       /* $_orderId = $shipment->getOrderId();
         $orders  = Mage::getModel('sales/order')->load($_orderId);
         $orderId = $orders->getIncrementId();
-        $_order = $shipment->getOrder();
-        $write = Mage::getSingleton('core/resource')->getConnection('shipmentpayout_write');
+        $_order = $shipment->getOrder();*/
+        //$write = Mage::getSingleton('core/resource')->getConnection('shipmentpayout_write');
         
 //email
-        $sender = Array('name'  => 'Craftsvilla',
-                        'email' => 'places@craftsvilla.com');
-        $emailrefunded = Mage::getModel('core/email_template');
-        $getName = $_order->getCustomerFirstname();
-        $items = $shipment->getAllItems();
+        //$sender = Array('name'  => 'Craftsvilla',
+          //              'email' => 'places@craftsvilla.com');
+        //$emailrefunded = Mage::getModel('core/email_template');
+        //$getName = $_order->getCustomerFirstname();
+        /*$items = $shipment->getAllItems();
         $sku=array();
         $productName=array();
         foreach($items as $_items)
@@ -1194,7 +1194,7 @@ public function disputeCustomerRemarks($shipment_id_value)
              $qty[] =mysql_escape_string($_items->getQtyOrdered());
              $productImage="http://img1.craftsvilla.com/thumb/166x166".$_product->getImage();
         }
-        
+        */
         $vendorId = $shipment['udropship_vendor']; //print_r($shipment['udropship_vendor']);//echo $vendorId;
         $requestParams  =   array();
         $readdb         =   Mage::getSingleton('core/resource')->getConnection('custom_db');
@@ -1225,15 +1225,21 @@ public function disputeCustomerRemarks($shipment_id_value)
             
             if(strlen($awb)>0) 
             {
-                $dest       =   "/tmp/".$shipmentId.".pdf";
+                $dest       =   "/tmp/".$shipment_id_value.".pdf";
                 copy($shipping_docs, $dest);
 
                 $bucketName             ='assets1.craftsvilla.com';
-                $imageSlipNameTwo       = 'sendd/barcode/'.$vendorId.'/'.$shipmentId.'_invoice_reverse_shipment_label.pdf';
+                $imageSlipNameTwo       = 'sendd/barcode/'.$vendorId.'/'.$shipment_id_value.'_invoice_reverse_shipment_label.pdf';
                 $moveToBucketSlipTwo    = $this->uploadToS3($dest,$bucketName, $imageSlipNameTwo);
                 unlink($dest);
             } 
-            
+
+            $writedb = Mage::getSingleton('core/resource')->getConnection('core_write');
+            $updatereAwb = "INSERT INTO `sales_flat_shipment_reverse_track`(`shipment_id`, `reverse_awb_no`, `reverse_shipping_docs`,`courier_code`,`reverse_reason`,`created_at`,`updated_at`,`message`,`created_by`,`updated_by`) VALUES ('".$shipment_id_value."','".$awb."','".$shipping_docs."','".$c_company."','".$reason."','".$created_at."','".$updated_at."','".$message_status."','1','1') ";
+        
+            $_updatereAwb = $writedb->query($updatereAwb);
+            $writedb->closeConnection();
+            /*
             $vars = array(
                             'sku'=>$sku[0],
                             'productName'=>$productName[0],
@@ -1245,22 +1251,17 @@ public function disputeCustomerRemarks($shipment_id_value)
                             'tracknums'=> $awb,
                             'orderId'=>$orderId,
                             'base_url'=>$base_url,
-                            );
+                            );*/
           //echo '<pre>';print_r($vars);exit;
 
-            $emailrefunded->setDesignConfig(array('area'=>'frontend', 'store'=>$storeId))
-                            ->sendTransactional($templateId, $sender,$_orderBillingEmail, '', $vars, $storeId);
-              
-            $shipment->setUdropshipStatus(37);
-            Mage::helper('udropship')->addShipmentComment($shipment, ('Status has been changed to Return Requested from customer care agent'));
-            $shipment->save();
-
-            $writedb = Mage::getSingleton('core/resource')->getConnection('core_write');
-            $updatereAwb = "INSERT INTO `sales_flat_shipment_reverse_track`(`shipment_id`, `reverse_awb_no`, `reverse_shipping_docs`,`courier_code`,`reverse_reason`,`created_at`,`updated_at`,`message`,`created_by`,`updated_by`) VALUES ('".$shipentId."','".$awb."','".$shipping_docs."','".$c_company."','".$reason."','".$created_at."','".$updated_at."','".$message_status."','1','1') ";
-        
-            $_updatereAwb = $writedb->query($updatereAwb);
-            $writedb->closeConnection();
         }
+        //$emailrefunded->setDesignConfig(array('area'=>'frontend', 'store'=>$storeId))
+          //              ->sendTransactional($templateId, $sender,$_orderBillingEmail, '', $vars, $storeId);
+          
+        $shipment->setUdropshipStatus(37);
+        Mage::helper('udropship')->addShipmentComment($shipment,('Status has been changed to Return Requested from customer care agent'));
+        $shipment->save();
+
     }
     public function senddReverseOrder($jsonInput, $incrementId, $vendorId)
     {

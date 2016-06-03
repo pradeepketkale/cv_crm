@@ -33,6 +33,46 @@
 <?php if ($_item = $this->getItem()): ?>
     <h5 class="title"><span id="order_item_<?php echo $_item->getId() ?>_title"><?php echo $this->htmlEscape($_item->getName()) ?></span></h5>
     <div><strong><?php echo $this->helper('sales')->__('SKU') ?>:</strong> <?php echo implode('<br />', Mage::helper('catalog')->splitSku($this->htmlEscape($this->getSku()))); ?></div>
+     <?php 
+        $order_id=  $_item->getOrderId();
+        $product_id = $_item->getProductId();
+        //$product_id=  $_item->getProductId();
+        $readdb         =   Mage::getSingleton('core/resource')->getConnection('custom_db');
+        $trackSql       =   "SELECT `variant` FROM `cv_order_item_details`  as coid
+                            LEFT JOIN `sales_flat_shipment` as sfs
+                            ON coid.order_id= sfs.`order_id` 
+                            LEFT JOIN `sales_flat_shipment_item` as sfsi
+                            ON coid.`order_id` = sfsi.`order_id`
+                            WHERE sfs.`order_id` = '$order_id' AND sfsi.`product_id` = '$product_id'";
+              
+        $trackInformation   =   $readdb->query($trackSql)->fetchAll(); 
+        //echo "<pre>";print_r($trackInformation); 
+        $readdb->closeConnection();  
+        if(isset($trackInformation)) {  
+        $data = json_decode($trackInformation[0]['variant']);
+         //echo "<pre>";print_r($data); exit;
+        
+        if(!empty($data))
+        {
+              //echo "<pre>";print_r($data); 
+        ?>
+            <div><strong><?php echo $this->helper('sales')->__('SIZE') ?>:</strong> 
+     <?php echo $data->Size[0]; ?>
+     <div><strong><?php echo $this->helper('sales')->__('Color') ?>:</strong> 
+     <?php
+       
+        foreach ($data->Color as  $Color) {
+
+             echo $Color;
+           echo " ";
+         } 
+
+          
+        }
+      }
+    ?>
+  
+    </div>
     <?php if ($this->getOrderOptions()): ?>
         <dl class="item-options">
         <?php foreach ($this->getOrderOptions() as $_option): ?>
