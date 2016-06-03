@@ -452,6 +452,11 @@ class Craftsvilla_Shipmentpayout_Adminhtml_ShipmentpayoutController extends Mage
 		    	//Modifed for kribha and vendor amount for those shipments whose UTR is not assigned with new Method
 		    	if ($kribha_amount== 0 && $vendor_amount == 0){
 		    		$_orderCurrencyCode = $order->getOrderCurrencyCode();
+		    		/***********SEND SHIPPING CHECK**************/
+		    		$senddLogisticAmount = (75*(1+$service_tax));
+		    		$sqlSenddCheckQuery = "select `result_extra` from `sales_flat_shipment_track` where `result_extra` = 'sendd_prepaid' AND parent_id = " .$shipmentpayout_report1_val['entity_id'];
+		    		$resultSendd = $readOrderCntry->query($sqlSenddCheckQuery)->fetch();
+		    		/***********SEND SHIPPING CHECK**************/
 		    		if(($_orderCurrencyCode != 'INR') && (strtotime($shipmentpayout_report1_val['order_created_at']) >= strtotime($_liveDate))){
 		    			$subTotal = $shipmentpayout_report1_val['subtotal']/1.5 ;
 		    		} else {
@@ -471,10 +476,16 @@ class Craftsvilla_Shipmentpayout_Adminhtml_ShipmentpayoutController extends Mage
 		    			if($result){
 		    				$total_amount1 = $total_amount - $shipmentpayout_report1_val['base_shipping_amount'];
 		    				$vendor_amount = (($total_amount1)*(1-($commission_amount/100)*(1+$service_tax)));
+		    				if($resultSendd){
+		    					$vendor_amount = $vendor_amount - $senddLogisticAmount;
+		    				}
 		    				$kribha_amount = ((($total_amount)*1.00) - $vendor_amount) ;
 		    				$shipmentType = "KYC";
 		    			}else {
 			    			$vendor_amount = (($total_amount)*(1-($commission_amount/100)*(1+$service_tax)));
+			    			if($resultSendd){
+		    					$vendor_amount = $vendor_amount - $senddLogisticAmount;
+		    				}
 			    			$kribha_amount = ((($total_amount)*1.00) - $vendor_amount);
 			    			$shipmentType = "Non KYC";
 			    		}
@@ -485,11 +496,17 @@ class Craftsvilla_Shipmentpayout_Adminhtml_ShipmentpayoutController extends Mage
 		    			if($result){
 		    				$total_amount1 = $total_amount - $shipmentpayout_report1_val['base_shipping_amount'];
 		    				$vendor_amount = (($total_amount1)*(1-($commission_amount/100)*(1+$service_tax)));
+		    				if($resultSendd){
+		    					$vendor_amount = $vendor_amount - $senddLogisticAmount;
+		    				}
 		    				$total_amount = ($subTotal*1.5)+$shipmentpayout_report1_val['base_shipping_amount']+$discountAmountCoupon; //For 1.5 Factor recovery
 		    				$kribha_amount = ((($total_amount)*1.00) - $vendor_amount) ;
 		    				$shipmentType = "KYC";
 		    			}else {
 		    				$vendor_amount = (($total_amount)*(1-($commission_amount/100)*(1+$service_tax)));
+		    				if($resultSendd){
+		    					$vendor_amount = $vendor_amount - $senddLogisticAmount;
+		    				}
 		    				$total_amount = ($subTotal*1.5)+$shipmentpayout_report1_val['base_shipping_amount']+$discountAmountCoupon; //For 1.5 Factor recovery
 		    				$kribha_amount = ((($total_amount)*1.00) - $vendor_amount);
 		    				$shipmentType = "Non KYC";

@@ -211,6 +211,8 @@ public function assignAction()
 						unset($total_amount);
 						unset($adjustmentAmount);
 						unset($shipmentType);
+						unset($resultSendd);
+						$isSenddFlag = "false";
 						$order = Mage::getModel('sales/order')->loadByIncrementId($shipmentpayout_report1_val['order_id']);
 						$orderBaseShippingAmount = $order->getBaseShippingAmount();
 						$disCouponcode = '';
@@ -285,6 +287,11 @@ public function assignAction()
 
 						$total_amount = $subTotal+$shipmentpayout_report1_val['base_shipping_amount']+$discountAmountCoupon;
 						$payu_commission = $total_amount * ($payuChargePercent/100) ;
+						/***********SEND SHIPPING CHECK**************/
+						$senddLogisticAmount = (75*(1+$service_tax));
+						$sqlSenddCheckQuery = "select `result_extra` from `sales_flat_shipment_track` where `result_extra` = 'sendd_prepaid' AND parent_id = " .$shipmentpayout_report1_val['entity_id'];
+						$resultSendd = $readOrderCntry->query($sqlSenddCheckQuery)->fetch();
+						/***********SEND SHIPPING CHECK**************/
 						if($shipmentpayout_report1_val['order_created_at']<='2012-07-02 23:59:59')
 						{
 							if($vendors->getManageShipping() == "imanage")
@@ -306,29 +313,45 @@ public function assignAction()
 							else {
 								//$vendor_amount = (($total_amount+$base_shipping_amount+$discountAmountCoupon)*(1-($commission_amount/100)*(1+0.1450)));
 								if($_orderCurrencyCode == 'INR'){
-									$sqlQuery = "select courier_name from `sales_flat_shipment_track` where LOWER(`courier_name`) = 'dhl_int' AND parent_id = " .$shipmentpayout_report1_val['entity_id'];
+									$sqlQuery = "select `courier_name`,`result_extra` from `sales_flat_shipment_track` where LOWER(`courier_name`) = 'dhl_int' AND parent_id = " .$shipmentpayout_report1_val['entity_id'];
 									$result = $readOrderCntry->query($sqlQuery)->fetch();
 									if($result){
 										$total_amount1 = $total_amount - $shipmentpayout_report1_val['base_shipping_amount'];
 										$vendor_amount = (($total_amount1)*(1-($commission_amount/100)*(1+$service_tax)));
+										if($resultSendd){
+											$vendor_amount = $vendor_amount - $senddLogisticAmount;
+											$isSenddFlag = "true";
+										}
 										$kribha_amount = ((($total_amount)*1.00) - $vendor_amount);
 										$shipmentType = "KYC";
 									}else {
 										$vendor_amount = (($total_amount)*(1-($commission_amount/100)*(1+$service_tax)));
+										if($resultSendd){
+											$vendor_amount = $vendor_amount - $senddLogisticAmount;
+											$isSenddFlag = "true";
+										}
 										$kribha_amount = ((($total_amount)*1.00) - $vendor_amount) - $payu_commission;
 										$shipmentType = "IN";
 									}
 								}else{
-									$sqlQuery = "select courier_name from `sales_flat_shipment_track` where LOWER(`courier_name`) = 'dhl_int' AND parent_id = " .$shipmentpayout_report1_val['entity_id'];
+									$sqlQuery = "select `courier_name`,`result_extra` from `sales_flat_shipment_track` where LOWER(`courier_name`) = 'dhl_int' AND parent_id = " .$shipmentpayout_report1_val['entity_id'];
 									$result = $readOrderCntry->query($sqlQuery)->fetch();
 									if($result){
 										$total_amount1 = $total_amount - $shipmentpayout_report1_val['base_shipping_amount'];
 										$vendor_amount = (($total_amount1)*(1-($commission_amount/100)*(1+$service_tax)));
+										if($resultSendd){
+											$vendor_amount = $vendor_amount - $senddLogisticAmount;
+											$isSenddFlag = "true";
+										}
 										$total_amount = ($subTotal*1.5)+$shipmentpayout_report1_val['base_shipping_amount']+$discountAmountCoupon; //For 1.5 Factor recovery
 										$kribha_amount = ((($total_amount)*1.00) - $vendor_amount);
 										$shipmentType = "KYC";
 									}else {
 										$vendor_amount = (($total_amount)*(1-($commission_amount/100)*(1+$service_tax)));
+										if($resultSendd){
+											$vendor_amount = $vendor_amount - $senddLogisticAmount;
+											$isSenddFlag = "true";
+										}
 										$total_amount = ($subTotal*1.5) + $shipmentpayout_report1_val['base_shipping_amount'] +$discountAmountCoupon; //For 1.5 Factor recovery
 										$kribha_amount = ((($total_amount)*1.00) - $vendor_amount);
 										$shipmentType = "Non IN KYC";
@@ -351,7 +374,7 @@ public function assignAction()
 									$closingbalance = $closingbalance + $vendor_amount;
 									//$utrBalance = $utrBalance - $vendor_amount;
 									//$vendor_amount = 0;
-									$strTest.= "$adjustmentAmount,$commission_amount,$service_tax,$shipmentType,$payu_commission,$pg\n";
+									$strTest.= "$adjustmentAmount,$commission_amount,$service_tax,$shipmentType,$payu_commission,$pg,$isSenddFlag\n";
 									$neft = 'Adjusted Against Refund';
 									$queryUpdate = "update shipmentpayout set `shipmentpayout_update_time` = NOW(),`todo_payment_amount`= '".$adjustmentAmount."',`todo_commission_amount`= '".$kribha_amount."',`adjustment` ='".$adjustmentAmount."',`shipmentpayout_status` = '1',`type` = '".$neft."',`comment` = 'Adjusted Against Refund By System' WHERE shipment_id = '".$shipmentpayout_report1_val['shipment_id']."'";
 									$write = Mage::getSingleton('core/resource')->getConnection('shipmentpayout_write');
@@ -367,7 +390,7 @@ public function assignAction()
 									$this->_getSession()->addSuccess($this->__('Total of %d record(s) UTR successfully Assigned'.$shipmentpayout_report1_val['shipment_id']));
 
 							} else if ($utrBalance >= $total_amount) {
-								$strTest.= $shipmentpayout_report1_val['shipment_id'].",".$utrBalance.",".$total_amount.",".$vendor_amount.",".$kribha_amount.",".$closingbalance.",nill,$commission_amount,$service_tax,$shipmentType,$payu_commission,$pg\n";////////////////////
+								$strTest.= $shipmentpayout_report1_val['shipment_id'].",".$utrBalance.",".$total_amount.",".$vendor_amount.",".$kribha_amount.",".$closingbalance.",nill,$commission_amount,$service_tax,$shipmentType,$payu_commission,$pg,$isSenddFlag\n";////////////////////
 								$utrBalance = $utrBalance - ($total_amount - $payu_commission);
 								$write = Mage::getSingleton('core/resource')->getConnection('shipmentpayout_write');
 								$queryUpdate = "update shipmentpayout set `citibank_utr` = '".$utrNum."', `todo_payment_amount`= '".$vendor_amount."',`todo_commission_amount`= '".$kribha_amount."' WHERE shipment_id = '".$shipmentpayout_report1_val['shipment_id']."'";
@@ -411,7 +434,7 @@ public function assignAction()
 				$filename = "UtrReport_".date("Ymd");
 				$filePathOfCsv = Mage::getBaseDir('media').DS.'misreport'.DS.$filename.'.txt';
 			    $fp=fopen($filePathOfCsv,'a');
-			    $strHead = "Shipment Id,Utr Balance,Total Amount,Vendor Amount,Commission Amount,Closing Balance, Adjustment Amount,Commission Percent,Service Tax,Shipment Type,PayU Commission,PG\n";
+			    $strHead = "Shipment Id,Utr Balance,Total Amount,Vendor Amount,Commission Amount,Closing Balance, Adjustment Amount,Commission Percent,Service Tax,Shipment Type,PayU Commission,PG,SenddFlag\n";
 			    fputs($fp, $strHead);
 			    fputs($fp, $strTest);
 			    fputs($fp, $strHead);
