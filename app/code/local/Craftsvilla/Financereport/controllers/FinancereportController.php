@@ -1850,4 +1850,19 @@ on sfs.order_id = sfop.parent_id where sfs.created_at BETWEEN '".$startDate." 00
                 echo "Merchant Id Already available........";
                 }
     }
+
+     public function awbToShipmentDisplayAction(){
+        $getAwb = $_POST['awbnumber'];
+        $readConnection = Mage::getSingleton('core/resource')->getConnection('custom_db');
+        $selectAwbnumber = "select sales_flat_shipment_track.number, sales_flat_shipment.increment_id from sales_flat_shipment left join sales_flat_shipment_track on sales_flat_shipment.entity_id = sales_flat_shipment_track.parent_id where sales_flat_shipment_track.number = '".$getAwb."' ";
+        $getAwbnumber = $readConnection->query($selectAwbnumber)->fetch();
+        $incrementId=$getAwbnumber['increment_id'];
+        $readConnection->closeConnection();
+        $htmlDiv="";
+        if($incrementId){
+            $htmlDiv .="<center><div style=' text-color:black; width:700px; height:200px; background-color:#ccc; padding-top:2px; padding:5px; box-shadow: 1px 1px 1px #888888;'>";
+            $htmlDiv .="<div style='font-size:20px; padding-top:8px; text-align:center;'>Shipment Id: <spam style='float:center;'>".$incrementId."</spam><br/><br/><a href='http://localcadmin.craftsvilla.com/financereportcv/AwbToCsv.php' style='float:center; '>Go Back</a> </div></div></center>";
+            echo $htmlDiv;
+        }
+    }
 }

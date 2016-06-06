@@ -64,6 +64,15 @@ include('session.php');
         }
     });
 </script>
+<script>
+    function validateForm() {
+        var awb = document.forms["myForm"]["awbnumber"].value;
+        if (awb == null || awb == "") {
+            alert("Awb Number must be filled out");
+            return false;
+        }
+    }
+</script>
     </head>
     <body>
     <div class="grid Page-container">
@@ -97,6 +106,14 @@ include('session.php');
             </div>
         </div>
     </div>
+
+        <div style='padding-top: 14px;'>
+            <form name="myForm" action="/financereport/financereport/awbToShipmentDisplay" onsubmit="return validateForm()" method="post">
+                Awb Number: <input type="text" name="awbnumber">
+                <input type="submit" name="submit" value="Submit">
+            </form>
+        </div>
+
         <div style="height: 20px"></div>
         <div id="dvImportSegments" class="fileupload ">
         <fieldset>
