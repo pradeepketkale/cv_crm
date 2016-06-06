@@ -38,6 +38,11 @@
 
     $rpu_status_arr    =   array('Return Requested','Return In Transit','Return Delivered','Return RTO');
 ?>
+
+<?php $shipmentArray =  Mage::getSingleton('udropship/source')->setPath('shipment_statuses')->toOptionHash();
+			$currentShipmentStatusId = $this->getEntity()->getUdropshipStatus() ;
+			$currentShipmentStatus = $shipmentArray[$currentShipmentStatusId];
+?>
         <!-- Add code for prevent change status when its set refund initiated (12)/COD RTO (25) -->
 <?php $checkShipementStatus = array('12','25');
 			$shipmentStatusId = $this->getEntity()->getUdropshipStatus() ;
@@ -45,45 +50,52 @@
 			// access array
 			$userAccess = array('robin.sequeria@craftsvilla.com','sameer.mantri@craftsvilla.com','Rohit@craftsvilla.com','anderson.kokken@craftsvilla.com','jyoti.arora@craftsvilla.com','tribhuvan@craftsvilla.com','niraj@craftsvilla.com','gaurav@craftsvilla.com','dilipcscare@craftsvilla.com','santoshc@craftsvilla.com','samidha@craftsvilla.com','Seemag@craftsvilla.com','poojaminac@craftsvilla.com');
 			
-			/* disable shipment status which is older than 3 month */
-			$monthDiff =  strtotime(date("Y-m-d", strtotime($_entity->getUpdatedAt())) . " +3 month");
-	    $finaldate =  date('Y-m-d H:i:s', $monthDiff);
-		  $todaydate = date('Y-m-d H:i:s',strtotime(date('Y-m-d H:i:s', strtotime(NOW()))));
-		  if($todaydate > $finaldate){
-				// user access check
-			  if(in_array($user,$userAccess)){
-						//$accessFlag = 0 ;
-						$flag = 0 ;
-				} else {
-						//$accessFlag = 1 ;
-						$flag = 1 ;
-				}
-		  } else {
-				// allow access to user for changing status having 90 days old .
-				if(in_array($user,$userAccess)){
-						//$accessFlag = 0 ;
-						$flag = 0 ;
-				} else {
-						//$accessFlag = 1 ;
-						$flag = 1 ;
-				}
-			}
+		/* disable shipment status which is older than 3 month */
+		$monthDiff =  strtotime(date("Y-m-d", strtotime($_entity->getUpdatedAt())) . " +3 month");
+		$finaldate =  date('Y-m-d H:i:s', $monthDiff);
+		$todaydate = date('Y-m-d H:i:s',strtotime(date('Y-m-d H:i:s', strtotime(NOW()))));
+			
 		$inc_id = $_entity->getIncrementId();
 		$read = Mage::getSingleton('core/resource')->getConnection('core_read');
 		$query = "select shipmentpayout_status from shipmentpayout where shipment_id=".$inc_id;
 		$result = $read->query($query)->fetch();
 		$read->closeConnection();
-	  if($result['shipmentpayout_status']){
+		
+		$accessFlag = 0 ; $flag = 0; $payoutFlag =0;
+			
+		if(in_array($shipmentStatusId,$checkShipementStatus)){
+				if(in_array($user,$userAccess)) {
+						$accessFlag = 0;
+				} else {
+						$accessFlag = 1;
+				}
+				
+		} else if($todaydate > $finaldate){
+				$flag = 1;
+		} else if($result['shipmentpayout_status']){
 				$payoutFlag = 1 ;
-		} else {
-				$payoutFlag = 0 ;
 		}
 		
-		if(in_array($user,$userAccess)){
-				$accessFlag = 0 ;
-		} else {
-				$accessFlag = 1 ;
-		}
+			
+		
+		//  if($todaydate > $finaldate){
+		//		$flag = 1;
+		//  } else {
+		//		$flag = 0;
+		//	}
+		
+	
+	//  if($result['shipmentpayout_status']){
+	//			$payoutFlag = 1 ;
+	//	} else {
+	//			$payoutFlag = 0 ;
+	//	}
+		
+		//if(in_array($user,$userAccess)){
+		//		$accessFlag = 0 ;
+		//} else {
+		//		$accessFlag = 1 ;
+		//}
 ?>
 
 <!-- following shipment status removed
@@ -94,17 +106,13 @@ $_label == 'COD Shipment Picked Up'|| $_label == 'Return Recieved From Customer'
 in_array($shipmentStatusId,$checkShipementStatus) || 
 -->
 
-<?php $shipmentArray =  Mage::getSingleton('udropship/source')->setPath('shipment_statuses')->toOptionHash();
-			$currentShipmentStatusId = $this->getEntity()->getUdropshipStatus() ;
-			$currentShipmentStatus = $shipmentArray[$currentShipmentStatusId];
-?>
 	
 <div id="comments_block">
     <span class="field-row">
         <label class="normal" for="comment_status"><?php echo Mage::helper('sales')->__('Status') ?></label><br/>
 
     
-       <select name="comment[status]" class="select" id="comment_status" onchange="showfield(this.options[this.selectedIndex].value)" <?php if( in_array($shipmentStatusId,$checkShipementStatus) || $accessFlag == '1' || $flag == '1' || $payoutFlag == '1') echo 'disabled' ?>>
+       <select name="comment[status]" class="select" id="comment_status" onchange="showfield(this.options[this.selectedIndex].value)" <?php if($accessFlag == '1' || $flag == '1' || $payoutFlag == '1') echo 'disabled' ?>>
 
 	<?php 
  
@@ -218,8 +226,9 @@ function submitComment() {
      var currentStatusId = '<?php echo $shipmentStatusId ?>'; //alert(currentStatusId);
 		 var monthCheck = '<?php echo $flag ?>' ;
 		 var payoutFlag = '<?php echo $payoutFlag ?>';
-		 var userAccess =  '<?php echo $accessFlag ?>';
-     if(currentStatusId == '25' || currentStatusId == '12' || monthCheck == '1' || payoutFlag == '1' || userAccess == '1')
+		 var userAccess = '<?php echo $accessFlag ?>';
+		
+     if( (currentStatusId == '25' && currentStatusId == '12' && userAccess == '1') || monthCheck == '1' || payoutFlag == '1' )
      {
      alert('Futher Modification not allow at this stage.');
      return false ;
