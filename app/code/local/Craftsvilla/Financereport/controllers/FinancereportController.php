@@ -1863,6 +1863,10 @@ on sfs.order_id = sfop.parent_id where sfs.created_at BETWEEN '".$startDate." 00
             $htmlDiv .="<center><div style=' text-color:black; width:700px; height:200px; background-color:#ccc; padding-top:2px; padding:5px; box-shadow: 1px 1px 1px #888888;'>";
             $htmlDiv .="<div style='font-size:20px; padding-top:8px; text-align:center;'>Shipment Id: <spam style='float:center;'>".$incrementId."</spam><br/><br/><a href='http://localcadmin.craftsvilla.com/financereportcv/AwbToCsv.php' style='float:center; '>Go Back</a> </div></div></center>";
             echo $htmlDiv;
+        }else{
+            $htmlDiv .="<center><div style=' text-color:black; width:700px; height:200px; background-color:#ccc; padding-top:2px; padding:5px; box-shadow: 1px 1px 1px #888888;'>";
+            $htmlDiv .="<div style='font-size:20px; padding-top:8px; text-align:center;'>You have entered wrong Awb Number.<br/><br/><a href='http://localcadmin.craftsvilla.com/financereportcv/AwbToCsv.php' style='float:center; '>Go Back</a> </div></div></center>";
+            echo $htmlDiv;
         }
     }
 }
