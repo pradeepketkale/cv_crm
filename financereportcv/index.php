@@ -1,4 +1,3 @@
-
 <?php
 if(isset($_SESSION['login_user'])){
 	header("location: dashboard.php");
@@ -21,9 +20,11 @@ if (isset($_POST['submit'])) {
 	if ($rows == 1 && $username == "finance1@craftsvilla.com") {
 		$_SESSION['login_user']= $user_id['user_id']; // Initializing Session
 		header("location: preformacode.php"); // Redirecting To Other Page
+		exit();
 	} else if($rows == 1){
 		$_SESSION['login_user']= $user_id['user_id']; // Initializing Session
 		header("location: dashboard.php"); // Redirecting To Other Page
+		exit();
 	}else {
 		$error = "Username or Password is invalid";
 	}

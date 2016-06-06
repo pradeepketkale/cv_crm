@@ -65,6 +65,7 @@ class Unirgy_Dropship_Model_Pdf_Statement extends Unirgy_Dropship_Model_Pdf_Abst
         {
 
 		    $po = Mage::getModel('sales/order_shipment')->load($_po['entity_id']);
+            $commission_percent = $hlp->getVendorCommission($po->getUdropshipVendor(), $_po['increment_id']);
 		    //echo '<pre>'; print_r($po); exit;
 	       	$actualServiceTax = $this->getServicetaxCv($po->getUpdatedAt());
 		    $shipmentId = $_po['increment_id'];
@@ -73,7 +74,7 @@ class Unirgy_Dropship_Model_Pdf_Statement extends Unirgy_Dropship_Model_Pdf_Abst
 		        'po_id' => $po->getId(),
 		        'date' => $hlp->getPoOrderCreatedAt($po),
 		        'id' => $hlp->getPoOrderIncrementId($po),
-		        'com_percent' => '20',
+		        'com_percent' => $commission_percent,
 				'adjustments' => $po->getAdjustments(),
 		        'order_id' => $po->getOrderId(),
 		        'po_id' => $po->getId(),
@@ -1286,6 +1287,7 @@ class Unirgy_Dropship_Model_Pdf_Statement extends Unirgy_Dropship_Model_Pdf_Abst
         {
 
             $po = Mage::getModel('sales/order_shipment')->load($_po['entity_id']);
+            $commission_percent = $hlp->getVendorCommission($po->getUdropshipVendor(), $_po['increment_id']);
             //echo '<pre>'; print_r($po); exit;
             $actualServiceTax = $this->getServicetaxCv($po->getUpdatedAt());
             $shipmentId = $_po['increment_id'];
@@ -1294,7 +1296,7 @@ class Unirgy_Dropship_Model_Pdf_Statement extends Unirgy_Dropship_Model_Pdf_Abst
                 'po_id' => $po->getId(),
                 'date' => $hlp->getPoOrderCreatedAt($po),
                 'id' => $hlp->getPoOrderIncrementId($po),
-                'com_percent' => '20',
+                'com_percent' => $commission_percent,
                 'adjustments' => $po->getAdjustments(),
                 'order_id' => $po->getOrderId(),
                 'po_id' => $po->getId(),
