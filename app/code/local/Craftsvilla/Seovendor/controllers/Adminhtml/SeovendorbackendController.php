@@ -8,16 +8,16 @@ class Craftsvilla_Seovendor_Adminhtml_SeovendorbackendController extends Mage_Ad
 	//			 ->_addBreadcrumb(Mage::helper("adminhtml")->__("Vendorseo  Manager"),Mage::helper("adminhtml")->__("Vendorseo Manager"));
 	//			return $this;
 	//	}
-	
-	 	public function indexAction() 
+
+	 	public function indexAction()
 		{
 				$this->_title($this->__("SeoVendor Manager"));
 				$this->loadLayout();
-				$this->_setActiveMenu("cms/seovendor");
+				$this->_setActiveMenu("sales/seovendor");
 				$this->_addBreadcrumb(Mage::helper("adminhtml")->__("Vendorseo  Manager"),Mage::helper("adminhtml")->__("Vendorseo Manager"));
 			  $this->renderLayout();
 		}
-		
+
 		public function gridAction()
 		{
 			 $this->loadLayout();
@@ -25,26 +25,26 @@ class Craftsvilla_Seovendor_Adminhtml_SeovendorbackendController extends Mage_Ad
 			 $this->getLayout()->createBlock('seovendor/adminhtml_seovendor_grid')->toHtml()
 			 );
 		}
-		
+
 		public function editAction()
-		{			    
+		{
 				//$this->_title($this->__("Vendorseo"));
-				
+
 				$this->loadLayout();
-				$this->_setActiveMenu("cms/seovendor");
+				$this->_setActiveMenu("sales/seovendor");
 				$this->_addBreadcrumb(Mage::helper("adminhtml")->__("Vendorseo Manager"), Mage::helper("adminhtml")->__("Vendorseo Manager"));
 				$this->_addBreadcrumb(Mage::helper("adminhtml")->__("Vendorseo Description"), Mage::helper("adminhtml")->__("Vendorseo Description"));
-				
-						
+
+
 				$id = $this->getRequest()->getParam("id");
 				$model = Mage::getModel("seovendor/seovendor")->load($id);
-				
+
 				if ($model->getVendorId()) {
-					
+
 						$model->setData($model->getData());
 						$model->save();
 						Mage::register("seovendor_data", $model);
-				} 
+				}
 				else {
 					Mage::getSingleton("adminhtml/session")->addError(Mage::helper("seovendor")->__("Item does not exist."));
 					$this->_redirect("*/*/");
@@ -54,26 +54,26 @@ class Craftsvilla_Seovendor_Adminhtml_SeovendorbackendController extends Mage_Ad
 				     ->_addLeft($this->getLayout()->createBlock("seovendor/adminhtml_seovendor_edit_tabs"));
 				$this->renderLayout();
 		}
-		
+
 		public function newAction()
 		{
-		
+
 			$this->loadLayout();
-			$this->_setActiveMenu("cms/seovendor");
-		
+			$this->_setActiveMenu("sales/seovendor");
+
 			$this->getLayout()->getBlock("head")->setCanLoadExtJs(true);
-		
+
 			$this->_addBreadcrumb(Mage::helper("adminhtml")->__("Vendorseo Manager"), Mage::helper("adminhtml")->__("Vendorseo Manager"));
 			$this->_addBreadcrumb(Mage::helper("adminhtml")->__("Vendorseo Description"), Mage::helper("adminhtml")->__("Vendorseo Description"));
-		
-		
+
+
 			$this->_addContent($this->getLayout()->createBlock("seovendor/adminhtml_seovendor_edit"))
 			     ->_addLeft($this->getLayout()->createBlock("seovendor/adminhtml_seovendor_edit_tabs"));
-		
+
 			$this->renderLayout();
-		
+
 		}
-		
+
 		public function getSeoDataAction()
 		{
 			if(isset($_GET['v_id'])) {
@@ -89,7 +89,7 @@ class Craftsvilla_Seovendor_Adminhtml_SeovendorbackendController extends Mage_Ad
 			 exit ;
 			}
 		}
-		
+
 		public function saveAction()
 		{
 			$post_data = $this->getRequest()->getPost();
@@ -98,13 +98,13 @@ class Craftsvilla_Seovendor_Adminhtml_SeovendorbackendController extends Mage_Ad
 					$vendor_id = (int)$post_data['vendor_name'];
 					//$vendorCheck = Mage::helper('seovendor')->getVendorSeoData($vendor_id);
 					//$vendorData  = $vendorCheck->getData()[0] ;
-		
+
 					//$vendorName = Mage::helper('seovendor')->getVendorNameById($vendor_id);
 					$metaTitle = $post_data['meta_title'];
 					$metaDescription = $post_data['meta_description'];
 					$metaKeywords = $post_data['meta_keywords'];
 					$vendorDescription = $post_data['vendor_description'];
-		
+
 					// check for update seodata from edit section
 					if($this->getRequest()->getParam("id")) {
 						 $model = Mage::getModel("seovendor/seovendor")->load($this->getRequest()->getParam("id"));
@@ -123,10 +123,10 @@ class Craftsvilla_Seovendor_Adminhtml_SeovendorbackendController extends Mage_Ad
 						  Mage::getSingleton("adminhtml/session")->addError($e->getMessage());
 						  }
 					}
-		
+
 					Mage::getSingleton("adminhtml/session")->addSuccess(Mage::helper("adminhtml")->__("VendorSeo Data Was Successfully Saved"));
 					Mage::getSingleton("adminhtml/session")->setVendorseoData(false);
-		
+
 					if ($this->getRequest()->getParam("back")) {
 						if($this->getRequest()->getParam("id")) {
 							$this->_redirect("*/*/edit", array("id" => $model->getVendorId()));
@@ -137,7 +137,7 @@ class Craftsvilla_Seovendor_Adminhtml_SeovendorbackendController extends Mage_Ad
 					}
 					$this->_redirect("*/*/");
 					return;
-				} 
+				}
 				catch (Exception $e) {
 					Mage::getSingleton("adminhtml/session")->addError($e->getMessage());
 					Mage::getSingleton("adminhtml/session")->setVendorseoData($this->getRequest()->getPost());
@@ -146,10 +146,10 @@ class Craftsvilla_Seovendor_Adminhtml_SeovendorbackendController extends Mage_Ad
 				}
 			}
 			Mage::getSingleton('adminhtml/session')->addError(Mage::helper('seovendor')->__('Unable to find item to save'));
-			
+
 			$this->_redirect("*/*/");
 		}
-		
+
 		public function deleteAction()
 		{
 				if( $this->getRequest()->getParam("id") > 0 ) {
@@ -159,7 +159,7 @@ class Craftsvilla_Seovendor_Adminhtml_SeovendorbackendController extends Mage_Ad
 						//echo '<pre>'; print_r(Mage::registry("seovendor_data")); exit ;
 						Mage::getSingleton("adminhtml/session")->addSuccess(Mage::helper("adminhtml")->__( "VendorSeo Data Was Successfully Deleted"));
 						$this->_redirect("*/*/");
-					} 
+					}
 					catch (Exception $e) {
 						Mage::getSingleton("adminhtml/session")->addError($e->getMessage());
 						$this->_redirect("*/*/edit", array("id" => $this->getRequest()->getParam("id")));
@@ -168,7 +168,7 @@ class Craftsvilla_Seovendor_Adminhtml_SeovendorbackendController extends Mage_Ad
 				$this->_redirect("*/*/");
 		}
 
-		
+
 		public function massRemoveAction()
 		{
 			try {
@@ -184,6 +184,6 @@ class Craftsvilla_Seovendor_Adminhtml_SeovendorbackendController extends Mage_Ad
 			}
 			$this->_redirect('*/*/');
 		}
-			
-		
+
+
 }

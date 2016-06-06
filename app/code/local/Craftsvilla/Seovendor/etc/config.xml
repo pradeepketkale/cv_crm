@@ -5,7 +5,7 @@
       <version>0.1.0</version>
     </Craftsvilla_Seovendor>
   </modules>
- 
+
  <admin>
 		<routers>
 			<seovendor>
@@ -17,10 +17,10 @@
 			</seovendor>
 		</routers>
 	</admin>
-	
+
 	<adminhtml>
 		<menu>
-			<cms>
+			<sales>
 				<children>
 					<seovendor module="seovendor">
 					<title>VendorSeo</title>
@@ -35,9 +35,9 @@
 					 <action>seovendor/adminhtml_seovendorbackend</action>
 					</seovendor>
 				</children>
-			</cms>
+			</sales>
 		</menu>
-	
+
 		<acl>
 			<resources>
 			<all>
@@ -45,18 +45,18 @@
 			</all>
 			<admin>
 				<children>
-					<cms>
+					<sales>
 						<children>
 							<seovendorbackend>
 							<title>Manage Seo Data</title>
 							</seovendorbackend>
 						</children>
-				  </cms>
+				  </sales>
 				</children>
 			</admin>
 			</resources>
 		</acl>
-		
+
 		<layout>
 			<updates>
 			<seovendor>
@@ -65,7 +65,7 @@
 			</updates>
 		</layout>
   </adminhtml>
-	
+
   <global>
     <models>
 			<seovendor>
@@ -74,14 +74,14 @@
 			</seovendor>
 			<seovendor_mysql4>
 				<class>Craftsvilla_Seovendor_Model_Mysql4</class>
-				<entities>		  
+				<entities>
 					<seovendor>
 					<table>cv_vendor</table>
 					</seovendor>
 				</entities>
 			</seovendor_mysql4>
 		</models>
-	
+
 		<resources>
 			<seovendor_setup>
 				<setup>
@@ -102,17 +102,17 @@
 				</connection>
 			</seovendor_read>
 		</resources>
-  
+
 	  <blocks>
 			<seovendor>
 				<class>Craftsvilla_Seovendor_Block</class>
 			</seovendor>
 		</blocks>
-	
+
 		<helpers>
       <seovendor>
         <class>Craftsvilla_Seovendor_Helper</class>
       </seovendor>
     </helpers>
 	</global>
-</config> 
+</config>

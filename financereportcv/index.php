@@ -18,7 +18,7 @@ if (isset($_POST['submit'])) {
 	$query = mysql_query($ses_sql,$mainConnection);
 	$rows = mysql_num_rows($query);
 	$user_id = mysql_fetch_assoc($query);
-	if ($rows == 1 && $user_id['user_id'] == "finance1@craftsvilla.com") {
+	if ($rows == 1 && $username == "finance1@craftsvilla.com") {
 		$_SESSION['login_user']= $user_id['user_id']; // Initializing Session
 		header("location: preformacode.php"); // Redirecting To Other Page
 	} else if($rows == 1){

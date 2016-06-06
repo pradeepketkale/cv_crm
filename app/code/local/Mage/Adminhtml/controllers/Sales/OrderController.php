@@ -1496,7 +1496,7 @@ public function changeordertocodAction()
 		$user = Mage::getSingleton('admin/session');
 		$userEmail = $user->getUser()->getEmail();
         $userName = $user->getUser()->getName();
-	if($userEmail == "dileswar@craftsvilla.com" || $userEmail == "pravin.craftsvilla@gmail.com" || $userEmail == "suraj.craftsvilla92@gmail.com" || $userEmail == "ajaysharma.craftsvilla@gmail.com" || $userEmail == "akbar.craftsvilla@gmail.com" || $userEmail == "sagar.craftsvilla@gmail.com" || $userEmail == "monica@craftsvilla.com" || $userEmail == "manoj@craftsvilla.com" || $userEmail == "Surajg@craftsvilla.com" || $userEmail == "Pravind@craftsvilla.com" || $userEmail == "akbar@craftsvilla.com" || $userEmail == "ajays@craftsvilla.com")
+	if($userEmail == "jyoti.arora@craftsvilla.com" || $userEmail == "pravin.craftsvilla@gmail.com" || $userEmail == "suraj.craftsvilla92@gmail.com" || $userEmail == "ajaysharma.craftsvilla@gmail.com" || $userEmail == "akbar.craftsvilla@gmail.com" || $userEmail == "sagar.craftsvilla@gmail.com" || $userEmail == "monica@craftsvilla.com" || $userEmail == "manoj@craftsvilla.com" || $userEmail == "Surajg@craftsvilla.com" || $userEmail == "Pravind@craftsvilla.com" || $userEmail == "akbar@craftsvilla.com" || $userEmail == "ajays@craftsvilla.com")
 		{
 		$orderIds = $this->getRequest()->getPost('order_ids');
 		$order = Mage::getModel('sales/order')->load($orderIds); //load order
