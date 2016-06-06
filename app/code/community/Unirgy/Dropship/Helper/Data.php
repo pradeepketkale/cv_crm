@@ -4497,10 +4497,10 @@ $drawing->finish($filetypes[$default_valuetwo['filetype']]);
          $resDate = $readCon->query($queryGet)->fetch();
          $updatedDate = $resDate['updated_at'];
          $readCon->closeConnection();
-        if($updatedDate >= '2015-05-31 18:30:00')
+        if($updatedDate >= '2016-05-31 18:30:00')
         {
             $exServicetax = (15/100);
-        }elseif($updatedDate >= '2015-11-15 23:59:59' && $updatedDate < '2015-05-31 18:29:59')
+        }elseif($updatedDate >= '2015-11-15 23:59:59' && $updatedDate <= '2016-05-31 18:29:59')
         {
             $exServicetax = (14.5/100);
         }

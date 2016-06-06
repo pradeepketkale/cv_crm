@@ -182,11 +182,11 @@ class Unirgy_Dropship_Model_Pdf_Statement extends Unirgy_Dropship_Model_Pdf_Abst
     }
     public function getServicetaxCv($updatedDate)
     {
-        if($updatedDate >= '2015-05-31 18:30:00')
+        if($updatedDate >= '2016-05-31 18:30:00')
         {
             $exServicetax = (15/100);
         }
-        elseif($updatedDate >= '2015-11-15 00:00:00' && $updatedDate < '2015-05-31 18:29:59')
+        elseif($updatedDate >= '2015-11-15 00:00:00' && $updatedDate <= '2016-05-31 18:29:59')
         {
             $exServicetax = (14.5/100);
         }
