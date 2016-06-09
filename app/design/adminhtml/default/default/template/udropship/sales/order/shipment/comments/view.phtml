@@ -48,7 +48,7 @@
 			$shipmentStatusId = $this->getEntity()->getUdropshipStatus() ;
 			
 			// access array
-			$userAccess = array('robin.sequeria@craftsvilla.com','sameer.mantri@craftsvilla.com','Rohit@craftsvilla.com','anderson.kokken@craftsvilla.com','jyoti.arora@craftsvilla.com','tribhuvan@craftsvilla.com','niraj@craftsvilla.com','gaurav@craftsvilla.com','dilipcscare@craftsvilla.com','santoshc@craftsvilla.com','samidha@craftsvilla.com','Seemag@craftsvilla.com','poojaminac@craftsvilla.com');
+			$userAccess = array('robin.sequeria@craftsvilla.com','sameer.mantri@craftsvilla.com','Rohit@craftsvilla.com','anderson.kokken@craftsvilla.com','jyoti.arora@craftsvilla.com','tribhuvan@craftsvilla.com','niraj@craftsvilla.com','gaurav@craftsvilla.com','dilipcscare@craftsvilla.com','santoshc@craftsvilla.com','samidha@craftsvilla.com','Seemag@craftsvilla.com','poojaminac@craftsvilla.com','Ayeshab@craftsvilla.com');
 			
 		/* disable shipment status which is older than 3 month */
 		$monthDiff =  strtotime(date("Y-m-d", strtotime($_entity->getUpdatedAt())) . " +3 month");
@@ -123,7 +123,7 @@ in_array($shipmentStatusId,$checkShipementStatus) ||
         		*Added by Suresh on 31-05-2012
         		*/
         	
-				if($_label == '' || $_label == 'Processing' || $_label == 'Shipped To Customer' || $_label == 'Delivered' || $_label == 'Refund Initiated' || $_label == 'Not Delivered' || $_label == 'Charge Back' || $_label == 'Canceled' || $_label == 'Product Out Of Stock' || $_label == 'Dispute Raised' || $_label == 'Shipment Delayed' || $_label == 'Refund To Do' || $_label == 'Accepted' || $_label == 'COD RTO' || $_label == 'Accept To Ship Directly To Customer'|| $_label == 'Handed To Courier' || $_label == 'Refund Voucher Requested' || $_label == 'Refund Voucher Sent' || $_label == 'PREPAID RTO' || ($_label=='Damage/Lost in transit' && $user == "pravin@craftsvilla.com" || $user == "tarun@craftsvilla.com" || $user == "Ayeshab@craftsvilla.com" || $user == "roshan@craftsvilla.com") || $_label == 'Return Requested' || $_label == 'Return In Transit' || $_label == 'Return Delivered' || $_label == 'Return RTO'): //Modifed by Ankit for restriction on Damage/Lost in Transit
+				if($_label == '' || $_label == 'Processing' || $_label == 'Shipped To Customer' || $_label == 'Delivered' || $_label == 'Refund Initiated' || $_label == 'Not Delivered' || $_label == 'Charge Back' || $_label == 'Canceled' || $_label == 'Product Out Of Stock' || $_label == 'Dispute Raised' || $_label == 'Shipment Delayed' || $_label == 'Refund To Do' || $_label == 'Accepted' || $_label == 'COD RTO' || $_label == 'Accept To Ship Directly To Customer'|| $_label == 'Handed To Courier' || $_label == 'Refund Voucher Requested' || $_label == 'Refund Voucher Sent' || $_label == 'PREPAID RTO' || ($_label=='Damage/Lost in transit' && $user == "pravin@craftsvilla.com" || $user == "tarun@craftsvilla.com" || $user == "Ayeshab@craftsvilla.com" || $user == "roshan@craftsvilla.com")): //Modifed by Ankit for restriction on Damage/Lost in Transit
         ?>
 				   <option value="<?php echo $_code ?>"<?php if($_code==$this->getEntity()->getUdropshipStatus()): ?> selected="selected" <?php endif; ?>><?php echo $_label ?></option>
 			  <!-- check for current status with allow status -->
