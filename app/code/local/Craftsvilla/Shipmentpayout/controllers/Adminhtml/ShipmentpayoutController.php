@@ -1674,7 +1674,7 @@ class Craftsvilla_Shipmentpayout_Adminhtml_ShipmentpayoutController extends Mage
 		    		if($fieldvalue == "Debit Account Number")
 		    		{
 		    			//$output .= '710607028';
-		    			$output .= '712097019';
+		    			$output .= "'".'041981300000432';
 		    		}
 
 		    		if($fieldvalue == "Value Date")
@@ -1684,7 +1684,7 @@ class Craftsvilla_Shipmentpayout_Adminhtml_ShipmentpayoutController extends Mage
 
 		    		if($fieldvalue == "Customer Reference No")
 		    		{
-		    			$output .= $shipmentpayout_report1_val['shipment_id'];
+		    			$output .= $shipmentpayout_report1_val['shipment_id'].'-SP';
 		    		}
 
 		    		if($fieldvalue == "Beneficiary Name")
