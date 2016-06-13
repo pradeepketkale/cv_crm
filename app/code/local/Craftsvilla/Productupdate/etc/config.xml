@@ -77,7 +77,7 @@
 		</layout>
     </adminhtml>   
     <global>
-        <models>
+       <!--- <models>
             <productupdate>
                 <class>Craftsvilla_Productupdate_Model</class>
                 <resourceModel>productupdate_mysql4</resourceModel>
@@ -90,7 +90,7 @@
                     </productupdate>
                 </entities>
             </productupdate_mysql4>
-        </models>
+        </models>-->
         <resources>
             <productupdate_setup>
                 <setup>

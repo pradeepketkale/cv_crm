@@ -130,9 +130,9 @@ class Craftsvilla_Productmanagement_IndexController extends Mage_Core_Controller
 					$bodyhtml .='</div>';
 
 					echo $bodyhtml;
-				}elseif($selectedSearch=='vendorName'){
+				}elseif($selectedSearch=='vendorId'){
 					$readcon = Mage::getSingleton('core/resource')->getConnection('core_read');
-			 		$vendorQuery="SELECT `vendor_id`,`vendor_name`,`url_key` FROM `udropship_vendor` WHERE `vendor_name` Like '%".$str."%' ";
+			 		$vendorQuery="SELECT `vendor_id`,`vendor_name`,`url_key` FROM `udropship_vendor` WHERE `vendor_id` = '".$str."' ";
 					$vendorQueryRes = $readcon->query($vendorQuery)->fetch();
 					//print_r($vendorQueryRes);
 					if(empty($vendorQueryRes)){
