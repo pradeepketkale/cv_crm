@@ -122,11 +122,12 @@ class Unirgy_Dropship_Adminhtml_ShipmentController extends Mage_Adminhtml_Contro
         *Added to get order id
         *Added by Suresh on 04-06-2012
         */
-
+        
         $shipmentId_value = $this->getRequest()->getParam('shipment_id');
         $shipment_collection = Mage::getModel('sales/order_shipment')->load($shipmentId_value);
         $shipment_id_value = $shipment_collection->getIncrementId();
-
+        $reason = $this->getRequest()->getPost('returnRequestRemark');
+        
         /*End..
         *Craftsvilla Comment
         *Added to get order id
@@ -142,18 +143,21 @@ class Unirgy_Dropship_Adminhtml_ShipmentController extends Mage_Adminhtml_Contro
                 Mage::throwException($this->__('Comment text field cannot be empty.'));
             }
 
-//mstart
-        if (empty($dataRefund) && $data['status']==23) {
-                Mage::throwException($this->__('Please Enter Refund Amount in Refund To Do Dropdown'));
+            //mstart
+            if (empty($dataRefund) && $data['status']==23) {
+                    Mage::throwException($this->__('Please Enter Refund Amount in Refund To Do Dropdown'));
+                }
+            if (!is_numeric($dataRefund) && $data['status']==23){
+            Mage::throwException($this->__('Only Numeric Value Allow in Refund To Do Dropdown'));
             }
-       if (!is_numeric($dataRefund) && $data['status']==23){
-        Mage::throwException($this->__('Only Numeric Value Allow in Refund To Do Dropdown'));
-        }
-
-        if (empty($dataDispute) && $data['status']==20) {
-                Mage::throwException($this->__('Please Select Reason For Dispute Raise'));
+            
+            if (empty($dataDispute) && $data['status']==20) {
+                    Mage::throwException($this->__('Please Select Reason For Dispute Raise'));
+                }
+            //mend
+            if (empty($reason) && $data['status']==37) {
+                Mage::throwException($this->__('Please Select Return Request Reason'));
             }
-//mend
 
             $hlp = Mage::helper('udropship');
             $status = $data['status'];
@@ -231,7 +235,7 @@ class Unirgy_Dropship_Adminhtml_ShipmentController extends Mage_Adminhtml_Contro
                      if($status == 37)
                     {
                        
-                       $this->returnrequested($shipment_id_value,$shipmentId_value);
+                       $this->returnrequested($shipment_id_value,$shipmentId_value,$reason);
                     }
                      
 
@@ -1161,7 +1165,7 @@ public function disputeCustomerRemarks($shipment_id_value)
             $shipment->save();
     }
 
-    public function returnrequested($shipment_id_value,$shipentId)
+    public function returnrequested($shipment_id_value,$shipentId,$reason='')
     {
         //send mail to customer
         //$storeId = Mage::app()->getStore()->getId();
