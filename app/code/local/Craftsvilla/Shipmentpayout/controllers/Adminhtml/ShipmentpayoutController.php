@@ -1684,7 +1684,7 @@ class Craftsvilla_Shipmentpayout_Adminhtml_ShipmentpayoutController extends Mage
 
 		    		if($fieldvalue == "Customer Reference No")
 		    		{
-		    			$output .= $shipmentpayout_report1_val['shipment_id'].'-SP';
+		    			$output .= $shipmentpayout_report1_val['shipment_id'].'SP';
 		    		}
 
 		    		if($fieldvalue == "Beneficiary Name")
