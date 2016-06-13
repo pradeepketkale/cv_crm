@@ -47,9 +47,9 @@
 				<children>
 					<sales>
 						<children>
-							<seovendorbackend>
+							<seovendor>
 							<title>Manage Seo Data</title>
-							</seovendorbackend>
+							</seovendor>
 						</children>
 				  </sales>
 				</children>
