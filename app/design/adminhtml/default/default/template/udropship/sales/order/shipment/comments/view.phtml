@@ -75,6 +75,27 @@
 		} else if($result['shipmentpayout_status']){
 				$payoutFlag = 1 ;
 		}
+		
+			
+		
+		//  if($todaydate > $finaldate){
+		//		$flag = 1;
+		//  } else {
+		//		$flag = 0;
+		//	}
+		
+	
+	//  if($result['shipmentpayout_status']){
+	//			$payoutFlag = 1 ;
+	//	} else {
+	//			$payoutFlag = 0 ;
+	//	}
+		
+		//if(in_array($user,$userAccess)){
+		//		$accessFlag = 0 ;
+		//} else {
+		//		$accessFlag = 1 ;
+		//}
 ?>
 
 <!-- following shipment status removed
@@ -111,28 +132,28 @@ in_array($shipmentStatusId,$checkShipementStatus) ||
 				<?php endif; ?>
 			   
 				<?php
-				  if($reverse_pick==1){
+				   if($reverse_pick==1){
             if(in_array($_label,$rpu_status_arr)){
         ?>
             <option value="<?php echo $_code ?>"<?php if($_code==$this->getEntity()->getUdropshipStatus()): ?> selected="selected" <?php endif; ?>><?php echo $_label ?></option>
        <?php } } ?>
 			  <?php endforeach; ?>
         </select>
-				<!--mstart-->
-				<select  id="disputeremarks"  name="disputeremarks"  style="display: none;margin-top:8px; width:203px; ">
-					<option value="" >Select Reason</option>
-					<option value="Bad Quality">Bad Quality</option>
-					<option value="Damaged/ Defective">Damaged/ Defective</option>
-					<option value="Not as per photo/ Description">Not as per photo/ Description</option>
-					<option value="Did not like">Did not like</option>
-					<option value="Late delivery">Late delivery</option>
-					<option value="Stitched/ Unstitched">Stitched/ Unstitched</option>
-					<option value="Multiple Quantity Ordered">Multiple Quantity Ordered</option>
-					<option value="Other">Others (Please add in remarks)</option>
-				</select>
-				<!--mend-->
-				<br/>
-				<div id="returnRequest" style="display: none;margin-top:6px;margin-bottom:6px"></div>
+<!--mstart-->
+<select  id="disputeremarks"  name="disputeremarks"  style="display: none;margin-top:8px; width:203px; ">
+	<option value="" >Select Reason</option>
+	<option value="Bad Quality">Bad Quality</option>
+	<option value="Damaged/ Defective">Damaged/ Defective</option>
+	<option value="Not as per photo/ Description">Not as per photo/ Description</option>
+	<option value="Did not like">Did not like</option>
+	<option value="Late delivery">Late delivery</option>
+	<option value="Stitched/ Unstitched">Stitched/ Unstitched</option>
+	<option value="Multiple Quantity Ordered">Multiple Quantity Ordered</option>
+	<option value="Other">Others (Please add in remarks)</option>
+</select>
+<!--mend-->
+<br/>
+<div id="returnRequest" style="display: none;margin-top:6px;margin-bottom:6px"></div>
        <?php //echo $this->getUrl('udropshipadmin/adminhtml_qcreject/qcreject/', array('shipment_id'=>$_entity->getId()));exit; ?>
 
 
@@ -245,33 +266,35 @@ function validateShipmentStatusSubmit()
 <!--Added By Dileswar on dated 30-03-2013 for add a extra text box to get the refund amount-->
 function showfield(name)
 		{
-
-		if(name==23)
-		{
-
-		document.getElementById('div1').style.display = "block";
-		}
-
-		else
-		{
-		document.getElementById('div1').style.display = "none";
-		}
-		if(name==20)
-		{
-		document.getElementById('div2').innerHTML= '<input type="checkbox" name ="disputeMail" value = "" onclick="sendDisputeRaisedEmailtoCustomer();"> Send return address to customer</input><br/>';
-		document.getElementById('disputeremarks').style.display = "block";
-		}
-		if(name==37){
-				document.getElementById('returnRequest').innerHTML='<select id="returnRequestRemark" name="returnRequestRemark"><option value="" >Select Reason</option><option value="Product different from picture / description">Product different from picture / description</option><option value="Wrong Size / Fitting">Wrong Size / Fitting</option><option value="Poor Quality">Poor Quality</option><option value="Change of Mind">Change of Mind</option><option value="Late Delivery">Late Delivery</option><option value="Other">Others (Please add in remarks)</option></select>';
-				document.getElementById('returnRequest').style.display = "block";
-		}
-		else
-		{
-			document.getElementById('div2').innerHTML='';
-			document.getElementById('disputeremarks').style.display = "none";
-			document.getElementById('returnRequest').style.display = "none";
-		}
-
+				if(name==23)
+				{
+		
+				document.getElementById('div1').style.display = "block";
+				}
+		
+				else
+				{
+				document.getElementById('div1').style.display = "none";
+				}
+				if(name==20)
+				{
+				document.getElementById('div2').innerHTML= '<input type="checkbox" name ="disputeMail" value = "" onclick="sendDisputeRaisedEmailtoCustomer();"> Send return address to customer</input><br/>';
+				document.getElementById('disputeremarks').style.display = "block";
+				}
+				else
+				{
+					document.getElementById('div2').innerHTML='';
+					document.getElementById('disputeremarks').style.display = "none";
+				}
+				if(name==37){
+						document.getElementById('returnRequest').innerHTML='<select id="returnRequestRemark" name="returnRequestRemark"><option value="" >Select Reason</option><option value="Product different from picture / description">Product different from picture / description</option><option value="Wrong Size / Fitting">Wrong Size / Fitting</option><option value="Poor Quality">Poor Quality</option><option value="Change of Mind">Change of Mind</option><option value="Late Delivery">Late Delivery</option><option value="Other">Others (Please add in remarks)</option></select>';
+						document.getElementById('returnRequest').style.display = "block";
+				}
+				else
+				{
+					
+					document.getElementById('returnRequest').style.display = "none";
+				}
 		}
 
 
