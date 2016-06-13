@@ -6,7 +6,6 @@ class Craftsvilla_Productupdate_IndexController extends Mage_Core_Controller_Fro
 		$this->loadLayout();     
 		$this->renderLayout();
     }
-    
 
     public function getsearchDataAction()
     {
