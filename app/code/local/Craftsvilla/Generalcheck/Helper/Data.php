@@ -4,15 +4,15 @@ class Craftsvilla_Generalcheck_Helper_Data extends Mage_Core_Helper_Abstract
 {
 
 	public function getMaindbconnection()
-	{   
-               
+	{
+
 		return Mage::getSingleton('core/resource')->getConnection('core_write');
-	}	
+	}
 	public function getStatsdbconnection()
 	{
-               
+
 		return Mage::getSingleton('core/resource')->getConnection('statsdb_connection');
-	}	         
+	}
 
 	public function getproductStatsCraftsvillaTable()                                       //tables
 	{
@@ -79,14 +79,14 @@ class Craftsvilla_Generalcheck_Helper_Data extends Mage_Core_Helper_Abstract
 	{
 		$tablename = "couponrequest";
 		return $tablename;
-	}  
+	}
 
 	public function ismobile() {
     $is_mobile = '0';
 
     if(preg_match('/(android|up.browser|up.link|mmp|symbian|smartphone|midp|wap|phone)/i', strtolower($_SERVER['HTTP_USER_AGENT']))) {
         $is_mobile=1;
-    }   
+    }
 
     if((strpos(strtolower($_SERVER['HTTP_ACCEPT']),'application/vnd.wap.xhtml+xml')>0) or ((isset($_SERVER['HTTP_X_WAP_PROFILE']) or isset($_SERVER['HTTP_PROFILE'])))) {
         $is_mobile=1;
@@ -115,10 +115,10 @@ class Craftsvilla_Generalcheck_Helper_Data extends Mage_Core_Helper_Abstract
 
 	public function homeMobileView()
 	{
-	
+
 	$statsconn = $this->getStatsdbconnection();
 	$_columnCount = 2;
-	$i=0; 
+	$i=0;
 
 $bodyhtml = "<div style='margin-left:auto;margin-right: auto;'>";
 
@@ -149,9 +149,9 @@ foreach($resultProduct as $_resultProduct)
 	{
 
 	if ($i++%$_columnCount==0)
-		{ 
+		{
 			$bodyhtml .= "<ul class='products-grid first odd you_like' /**style ='float: right;**/'>";
-		} 
+		}
 			$product = Mage::helper('catalog/product')->loadnew($_resultProduct);
 
 			$prodImage = Mage::helper('catalog/image')->init($product, 'image')->resize(500,500);
@@ -175,9 +175,9 @@ foreach($resultProduct as $_resultProduct)
 				$storeurl = Mage::helper('umicrosite')->getVendorUrl($vendorinfo->getData('vendor_id'));
 				$storeurl = substr($storeurl, 0, -1);
 				if($storeurl != '') {
-		 
+
 		$bodyhtml .= "<p class='vendorname' style='padding-bottom:30px;'><font size='+3'>by </font><a target='_blank' href='".$storeurl."'><font size='+3'>".substr($vendorinfo->getVendorName(),0,25)."</font></a></p>";
-	 } 
+	 }
 
 	if(!$product->getSpecialPrice()):
 		$bodyhtml .= "<div class='products price-box' style='padding-bottom:15px'> <span id='product-price-80805' class='regular-price'> <span class='price 123' style='font-size: 35px;padding-bottom:35px'> Rs. ".number_format($product->getPrice(),0)."</span> </span> </div>";
@@ -190,11 +190,11 @@ foreach($resultProduct as $_resultProduct)
 		$bodyhtml .= "<div class='clear'></div>";
 		$bodyhtml .= "</div>";
 		$bodyhtml .= "</li>";
-	
+
 	 if ($i%$_columnCount==0){
 		$bodyhtml .= "</ul>";
-	 } 
-} 
+	 }
+}
 
 	$bodyhtml .= "</div>";
 $cvmobilehtml = $bodyhtml;
@@ -208,15 +208,15 @@ public function productUpdateCurlCall($productId){
 	//$count=sizeof($productId);
 	//print_r($productId);
 	//echo $count;exit;
-	
+
 		//$productId=str_getcsv($productId,',','""');
 		//echo "arr".count($productId);exit;
-		
-		$data = array("productId"=>$productId,"apiVersionCode"=>"2"); 
+
+		$data = array("productId"=>$productId,"apiVersionCode"=>"2");
 		$data_string = json_encode($data);//print_r($data_string);exit;
-		$handle = curl_init($url); 
+		$handle = curl_init($url);
 		curl_setopt($handle, CURLOPT_POST, true);
-		curl_setopt($handle, CURLOPT_POSTFIELDS, $data_string); 
+		curl_setopt($handle, CURLOPT_POSTFIELDS, $data_string);
 		curl_setopt($handle, CURLOPT_RETURNTRANSFER, TRUE);
 		curl_setopt($handle, CURLOPT_HTTPHEADER, array('Content-Type: application/json','Content-Length: ' . strlen($data_string)));
 		curl_exec($handle);
@@ -226,61 +226,56 @@ public function productUpdateCurlCall($productId){
 		return $http_status_code;
 
 
-			
+
 	}
 public function productUpdateNotify_retry($productId)
-	{	
-	$statusCode=$this->productUpdateCurlCall($productId);	
+	{
+	$statusCode=$this->productUpdateCurlCall($productId);
 	if($statusCode != 200)
-					{	
+					{
 						$numRetry=3;
 						while($numRetry>0)
-						{	
-								
-									
-									$statusCode=$this->productUpdateCurlCall($productId);
-									if($statusCode == 200)
-									{	
-										break;
-									
-									}
-								$numRetry--;
+						{
+							$statusCode=$this->productUpdateCurlCall($productId);
+							if($statusCode == 200)
+							{
+								break;
+							}
+						$numRetry--;
 						}
 								//echo	$numRetry;exit;
 						if($numRetry==0)
 							{
 									$email_mod= Mage::getStoreConfig('craftsvilla_config/productupdate_q');
 									$templateId='productupdate_notify';
-									
+									$storeId = Mage::app()->getStore()->getId();
 									$toEmail = $email_mod['email_to'];
 									$toEmailCC = $email_mod['email_bcc'];
 									$emailFrom= $email_mod['email_from'];
-									
-									$vars = array();
-									$sender = Array('name'  => 'Craftsvilla',
-											'email' =>$emailFrom);
-									$storeId = 1;
+									$mailSubject = 'Product Notification';
+									$mailbody = 'Your Products are not updating on Queue.Product Id are :'.$productId;
+	                                $mail = Mage::getModel('core/email');
+	                                $mail->setToName('Craftsvilla');
+	                                $mail->setToEmail($toEmail);
+	                                $mail->setBody($mailbody);
+	                                $mail->setSubject($mailSubject);
+	                                $mail->setFromEmail($emailFrom);
+	                                $mail->setFromName('Craftsvilla Places');
+	                                $mail->setType('html');
+	                                $mail->send();
 
-									$transactionalEmail = Mage::getModel('core/email_template')
-									            ->setDesignConfig(array('area' => 'frontend', 'store' => $storeId));                 
-									$transactionalEmail
-									        ->getMail();
-									$transactionalEmail->setTemplateSubject('Product Notifiaction');
-									$transactionalEmail->sendTransactional($templateId, $sender, $toEmail,  $vars);
-									$transactionalEmail->sendTransactional($templateId, $sender, $toEmailCC, $vars);
-									
 							}
-									
+
 					}else
-					{	
+					{
 						return true;
 						//echo "Yess";exit;
-						 
+
 					}
-			
-			
-	}	
-     
+
+
+	}
+
     /*--------
         SendDNXT authentication
         Author: pbketkale@gmail.com
@@ -302,7 +297,7 @@ public function productUpdateNotify_retry($productId)
     }
 
     public function senddLogin(){
-        
+
         $errorArr = array();
         $model= Mage::getStoreConfig('craftsvilla_config/sendd');
         $url = $model['base_url'].'rest-auth/login/';
@@ -336,7 +331,7 @@ public function productUpdateNotify_retry($productId)
                 return $result->key;
             }
             $count--;
-        } 
+        }
 
         $errorArr[] = "The error http status code : " . $httpCode;
         if($result){
@@ -394,6 +389,6 @@ public function productUpdateNotify_retry($productId)
         $cacheSenddLoginKey = 'Craftsvilla-Sendd-Login-Token';
         Mage::app()->removeCache($cacheSenddLoginKey);
         return;
-    }                       
+    }
 }
-	 
+
