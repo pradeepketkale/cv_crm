@@ -311,7 +311,7 @@ class Craftsvilla_Shipmentpayout_Adminhtml_ShipmentpayoutController extends Mage
     	$filename = "NodalReport"."_".$selected_date_val;
 		$output = "";
 
-		$fieldlist = array("ACCOUNT_NO","SHIPMENT_ID","ORDER_ID","ORDER_DATE","ME_ID","MERCHANT","TXN_TYPE","BENE_AC_NO","IFSC_CODE","TID","AMOUNT","NARRATION","UTR_NUMBER","TYPE");
+		$fieldlist = array("ACCOUNT_NO","SHIPMENT_ID","ORDER_ID","ORDER_DATE","ME_ID","MERCHANT","TXN_TYPE","BENE_AC_NO","IFSC_CODE","TID","AMOUNT","NARRATION","UTR_NUMBER","TYPE","PG");
 
 		$numfields = sizeof($fieldlist);
 
@@ -381,11 +381,19 @@ class Craftsvilla_Shipmentpayout_Adminhtml_ShipmentpayoutController extends Mage
 				$readOrderCntry = Mage::getSingleton('core/resource')->getConnection('core_read');
 				$sqlQuery = "select courier_name from `sales_flat_shipment_track` where LOWER(`courier_name`) = 'dhl_int' AND parent_id = " .$shipmentpayout_report1_val['entity_id'];
     			$result = $readOrderCntry->query($sqlQuery)->fetch();
-    			$readOrderCntry->closeConnection();
 				if($result){
 	    				$shipmentType = "KYC";
 	    		}
-
+	    		//Added by Ankit for PG commission Track
+	    		$sqlQuery = "SELECT `pg_type`, `mode` FROM `payu_payment_details` WHERE `increment_id` =" .$shipmentpayout_report1_val['order_id'];
+				$result = $readOrderCntry->query($sqlQuery)->fetch();
+				$readOrderCntry->closeConnection();
+				if($result){
+					$pg = $result['pg_type'];
+				} else {
+					$pg = "NA";
+				}
+	    		//End
 				/*if($commission_amount>0)
 		    	{
 		    		$kribha_amount = (($total_amount*$commission_amount)/100);
@@ -627,6 +635,11 @@ class Craftsvilla_Shipmentpayout_Adminhtml_ShipmentpayoutController extends Mage
 		    			$output .= $shipmentType;
 		    		}
 
+		    		if($fieldvalue == "PG")
+		    		{
+		    			$output .= $pg;
+		    		}
+
 		    		if ($m < ($numfields-1))
 		    		{
 		    			$output .= ",";
@@ -660,6 +673,8 @@ class Craftsvilla_Shipmentpayout_Adminhtml_ShipmentpayoutController extends Mage
 			    		$output .= $utr;
 			    		$output .= ",";
 			    		$output .= $shipmentType;
+			    		$output .= ",";
+			    		$output .= $pg;
 		    		}
 		    	}
 		    	$output .= "\n";
