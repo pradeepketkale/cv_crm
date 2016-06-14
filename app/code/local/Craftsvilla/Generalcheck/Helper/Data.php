@@ -253,7 +253,11 @@ public function productUpdateNotify_retry($productId)
 									$toEmailCC = $email_mod['email_bcc'];
 									$emailFrom= $email_mod['email_from'];
 									$mailSubject = 'Product Notification';
-									$mailbody = 'Your Products are not updating on Queue.Product Id are :'.$productId;
+									$mailbody = 'Your Products are not updating on Queue.Product Id are :';
+									foreach($productId as $product_Id){
+										$mailbody .= $product_Id;
+										$mailbody .= ',';
+									}
 	                                $mail = Mage::getModel('core/email');
 	                                $mail->setToName('Craftsvilla');
 	                                $mail->setToEmail($toEmail);
