@@ -19,8 +19,8 @@
 <?php if ($_entity = $this->getEntity()): ?>
 <?php
    	$_order_id = $_entity->getOrder();
-	$_shippingAddress_value = $_order_id->getShippingAddress();
-	$country_id_value = $_shippingAddress_value->getCountry_id();
+		$_shippingAddress_value = $_order_id->getShippingAddress();
+		$country_id_value = $_shippingAddress_value->getCountry_id();
     $autoRefundedamount = Mage::helper('udropship')->getrefundCv($_entity->getId());
     $helpc  =   Mage::helper('udropship');	
     $user = Mage::getSingleton('admin/session')->getUser(); //Added by Ankit for restriction on Damage/Lost in Transit
@@ -75,27 +75,6 @@
 		} else if($result['shipmentpayout_status']){
 				$payoutFlag = 1 ;
 		}
-		
-			
-		
-		//  if($todaydate > $finaldate){
-		//		$flag = 1;
-		//  } else {
-		//		$flag = 0;
-		//	}
-		
-	
-	//  if($result['shipmentpayout_status']){
-	//			$payoutFlag = 1 ;
-	//	} else {
-	//			$payoutFlag = 0 ;
-	//	}
-		
-		//if(in_array($user,$userAccess)){
-		//		$accessFlag = 0 ;
-		//} else {
-		//		$accessFlag = 1 ;
-		//}
 ?>
 
 <!-- following shipment status removed
@@ -292,7 +271,6 @@ function showfield(name)
 				}
 				else
 				{
-					
 					document.getElementById('returnRequest').style.display = "none";
 				}
 		}
