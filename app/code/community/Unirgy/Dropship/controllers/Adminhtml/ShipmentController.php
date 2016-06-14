@@ -274,17 +274,7 @@ class Unirgy_Dropship_Adminhtml_ShipmentController extends Mage_Adminhtml_Contro
                             $updated_at         =   $response->partner_tracking_detail->tracking_status_updates[0]->updated_at;
                             $message_status     =   $response->partner_tracking_detail->tracking_status_updates[0]->message;
                             
-                            if(strlen($awb)>0) 
-                            {
-                                $dest       =   "/tmp/".$shipment_id_value.".pdf";
-                                copy($shipping_docs, $dest);
-                
-                                $bucketName             ='assets1.craftsvilla.com';
-                                $imageSlipNameTwo       = 'sendd/barcode/'.$vendorId.'/'.$shipment_id_value.'_invoice_reverse_shipment_label.pdf';
-                                $moveToBucketSlipTwo    = $this->uploadToS3($dest,$bucketName, $imageSlipNameTwo);
-                                unlink($dest);
-                            } 
-                           try{
+                            try{
                                 $writedb = Mage::getSingleton('core/resource')->getConnection('core_write');
                                 $updatereAwb = "INSERT INTO `sales_flat_shipment_reverse_track`(`shipment_id`, `reverse_awb_no`, `reverse_shipping_docs`,`courier_code`,`reverse_reason`,`created_at`,`updated_at`,`message`,`created_by`,`updated_by`) VALUES ('".$shipment_id_value."','".$awb."','".$shipping_docs."','".$c_company."','".$reason."','".$created_at."','".$updated_at."','".$message_status."','1','1') ";
                                 //Mage::log("ShipmentReverseTrack: " .$updatereAwb, null, 'system.log', true).
@@ -298,6 +288,20 @@ class Unirgy_Dropship_Adminhtml_ShipmentController extends Mage_Adminhtml_Contro
                             $shipment->setUdropshipStatus(37);
                             Mage::helper('udropship')->addShipmentComment($shipment,('Status has been changed to Return Requested from customer care agent'));
                             $shipment->save();
+                            
+                            
+                            if(strlen($awb)>0) 
+                            {
+                                $hlp = Mage::helper('generalcheck');
+                                $dest       =   "/tmp/".$shipment_id_value.".pdf";
+                                copy($shipping_docs, $dest);
+                
+                                $bucketName             ='assets1.craftsvilla.com';
+                                $imageSlipNameTwo       = 'sendd/barcode/'.$vendorId.'/'.$shipment_id_value.'_invoice_reverse_shipment_label.pdf';
+                                $moveToBucketSlipTwo    = $hlp->uploadToS3($dest,$bucketName, $imageSlipNameTwo);
+                                unlink($dest);
+                            } 
+                           
                         }
                         
                         
