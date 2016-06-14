@@ -261,7 +261,7 @@ class Unirgy_Dropship_Adminhtml_ShipmentController extends Mage_Adminhtml_Contro
                             $response               =   $this->senddReverseOrder($jsonInput,$shipmentId_value,$vendorId);
                             //var_dump(count((array)$response)); exit;
                              
-                            if($response  == NULL)
+                            if($response == NULL)
                             {
                                Mage::throwException($this->__('Please try again later'));
                                return false ;
@@ -280,6 +280,17 @@ class Unirgy_Dropship_Adminhtml_ShipmentController extends Mage_Adminhtml_Contro
                                 //Mage::log("ShipmentReverseTrack: " .$updatereAwb, null, 'system.log', true).
                                 $_updatereAwb = $writedb->query($updatereAwb);
                                 $writedb->closeConnection();
+                                if(strlen($awb)>0) 
+                                {
+                                    $hlp = Mage::helper('generalcheck');
+                                    $dest       =   "/tmp/".$shipment_id_value.".pdf";
+                                    copy($shipping_docs, $dest);
+                    
+                                    $bucketName             ='assets1.craftsvilla.com';
+                                    $imageSlipNameTwo       = 'sendd/barcode/'.$vendorId.'/'.$shipment_id_value.'_invoice_reverse_shipment_label.pdf';
+                                    $moveToBucketSlipTwo    = $hlp->uploadToS3($dest,$bucketName, $imageSlipNameTwo);
+                                    unlink($dest);
+                                } 
                                }
                             catch (Exception $e){
                                 $session = $this->_getSession();
@@ -288,19 +299,6 @@ class Unirgy_Dropship_Adminhtml_ShipmentController extends Mage_Adminhtml_Contro
                             $shipment->setUdropshipStatus(37);
                             Mage::helper('udropship')->addShipmentComment($shipment,('Status has been changed to Return Requested from customer care agent'));
                             $shipment->save();
-                            
-                            
-                            if(strlen($awb)>0) 
-                            {
-                                $hlp = Mage::helper('generalcheck');
-                                $dest       =   "/tmp/".$shipment_id_value.".pdf";
-                                copy($shipping_docs, $dest);
-                
-                                $bucketName             ='assets1.craftsvilla.com';
-                                $imageSlipNameTwo       = 'sendd/barcode/'.$vendorId.'/'.$shipment_id_value.'_invoice_reverse_shipment_label.pdf';
-                                $moveToBucketSlipTwo    = $hlp->uploadToS3($dest,$bucketName, $imageSlipNameTwo);
-                                unlink($dest);
-                            } 
                            
                         }
                         
@@ -1339,7 +1337,8 @@ public function disputeCustomerRemarks($shipment_id_value)
             }
             if($httpCode == 401)
             {
-                $token = $this->getSenddToken();
+               // $token = $this->getSenddToken();
+                $token = $generalcheck_hlp->getSenddToken() ;
                 if(!$token)
                 {
                     return NULL;
