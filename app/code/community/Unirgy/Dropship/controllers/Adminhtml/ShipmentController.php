@@ -232,77 +232,13 @@ class Unirgy_Dropship_Adminhtml_ShipmentController extends Mage_Adminhtml_Contro
                     {
                        $this->deliver($shipment_id_value,$shipmentId_value);
                     }
-                     if($status == 37)
+                    if($status == 37)
                     {
-                        
-                       //$sendResponse = $this->returnrequested($shipment_id_value,$shipmentId_value,$reason);
-                       //if($sendResponse == '1'){
-                       // Mage::throwException($this->__('Please try again later'));
-                       // return false ;
-                       //}
-                        $shipmentModel = Mage::getModel('sales/order_shipment');
-                        $shipment = $shipmentModel->load($shipmentId_value);
-                        $vendorId = $shipment['udropship_vendor'];
-                        $requestParams  =   array();
-                        $readdb         =   Mage::getSingleton('core/resource')->getConnection('custom_db');
-                        $trackSql       =   "SELECT `number` FROM `sales_flat_shipment_track` WHERE `parent_id` = '$shipmentId_value'";
-                        $trackInformation   =   $readdb->query($trackSql)->fetch();
-                        $readdb->closeConnection();
-                        //echo '<pre>';print_r($trackInformation); exit;
-                        if(!empty($trackInformation))
-                        {
-                            $trackNumber                =   $trackInformation['number'];
-                            $requestParams['tracking_number']   =   $trackNumber;
-                            $jsonInput              =   str_replace('\\/', '/', json_encode($requestParams));
-                             
-                            #call sendd api if tracking number exists
-                            $response               =   $this->senddReverseOrder($jsonInput,$shipmentId_value,$vendorId);
-                            //var_dump(count((array)$response)); exit;
-                             
-                            if($response == NULL)
-                            {
-                               Mage::throwException($this->__('Please try again later'));
-                               return false ;
-                            }
-                            
-                            $awb=   $response->partner_tracking_detail->tracking_number;
-                            $shipping_docs      =   $response->partner_tracking_detail->shipping_docs;
-                            $c_company      =   $response->partner_tracking_detail->company;
-                            $created_at         =   $response->partner_tracking_detail->tracking_status_updates[0]->created_at;
-                            $updated_at         =   $response->partner_tracking_detail->tracking_status_updates[0]->updated_at;
-                            $message_status     =   $response->partner_tracking_detail->tracking_status_updates[0]->message;
-                            $generalcheck_hlp = Mage::helper('generalcheck');
-                            try{
-                                $writedb = Mage::getSingleton('core/resource')->getConnection('core_write');
-                                $updatereAwb = "INSERT INTO `sales_flat_shipment_reverse_track`(`shipment_id`, `reverse_awb_no`, `reverse_shipping_docs`,`courier_code`,`reverse_reason`,`created_at`,`updated_at`,`message`,`created_by`,`updated_by`) VALUES ('".$shipment_id_value."','".$awb."','".$shipping_docs."','".$c_company."','".$reason."','".$created_at."','".$updated_at."','".$message_status."','1','1') ";
-                                //Mage::log("ShipmentReverseTrack: " .$updatereAwb, null, 'system.log', true).
-                                $_updatereAwb = $writedb->query($updatereAwb);
-                                $writedb->closeConnection();
-                                if(strlen($awb)>0) 
-                                {
-                                    
-                                    $dest       =   "/tmp/".$shipment_id_value.".pdf";
-                                    copy($shipping_docs, $dest);
-                    
-                                    $bucketName             ='assets1.craftsvilla.com';
-                                    $imageSlipNameTwo       = 'sendd/barcode/'.$vendorId.'/'.$shipment_id_value.'_invoice_reverse_shipment_label.pdf';
-                                    $moveToBucketSlipTwo    = $generalcheck_hlp->uploadToS3($dest,$bucketName, $imageSlipNameTwo);
-                                    unlink($dest);
-                                } 
-                               }
-                            catch (Exception $e){
-                                Mage::throwException($this->__($e->getMessage()));
-                             }
-                            $courierName = $generalcheck_hlp->getCouriernameFromCourierCode($c_company);
-                            $shipment->setUdropshipStatus(37);
-                            //Mage::helper('udropship')->addShipmentComment($shipment,('Status has been changed to Return Requested from customer care agent having AWB No:'.$awb.'And CourierName:'.$courierName));
-                            $commentId = 'Status has been changed to Return Requested from customer care agent having AWB No:'.$awb.'And CourierName:'.$courierName.' due to '.$reason;
-                            $shipment->save();
-                            $commentNew = Mage::getModel('sales/order_shipment_comment')
-                                    ->setComment($commentId)
-                                    ->setUdropshipStatus(@$statuses[$status]);
-                            $shipment->addComment($commentNew);
-                        }
+                       $sendResponse = $this->returnrequested($shipment_id_value,$shipmentId_value,$reason);
+                       if($sendResponse == '1'){
+                        Mage::throwException($this->__('Please try again later'));
+                        return false ;
+                       }
                     }
                      
 
@@ -433,6 +369,14 @@ class Unirgy_Dropship_Adminhtml_ShipmentController extends Mage_Adminhtml_Contro
 
                         }
                         //mend
+                    }
+                    if($status == 37)
+                    {
+                       $sendResponse = $this->returnrequested($shipment_id_value,$shipmentId_value,$reason);
+                       if($sendResponse == '1'){
+                        Mage::throwException($this->__('Please try again later'));
+                        return false ;
+                       }
                     }
 
                 if (isset($data['is_vendor_notified'])) {
@@ -1232,64 +1176,79 @@ public function disputeCustomerRemarks($shipment_id_value)
             $shipment->save();
     }
 
-    //public function returnrequested($shipment_id_value,$shipentId,$reason='')
-    //{
-    //    $shipment1 = Mage::getModel('sales/order_shipment');
-    //    $shipment = $shipment1->load($shipentId);
-    //  
-    //    $vendorId = $shipment['udropship_vendor']; //print_r($shipment['udropship_vendor']);//echo $vendorId;
-    //    $requestParams  =   array();
-    //    $readdb         =   Mage::getSingleton('core/resource')->getConnection('custom_db');
-    //    $trackSql       =   "SELECT `number` FROM `sales_flat_shipment_track` WHERE `parent_id` = '$shipentId'";
-    //    $trackInformation   =   $readdb->query($trackSql)->fetch();
-    //    $readdb->closeConnection();
-    //    
-    //    
-    //    if(!empty($trackInformation))
-    //    {
-    //        $trackNumber                =   $trackInformation['number'];
-    //        $requestParams['tracking_number']   =   $trackNumber;
-    //        $jsonInput              =   str_replace('\\/', '/', json_encode($requestParams));
-    //         
-    //        #call sendd api if tracking number exists
-    //        $response               =   $this->senddReverseOrder($jsonInput,$shipentId,$vendorId);
-    //         
-    //        //if(count((array)$response)  == 0)
-    //        //{
-    //        //    $flag = 1 ; 
-    //        //    return $flag ; //return 'Please try again later';
-    //        //}
-    //        
-    //        $awb=   $response->partner_tracking_detail->tracking_number; 
-    //        $shipping_docs      =   $response->partner_tracking_detail->shipping_docs;
-    //        $c_company      =   $response->partner_tracking_detail->company;
-    //        $created_at         =   $response->partner_tracking_detail->tracking_status_updates[0]->created_at;
-    //        $updated_at         =   $response->partner_tracking_detail->tracking_status_updates[0]->updated_at;
-    //        $message_status     =   $response->partner_tracking_detail->tracking_status_updates[0]->message;
-    //        
-    //        if(strlen($awb)>0) 
-    //        {
-    //            $dest       =   "/tmp/".$shipment_id_value.".pdf";
-    //            copy($shipping_docs, $dest);
-    //
-    //            $bucketName             ='assets1.craftsvilla.com';
-    //            $imageSlipNameTwo       = 'sendd/barcode/'.$vendorId.'/'.$shipment_id_value.'_invoice_reverse_shipment_label.pdf';
-    //            $moveToBucketSlipTwo    = $this->uploadToS3($dest,$bucketName, $imageSlipNameTwo);
-    //            unlink($dest);
-    //        } 
-    //
-    //        $writedb = Mage::getSingleton('core/resource')->getConnection('core_write');
-    //        $updatereAwb = "INSERT INTO `sales_flat_shipment_reverse_track`(`shipment_id`, `reverse_awb_no`, `reverse_shipping_docs`,`courier_code`,`reverse_reason`,`created_at`,`updated_at`,`message`,`created_by`,`updated_by`) VALUES ('".$shipment_id_value."','".$awb."','".$shipping_docs."','".$c_company."','".$reason."','".$created_at."','".$updated_at."','".$message_status."','1','1') ";
-    //        //Mage::log("ShipmentReverseTrack: " .$updatereAwb, null, 'system.log', true).
-    //        $_updatereAwb = $writedb->query($updatereAwb);
-    //        $writedb->closeConnection();
-    //    }
-    //    
-    //    $shipment->setUdropshipStatus(37);
-    //    Mage::helper('udropship')->addShipmentComment($shipment,('Status has been changed to Return Requested from customer care agent'));
-    //    $shipment->save();
-    //
-    //}
+    public function returnrequested($shipment_id_value,$shipentId,$reason='')
+    {
+        $shipment1 = Mage::getModel('sales/order_shipment');
+        $shipment = $shipment1->load($shipentId);
+      
+        $vendorId = $shipment['udropship_vendor']; //print_r($shipment['udropship_vendor']);//echo $vendorId;
+        $requestParams  =   array();
+        $readdb         =   Mage::getSingleton('core/resource')->getConnection('custom_db');
+        $trackSql       =   "SELECT `number` FROM `sales_flat_shipment_track` WHERE `parent_id` = '$shipentId'";
+        $trackInformation   =   $readdb->query($trackSql)->fetch();
+        $readdb->closeConnection();
+        
+        
+        if(!empty($trackInformation))
+        {
+            $trackNumber                =   $trackInformation['number'];
+            $requestParams['tracking_number']   =   $trackNumber;
+            $jsonInput              =   str_replace('\\/', '/', json_encode($requestParams));
+             
+            #call sendd api if tracking number exists
+            $response               =   $this->senddReverseOrder($jsonInput,$shipentId,$vendorId);
+             
+            if($response == NULL)
+            {
+               $flag=1;
+               return $flag ;
+            }
+            
+            $awb=   $response->partner_tracking_detail->tracking_number; 
+            $shipping_docs      =   $response->partner_tracking_detail->shipping_docs;
+            $c_company      =   $response->partner_tracking_detail->company;
+            $created_at         =   $response->partner_tracking_detail->tracking_status_updates[0]->created_at;
+            $updated_at         =   $response->partner_tracking_detail->tracking_status_updates[0]->updated_at;
+            $message_status     =   $response->partner_tracking_detail->tracking_status_updates[0]->message;
+            $generalcheck_hlp = Mage::helper('generalcheck');
+             
+           try{
+                $writedb = Mage::getSingleton('core/resource')->getConnection('core_write');
+                $updatereAwb = "INSERT INTO `sales_flat_shipment_reverse_track`(`shipment_id`, `reverse_awb_no`, `reverse_shipping_docs`,`courier_code`,`reverse_reason`,`created_at`,`updated_at`,`message`,`created_by`,`updated_by`) VALUES ('".$shipment_id_value."','".$awb."','".$shipping_docs."','".$c_company."','".$reason."','".$created_at."','".$updated_at."','".$message_status."','1','1') ";
+                //Mage::log("ShipmentReverseTrack: " .$updatereAwb, null, 'system.log', true).
+                $_updatereAwb = $writedb->query($updatereAwb);
+                $writedb->closeConnection();
+                if(strlen($awb)>0) 
+                {
+                    
+                    $dest       =   "/tmp/".$shipment_id_value.".pdf";
+                    copy($shipping_docs, $dest);
+    
+                    $bucketName             ='assets1.craftsvilla.com';
+                    $imageSlipNameTwo       = 'sendd/barcode/'.$vendorId.'/'.$shipment_id_value.'_invoice_reverse_shipment_label.pdf';
+                    $moveToBucketSlipTwo    = $generalcheck_hlp->uploadToS3($dest,$bucketName, $imageSlipNameTwo);
+                    unlink($dest);
+                } 
+               }
+            catch (Exception $e){
+                //Mage::throwException($this->__($e->getMessage()));
+                $flag = 1;
+                return $flag;
+             }
+            $courierName = $generalcheck_hlp->getCouriernameFromCourierCode($c_company);
+            $shipment->setUdropshipStatus(37);
+            //Mage::helper('udropship')->addShipmentComment($shipment,('Status has been changed to Return Requested from customer care agent having AWB No:'.$awb.'And CourierName:'.$courierName));
+           $commentId = 'Status has been changed to Return Requested from customer care agent having AWB No:'.$awb.'And CourierName:'.$courierName.' due to '.$reason;
+            $commentNew = Mage::getModel('sales/order_shipment_comment')
+                    ->setComment($commentId)
+                    ->setUdropshipStatus(@$statuses[$status]);
+            $shipment->addComment($commentNew);
+             $shipment->save();
+        }
+        
+       
+    
+    }
     
     public function senddReverseOrder($jsonInput, $incrementId, $vendorId)
     {
