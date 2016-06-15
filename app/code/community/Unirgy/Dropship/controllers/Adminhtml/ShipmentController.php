@@ -242,9 +242,7 @@ class Unirgy_Dropship_Adminhtml_ShipmentController extends Mage_Adminhtml_Contro
                        //}
                         $shipmentModel = Mage::getModel('sales/order_shipment');
                         $shipment = $shipmentModel->load($shipmentId_value);
-                      
                         $vendorId = $shipment['udropship_vendor'];
-                        //print_r($shipment['udropship_vendor']);//echo $vendorId;
                         $requestParams  =   array();
                         $readdb         =   Mage::getSingleton('core/resource')->getConnection('custom_db');
                         $trackSql       =   "SELECT `number` FROM `sales_flat_shipment_track` WHERE `parent_id` = '$shipmentId_value'";
@@ -267,7 +265,7 @@ class Unirgy_Dropship_Adminhtml_ShipmentController extends Mage_Adminhtml_Contro
                                return false ;
                             }
                             
-                            $awb=   $response->partner_tracking_detail->tracking_number; 
+                            $awb=   $response->partner_tracking_detail->tracking_number;
                             $shipping_docs      =   $response->partner_tracking_detail->shipping_docs;
                             $c_company      =   $response->partner_tracking_detail->company;
                             $created_at         =   $response->partner_tracking_detail->tracking_status_updates[0]->created_at;
@@ -293,15 +291,17 @@ class Unirgy_Dropship_Adminhtml_ShipmentController extends Mage_Adminhtml_Contro
                                 } 
                                }
                             catch (Exception $e){
-                                //$session = $this->_getSession();
-                                //$session->addError($this->__($e->getMessage()));
                                 Mage::throwException($this->__($e->getMessage()));
                              }
-                            $shipment->setUdropshipStatus(37);
                             $courierName = $generalcheck_hlp->getCouriernameFromCourierCode($c_company);
-                            $commentText = $commentText.' having AWB No:'.$awb.'And CourierName:'.$courierName;
+                            $shipment->setUdropshipStatus(37);
                             //Mage::helper('udropship')->addShipmentComment($shipment,('Status has been changed to Return Requested from customer care agent having AWB No:'.$awb.'And CourierName:'.$courierName));
+                            $commentId = 'Status has been changed to Return Requested from customer care agent having AWB No:'.$awb.'And CourierName:'.$courierName.' due to '.$reason;
                             $shipment->save();
+                            $commentNew = Mage::getModel('sales/order_shipment_comment')
+                                    ->setComment($commentId)
+                                    ->setUdropshipStatus(@$statuses[$status]);
+                            $shipment->addComment($commentNew);
                         }
                     }
                      
