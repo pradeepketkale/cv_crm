@@ -294,7 +294,7 @@ class Unirgy_Dropship_Adminhtml_ShipmentController extends Mage_Adminhtml_Contro
                                }
                             catch (Exception $e){
                                 $session = $this->_getSession();
-                                $session->addError($e->getMessage());
+                                $session->addError($this->__($e->getMessage()));
                              }
                             $shipment->setUdropshipStatus(37);
                             Mage::helper('udropship')->addShipmentComment($shipment,('Status has been changed to Return Requested from customer care agent'));
