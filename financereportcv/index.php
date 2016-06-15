@@ -2,7 +2,7 @@
 if(isset($_SESSION['login_user'])){
 	header("location: dashboard.php");
 }
-require_once __DIR__.'/../dbConnectionRead.php';
+require_once __DIR__.'/dbConnectionRead.php';
 session_start(); // Starting Session
 $error=''; // Variable To Store Error Message
 if (isset($_POST['submit'])) {
