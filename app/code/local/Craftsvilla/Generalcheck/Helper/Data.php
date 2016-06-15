@@ -236,14 +236,14 @@ public function productUpdateNotify_retry($productId)
 						$numRetry=3;
 						while($numRetry>0)
 						{
-							$statusCode=$this->productUpdateCurlCall($productId);
-							if($statusCode == 200)
+							$statusCode1=$this->productUpdateCurlCall($productId);
+							if($statusCode1 == 200)
 							{
 								break;
 							}
-						$numRetry--;
+							$numRetry--;
 						}
-								//echo	$numRetry;exit;
+					//	echo "<br/> Try:".	$numRetry;exit;
 						if($numRetry==0)
 							{
 									$email_mod= Mage::getStoreConfig('craftsvilla_config/productupdate_q');
