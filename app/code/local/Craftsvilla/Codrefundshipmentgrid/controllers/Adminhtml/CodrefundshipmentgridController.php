@@ -7,10 +7,10 @@ class Craftsvilla_Codrefundshipmentgrid_Adminhtml_CodrefundshipmentgridControlle
 		$this->loadLayout()
 			->_setActiveMenu('codrefundshipmentgrid/items')
 			->_addBreadcrumb(Mage::helper('adminhtml')->__('Codrefundshipmentgrid Details'), Mage::helper('adminhtml')->__('Codrefundshipmentgrid Details'));
-		
+
 		return $this;
-	}   
- 
+	}
+
 	public function indexAction() {
 		$this->_initAction()
 			->renderLayout();
@@ -53,38 +53,38 @@ class Craftsvilla_Codrefundshipmentgrid_Adminhtml_CodrefundshipmentgridControlle
 			$this->_redirect('*/*/');
 		}
 	}
- 
+
  public function massModifyAction() {
- 
+
 		$connwrite = Mage::getSingleton('core/resource')->getConnection('core_write');
 		$connread = Mage::getSingleton('core/resource')->getConnection('core_read');
  		$codrefundshipmentgridIds = $this->getRequest()->getParam('codrefundshipmentgrid');
- 		
+
  		//print_r($codrefundshipmentgridIds); exit;
  		$idGrid = $codrefundshipmentgridIds[0];
- 		$setShipmentId = $this->getRequest()->getParam('shipmentId'); 
+ 		$setShipmentId = $this->getRequest()->getParam('shipmentId');
  		$setcustName = mysql_escape_string($this->getRequest()->getParam('custName'));
  		$setaccountNumber = mysql_escape_string($this->getRequest()->getParam('accountNumber'));
  		$setifscCode = str_replace(' ','',strtoupper(mysql_escape_string($this->getRequest()->getParam('ifscCode'))));
- 		
+
  		$setamount = $this->getRequest()->getParam('amount');
- 		
+
  		$codrefundshipmentgridData = Mage::getModel('codrefundshipmentgrid/codrefundshipmentgrid')->load($idGrid)->getData();
  		//print_r($codrefundshipmentgridData); exit;
- 		
+
  		$getshipmentId = $codrefundshipmentgridData['shipment_id'];
  		$getCustName = mysql_escape_string($codrefundshipmentgridData['cust_name']);
  		$getaccountno = mysql_escape_string($codrefundshipmentgridData['accountno']);
  		$getifsccode = mysql_escape_string($codrefundshipmentgridData['ifsccode']);
  		$getpaymentamount1 = $codrefundshipmentgridData['paymentamount'];
  		$getpaymentamount = $getpaymentamount1;
- 		
+
  		$duplicateQuery = "SELECT * FROM `codrefundshipmentgrid` WHERE `shipment_id` = '".$setShipmentId."'";
  		$duplicateQueryRes = $connread->query($duplicateQuery)->fetch();
- 		
+
  		$sfsquery = "SELECT * FROM `sales_flat_shipment` WHERE `increment_id` = '".$setShipmentId."'";
  		$sfsqueryResult = $connread->query($sfsquery)->fetch();
- 		
+
  		if($sfsqueryResult) {
  		if($setShipmentId)
  			{
@@ -95,15 +95,15 @@ class Craftsvilla_Codrefundshipmentgrid_Adminhtml_CodrefundshipmentgridControlle
  				 	{
  				 		$lastShipmentId = $setShipmentId;
  				 	}
- 				 	else 
+ 				 	else
  				 	{
  						$this->_redirect('*/*/');
 						Mage::getSingleton('adminhtml/session')->addError("Shipment ID already exist");
  						$lastShipmentId = $getshipmentId;
- 						return;	
- 					}	 
- 				}	
- 				else 
+ 						return;
+ 					}
+ 				}
+ 				else
  				{
  					$lastShipmentId = $setShipmentId;
  				}
@@ -121,175 +121,193 @@ class Craftsvilla_Codrefundshipmentgrid_Adminhtml_CodrefundshipmentgridControlle
  			$this->_redirect('*/*/');
  			return;
  		}
- 		
- 			
+
+
  			if($setcustName)
  			{
  				//To check specialcharacters replace with space in accountholder name
- 			$lastcustName = preg_replace('/[^a-zA-Z0-9]+/',' ',$setcustName); 
+ 			$lastcustName = preg_replace('/[^a-zA-Z0-9]+/',' ',$setcustName);
  			}
 	 		else
 	 		{
 	 			$lastcustName = $getCustName;
 	 		}
-	 		
+
 	 		if($setaccountNumber)
  			{
- 				
- 			$lastaccountNumber = $setaccountNumber; 
+
+ 			$lastaccountNumber = $setaccountNumber;
  			}
 	 		else
 	 		{
 	 			$lastaccountNumber = $getaccountno;
 	 		}
-	 		
+
 	 		if($setifscCode)
  			{
  				//To check first four characters are alphabets and fifth character is 0 only in ifscCode field
- 			
+
  			$firstFourChar = substr($setifscCode,0,4);
-			$fifthChar = $setifscCode[4];  
-			for($i = 0; $i < strlen($firstFourChar); $i++) 
+			$fifthChar = $setifscCode[4];
+			for($i = 0; $i < strlen($firstFourChar); $i++)
 			{
-			
-				if((!preg_match("/^[A-Z]*$/",$firstFourChar[$i])) || ($fifthChar != '0')) 
-				{ 
+
+				if((!preg_match("/^[A-Z]*$/",$firstFourChar[$i])) || ($fifthChar != '0'))
+				{
 					$this->_redirect('*/*/');
 					Mage::getSingleton('adminhtml/session')->addError('Please enter First 4 Characters of IFSC code are alphabets followed by zero');
 					return;
 				}
-				 
+
 			}
-				//To check length of ifsccode field not to exceed 11 
+				//To check length of ifsccode field not to exceed 11
 				$ifscLength = strlen($setifscCode);
-				if($ifscLength < 11) 
+				if($ifscLength < 11)
 				{
 					$this->_redirect('*/*/');
 					Mage::getSingleton('adminhtml/session')->addError('Please enter valid 11 digit IFSC code');
 					return;
 				}
-				$lastifscCode = $setifscCode; 
+				$lastifscCode = $setifscCode;
  			}
 			else
 			{
 			 	$lastifscCode = $getifsccode;
 			}
- 		
- 			if($setamount)	
+
+ 			if($setamount)
  			{
- 				//To check only numeric values into price 
-		 	if(!preg_match("/^[0-9]*$/",$setamount)) 
+ 				//To check only numeric values into price
+		 	if(!preg_match("/^[0-9]*$/",$setamount))
 				{
 					$this->_redirect('*/*/');
 					Mage::getSingleton('adminhtml/session')->addError('Please enter valid Payment Amount of numeric digits.');
 					return;
 				}
-		
-				$lastamount = $setamount;		
- 			
-		 	} 
-		 	else 
+
+				$lastamount = $setamount;
+
+		 	}
+		 	else
 		 	{
-		 		$lastamount = $getpaymentamount;		
+		 		$lastamount = $getpaymentamount;
 		 	}
 
 $updateCodQuery = "UPDATE `codrefundshipmentgrid` SET `shipment_id`= '".$lastShipmentId."'  ,`cust_name`='".$lastcustName."',`accountno`='".$lastaccountNumber."',`ifsccode`='".$lastifscCode."',`paymentamount`='".$lastamount."',`created_time`=now(),`update_time`=now() WHERE `codrefundshipmentgrid_id` = '".$idGrid."'"; //exit;
 	 $connwrite->query($updateCodQuery);
 	 $this->_redirect('*/*/index');
 	 Mage::getSingleton('adminhtml/session')->addSuccess("CodRefund Details are modified successfully");
-	
+
  }
- 
+
 	public function newAction() {
 		$this->_forward('edit');
 	}
- 
+
 	public function saveAction() {
-		$user = Mage::getSingleton('admin/session'); 
-		$userFirstname = $user->getUser()->getFirstname();	
+		$user = Mage::getSingleton('admin/session');
+		$userFirstname = $user->getUser()->getFirstname();
 		$connread = Mage::getSingleton('core/resource')->getConnection('core_read');
 		if ($data = $this->getRequest()->getPost()) {
-			
+
 			$refundedamount = $data['paymentamount'];
 			$shipmentIncId = $data['shipment_id'];
 			$bankholderName1 = mysql_escape_string($data['cust_name']);
 			$ifscCode = str_replace(' ','',strtoupper(mysql_escape_string($this->getRequest()->getParam('ifsccode'))));
-			
-			$bankholderName = preg_replace('/[^a-zA-Z0-9]+/',' ',$bankholderName1); 
-			
+
+			$bankholderName = preg_replace('/[^a-zA-Z0-9]+/',' ',$bankholderName1);
+
 			$firstFourChar = substr($ifscCode,0,4);
-			$fifthChar = $ifscCode[4];  
-		for($i = 0; $i < strlen($firstFourChar); $i++) 
+			$fifthChar = $ifscCode[4];
+		for($i = 0; $i < strlen($firstFourChar); $i++)
 		{
-			
-			if((!preg_match("/^[A-Z]*$/",$firstFourChar[$i])) || ($fifthChar != '0')) 
-			{ 
+
+			if((!preg_match("/^[A-Z]*$/",$firstFourChar[$i])) || ($fifthChar != '0'))
+			{
 				$this->_redirect('*/*/');
 				Mage::getSingleton('adminhtml/session')->addError('Please enter First 4 Characters of IFSC code are alphabets followed by zero for Shipment.'.$shipmentIncId);
 				return;
 			}
-			 
+
 		}
-		
+
 		$ifscLength = strlen($ifscCode);
-		if($ifscLength < 11) 
+		if($ifscLength < 11)
 		{
 			$this->_redirect('*/*/');
 			Mage::getSingleton('adminhtml/session')->addError('Please enter valid 11 digit IFSC code for Shipment.'.$shipmentIncId);
 			return;
 		}
-		
-		if(!preg_match("/^[0-9]*$/",$refundedamount)) 
+
+		if(!preg_match("/^[0-9]*$/",$refundedamount))
 		{
 			$this->_redirect('*/*/');
 			Mage::getSingleton('adminhtml/session')->addError('Please enter valid Payment Amount of numeric digits for Shipment.'.$shipmentIncId);
 			return;
 		}
-		
+
 			//$read = Mage::getSingleton('core/resource')->getConnection('couponrequest_read');
 			$sfsquery = "SELECT * FROM `sales_flat_shipment` WHERE `increment_id` = '".$shipmentIncId."'";
 			$resultquery = $connread->query($sfsquery)->fetch();
 			if($resultquery)
 			{
-			
-			
+
+
 			$duplicateQuery = "SELECT * FROM `codrefundshipmentgrid` WHERE `shipment_id` = '".$shipmentIncId."'";
 			$duplicateQueryRes = $connread->query($duplicateQuery)->fetch();
-			if($duplicateQueryRes) 
+			if($duplicateQueryRes)
 			{
 				Mage::getSingleton('adminhtml/session')->addError(Mage::helper('codrefundshipmentgrid')->__('Duplicate ShipmentID.'));
 				$this->_redirect('*/*/');
 				return;
 			}
-			else 
+			else
 			{
-				$model = Mage::getModel('codrefundshipmentgrid/codrefundshipmentgrid');	
-				//print_r($model); exit;	
+				$model = Mage::getModel('codrefundshipmentgrid/codrefundshipmentgrid');
+				//print_r($model); exit;
 				$model->setData($data)
 					->setId($this->getRequest()->getParam('id'));
-			
+
 			try {
 				if ($model->getCreatedTime == NULL || $model->getUpdateTime() == NULL) {
 					$model->setCreatedTime(now())
 						->setUpdateTime(now());
 				} else {
 					$model->setUpdateTime(now());
-				}	
-				
+				}
+
 				$model->setCustName($bankholderName);
 				$model->setIfsccode($ifscCode);
 				$model->save();
-				$commentText = "Status has changes to Refund Todo & Amount is :Rs  ".$refundedamount." done by ".$userFirstname;
-				$write = Mage::getSingleton('core/resource')->getConnection('core_write');	
-				$queryUpdate = "update shipmentpayout set `refundtodo`='".$refundedamount."' WHERE shipment_id = '".$shipmentIncId."'";
-				$write->query($queryUpdate);
-				
-				$shipment = Mage::getModel('sales/order_shipment')->loadByIncrementId($shipmentIncId);
-				$shipment->setUdropshipStatus(23);
-				Mage::helper('udropship')->addShipmentComment($shipment,$commentText);
-                $shipment->save();
-				
-				
+				/************Check for Sendd Reverse Pickup Condition : Ankit**********/
+				$sqlForRPCheck = "select reverse_awb_no from sales_flat_shipment_reverse_track where shipment_id =".$shipmentIncId;
+				$result_rp = $connread->query($sqlForRPCheck)->fetch();
+				//var_dump($result_rp);exit;
+				if(!$result_rp){
+					$commentText = "Status has changes to Refund Todo & Amount is :Rs  ".$refundedamount." done by ".$userFirstname;
+					$write = Mage::getSingleton('core/resource')->getConnection('core_write');
+					$queryUpdate = "update shipmentpayout set `refundtodo`='".$refundedamount."' WHERE shipment_id = '".$shipmentIncId."'";
+					$write->query($queryUpdate);
+
+					$shipment = Mage::getModel('sales/order_shipment')->loadByIncrementId($shipmentIncId);
+					$shipment->setUdropshipStatus(23);
+					Mage::helper('udropship')->addShipmentComment($shipment,$commentText);
+	                $shipment->save();
+	            } else {
+	            	$status = $this->senddStatusCheck($result_rp['reverse_awb_no']);
+	            	if($status == 'PU' || $status == 'DL'){
+	            		$commentText = "Status has changes to Refund Todo & Amount is :Rs  ".$refundedamount." done by ".$userFirstname;
+						$write = Mage::getSingleton('core/resource')->getConnection('core_write');
+						$queryUpdate = "update shipmentpayout set `refundtodo`='".$refundedamount."' WHERE shipment_id = '".$shipmentIncId."'";
+						$write->query($queryUpdate);
+
+						$shipment = Mage::getModel('sales/order_shipment')->loadByIncrementId($shipmentIncId);
+						$shipment->setUdropshipStatus(23);
+						Mage::helper('udropship')->addShipmentComment($shipment,$commentText);
+		                $shipment->save();
+	            	}
+	            }
+	            /************Check for Sendd Reverse Pickup Condition : Ankit**********/
 				Mage::getSingleton('adminhtml/session')->addSuccess(Mage::helper('codrefundshipmentgrid')->__('Shipment was successfully saved & The shipmentno."'.$shipmentIncId.'" status has changes to refund todo'));
 				Mage::getSingleton('adminhtml/session')->setFormData(false);
 
@@ -306,29 +324,29 @@ $updateCodQuery = "UPDATE `codrefundshipmentgrid` SET `shipment_id`= '".$lastShi
                 return;
             }
           }
-          
-         } 
-         
+
+         }
+
          else{
-				
+
 				Mage::getSingleton('adminhtml/session')->addError($this->__('Shipment Id doesnot exist'));
 				$this->_redirect('*/*/');
 				return;
 			}
-         
+
         }
         Mage::getSingleton('adminhtml/session')->addError(Mage::helper('codrefundshipmentgrid')->__('Unable to find item to save'));
         $this->_redirect('*/*/');
 	}
- 
+
 	public function deleteAction() {
 		if( $this->getRequest()->getParam('id') > 0 ) {
 			try {
 				$model = Mage::getModel('codrefundshipmentgrid/codrefundshipmentgrid');
-				 
+
 				$model->setId($this->getRequest()->getParam('id'))
 					->delete();
-					 
+
 				Mage::getSingleton('adminhtml/session')->addSuccess(Mage::helper('adminhtml')->__('Item was successfully deleted'));
 				$this->_redirect('*/*/');
 			} catch (Exception $e) {
@@ -360,17 +378,49 @@ $updateCodQuery = "UPDATE `codrefundshipmentgrid` SET `shipment_id`= '".$lastShi
         }
         $this->_redirect('*/*/index');
     }
-	
+
+	private function senddStatusCheck($trackingNum){
+		//echo $trackingNum;
+		$generalcheck_hlp = Mage::helper('generalcheck');
+		$token      =   $generalcheck_hlp->getSenddToken() ;
+		if(!$token){
+		        return NULL;
+	    }
+	    $inputHeader = 'Token '.$token;
+	    $model= Mage::getStoreConfig('craftsvilla_config/sendd');
+        $url = $model['base_url'].'/core/api/v1/track/?partner_tracking_number='.$trackingNum;
+        $curl = curl_init();
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => "",
+            CURLOPT_MAXREDIRS => -1,
+            CURLOPT_TIMEOUT => 300,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => "GET",
+            CURLOPT_HTTPHEADER => array("cache-control: no-cache",
+                                        "content-type: application/json",
+                                        "Authorization : ".$inputHeader
+            ),
+        ));
+        $result = curl_exec($curl);
+        $error = curl_error($curl);
+        $response = json_decode($result, true);
+        //var_dump($response);exit;
+        curl_close($curl);
+        $getTrackingIdStatus = $response['status'];
+		return $getTrackingIdStatus;
+	}
     public function massStatusAction()
     {
         $codrefundshipmentgridIds = $this->getRequest()->getParam('codrefundshipmentgrid');
-		
+
         if(!is_array($codrefundshipmentgridIds)) {
             Mage::getSingleton('adminhtml/session')->addError($this->__('Please select item(s)'));
         } else {
             try {
                 foreach ($codrefundshipmentgridIds as $codrefundshipmentgridId) {
-				
+
 					$payOutstatus = $this->getRequest()->getParam('payout_status');
 					$codrefundshipmentId1 = Mage::getModel('codrefundshipmentgrid/codrefundshipmentgrid')->load($codrefundshipmentgridId)->getShipmentId();
 					$write = Mage::getSingleton('core/resource')->getConnection('shipmentpayout_write');
@@ -391,42 +441,42 @@ $updateCodQuery = "UPDATE `codrefundshipmentgrid` SET `shipment_id`= '".$lastShi
         }
         $this->_redirect('*/*/index');
     }
-	
+
 	public function codrefundshipuploadAction()
 		{
-			
+
 		$selected_date_val = $this->getRequest()->getParam('selected_date');
 		$dateOpen = date('Ymd',strtotime($selected_date_val));
- 		$shipmentpayout_report1 = Mage::getModel('codrefundshipmentgrid/codrefundshipmentgrid')->getCollection();      	
+ 		$shipmentpayout_report1 = Mage::getModel('codrefundshipmentgrid/codrefundshipmentgrid')->getCollection();
 		$shipmentpayout_report1->getSelect()
       			->join(array('a'=>'sales_flat_shipment'), 'a.increment_id=main_table.shipment_id')
       			->joinLeft(array('b'=>'sales_flat_order'), 'a.order_id= b.entity_id','customer_email')
-      			->where('a.udropship_status = "23"');      	
+      			->where('a.udropship_status = "23"');
       	//echo "Query:".$shipmentpayout_report1->getSelect()->__toString();
 		//exit();
 		$shipmentpayout_report1_arr = $shipmentpayout_report1->getData();
     	$filename = "CODshipmentReport"."_".$selected_date_val;
 		$output = "";
-	
+
 		$fieldlist = array("Debit Account Number","Value Date","Customer Reference No","Beneficiary Name","Payment Type","Bene Account Number","Bank Code","Account type","Amount","Payment Details 1","Payment Details 2","Payment Details 3","Payment Details 4","Payable Location Code *","Payable Location Name *","Print Location Code *","Print Location Name *","Beneficiary Address 1","Beneficiary Address 2","Beneficiary Address 3","Beneficiary Address 4","Delivery Method","Cheque Number","Bene E-mail ID","Instrument Detail 1","Instrument Detail 2","CV Customer EmaiID");
-    	
+
 		$numfields = sizeof($fieldlist);
 		$i = 1;
-	
+
 		// *********************   NOW START BUILDING THE CSV
-	
+
 		// Create the column headers
-	
-		for($k =0; $k < $numfields;  $k++) { 
+
+		for($k =0; $k < $numfields;  $k++) {
 			$output .= $fieldlist[$k];
 			if ($k < ($numfields-1)) $output .= ", ";
 		}
 		$output .= "\n";
-		
+
 		/*echo "<pre>";
 		print_r($shipmentpayout_report1_arr);
 		exit();*/
-		
+
     	foreach($shipmentpayout_report1_arr as $shipmentpayout_report1_val)
 	    {
 			$total_amount1 = $shipmentpayout_report1_val['paymentamount'];
@@ -443,61 +493,61 @@ $updateCodQuery = "UPDATE `codrefundshipmentgrid` SET `shipment_id`= '".$lastShi
 		    			//$output .= '710607028';
 		    			$output .= '712097019';
 		    		}
-		    		
+
 		    		if($fieldvalue == "Value Date")
 		    		{
 		    			$output .= $dateOpen;
 		    		}
-		    		
+
 		    		if($fieldvalue == "Customer Reference No")
 		    		{
 		    			$output .= $shipmentId;
 		    		}
-		    		
+
 		    		if($fieldvalue == "Beneficiary Name")
 		    		{
 		    			$output .= $beneficiaryName;
 		    		}
-		    			
+
 		    		if($fieldvalue == "Payment Type")
 		    		{
 		    			$output .= 'EFT';
 		    		}
-		    			
+
 		    		if($fieldvalue == "Bene Account Number")
 		    		{
 		    			$output .= "'".$accountNo;
 		    		}
-		    			
+
 		    		if($fieldvalue == "Bank Code")
 		    		{
 		    			$output .= $ifsccode;
 		    		}
-		    			
+
 		    		if($fieldvalue == "Account type")
 		    		{
 		    			$output .= '2';
 		    		}
-		    			
+
 		    		if($fieldvalue == "Amount")
 		    		{
 		    			$output .= str_replace(',','',number_format($total_amount,2));
 		    		}
-		    			
+
 		    		if($fieldvalue == "Payment Details 1")
 		    		{
 		    			$output .= $shipmentId;
 		    		}
-		    		
+
 		    		if($fieldvalue == "Payment Details 2")
 		    		{
 		    			$output .= preg_replace('/[^a-zA-Z0-9]/s','',str_replace(' ','',substr(strtoupper($beneficiaryName),0,30)));		    		}
-		    		
+
 		    		if($fieldvalue == "Payment Details 3")
 		    		{
 		    			$output .= "";
 		    		}
-		    			
+
 		    		if($fieldvalue == "Payment Details 4")
 		    		{
 		    			$output .= "";
@@ -558,22 +608,22 @@ $updateCodQuery = "UPDATE `codrefundshipmentgrid` SET `shipment_id`= '".$lastShi
 		    		{
 		    			$output .= $custEmailID;
 		    		}
-					
-					
-		    			
+
+
+
 		    		if ($m < ($numfields-1))
 		    		{
 		    			$output .= ",";
 		    		}
-		    	
+
 				}
 		    	$output .= "\n";
-				
+
     		//}
 	    }
-		
+
     	// Send the CSV file to the browser for download
-	
+
 		header("Content-type: text/x-csv");
 		header("Content-Disposition: attachment; filename=$filename.csv");
 		echo $output;

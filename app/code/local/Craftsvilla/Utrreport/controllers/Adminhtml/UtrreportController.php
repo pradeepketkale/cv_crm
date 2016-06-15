@@ -245,8 +245,9 @@ public function assignAction()
 						} else {
 							$subTotal = $shipmentpayout_report1_val['subtotal'];
 						}
+						$total_amount = $subTotal+$shipmentpayout_report1_val['base_shipping_amount']+$discountAmountCoupon;
 						/**** Code for deduction of Bank wise persentage from Craftsvilla Commission */
-						$sqlQuery = "SELECT `pg_type`, `mode` FROM `payu_payment_details` WHERE `increment_id` =" .$shipmentpayout_report1_val['shipment_id'];
+						$sqlQuery = "SELECT `pg_type`, `mode` FROM `payu_payment_details` WHERE `increment_id` =" .$shipmentpayout_report1_val['order_id'];
 						$result = $readOrderCntry->query($sqlQuery)->fetch();
 						$payuChargePercent = 0;
 						if($result){
@@ -269,7 +270,7 @@ public function assignAction()
 									$payuChargePercent = 1.90; //Any other PG
 								}
 							} else if($mode == 'DC'){
-								if(product_amount >2000){
+								if($total_amount >2000){
 									$payuChargePercent = 1;
 								} else {
 									$payuChargePercent = 0.75;
@@ -284,8 +285,6 @@ public function assignAction()
 							$pg = 'nill';
 						}
 						/****Code for deduction of Bank wise persentage from Craftsvilla Commission ENDS*/
-
-						$total_amount = $subTotal+$shipmentpayout_report1_val['base_shipping_amount']+$discountAmountCoupon;
 						$payu_commission = $total_amount * ($payuChargePercent/100) ;
 						/***********SEND SHIPPING CHECK**************/
 						$senddLogisticAmount = (75*(1+$service_tax));
