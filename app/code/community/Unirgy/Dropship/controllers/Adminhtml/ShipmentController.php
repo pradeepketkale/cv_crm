@@ -273,7 +273,7 @@ class Unirgy_Dropship_Adminhtml_ShipmentController extends Mage_Adminhtml_Contro
                             $created_at         =   $response->partner_tracking_detail->tracking_status_updates[0]->created_at;
                             $updated_at         =   $response->partner_tracking_detail->tracking_status_updates[0]->updated_at;
                             $message_status     =   $response->partner_tracking_detail->tracking_status_updates[0]->message;
-                            
+                            $generalcheck_hlp = Mage::helper('generalcheck');
                             try{
                                 $writedb = Mage::getSingleton('core/resource')->getConnection('core_write');
                                 $updatereAwb = "INSERT INTO `sales_flat_shipment_reverse_track`(`shipment_id`, `reverse_awb_no`, `reverse_shipping_docs`,`courier_code`,`reverse_reason`,`created_at`,`updated_at`,`message`,`created_by`,`updated_by`) VALUES ('".$shipment_id_value."','".$awb."','".$shipping_docs."','".$c_company."','".$reason."','".$created_at."','".$updated_at."','".$message_status."','1','1') ";
@@ -282,28 +282,26 @@ class Unirgy_Dropship_Adminhtml_ShipmentController extends Mage_Adminhtml_Contro
                                 $writedb->closeConnection();
                                 if(strlen($awb)>0) 
                                 {
-                                    $hlp = Mage::helper('generalcheck');
+                                    
                                     $dest       =   "/tmp/".$shipment_id_value.".pdf";
                                     copy($shipping_docs, $dest);
                     
                                     $bucketName             ='assets1.craftsvilla.com';
                                     $imageSlipNameTwo       = 'sendd/barcode/'.$vendorId.'/'.$shipment_id_value.'_invoice_reverse_shipment_label.pdf';
-                                    $moveToBucketSlipTwo    = $hlp->uploadToS3($dest,$bucketName, $imageSlipNameTwo);
+                                    $moveToBucketSlipTwo    = $generalcheck_hlp->uploadToS3($dest,$bucketName, $imageSlipNameTwo);
                                     unlink($dest);
                                 } 
                                }
                             catch (Exception $e){
-                                $session = $this->_getSession();
-                                $session->addError($this->__($e->getMessage()));
+                                //$session = $this->_getSession();
+                                //$session->addError($this->__($e->getMessage()));
+                                Mage::throwException($this->__($e->getMessage()));
                              }
                             $shipment->setUdropshipStatus(37);
-                            Mage::helper('udropship')->addShipmentComment($shipment,('Status has been changed to Return Requested from customer care agent'));
+                            $courierName = $generalcheck_hlp->getCouriernameFromCourierCode($c_company);
+                            Mage::helper('udropship')->addShipmentComment($shipment,('Status has been changed to Return Requested from customer care agent having AWB No:'.$awb. ' And Courier Name:'.$courierName));
                             $shipment->save();
-                           
                         }
-                        
-                        
-
                     }
                      
 
@@ -1361,44 +1359,7 @@ public function disputeCustomerRemarks($shipment_id_value)
            $errorArr[] = $error; 
         }            
         $issue = "The Awb Number is not generated for Reverse";
-        return $this->sendErrorEmail($errorArr, $issue, $incrementId, $vendorId); 
+        return $generalcheck_hlp->sendErrorEmail($errorArr, $issue, $incrementId, $vendorId); 
     }
-     
-    public function sendErrorEmail($errors, $issue, $shipmentId ='', $vendorId =''){
-        //echo "sent the mail";
-        date_default_timezone_set('Asia/Kolkata');
-        $errorTiming = date("Y-m-d h:i:sa");
-        $courierName = 'India Post';
-
-        $serverInfo  = json_encode($_SERVER);
-
-        $errorMessage = json_encode($errors);
-    	$errorTable = "";
-    	$errorTable .="<div>";
-    	$errorTable .="<p>".$issue.".The Status is shown below table.</p>";
-    	$errorTable .="<table border='1' cellpadding='2px'>";
-    	$errorTable .="<th>Courier Name</th><th>Shipment Id</th><th>Reason</th>";
-        $errorTable .="<tr><td>".$courierName."</td><td>".$shipmentId."</td><td>".$errorMessage."</td></tr>";
-        $errorTable .="<tr><td colspan=3>".$serverInfo."</td></tr>";
-        $errorTable .="</table></div>";
-
-        $mail = Mage::getModel('core/email');
-        $mail->setToName('Craftsvilla');
-        $mail->setToEmail('awb.errors@craftsvilla.com');
-        $mail->setBody($errorTable);
-        $mail->setSubject($courierName.' Awb Number Creation Issue at '.$errorTiming);
-        $mail->setFromEmail('dileswar@craftsvilla.com');
-        $mail->setFromName("Craftsvilla");
-        $mail->setType('html');
-        $mail->send();
-        $awberrorCourierName = $courierName;
-        $writedb = Mage::getSingleton('core/resource')->getConnection('core_write');
-        $updateAwbError = "INSERT INTO `courier_awb_error`(`shipment_id`, `vendor_id`, `courier`, `error`) VALUES ('".$shipmentId."','".$vendorId."','".$awberrorCourierName."', '".$errorMessage."') ";
-        $writedb->query($updateAwbError);
-        $writedb->closeConnection();
-
-        return NULL;
-    }   
-        
 }
 

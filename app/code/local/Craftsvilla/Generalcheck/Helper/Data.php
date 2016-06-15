@@ -394,6 +394,63 @@ public function productUpdateNotify_retry($productId)
         $cacheSenddLoginKey = 'Craftsvilla-Sendd-Login-Token';
         Mage::app()->removeCache($cacheSenddLoginKey);
         return;
-    }                       
+    }
+		
+		public function uploadToS3($tempPath, $bucket, $tempFilename)
+    {
+      $model= Mage::getStoreConfig('craftsvilla_config/amazon_s3');
+      $accessKey = $model['awsaccesskey'];
+      $secretKey = $model['awssecretkey'];
+      if (!class_exists('S3'))require_once(Mage::getBaseDir('lib').'/amazonbucket/s3.php');
+      //instantiate the class
+      $s3 = new S3($accessKey, $secretKey);
+      //$s3->getBucket($bucket); // Get the files of our bucket
+      $uploadToAmazonS3 = $s3->putObjectFile($tempPath, $bucket , $tempFilename, S3::ACL_PUBLIC_READ_WRITE);
+      return $uploadToAmazonS3;
+    }
+		
+		public function getCouriernameFromCourierCode($courierCode){
+        $courierName = 'UNKNOWN';
+        if($courierCode == 'FE'){
+        $courierName = 'FedEx';
+        }
+        if($courierCode == 'AX'){
+        $courierName = 'ARAMEX';
+        }
+        if($courierCode == 'DT'){
+        $courierName = 'DTDC';
+        }
+        if($courierCode == 'IP'){
+        $courierName = 'India Post';
+        }
+        if($courierCode == 'EE'){
+        $courierName = 'EcomExpress';
+        }
+        if($courierCode == 'BD'){
+        $courierName = 'Blue Dart';
+        }
+        if($courierCode == 'SD'){
+        $courierName = 'Sendd';
+        }
+        if($courierCode == 'DH'){
+        $courierName = 'Delhivery';
+        }
+        if($courierCode == 'PR'){
+        $courierName = 'Professional';
+        }
+        if($courierCode == 'GT'){
+        $courierName = 'Gati';
+        }
+        if($courierCode == 'FF'){
+        $courierName = 'First Flight';
+        }
+        if($courierCode == 'MC'){
+        $courierName = 'Maruti Courier';
+        }
+        if($courierCode == 'HA'){
+        $courierName = 'Hand Delivery';
+        }
+        return $courierName;
+    }
 }
 	 
