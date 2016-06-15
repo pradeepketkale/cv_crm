@@ -40,7 +40,7 @@
 		<children>
 			<productmanagement module="productmanagement">
 				<title>Productmanagement</title>
-				<sort_order>71</sort_order>               
+				<sort_order>71</sort_order>
 				<action>productmanagement/adminhtml_productmanagement</action>
 			</productmanagement>
 		</children>
@@ -53,14 +53,14 @@
 				</all>
 				<admin>
 					<children>
-					<catalog>
-					<children>
-						<productmanagement translate="title" module="productmanagement">
-									<title>Productmanagement Module</title>
-									<sort_order>10</sort_order>
-								</productmanagement>
-					</children>
-					</catalog>
+    					<catalog>
+        					<children>
+        						<productmanagement translate="title" module="productmanagement">
+        									<title>Disable Product Module</title>
+        									<sort_order>10</sort_order>
+        						</productmanagement>
+        					</children>
+    					</catalog>
 					</children>
 				</admin>
 			</resources>
@@ -72,7 +72,7 @@
 				</productmanagement>
 			</updates>
 		</layout>
-    </adminhtml>   
+    </adminhtml>
     <global>
          <resources>
             <productmanagement_setup>
@@ -94,7 +94,7 @@
                 </connection>
             </productmanagement_read>
         </resources>
-        
+
         <blocks>
             <productmanagement>
                 <class>Craftsvilla_Productmanagement_Block</class>

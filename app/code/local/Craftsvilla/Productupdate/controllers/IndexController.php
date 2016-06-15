@@ -6,7 +6,6 @@ class Craftsvilla_Productupdate_IndexController extends Mage_Core_Controller_Fro
 		$this->loadLayout();     
 		$this->renderLayout();
     }
-    
 
     public function getsearchDataAction()
     {
@@ -79,9 +78,9 @@ class Craftsvilla_Productupdate_IndexController extends Mage_Core_Controller_Fro
 
 		
 		///from vendor name
-		if($selectedSearch=='vendorName'){
+		if($selectedSearch=='vendorId'){
 			$readcon = Mage::getSingleton('core/resource')->getConnection('core_read');
-			 $vendorQuery="SELECT `vendor_id`,`vendor_name`,`url_key` FROM `udropship_vendor` WHERE `vendor_name` Like '%".$searchtxt."%' ";
+			 $vendorQuery="SELECT `vendor_id`,`vendor_name`,`url_key` FROM `udropship_vendor` WHERE `vendor_id` = '".$searchtxt."' ";
 		
 			$vendorQueryRes = $readcon->query($vendorQuery)->fetch();
 			

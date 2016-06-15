@@ -40,34 +40,33 @@
                 <children>
 			<productupdate module="productupdate">
 				<title>Productupdate</title>
-				<sort_order>71</sort_order> 
-                                <action>productupdate/adminhtml_productupdate</action>             
+				<sort_order>71</sort_order>
+                                <action>productupdate/adminhtml_productupdate</action>
 			</productupdate>
-                        
+
 
                 </children>
                 </catalog>
 		</menu>
-		<acl>
-			<resources>
-				<all>
-					<title>Allow Everything</title>
-				</all>
-				<admin>
-					<children>
-                                        <catalog>
-                                        <children>
-						<productupdate translate="title" module="productupdate">
-									<title>Productupdate Module</title>
-									<sort_order>10</sort_order>
-                                                </productupdate>
-                                                
-					</children>
-                                        </catalog>
-                                        </children>
-				</admin>
-			</resources>
-		</acl>
+        <acl>
+            <resources>
+                <all>
+                    <title>Allow Everything</title>
+                </all>
+                <admin>
+                    <children>
+                        <catalog>
+                            <children>
+                                <productupdate translate="title" module="productupdate">
+                                    <title>Reindex Productupdate Module</title>
+                                <sort_order>10</sort_order>
+                                </productupdate>
+                            </children>
+                        </catalog>
+                    </children>
+                </admin>
+            </resources>
+        </acl>
 		<layout>
 			<updates>
 				<productupdate>
@@ -75,9 +74,9 @@
 				</productupdate>
 			</updates>
 		</layout>
-    </adminhtml>   
+    </adminhtml>
     <global>
-        <models>
+       <!--- <models>
             <productupdate>
                 <class>Craftsvilla_Productupdate_Model</class>
                 <resourceModel>productupdate_mysql4</resourceModel>
@@ -90,7 +89,7 @@
                     </productupdate>
                 </entities>
             </productupdate_mysql4>
-        </models>
+        </models>-->
         <resources>
             <productupdate_setup>
                 <setup>

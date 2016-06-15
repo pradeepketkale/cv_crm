@@ -13,8 +13,8 @@ class Craftsvilla_Productupdate_Block_Adminhtml_Productupdate_Grid extends Mage_
 
   protected function _prepareCollection()
   {
-	  
-	
+
+
       //$this->setCollection($collection);
       //return parent::_prepareCollection();
      // $collection = Mage::getModel('productupdate/productupdate')->getCollection();
@@ -23,7 +23,7 @@ class Craftsvilla_Productupdate_Block_Adminhtml_Productupdate_Grid extends Mage_
   }
 
   protected function _prepareColumns()
-  {     
+  {
       $hlp = Mage::helper('productupdate');
       $hlp->searchBox();
        /*$this->addColumn('productupdate_id', array(
@@ -40,7 +40,7 @@ class Craftsvilla_Productupdate_Block_Adminhtml_Productupdate_Grid extends Mage_
           'index'     => 'udropship_vendor',
           'renderer'  => 'productupdate/adminhtml_productupdate_renderer_vendorname',
       ));
-	
+
      /* $this->addColumn('content', array(
 			'header'    => Mage::helper('productupdate')->__('Product Name'),
 			'width'     => '150px',
@@ -53,9 +53,9 @@ class Craftsvilla_Productupdate_Block_Adminhtml_Productupdate_Grid extends Mage_
           'width'     => '150',
           'index'     => 'sku', //MTEST11517294030
           'renderer'  => 'productupdate/adminhtml_productupdate_renderer_sku',
-          
+
       ));
-    
+
 /*
  $this->addColumn('status', array(
           'header'    => Mage::helper('productupdate')->__('Status'),
@@ -68,7 +68,7 @@ class Craftsvilla_Productupdate_Block_Adminhtml_Productupdate_Grid extends Mage_
               2 => 'Disabled',
           ),
       ));
-	  
+
        $this->addColumn('action',
             array(
                 'header'    =>  Mage::helper('productupdate')->__('Action'),
@@ -87,10 +87,10 @@ class Craftsvilla_Productupdate_Block_Adminhtml_Productupdate_Grid extends Mage_
                 'index'     => 'stores',
                 'is_system' => true,
         ));*/
-		
+
 		//$this->addExportType('*/*/exportCsv', Mage::helper('productupdate')->__('CSV'));
 		//$this->addExportType('*/*/exportXml', Mage::helper('productupdate')->__('XML'));
-	  
+
       return parent::_prepareColumns();
   }
 
@@ -105,22 +105,22 @@ class Craftsvilla_Productupdate_Block_Adminhtml_Productupdate_Grid extends Mage_
              'confirm'  => Mage::helper('productupdate')->__('Are you sure?')
         ));
 
-        $statuses = Mage::getSingleton('productupdate/status')->getOptionArray();
+        // $statuses = Mage::getSingleton('productupdate/status')->getOptionArray();
 
-        array_unshift($statuses, array('label'=>'', 'value'=>''));
-        $this->getMassactionBlock()->addItem('status', array(
-             'label'=> Mage::helper('productupdate')->__('Change status'),
-             'url'  => $this->getUrl('*/*/massStatus', array('_current'=>true)),
-             'additional' => array(
-                    'visibility' => array(
-                         'name' => 'status',
-                         'type' => 'select',
-                         'class' => 'required-entry',
-                         'label' => Mage::helper('productupdate')->__('Status'),
-                         'values' => $statuses
-                     )
-             )
-        ));
+        // array_unshift($statuses, array('label'=>'', 'value'=>''));
+        // $this->getMassactionBlock()->addItem('status', array(
+        //      'label'=> Mage::helper('productupdate')->__('Change status'),
+        //      'url'  => $this->getUrl('*/*/massStatus', array('_current'=>true)),
+        //      'additional' => array(
+        //             'visibility' => array(
+        //                  'name' => 'status',
+        //                  'type' => 'select',
+        //                  'class' => 'required-entry',
+        //                  'label' => Mage::helper('productupdate')->__('Status'),
+        //                  'values' => $statuses
+        //              )
+        //      )
+        // ));
         return $this;
     }
 

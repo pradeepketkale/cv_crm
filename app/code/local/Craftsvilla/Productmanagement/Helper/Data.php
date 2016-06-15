@@ -51,12 +51,12 @@ class Craftsvilla_Productmanagement_Helper_Data extends Mage_Core_Helper_Abstrac
                             <option value="none">Select</option>
                             <option value="productId">Product Id</option>
                             <option value="productName">Product Name</option>
-                            <option value="vendorName">Vendor Name</option>
+                            <option value="vendorId">Vendor Id</option>
                              
                         </select>
                         <br><br>
                         <div class="field">
-                            <input type="text" name="product_sku" id="product_sku" placeholder="Product ID, Vendor Name,Product Name "  value="" style="width:100%;">
+                            <input type="text" name="product_sku" id="product_sku" placeholder="Product ID, Vendor Id,Product Name "  value="" style="width:100%;">
                         </div>
                         <br>
                         <input type="button" name="search" onclick="doSearch();" value="Search">
