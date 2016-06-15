@@ -261,11 +261,11 @@ class Unirgy_Dropship_Adminhtml_ShipmentController extends Mage_Adminhtml_Contro
                             $response               =   $this->senddReverseOrder($jsonInput,$shipmentId_value,$vendorId);
                             //var_dump(count((array)$response)); exit;
                              
-                            if($response == NULL)
-                            {
-                               Mage::throwException($this->__('Please try again later'));
-                               return false ;
-                            }
+                            //if($response == NULL)
+                            //{
+                            //   Mage::throwException($this->__('Please try again later'));
+                            //   return false ;
+                            //}
                             
                             $awb=   $response->partner_tracking_detail->tracking_number; 
                             $shipping_docs      =   $response->partner_tracking_detail->shipping_docs;
@@ -299,7 +299,8 @@ class Unirgy_Dropship_Adminhtml_ShipmentController extends Mage_Adminhtml_Contro
                              }
                             $shipment->setUdropshipStatus(37);
                             $courierName = $generalcheck_hlp->getCouriernameFromCourierCode($c_company);
-                            Mage::helper('udropship')->addShipmentComment($shipment,('Status has been changed to Return Requested from customer care agent having AWB No:'.$awb. ' And Courier Name:'.$courierName));
+                            //$msg = 'Status has been changed to Return Requested from customer care agent having AWB No:'.$awb. 'And CourierName:'.$courierName;
+                            Mage::helper('udropship')->addShipmentComment($shipment,('Status has been changed to Return Requested from customer care agent'));
                             $shipment->save();
                         }
                     }
