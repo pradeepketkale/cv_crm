@@ -66,7 +66,7 @@ include('session.php');
 				changeYear: true,
 				buttonImage: "img/cal.png",
 				buttonImageOnly: true,
-				dateFormat: 'yy-mm-dd',
+				dateFormat: 'yy-mm-dd 00:00:00',
 			});
 
 			$( "#end" ).datepicker({
@@ -75,7 +75,7 @@ include('session.php');
 				changeYear: true,
 				buttonImage: "img/cal.png",
 				buttonImageOnly: true,
-				dateFormat: 'yy-mm-dd',
+				dateFormat: 'yy-mm-dd 23:59:59',
 			});
 
 		});
