@@ -494,12 +494,13 @@ $updateCodQuery = "UPDATE `codrefundshipmentgrid` SET `shipment_id`= '".$lastShi
 			$readConnection = Mage::getSingleton('core/resource')->getConnection('custom_db');
 			$reverseTrackDetails="SELECT shipment_id FROM sales_flat_shipment_reverse_track WHERE shipment_id = ".$shipmentId;
 			$resultReverseTrackDetails = $readConnection->query($reverseTrackDetails)->fetchAll();
+			$readConnection->closeConnection();
 			$reversePickupStatus = "";
 			
 			if(!empty($resultReverseTrackDetails)){
-				$reversePickupStatus .="Reverse Pickup";	
+				$reversePickupStatus = "Reverse Pickup";	
 			}else{
-				$reversePickupStatus .="Non Reverse Pickup";	
+				$reversePickupStatus = "Non Reverse Pickup";	
 			}
 
 			for($m =0; $m < sizeof($fieldlist); $m++) {
