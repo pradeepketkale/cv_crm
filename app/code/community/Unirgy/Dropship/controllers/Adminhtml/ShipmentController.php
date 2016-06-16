@@ -234,7 +234,8 @@ class Unirgy_Dropship_Adminhtml_ShipmentController extends Mage_Adminhtml_Contro
                     }
                     if($status == 37)
                     {
-                       $sendResponse = $this->returnrequested($shipment_id_value,$shipmentId_value,$reason);
+                       $shipmentStatus = $statuses[$status];
+                       $sendResponse = $this->returnrequested($shipment_id_value,$shipmentId_value,$reason,$shipmentStatus);
                        if($sendResponse == '1'){
                         Mage::throwException($this->__('Please try again later'));
                         return false ;
@@ -372,7 +373,8 @@ class Unirgy_Dropship_Adminhtml_ShipmentController extends Mage_Adminhtml_Contro
                     }
                     if($status == 37)
                     {
-                       $sendResponse = $this->returnrequested($shipment_id_value,$shipmentId_value,$reason);
+                       $shipmentStatus = $statuses[$status];
+                       $sendResponse = $this->returnrequested($shipment_id_value,$shipmentId_value,$reason,$shipmentStatus);
                        if($sendResponse == '1'){
                         Mage::throwException($this->__('Please try again later'));
                         return false ;
@@ -1176,7 +1178,7 @@ public function disputeCustomerRemarks($shipment_id_value)
             $shipment->save();
     }
 
-    public function returnrequested($shipment_id_value,$shipentId,$reason='')
+    public function returnrequested($shipment_id_value,$shipentId,$reason='',$shipmentStatus)
     {
         $shipment1 = Mage::getModel('sales/order_shipment');
         $shipment = $shipment1->load($shipentId);
@@ -1241,7 +1243,7 @@ public function disputeCustomerRemarks($shipment_id_value)
            $commentId = 'Status has been changed to Return Requested from customer care agent having AWB No:'.$awb.'And CourierName:'.$courierName.' due to '.$reason;
             $commentNew = Mage::getModel('sales/order_shipment_comment')
                     ->setComment($commentId)
-                    ->setUdropshipStatus(@$statuses[$status]);
+                    ->setUdropshipStatus($shipmentStatus);
             $shipment->addComment($commentNew);
              $shipment->save();
         }
