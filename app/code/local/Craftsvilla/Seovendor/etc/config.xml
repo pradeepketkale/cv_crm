@@ -47,8 +47,8 @@
 				<children>
 					<sales>
 						<children>
-							<seovendor>
-							<title>Manage Seo Data</title>
+							<seovendor translate="title" module="seovendor">
+							<title>SeoVendor Module</title>
 							</seovendor>
 						</children>
 				  </sales>

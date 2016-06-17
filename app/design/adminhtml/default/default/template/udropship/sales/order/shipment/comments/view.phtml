@@ -37,6 +37,7 @@
      $reverse_pick       =   $servecable->servicable;
 
     $rpu_status_arr    =   array('Return Requested','Return In Transit','Return Delivered','Return RTO');
+		
 ?>
 
 <?php $shipmentArray =  Mage::getSingleton('udropship/source')->setPath('shipment_statuses')->toOptionHash();
@@ -205,14 +206,23 @@ in_array($shipmentStatusId,$checkShipementStatus) ||
     <?php endforeach; ?>
     </ul>
     </form>
+		
+<?php
+		$shipmentId = $this->getRequest()->getParam('shipment_id');
+		$trackingCollection = Mage::getResourceModel('sales/order_shipment_track_collection')
+												->addAttributeToSelect('*')
+												->addAttributeToFilter('parent_id',$shipmentId);
+		$trackid = $trackingCollection->getFirstItem()['number'];
+?>
+
 <script type="text/javascript">
 function submitComment() {
-     var currentStatusId = '<?php echo $shipmentStatusId ?>'; //alert(currentStatusId);
+     var currentStatusId = '<?php echo $shipmentStatusId ?>'; 
 		 var monthCheck = '<?php echo $flag ?>' ;
 		 var payoutFlag = '<?php echo $payoutFlag ?>';
 		 var userAccess = '<?php echo $accessFlag ?>';
 		
-     if( (currentStatusId == '25' && currentStatusId == '12' && userAccess == '1') || monthCheck == '1' || payoutFlag == '1' )
+		 if(((currentStatusId == '25' || currentStatusId == '12') && userAccess == '1') || monthCheck == '1' || payoutFlag == '1' )
      {
      alert('Futher Modification not allow at this stage.');
      return false ;
@@ -281,7 +291,44 @@ function showfield(name)
 
 
 if ($('submit_comment_button')) {
-    $('submit_comment_button').observe('click', submitComment);
+    $('submit_comment_button').observe('click', function(event){
+			var shipmentStatus = $('comment_status').value;
+			if(shipmentStatus == '6'){
+				var reloadurl = '<?php echo $this->getUrl('udropshipadmin/adminhtml_shipment/senddRequestOnDelete', array('track_id'=>$trackid)) ?>';
+				var trackNo = '<?php echo $trackid ?>';
+				new Ajax.Request(reloadurl, {
+						method: "get",
+						requestHeaders: {Accept: "application/json"},
+						parameters: {track_id:trackNo},
+						onSuccess: function(transport) {
+							var response = transport.responseText.evalJSON();
+							if(response.error){
+								/* condition when track not generated for shipment i.e order not accepted by vendor yet.
+									 allow to cancelled shipment when tracking number not generated.
+								*/
+								if(response.track_no){
+									alert(response.message);
+								} else{
+									submitComment();
+								}
+								
+							} else {
+								submitComment();
+							}
+						},
+						onFailure: function(transport) {
+							var response = transport.responseText.evalJSON();
+							if(response.error){
+								alert(response.message);
+							} else {
+								submitComment();
+							}
+						}
+				});
+			} else {
+					submitComment();
+			}		    
+		});
 }
 
 </script>

@@ -451,5 +451,60 @@ public function productUpdateNotify_retry($productId)
         }
         return $courierName;
     }
+		
+		public function senddRequestOnDeleteStatus($trackingId){
+        // get authenitication token
+        $token =  $this->getSenddToken();
+        if(!$token){
+            return NULL;
+        }
+        $requestBody = array('tracking_number'=>$trackingId);
+        $model= Mage::getStoreConfig('craftsvilla_config/sendd');
+        $url = $model['base_url'].'core/api/v1/shipment/cancel/';
+        $inputHeader = 'Token '.$token;
+        // try api calls 3 times
+        $calls = 3;
+        do{
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+            curl_setopt($ch, CURLOPT_HEADER, FALSE);
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PATCH");
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($requestBody));
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+              "Content-Type: application/json",
+              "Authorization: Token ".$token
+            ));
+
+            $result = curl_exec($ch);
+            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            $response = json_decode($result);
+            //echo '<pre>'; print_r($response); exit;
+            curl_close($ch);
+
+            if($httpCode == 200){
+                if($response->status == NULL){
+                    return $response;
+                } else {
+                    return $response->status;
+                }
+            }
+            if($httpCode == 400){
+								return $response;
+                break;
+            }
+
+            if($httpCode == 401){
+                $this->removeSenddLoginKey();
+                $token = $this->getSenddToken();
+                if(!$token){
+                    return NULL;
+                }
+                $inputHeader = 'Token '.$token;                                         
+                $calls--;
+                continue;
+            }        
+        }while($calls > 0); 
+    }
 }
 

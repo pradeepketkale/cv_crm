@@ -1323,5 +1323,52 @@ public function disputeCustomerRemarks($shipment_id_value)
         $issue = "The Awb Number is not generated for Reverse";
         return $generalcheck_hlp->sendErrorEmail($errorArr, $issue, $incrementId, $vendorId); 
     }
+
+     /*--------
+        API Call to SendDNXT when shipment status set to deleted (only for)
+     ----------*/
+     
+    public function senddRequestOnDeleteAction(){
+        $trackingId = $this->getRequest()->getParam('track_id');
+        if($trackingId)
+        {
+         // call to senddnxt API for cancelling cod order
+         try{
+                $status = Mage::helper('generalcheck')->senddRequestOnDeleteStatus($trackingId);
+                //echo $status->tracking_number[0];exit;
+                if($status == "CA"){
+                    $response = array(
+                        'error'     => false,
+                        'message'   => $this->__('Response from sendDNXT - CA'),
+                        'track_no'  => true,
+                    );
+                }
+                else if($status != 'Not Applicable' || $status != ''){
+                     $response = array(
+                        'error'     => true,
+                        'message'   => $this->__('Response from sendDNXT - '.$status->tracking_number[0]),
+                        'track_no'  => true,
+                    );
+                }
+            }catch(Exception $e){
+                $response = array(
+                    'error'     => true,
+                    'message'   => $this->__('Error in SendDNXT API call.'),
+                    'track_no'  => true,
+                );
+            }
+        } else {
+            $response = array(
+                'error'     => true,
+                'message'   => $this->__('Cannot load track with retrieving identifier.'),
+                'track_no'  => false,
+            );
+        }
+         if (is_array($response)) {
+                $response = Mage::helper('core')->jsonEncode($response);
+            }
+            $this->getResponse()->setBody($response);
+        
+    }
 }
 
