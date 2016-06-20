@@ -308,13 +308,9 @@ if ($('submit_comment_button')) {
 								*/
 								if(response.track_no){
 									alert(response.message);
-								} else{
-									submitComment();
 								}
-								
-							} else {
-								submitComment();
 							}
+							submitComment();
 						},
 						onFailure: function(transport) {
 							var response = transport.responseText.evalJSON();
