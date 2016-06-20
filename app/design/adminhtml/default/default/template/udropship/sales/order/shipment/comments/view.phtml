@@ -212,7 +212,8 @@ in_array($shipmentStatusId,$checkShipementStatus) ||
 		$trackingCollection = Mage::getResourceModel('sales/order_shipment_track_collection')
 												->addAttributeToSelect('*')
 												->addAttributeToFilter('parent_id',$shipmentId);
-		$trackid = $trackingCollection->getFirstItem()['number'];
+		$trackId = $trackingCollection->getFirstItem();
+		$trackid = $trackId['number'];
 ?>
 
 <script type="text/javascript">
