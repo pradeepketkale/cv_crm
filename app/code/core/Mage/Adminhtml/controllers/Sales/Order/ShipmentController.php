@@ -445,11 +445,10 @@ public function addTrackAction()
         if(intval($track->getId()) > 0 && intval($shipmentId) > 0){
 
 
-            $order = Mage::getModel('sales/order_shipment')->load($shipmentId)->getOrder(); 
-            if($order->getIncrementId() > 0){
-
-                $payment_method = $order->getPayment()->getMethodInstance()->getTitle();
-                if(strtolower($payment_method) == strtolower('Cash On Delivery') && strtolower($track->getCourierName()) == 'india post'){
+            //$order = Mage::getModel('sales/order_shipment')->load($shipmentId)->getOrder(); 
+            //if($order->getIncrementId() > 0){
+            //    $payment_method = $order->getPayment()->getMethodInstance()->getTitle();
+            //    if(strtolower($payment_method) == strtolower('Cash On Delivery') && strtolower($track->getCourierName()) == 'india post'){
 
                     // get authenitication token
                     $token =  $this->getSenddToken();
@@ -506,14 +505,16 @@ public function addTrackAction()
                             continue;
                         }        
                     }while($calls > 0); 
-                }
-                else{
-                    return "Not Applicable";
-                }
-            }
-            else{
-                return null;
-            }
+                //}
+                //else{
+                //    return "Not Applicable";
+                //}
+            //}
+            //else{
+            //    return null;
+            //}
+        } else {
+                 return "Not Applicable";
         }
     }
 

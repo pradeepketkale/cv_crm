@@ -236,8 +236,8 @@ class Unirgy_Dropship_Adminhtml_ShipmentController extends Mage_Adminhtml_Contro
                     {
                        $shipmentStatus = $statuses[$status];
                        $sendResponse = $this->returnrequested($shipment_id_value,$shipmentId_value,$reason,$shipmentStatus);
-                       if($sendResponse == '1'){
-                        Mage::throwException($this->__('Please try again later'));
+                       if($sendResponse['error'] == 'true'){
+                        Mage::throwException($this->__($sendResponse['message']));
                         return false ;
                        }
                     }
@@ -375,8 +375,8 @@ class Unirgy_Dropship_Adminhtml_ShipmentController extends Mage_Adminhtml_Contro
                     {
                        $shipmentStatus = $statuses[$status];
                        $sendResponse = $this->returnrequested($shipment_id_value,$shipmentId_value,$reason,$shipmentStatus);
-                       if($sendResponse == '1'){
-                        Mage::throwException($this->__('Please try again later'));
+                       if($sendResponse['error'] == 'true'){
+                        Mage::throwException($this->__($sendResponse['message']));
                         return false ;
                        }
                     }
@@ -1202,8 +1202,11 @@ public function disputeCustomerRemarks($shipment_id_value)
              
             if($response == NULL)
             {
-               $flag=1;
-               return $flag ;
+                $response = array(
+                            'error'     => true,
+                            'message'   => $this->__('Please try again later'),
+                        );
+                return $response;
             }
             
             $awb=   $response->partner_tracking_detail->tracking_number; 
@@ -1234,8 +1237,11 @@ public function disputeCustomerRemarks($shipment_id_value)
                }
             catch (Exception $e){
                 //Mage::throwException($this->__($e->getMessage()));
-                $flag = 1;
-                return $flag;
+                $response = array(
+                            'error'     => true,
+                            'message'   => $this->__($e->getMessage()),
+                        );
+                return $response;
              }
             $courierName = $generalcheck_hlp->getCouriernameFromCourierCode($c_company);
             $shipment->setUdropshipStatus(37);
@@ -1246,6 +1252,12 @@ public function disputeCustomerRemarks($shipment_id_value)
                     ->setUdropshipStatus($shipmentStatus);
             $shipment->addComment($commentNew);
              $shipment->save();
+        } else {
+            $response = array(
+                            'error'     => true,
+                            'message'   => $this->__('Cannot load track with retrieving identifier.'),
+                        );
+            return $response;
         }
         
        
