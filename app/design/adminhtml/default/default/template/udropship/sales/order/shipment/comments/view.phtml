@@ -51,7 +51,9 @@
 			// access array
 			$userAccess = array('robin.sequeria@craftsvilla.com','sameer.mantri@craftsvilla.com','Rohit@craftsvilla.com','anderson.kokken@craftsvilla.com','jyoti.arora@craftsvilla.com','tribhuvan@craftsvilla.com','niraj@craftsvilla.com','gaurav@craftsvilla.com','dilipcscare@craftsvilla.com','santoshc@craftsvilla.com','samidha@craftsvilla.com','Seemag@craftsvilla.com','poojaminac@craftsvilla.com','Ayeshab@craftsvilla.com');
 			
-			$payOutUserAccess = array('pravin@craftsvilla.com','bhupendrar@craftsvilla.com','gitap@craftsvilla.com');
+		  $payOutUserAccess = array('pravin@craftsvilla.com','bhupendrar@craftsvilla.com','gitap@craftsvilla.com');
+			
+			$refundUserAccess = array('pravin@craftsvilla.com');
 			
 		/* disable shipment status which is older than 3 month */
 		$monthDiff =  strtotime(date("Y-m-d", strtotime($_entity->getUpdatedAt())) . " +3 month");
@@ -64,7 +66,7 @@
 		$result = $read->query($query)->fetch();
 		$read->closeConnection();
 		
-		$accessFlag = 0 ; $flag = 0; $payoutFlag = 0;
+		$accessFlag = 0 ; $flag = 0; $payoutFlag = 0; $refundFlag = 0;
 		$payoutStatus =  $result['shipmentpayout_status'];
 		//var_dump($payoutStatus);
 		
@@ -92,6 +94,13 @@
 						$payoutFlag = 1;
 				}
 		}
+		
+		if(in_array($user,$refundUserAccess)){
+				$refundFlag = 0;
+		} else {
+				$refundFlag = 1;	
+		}
+		
 ?>
 
 <!-- following shipment status removed
@@ -155,13 +164,15 @@ in_array($shipmentStatusId,$checkShipementStatus) ||
 
 
 	<!--Added By Dileswar on dated 30-03-2013 for add a extra text box to get the refund amount-->
-<!--mstart-->
-       <div id="div1" style="display: none" ><label for=''>Refund Amount of <font face="Tahoma" size="2" color="green"> Rs: <?php echo $autoRefundedamount?></label> </font><br><input type="text"  name="refundamount" value = "<?php echo $autoRefundedamount?>" id="refundamount" /></div>
-<!--mend-->
-         <div id="div2"></div>
+		<!--mstart-->
+				<div id="div1" style="display: none" >
+						<label for='' style="width: 350px; margin: 5px;">Refund Amount of <font face="Tahoma" size="2" color="green"> Rs: <?php echo $autoRefundedamount?></label> </font><br>
+						<input type="text" <?php if($refundFlag == 1) { echo 'readonly';} ?>  name="refundamount" value = "<?php echo $autoRefundedamount?>" id="refundamount" />				 </div>
+		<!--mend-->
+    <div id="div2"></div>
 		<script type="text/javascript">
 		    $('comment_status').origValue = $('comment_status').value
-	    </script>
+	  </script>
 
         </span>
           <form name="qcreject" action="<?php echo $this->getUrl('udropshipadmin/adminhtml_shipment/qcreject/', array('shipment_id'=>$_entity->getId())); ?>" method="post" enctype="multipart/form-data">
@@ -306,6 +317,13 @@ function showfield(name)
 if ($('submit_comment_button')) {
     $('submit_comment_button').observe('click', function(event){
 			var shipmentStatus = $('comment_status').value;
+			var refundAccess = '<?php echo $refundFlag ?>';
+			
+			if(shipmentStatus == '23' && refundAccess == '1'){
+				alert('Further Modification Not Allow');
+				return false;
+			}
+			
 			if(shipmentStatus == '6'){
 				var reloadurl = '<?php echo $this->getUrl('udropshipadmin/adminhtml_shipment/senddRequestOnDelete', array('track_id'=>$trackid)) ?>';
 				var trackNo = '<?php echo $trackid ?>';
