@@ -174,6 +174,17 @@ class Unirgy_Dropship_Adminhtml_ShipmentController extends Mage_Adminhtml_Contro
 
             $statusSaveRes = true;
             if ($status!=$shipment->getUdropshipStatus()) {
+               
+                if($status == 37)
+                {
+                   $shipmentStatus = $statuses[$status];
+                   $sendResponse = $this->returnrequested($shipment_id_value,$shipmentId_value,$reason,$shipmentStatus);
+                   if($sendResponse['error'] == 'true'){
+                    Mage::throwException($this->__($sendResponse['message']));
+                    return false ;
+                   }
+                }
+                    
                 $oldStatus = $shipment->getUdropshipStatus();
                 if (($oldStatus==$statusShipped || $oldStatus==$statusDelivered )
                     && $status!=$statusShipped && $status!=$statusDelivered && $hlp->isUdpoActive()
@@ -232,15 +243,7 @@ class Unirgy_Dropship_Adminhtml_ShipmentController extends Mage_Adminhtml_Contro
                     {
                        $this->deliver($shipment_id_value,$shipmentId_value);
                     }
-                    if($status == 37)
-                    {
-                       $shipmentStatus = $statuses[$status];
-                       $sendResponse = $this->returnrequested($shipment_id_value,$shipmentId_value,$reason,$shipmentStatus);
-                       if($sendResponse['error'] == 'true'){
-                        Mage::throwException($this->__($sendResponse['message']));
-                        return false ;
-                       }
-                    }
+                   
                      
 
                 $comment = Mage::getModel('sales/order_shipment_comment')
@@ -320,7 +323,17 @@ class Unirgy_Dropship_Adminhtml_ShipmentController extends Mage_Adminhtml_Contro
                 $shipment->sendUpdateEmail(!empty($data['is_customer_notified']), $data['comment']);
                 $shipment->getCommentsCollection()->save();
             } else {
-
+                
+                if($status == 37)
+                {
+                   $shipmentStatus = $statuses[$status];
+                   $sendResponse = $this->returnrequested($shipment_id_value,$shipmentId_value,$reason,$shipmentStatus);
+                   if($sendResponse['error'] == 'true'){
+                    Mage::throwException($this->__($sendResponse['message']));
+                    return false ;
+                   }
+                }
+                    
                 $comment = Mage::getModel('sales/order_shipment_comment')
                     ->setComment($data['comment'])
                     ->setIsCustomerNotified(isset($data['is_customer_notified']))
@@ -371,15 +384,7 @@ class Unirgy_Dropship_Adminhtml_ShipmentController extends Mage_Adminhtml_Contro
                         }
                         //mend
                     }
-                    if($status == 37)
-                    {
-                       $shipmentStatus = $statuses[$status];
-                       $sendResponse = $this->returnrequested($shipment_id_value,$shipmentId_value,$reason,$shipmentStatus);
-                       if($sendResponse['error'] == 'true'){
-                        Mage::throwException($this->__($sendResponse['message']));
-                        return false ;
-                       }
-                    }
+                   
 
                 if (isset($data['is_vendor_notified'])) {
                     Mage::helper('udropship')->sendShipmentCommentNotificationEmail($shipment, $data['comment']);
@@ -1243,11 +1248,12 @@ public function disputeCustomerRemarks($shipment_id_value)
                         );
                 return $response;
              }
+
             $courierName = $generalcheck_hlp->getCouriernameFromCourierCode($c_company);
             $shipment->setUdropshipStatus(37);
             //Mage::helper('udropship')->addShipmentComment($shipment,('Status has been changed to Return Requested from customer care agent having AWB No:'.$awb.'And CourierName:'.$courierName));
            $commentId = 'Status has been changed to Return Requested from customer care agent having AWB No:'.$awb.'And CourierName:'.$courierName.' due to '.$reason;
-            $commentNew = Mage::getModel('sales/order_shipment_comment')
+           $commentNew = Mage::getModel('sales/order_shipment_comment')
                     ->setComment($commentId)
                     ->setUdropshipStatus($shipmentStatus);
             $shipment->addComment($commentNew);
