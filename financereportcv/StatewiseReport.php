@@ -69,7 +69,7 @@ $customer = mysql_query($sql_statecode,$mainConnection);
 				var date2 = new Date(enddates);
 				var timeDiff = (date2.getTime() - date1.getTime());
 				var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
-				if (diffDays >=31){
+				if (diffDays >31){
 					alert("You are exceeding date Range..Please correct");
 					return false;
 				} else if (diffDays<0 ) {

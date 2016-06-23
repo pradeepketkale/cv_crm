@@ -458,9 +458,9 @@ $updateCodQuery = "UPDATE `codrefundshipmentgrid` SET `shipment_id`= '".$lastShi
 
     	$filename = "CODshipmentReport"."_".$selected_date_val;
 		$output = "";
-	
+
 		$fieldlist = array("Debit Account Number","Value Date","Customer Reference No","Beneficiary Name","Payment Type","Bene Account Number","Bank Code","Account type","Amount","Payment Details 1","Payment Details 2","Payment Details 3","Payment Details 4","Payable Location Code *","Payable Location Name *","Print Location Code *","Print Location Name *","Beneficiary Address 1","Beneficiary Address 2","Beneficiary Address 3","Beneficiary Address 4","Delivery Method","Cheque Number","Bene E-mail ID","Instrument Detail 1","Instrument Detail 2","CV Customer EmaiID","Courier Type");
-    	
+
 
 		$numfields = sizeof($fieldlist);
 		$i = 1;
@@ -482,7 +482,6 @@ $updateCodQuery = "UPDATE `codrefundshipmentgrid` SET `shipment_id`= '".$lastShi
     	foreach($shipmentpayout_report1_arr as $shipmentpayout_report1_val)
 	    {
 			$total_amount1 = $shipmentpayout_report1_val['paymentamount'];
-			$total_amount = $total_amount1 + 100;
 			$shipmentId = $shipmentpayout_report1_val['shipment_id'];
 			$accountNo = "'".$shipmentpayout_report1_val['accountno'];
 			$beneficiaryName = $shipmentpayout_report1_val['cust_name'];
@@ -496,11 +495,13 @@ $updateCodQuery = "UPDATE `codrefundshipmentgrid` SET `shipment_id`= '".$lastShi
 			$resultReverseTrackDetails = $readConnection->query($reverseTrackDetails)->fetchAll();
 			$readConnection->closeConnection();
 			$reversePickupStatus = "";
-			
+
 			if(!empty($resultReverseTrackDetails)){
-				$reversePickupStatus = "Reverse Pickup";	
+				$reversePickupStatus = "Reverse Pickup";
+				$total_amount = $total_amount1;
 			}else{
-				$reversePickupStatus = "Non Reverse Pickup";	
+				$reversePickupStatus = "Non Reverse Pickup";
+				$total_amount = $total_amount1 + 100;
 			}
 
 			for($m =0; $m < sizeof($fieldlist); $m++) {
@@ -510,61 +511,61 @@ $updateCodQuery = "UPDATE `codrefundshipmentgrid` SET `shipment_id`= '".$lastShi
 	    			//$output .= '710607028';
 	    			$output .= '712097019';
 	    		}
-	    		
+
 	    		if($fieldvalue == "Value Date")
 	    		{
 	    			$output .= $dateOpen;
 	    		}
-	    		
+
 	    		if($fieldvalue == "Customer Reference No")
 	    		{
 	    			$output .= $shipmentId;
 	    		}
-	    		
+
 	    		if($fieldvalue == "Beneficiary Name")
 	    		{
 	    			$output .= $beneficiaryName;
 	    		}
-	    			
+
 	    		if($fieldvalue == "Payment Type")
 	    		{
 	    			$output .= 'EFT';
 	    		}
-	    			
+
 	    		if($fieldvalue == "Bene Account Number")
 	    		{
 	    			$output .= "'".$accountNo;
 	    		}
-	    			
+
 	    		if($fieldvalue == "Bank Code")
 	    		{
 	    			$output .= $ifsccode;
 	    		}
-	    			
+
 	    		if($fieldvalue == "Account type")
 	    		{
 	    			$output .= '2';
 	    		}
-	    			
+
 	    		if($fieldvalue == "Amount")
 	    		{
 	    			$output .= str_replace(',','',number_format($total_amount,2));
 	    		}
-	    			
+
 	    		if($fieldvalue == "Payment Details 1")
 	    		{
 	    			$output .= $shipmentId;
 	    		}
-	    		
+
 	    		if($fieldvalue == "Payment Details 2")
 	    		{
 	    			$output .= preg_replace('/[^a-zA-Z0-9]/s','',str_replace(' ','',substr(strtoupper($beneficiaryName),0,30)));		    		}
-	    		
+
 	    		if($fieldvalue == "Payment Details 3")
 	    		{
 	    			$output .= "";
 	    		}
-	    			
+
 	    		if($fieldvalue == "Payment Details 4")
 	    		{
 	    			$output .= "";
@@ -629,16 +630,16 @@ $updateCodQuery = "UPDATE `codrefundshipmentgrid` SET `shipment_id`= '".$lastShi
 	    		{
 	    			$output .= $reversePickupStatus;
 	    		}
-				
-	    			
+
+
 	    		if ($m < ($numfields-1))
 	    		{
 	    			$output .= ",";
 	    		}
-	    	
+
 			}
 	    	$output .= "\n";
-				
+
 
     		//}
 	    }
