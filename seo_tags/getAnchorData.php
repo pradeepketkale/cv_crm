@@ -17,8 +17,8 @@ if ($result) {
 		$link= $row['anchor_link'];
 		$anchorId= $row['seo_anchor_id'];
 		$data.='<li>
-				<a href="'.$link.'"" title="'.$anchor_tag.'"">"'.$anchor_tag.'"</a> 
-				<a style="cursor:pointer;cursor: pointer;font-size: 9px;letter-spacing: 2px;vertical-align: super;font-weight: bold;" onclick="cancelConfirm('.$anchorId.')"> (x)</a>
+				<a href="'.$link.'"" title="'.$anchor_tag.'"">'.$anchor_tag.'</a> 
+				<a style="cursor: pointer;font-size: 12px;vertical-align: super;font-weight: normal;color: #D40404;border-radius: 50%;border: 1px solid;letter-spacing: 4px;padding-left: 4px;" onclick="cancelConfirm('.$anchorId.')"> x</a>
 			   </li> ';
 	}
 	
@@ -29,7 +29,7 @@ if ($result) {
 } else {
 	$data ="No details found";
 	
-	$responseData['m'] = $message;
+	$responseData['m'] = '';
 	$responseData['d'] = $data;
 	$responseData['s'] = 0;
 	echo json_encode($responseData);

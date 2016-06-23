@@ -1,4 +1,21 @@
 <?php
+
+$valid_passwords = array ("seo" => "s3o");
+$valid_users = array_keys($valid_passwords);
+
+$user = $_SERVER['PHP_AUTH_USER'];
+$pass = $_SERVER['PHP_AUTH_PW'];
+
+$validated = (in_array($user, $valid_users)) && ($pass == $valid_passwords[$user]);
+
+if (!$validated) {
+  header('WWW-Authenticate: Basic realm="craftsvilla"');
+  header('HTTP/1.0 401 Unauthorized');
+  die ("Not authorized");
+}
+
+?>
+<?php
 error_reporting(E_ALL & ~E_NOTICE);
 require_once '../app/Mage.php';
 Mage::app();
@@ -107,7 +124,7 @@ Select Page Type
 			document.getElementById("txtHint").innerHTML =responseData.m;
 		}
 		};
-		xhttp.open("GET", "saveAnchor.php?pageDetail="+pageDetail+"&anchor_type="+anchorType+"&anchorLink="+anchorLink+"&anchorTitle="+anchorTitle+"&anchorSequence="+anchorSequence, true);
+		xhttp.open("POST", "saveAnchor.php?pageDetail="+pageDetail+"&anchor_type="+anchorType+"&anchorLink="+anchorLink+"&anchorTitle="+anchorTitle+"&anchorSequence="+anchorSequence, true);
 		xhttp.send();  
 	}
 	function cancelConfirm(str) {
@@ -151,7 +168,7 @@ Select Page Type
 		  document.getElementById("txtHint").innerHTML =responseData.m;
 		}
 	  };
-	  xhttp.open("GET", "getAnchorData.php?q="+str+"&anchor_type="+anchorType, true);
+	  xhttp.open("POST", "getAnchorData.php?q="+str+"&anchor_type="+anchorType, true);
 	  xhttp.send();   
 	}
 </script>

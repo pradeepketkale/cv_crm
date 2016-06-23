@@ -1,7 +1,19 @@
 <?php
-// error_reporting(E_ALL & ~E_NOTICE);
-// require_once '../app/Mage.php';
-// Mage::app();
+
+$valid_passwords = array ("seo" => "s3o");
+$valid_users = array_keys($valid_passwords);
+
+$user = $_SERVER['PHP_AUTH_USER'];
+$pass = $_SERVER['PHP_AUTH_PW'];
+
+$validated = (in_array($user, $valid_users)) && ($pass == $valid_passwords[$user]);
+
+if (!$validated) {
+  header('WWW-Authenticate: Basic realm="craftsvilla"');
+  header('HTTP/1.0 401 Unauthorized');
+  die ("Not authorized");
+}
+
 ?>
 <div class="container">
 	<div class="formMain">
@@ -68,7 +80,7 @@
 			document.getElementById("response").innerHTML =responseData.m;
 		}
 		};
-		xhttp.open("GET", "activateAnchor.php?pageDetail="+pageDetail+"&activate_anchor="+activate_anchor, true);
+		xhttp.open("POST", "activateAnchor.php?pageDetail="+pageDetail+"&activate_anchor="+activate_anchor, true);
 		xhttp.send();  
 	}
 	
