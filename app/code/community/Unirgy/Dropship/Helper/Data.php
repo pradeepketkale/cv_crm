@@ -4696,4 +4696,16 @@ public function getServicesendd($customerPincode,$vendorPincode){
         return null;
 
     }
+
+    public function uploadToS3($tempPath, $bucket, $tempFilename){
+        $model= Mage::getStoreConfig('craftsvilla_config/amazon_s3');
+        $accessKey = $model['awsaccesskey'];
+        $secretKey = $model['awssecretkey'];
+        if (!class_exists('S3'))require_once(Mage::getBaseDir('lib').'/amazonbucket/s3.php');
+        //instantiate the class
+        $s3 = new S3($accessKey, $secretKey);
+        //$s3->getBucket($bucket); // Get the files of our bucket
+        $uploadToAmazonS3 = $s3->putObjectFile($tempPath, $bucket , $tempFilename, S3::ACL_PUBLIC_READ_WRITE);
+        return $uploadToAmazonS3;
+    }
 }

@@ -64,7 +64,7 @@ include('session.php');
 				var date2 = new Date(enddates);
 				var timeDiff = (date2.getTime() - date1.getTime());
 				var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
-				if (diffDays >=31){
+				if (diffDays >31){
 					alert("You are exceeding date Range..Please correct");
 					return false;
 				} else if (diffDays<0 ) {
@@ -263,6 +263,11 @@ var normalizeDate = function (dateString) {
 						<option value="Returned Recieved from customer">Returned Recieved from customer</option>
 						<option value="partially recieved">partially recieved</option>
 						<option value="Damage/Lost in Transit">Damage/Lost in Transit</option>
+						<option value="PREPAID RTO">PREPAID RTO</option>
+						<option value="Return Requested">Return Requested</option>
+						<option value="Return In Transit">Return In Transit</option>
+						<option value="Return Delivered">Return Delivered</option>
+						<option value="Return RTO">Return RTO</option>
 					</select></td>
 
 					<td><b>Payment Status:</b></td>
