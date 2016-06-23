@@ -44,7 +44,12 @@ class Craftsvilla_Financereport_FinancereportController extends Mage_Core_Contro
             'Handed to courier' => 31,
             'Returned Recieved from customer' => 32,
             'partially recieved' => 33,
-            'Damage/Lost in Transit' => 36
+            'Damage/Lost in Transit' => 36,
+            'PREPAID RTO' => 41,
+            'Return Requested' => 37,
+            'Return In Transit' => 38,
+            'Return Delivered' => 39,
+            'Return RTO' => 40
         );
         $ustatusCond = ($_GET['ustatus'] != 'all' ? "AND sfs.udropship_status=" . $ustatus[$_GET['ustatus']] : '');
         $paymentCond = ($_GET['paymentstatus'] != 'all' ? "AND sp.shipmentpayout_status =" . $_GET['paymentstatus'] : '');
@@ -91,6 +96,11 @@ class Craftsvilla_Financereport_FinancereportController extends Mage_Core_Contro
         when 32 then 'Returned Recieved from customer'
         when 33 then 'partially recieved'
         when 36 then 'Damage/Lost in Transit'
+        when 41 then 'PREPAID RTO'
+        when 37 then 'Return Requested'
+        when 38 then 'Return In Transit'
+        when 39 then 'Return Delivered'
+        when 40 then 'Return RTO'
         end as ustatus,
         case sp.`shipmentpayout_status` when 0 then 'Unpaid'when 1 then 'Paid' when 2 then 'Refunded' end as payoutstatus,sfs.`created_at` AS shipment_datec, sfst.`number` AS awb_number, sfs.`updated_at` AS shipment_update, `sp`.`citibank_utr`, sp.`shipmentpayout_update_time` AS payment_updated_date, `sfs`.`udropship_vendor` AS vendor_name, sfs.`base_total_value` as SubTotal,sfs.`base_shipping_amount` as Shipping, sp.`payment_amount` AS payment_amount, sp.`commission_amount` AS comission_amount,sfst.`courier_name`
         FROM `sales_flat_shipment` as sfs
@@ -184,7 +194,12 @@ class Craftsvilla_Financereport_FinancereportController extends Mage_Core_Contro
             'Handed to courier' => 31,
             'Returned Recieved from customer' => 32,
             'partially recieved' => 33,
-            'Damage/Lost in Transit' => 36
+            'Damage/Lost in Transit' => 36,
+            'PREPAID RTO' => 41,
+            'Return Requested' => 37,
+            'Return In Transit' => 38,
+            'Return Delivered' => 39,
+            'Return RTO' => 40
         );
 
         /*
@@ -329,6 +344,11 @@ class Craftsvilla_Financereport_FinancereportController extends Mage_Core_Contro
         when 32 then 'Returned Recieved from customer'
         when 33 then 'partially recieved'
         when 36 then 'Damage/Lost in Transit'
+        when 41 then 'PREPAID RTO'
+        when 37 then 'Return Requested'
+        when 38 then 'Return In Transit'
+        when 39 then 'Return Delivered'
+        when 40 then 'Return RTO'
         end as ustatus,
         case sp.`shipmentpayout_status` when 0 then 'Unpaid'when 1 then 'Paid' when 2 then 'Refunded' end as payoutstatus,sfs.`created_at` AS shipment_datec, sfst.`number` AS awb_number, sfs.`updated_at` AS shipment_update, `utr`.`utrno`, sp.`shipmentpayout_update_time` AS payment_updated_date, uv.`vendor_name` AS vendor_name, sfs.`base_total_value` as SubTotal, sp.`payment_amount` AS payment_amount, sp.`commission_amount` AS comission_amount,sfst.`courier_name`
         FROM `sales_flat_shipment` as sfs
@@ -1305,7 +1325,12 @@ class Craftsvilla_Financereport_FinancereportController extends Mage_Core_Contro
             'Handed to courier' => 31,
             'Returned Recieved from customer' => 32,
             'partially recieved' => 33,
-            'Damage/Lost in Transit' => 36
+            'Damage/Lost in Transit' => 36,
+            'PREPAID RTO' => 41,
+            'Return Requested' => 37,
+            'Return In Transit' => 38,
+            'Return Delivered' => 39,
+            'Return RTO' => 40
         );
         $ustatusCond = ($_GET['ustatus'] != 'all' ? "AND sfs.udropship_status=" . $ustatus[$_GET['ustatus']] : '');
         $paymentCond = ($_GET['paymentstatus'] != 'all' ? "AND sp.shipmentpayout_status =" . $_GET['paymentstatus'] : '');
@@ -1352,6 +1377,11 @@ class Craftsvilla_Financereport_FinancereportController extends Mage_Core_Contro
     when 32 then 'Returned Recieved from customer'
     when 33 then 'partially recieved'
     when 36 then 'Damage/Lost in Transit'
+    when 41 then 'PREPAID RTO'
+    when 37 then 'Return Requested'
+    when 38 then 'Return In Transit'
+    when 39 then 'Return Delivered'
+    when 40 then 'Return RTO'
     end as ustatus,
     case sp.`shipmentpayout_status` when 0 then 'Unpaid'when 1 then 'Paid' when 2 then 'Refunded' end as payoutstatus,sfs.`created_at` AS shipment_datec, sfst.`number` AS awb_number, sfs.`updated_at` AS shipment_update, `sp`.`citibank_utr`, sp.`shipmentpayout_update_time` AS payment_updated_date, `sfs`.`udropship_vendor` AS vendor_name, sfs.`base_total_value` as SubTotal,sfs.`base_shipping_amount` as Shipping, sp.`payment_amount` AS payment_amount, sp.`commission_amount` AS comission_amount,sfst.`courier_name`
     FROM `sales_flat_shipment` as sfs
@@ -1430,6 +1460,11 @@ class Craftsvilla_Financereport_FinancereportController extends Mage_Core_Contro
     when 32 then 'Returned Recieved from customer'
     when 33 then 'partially recieved'
     when 36 then 'Damage/Lost in Transit'
+    when 41 then 'PREPAID RTO'
+    when 37 then 'Return Requested'
+    when 38 then 'Return In Transit'
+    when 39 then 'Return Delivered'
+    when 40 then 'Return RTO'
     end as ustatus, uv.`vendor_name` AS vendor_name,uv.`street` AS seller_address, uv.`custom_vars_combined` AS pan,'' as tin,dcr.`default_name` AS vendor_state,(sfs.`base_total_value`+sfs.`base_shipping_amount`) as GMV, sfop.`method` as payment_method, concat(sfoa.`firstname` ,' ',sfoa.`lastname`) as customer_name,sfoa.`region` as customer_region, concat(sfoa.`street` ,', ',sfoa.`city`) as customer_address from `sales_flat_shipment` as sfs
     LEFT JOIN `sales_flat_order` AS sfo ON `sfs`.`order_id` = `sfo`.`entity_id`
     LEFT JOIN `udropship_vendor` AS uv ON `sfs`.`udropship_vendor` = `uv`.`vendor_id`
