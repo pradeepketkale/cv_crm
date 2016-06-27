@@ -318,8 +318,9 @@ if ($('submit_comment_button')) {
     $('submit_comment_button').observe('click', function(event){
 			var shipmentStatus = $('comment_status').value;
 			var refundAccess = '<?php echo $refundFlag ?>';
-			
-			if(shipmentStatus == '23' && refundAccess == '1'){
+			var refundAccessTotalAmount = '<?php echo $autoRefundedamount; ?>'
+			var refundUpdateAmount =  $('refundamount').value;
+			if(shipmentStatus == '23' && refundAccess == '1' && refundUpdateAmount != refundAccessTotalAmount ){
 				alert('Further Modification Not Allow');
 				return false;
 			}
