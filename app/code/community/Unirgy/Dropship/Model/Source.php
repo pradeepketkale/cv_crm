@@ -75,6 +75,7 @@ class Unirgy_Dropship_Model_Source extends Unirgy_Dropship_Model_Source_Abstract
     const SHIPMENT_STATUS_RETURN_IN_TRANSIT = 38;
     const SHIPMENT_STATUS_RETURN_DELIVERED = 39;
     const SHIPMENT_STATUS_RETURN_RTO = 40;
+    const COD_RTO_IN_TRANSIT = 42;
 
     const TRACK_STATUS_PENDING   = 'P';
     const TRACK_STATUS_CANCELED  = 'C';
@@ -244,6 +245,7 @@ class Unirgy_Dropship_Model_Source extends Unirgy_Dropship_Model_Source_Abstract
                 self::SHIPMENT_STATUS_RETURN_IN_TRANSIT  => $hlp->__('Return In Transit'),
                 self::SHIPMENT_STATUS_RETURN_DELIVERED  => $hlp->__('Return Delivered'),
                 self::SHIPMENT_STATUS_RETURN_RTO  => $hlp->__('Return RTO'),
+                self::COD_RTO_IN_TRANSIT  => $hlp->__('COD RTO in Transit'),
             );
 
 
