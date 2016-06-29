@@ -122,7 +122,7 @@ $('#filter').on('click', function (e) {
 			var date2 = new Date(enddates);
 			var timeDiff = Math.abs(date2.getTime() - date1.getTime());
 			var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
-			if (diffDays >=31){
+			if (diffDays > 31){
 				alert("You are exceeding 31 days date Range..Please correct");
 				return false;
 			}
