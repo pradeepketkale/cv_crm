@@ -342,7 +342,7 @@ class Unirgy_Dropship_Model_Pdf_Statement extends Unirgy_Dropship_Model_Pdf_Abst
 
             $this->move(7.9, 2)
                     ->text($statement->getStatementId(), 'down')
-                    ->text($core->formatDate(date('Y-m-d',strtotime($statement->getOrderDateTo().'+8 days')), 'medium'), 'down');
+                    ->text($core->formatDate(date('Y-m-d',strtotime($statement->getOrderDateTo().'+10 days')), 'medium'), 'down');
             if ($hlp->isUdpoActive()) {
                 $this->text(Mage::getSingleton('udropship/source')->setPath('statement_po_type')->getOptionLabel($statement->getPoType()), 'down');
             }
@@ -1489,7 +1489,7 @@ class Unirgy_Dropship_Model_Pdf_Statement extends Unirgy_Dropship_Model_Pdf_Abst
 
             $this->move(7.9, 2)
                     ->text($statement->getStatementId(), 'down')
-                    ->text($core->formatDate(date('Y-m-d',strtotime($statement->getOrderDateTo().'+8 days')), 'medium'), 'down');
+                    ->text($core->formatDate(date('Y-m-d',strtotime($statement->getOrderDateTo().'+10 days')), 'medium'), 'down');
             if ($hlp->isUdpoActive()) {
                 $this->text(Mage::getSingleton('udropship/source')->setPath('statement_po_type')->getOptionLabel($statement->getPoType()), 'down');
             }
