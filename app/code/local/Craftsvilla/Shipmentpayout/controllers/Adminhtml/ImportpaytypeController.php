@@ -9,7 +9,7 @@ class Craftsvilla_Shipmentpayout_Adminhtml_ImportpaytypeController extends Mage_
      * Constructor
      */
     protected function _construct()
-    {        
+    {
         $this->setUsedModuleName('Shipmentpayout');
     }
 
@@ -51,18 +51,18 @@ class Craftsvilla_Shipmentpayout_Adminhtml_ImportpaytypeController extends Mage_
     /**
      * Importation logic
      * @param string $fileName
-    
+
      */
     protected function _importPayTypeFile($fileName)
     {
         /**
          * File handling
          **/
-		 
+
         ini_set('auto_detect_line_endings', true);
         $csvObject = new Varien_File_Csv();
         $csvData = $csvObject->getData($fileName);
-		
+
         /**
          * File expected fields
          */
@@ -74,13 +74,13 @@ class Craftsvilla_Shipmentpayout_Adminhtml_ImportpaytypeController extends Mage_
             4   => $this->__('Date')
         );
 
-       
+
         /**
          * $k is line number
          * $v is line content array
          */
         $write = Mage::getSingleton('core/resource')->getConnection('core_write');
-        
+
         foreach ($csvData as $k => $v) {
 
             /**
@@ -109,10 +109,10 @@ class Craftsvilla_Shipmentpayout_Adminhtml_ImportpaytypeController extends Mage_
             $dateCsv=$v[4];
 			$date=date('Y-m-d ',strtotime($dateCsv));
 			$date1=date('d-m-Y ',strtotime($dateCsv));
-			
-			$queryShipmentUtr = "update shipmentpayout set payment_amount='".$paymentAmount."',commission_amount='".$commissionAmount."',type='".$paymentType."',shipmentpayout_update_time='".$date."',shipmentpayout_status='1' WHERE shipment_id = '".$shipmentId."'";  
+
+			$queryShipmentUtr = "update shipmentpayout set payment_amount='".$paymentAmount."',commission_amount='".$commissionAmount."',type='".$paymentType."',shipmentpayout_update_time='".$date."',shipmentpayout_status='1' WHERE shipment_id = '".$shipmentId."'";
             $write->query($queryShipmentUtr);
-			
+
            $shipment = Mage::getModel('sales/order_shipment')->loadByIncrementId($shipmentId);
            $vendorId = $shipment['udropship_vendor'];
            $hlp = Mage::helper('udropship');
@@ -129,10 +129,10 @@ class Craftsvilla_Shipmentpayout_Adminhtml_ImportpaytypeController extends Mage_
 				}
 		  //$itemised_total_shippingcost = $shipment['itemised_total_shippingcost'];
 		  $itemised_total_shippingcost = $shipment['base_shipping_amount'];
-		  
-		  
-		  
-		 
+
+
+
+
 		  //$collectionVendor = Mage::getModel('udropship/vendor')->load($vendorId);
 				$couponCodeId = Mage::getModel('salesrule/coupon')->load($order->getCouponCode(), 'code');
 				$_resultCoupon = Mage::getModel('salesrule/rule')->load($couponCodeId->getRuleId());
@@ -144,12 +144,16 @@ class Craftsvilla_Shipmentpayout_Adminhtml_ImportpaytypeController extends Mage_
 					$discountAmountCoupon = $order->getBaseDiscountAmount();
 					$disCouponcode = $order->getCouponCode();
 				}
-			
-           
+
+
 			$read = Mage::getSingleton('core/resource')->getConnection('shipmentpayout_read');
 			$payment = "select * from  sales_flat_order_payment where parent_id = '".$order_id."'";
 			$paymentrd = $read->fetchAll($payment);
 			$method = $paymentrd[0]['method'];
+			$shipmentlogisticcharge = "select * from shipmentpayout where shipment_id = '".$shipmentId."'";
+			$sqlred = $read->fetchAll($shipmentlogisticcharge);
+			$logisticcharge1 = $sqlred[0]['intshipingcost'].'<br>';
+			$logisticcharge = $logisticcharge1*(1+$service_tax);
 			if($method=='cashondelivery')
 			{
 				$method1 = 'COD';
@@ -157,11 +161,17 @@ class Craftsvilla_Shipmentpayout_Adminhtml_ImportpaytypeController extends Mage_
 			else
 			{
 				$method1 = 'Prepaid';
+				/***********SEND SHIPPING CHECK**************/
+				$readOrderCntry = Mage::getSingleton('core/resource')->getConnection('core_read');
+				$senddLogisticAmount = (75*(1+$service_tax));
+				$sqlSenddCheckQuery = "select sfst.`result_extra` from `sales_flat_shipment_track` as sfst LEFT JOIN `sales_flat_shipment` as sfs on sfst.parent_id = sfs.entity_id where sfst.`result_extra` = 'sendd_prepaid' AND sfs.increment_id = '".$shipmentId."'";
+				$resultSendd = $readOrderCntry->query($sqlSenddCheckQuery)->fetch();
+				$readOrderCntry->closeConnection();
+				/***********SEND SHIPPING CHECK**************/
+				if($resultSendd){
+					$logisticcharge = $senddLogisticAmount;
+				}
 			}
-			$shipmentlogisticcharge = "select * from shipmentpayout where shipment_id = '".$shipmentId."'";
-			$sqlred = $read->fetchAll($shipmentlogisticcharge);
-			$logisticcharge1 = $sqlred[0]['intshipingcost'].'<br>';
-			$logisticcharge = $logisticcharge1*(1+$service_tax);
 			//echo $commissionAmount = $sqlred[0]['intshipingcost'];
 			//$querysmsemail = "SELECT sfs.`increment_id` as shipment_id,uv.`email` as email,uv.`telephone`,uv.`vendor_name` as vendor_name FROM `udropship_vendor` as uv,sales_flat_shipment as sfs where sfs.`udropship_vendor` = uv.`vendor_id` and sfs.`increment_id` = '".$shipmentId."'";
 
@@ -176,7 +186,7 @@ class Craftsvilla_Shipmentpayout_Adminhtml_ImportpaytypeController extends Mage_
 			$totalpayment = $totalpayment-$logisticcharge;
 			$cvcommission = ($total_value + $itemised_total_shippingcost + $discountAmountCoupon)*(0.2);
 			$cvsttax = $cvcommission*$service_tax;
-		
+
 			$shipmentvalue = "<table border='0' width='auto'><tr><td style='font-size: 13px;height: 26px;padding: 9px;vertical-align:top;background:#F2F2F2;color:#CE3D49;'>Shipment Value: </td><td style='font-size: 13px;height: 26px;padding: 9px;vertical-align:top;background:#F2F2F2;color:#CE3D49;'>Rs. ".floor($total_value)."</td></tr><tr><td style='font-size: 13px;height: 26px;padding: 9px;vertical-align:top;background:#F2F2F2;color:#CE3D49;'>Discount Amount: </td><td style='font-size: 13px;height: 26px;padding: 9px;vertical-align:top;background:#F2F2F2;color:#CE3D49;'>Rs. ".$discountAmountCoupon."</td></tr><tr><td style='font-size: 13px;height: 26px;padding: 9px;vertical-align:top;background:#F2F2F2;color:#CE3D49;'>ShippingCost: </td><td style='font-size: 13px;height: 26px;padding: 9px;vertical-align:top;background:#F2F2F2;color:#CE3D49;'>Rs. ".$itemised_total_shippingcost."</td></tr><td style='font-size: 13px;height: 26px;padding: 9px;vertical-align:top;background:#F2F2F2;color:#CE3D49;'>Logistic Charge: </td><td style='font-size: 13px;height: 26px;padding: 9px;vertical-align:top;background:#F2F2F2;color:#CE3D49;'>Rs. -".$logisticcharge."</td></tr><tr><td style='font-size: 13px;height: 26px;padding: 9px;vertical-align:top;background:#F2F2F2;color:#CE3D49;'>Service Tax: </td><td style='font-size: 13px;height: 26px;padding: 9px;vertical-align:top;background:#F2F2F2;color:#CE3D49;'>Rs. -".floor($cvsttax)."</td></tr><tr><td style='font-size: 13px;height: 26px;padding: 9px;vertical-align:top;background:#F2F2F2;color:#CE3D49;'>Commission Amount:</strong> </td><td style='font-size: 13px;height: 26px;padding: 9px;vertical-align:top;background:#F2F2F2;color:#CE3D49;'>Rs. -".floor($cvcommission)."</td></tr><tr><td style='font-size: 13px;height: 26px;padding: 9px;vertical-align:top;background:#F2F2F2;color:#CE3D49;'><strong>Total Payment:</strong> </td><td style='font-size: 13px;height: 26px;padding: 9px;vertical-align:top;background:#F2F2F2;color:#CE3D49;'><strong>Rs. ".floor($totalpayment)."</strong></td></tr></table>";
 			$storeId = Mage::app()->getStore()->getId();
 		 	$templatePayid = 'shipmentpayments_to_vendors';
@@ -192,32 +202,32 @@ class Craftsvilla_Shipmentpayout_Adminhtml_ImportpaytypeController extends Mage_
 						'shipmentvalue' => $shipmentvalue,
 						'totalpayment' => $totalpayment,
 						'method' => $method1,
-						
+
 			);
-		
+
 		$emailPayout = Mage::getModel('core/email_template')->setDesignConfig(array('area'=>'frontend', 'store'=>$storeId));
 		$emailPayout->sendTransactional($templatePayid, $sender, $smsEmail,$vendorName,$varSms, $storeId);
-		//$emailPayout->sendTransactional($templatePayid, $sender, 'dileswar@craftsvilla.com',$vendorName,$varSms, $storeId);		
+		//$emailPayout->sendTransactional($templatePayid, $sender, 'dileswar@craftsvilla.com',$vendorName,$varSms, $storeId);
 		//$translate->setTranslateInline(true);
-		
-	//// Added For SMS To Vendor by Dileswar On Dated (08-02-2013)//////    --------------------//////////////	
-		
+
+	//// Added For SMS To Vendor by Dileswar On Dated (08-02-2013)//////    --------------------//////////////
+
 			$_smsServerUrl = Mage::getStoreConfig('sms/general/server_url');
 			$_smsUserName = Mage::getStoreConfig('sms/general/user_name');
 			$_smsPassowrd = Mage::getStoreConfig('sms/general/password');
 			$_smsSource = Mage::getStoreConfig('sms/general/source');
-		
+
 		// Send SMS to Vendor
 		$customerMessage = 'Craftsvilla: Deposited in Your Bank Amount Rs.'.$paymentAmount.' For Shipment# '.$shipmentId.', On Date'.$date1.' Via '.$paymentType.'.';
 		$_customerSmsUrl = $_smsServerUrl."username=".$_smsUserName."&password=".$_smsPassowrd."&type=0&dlr=0&destination=".$smsTelephone."&source=".$_smsSource."&message=".urlencode($customerMessage);
 		$parse_url = file($_customerSmsUrl);
            //    $this->_getSession()->addError($this->__('Can Not Save UTR Number For Order Number - '.$orderId));
-         
+
 		 //  Send email to Vendor....................
-		 
+
 		}
            $this->_getSession()->addSuccess($this->__('Payment Amount And Payment Types are successfully saved & SMS & Email sent to respective Vendors!!!'));
-        
+
     }
-	
+
 }
