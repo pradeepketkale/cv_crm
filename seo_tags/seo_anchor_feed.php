@@ -108,7 +108,8 @@ Select Page Type
 	function saveAnchor() {
 		var xhttp;
 		var anchorTitle= document.getElementById("anchorTitle").value;
-		var anchorLink= document.getElementById("anchorLink").value;
+		var rawAnchorLink= document.getElementById("anchorLink").value;
+		var anchorLink = encodeURIComponent(rawAnchorLink); 
 		var anchorType= document.getElementById("pageType").value;
 		var pageDetail= document.getElementById("pageDetail").value;
 		var anchorSequence= document.getElementById("anchorSequence").value;
@@ -124,7 +125,9 @@ Select Page Type
 			document.getElementById("txtHint").innerHTML =responseData.m;
 		}
 		};
+
 		xhttp.open("POST", "saveAnchor.php?pageDetail="+pageDetail+"&anchor_type="+anchorType+"&anchorLink="+anchorLink+"&anchorTitle="+anchorTitle+"&anchorSequence="+anchorSequence, true);
+		xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 		xhttp.send();  
 	}
 	function cancelConfirm(str) {
