@@ -438,18 +438,11 @@ public function addTrackAction()
         Author: pbketkale@gmail.com (outsourced agent)
     ----------*/
 
-    public function cancelShipmentIndiaPost($trackId, $shipmentId){
+    public function cancelShipmentIndiaPost($trackNumber){
 
-        $track = Mage::getModel('sales/order_shipment_track')->load($trackId);
-
-        if(intval($track->getId()) > 0 && intval($shipmentId) > 0){
-
-
-            $order = Mage::getModel('sales/order_shipment')->load($shipmentId)->getOrder(); 
-            if($order->getIncrementId() > 0){
-
-                $payment_method = $order->getPayment()->getMethodInstance()->getTitle();
-                if(strtolower($payment_method) == strtolower('Cash On Delivery') && strtolower($track->getCourierName()) == 'india post'){
+        //$track = Mage::getModel('sales/order_shipment_track')->load($trackId);
+       // echo $track->getNumber().'<-->'.$trackId ; exit;
+        if($trackNumber){
 
                     // get authenitication token
                     $token =  $this->getSenddToken();
@@ -458,7 +451,7 @@ public function addTrackAction()
                         return NULL;
                     }
 
-                    $requestBody = array('tracking_number'=>$track->getNumber());
+                    $requestBody = array('tracking_number'=>$trackNumber);
                     $model= Mage::getStoreConfig('craftsvilla_config/sendd');
                     $url = $model['base_url'].'core/api/v1/shipment/cancel/';
 
@@ -492,6 +485,7 @@ public function addTrackAction()
                             }
                         }
                         if($httpCode == 400){
+                            return $response;
                             break;
                         }
 
@@ -506,14 +500,9 @@ public function addTrackAction()
                             continue;
                         }        
                     }while($calls > 0); 
-                }
-                else{
-                    return "Not Applicable";
-                }
-            }
-            else{
-                return null;
-            }
+              
+        } else {
+                 return "Not Applicable";
         }
     }
 
@@ -529,7 +518,8 @@ public function addTrackAction()
         $setStatusShipment = $shipmentId = $this->getRequest()->getParam('shipment_id'); 
 
         $track = Mage::getModel('sales/order_shipment_track')->load($trackId);
-        if ($track->getId()) {
+       // echo $track->getNumber(); echo 'dsfs';print_r($track);  exit;
+        if ($track->getNumber()) {
 
             try {
                 if ($shipmentId = $this->_initShipment()) {
@@ -547,16 +537,21 @@ public function addTrackAction()
                     // call to senddnxt API for cancelling cod order
                     try{
 
-                        $status = $this->cancelShipmentIndiaPost($trackId, $shipmentId);
-
+                        $status = $this->cancelShipmentIndiaPost($track->getNumber());
+                        //print_r($status);
                         if($status != "CA" && $status != 'Not Applicable' && $status != ''){
                             $response = array(
                                 'error'     => true,
-                                'message'   => $this->__('Response from sendDNXT for Indiapost - '.$status),
+                                'message'   => $this->__('Response from sendDNXT- '.$status->tracking_number[0]),
                             );
+                            $response = $this->getLayout()->getBlock('shipment_tracking')->toHtml();
                         } 
                         else{
-                            $response = $this->getLayout()->getBlock('shipment_tracking')->toHtml();    
+                            $response = $this->getLayout()->getBlock('shipment_tracking')->toHtml();
+                            //$response = array(
+                            //    'error'     => false,
+                            //    'message'   => $this->__('Response from sendDNXT- '.$status),
+                            //);
                         }                        
 
                     }catch(Exception $e){

@@ -22,7 +22,7 @@
 		$_shippingAddress_value = $_order_id->getShippingAddress();
 		$country_id_value = $_shippingAddress_value->getCountry_id();
     $autoRefundedamount = Mage::helper('udropship')->getrefundCv($_entity->getId());
-    $helpc  =   Mage::helper('udropship');	
+    $helpc  =   Mage::helper('udropship');
     $user = Mage::getSingleton('admin/session')->getUser(); //Added by Ankit for restriction on Damage/Lost in Transit
     $user = $user->email; //Added by Ankit for restriction on Damage/Lost in Transit
     $shipmentId         =   $_entity->getIncrementId();
@@ -37,6 +37,7 @@
      $reverse_pick       =   $servecable->servicable;
 
     $rpu_status_arr    =   array('Return Requested','Return In Transit','Return Delivered','Return RTO');
+
 ?>
 
 <?php $shipmentArray =  Mage::getSingleton('udropship/source')->setPath('shipment_statuses')->toOptionHash();
@@ -46,79 +47,100 @@
         <!-- Add code for prevent change status when its set refund initiated (12)/COD RTO (25) -->
 <?php $checkShipementStatus = array('12','25');
 			$shipmentStatusId = $this->getEntity()->getUdropshipStatus() ;
-			
+
 			// access array
 			$userAccess = array('robin.sequeria@craftsvilla.com','sameer.mantri@craftsvilla.com','Rohit@craftsvilla.com','anderson.kokken@craftsvilla.com','jyoti.arora@craftsvilla.com','tribhuvan@craftsvilla.com','niraj@craftsvilla.com','gaurav@craftsvilla.com','dilipcscare@craftsvilla.com','santoshc@craftsvilla.com','samidha@craftsvilla.com','Seemag@craftsvilla.com','poojaminac@craftsvilla.com','Ayeshab@craftsvilla.com');
-			
+
+		  $payOutUserAccess = array('pravin@craftsvilla.com','bhupendrar@craftsvilla.com','gitap@craftsvilla.com');
+
+			$refundUserAccess = array('pravin@craftsvilla.com');
+
 		/* disable shipment status which is older than 3 month */
 		$monthDiff =  strtotime(date("Y-m-d", strtotime($_entity->getUpdatedAt())) . " +3 month");
 		$finaldate =  date('Y-m-d H:i:s', $monthDiff);
 		$todaydate = date('Y-m-d H:i:s',strtotime(date('Y-m-d H:i:s', strtotime(NOW()))));
-			
+
 		$inc_id = $_entity->getIncrementId();
-		$read = Mage::getSingleton('core/resource')->getConnection('core_read');
+		$read = Mage::getSingleton('core/resource')->getConnection('custom_db');
 		$query = "select shipmentpayout_status from shipmentpayout where shipment_id=".$inc_id;
 		$result = $read->query($query)->fetch();
 		$read->closeConnection();
-		
-		$accessFlag = 0 ; $flag = 0; $payoutFlag =0;
-			
-		if(in_array($shipmentStatusId,$checkShipementStatus)){
+
+		$accessFlag = 0 ; $flag = 0; $payoutFlag = 0; $refundFlag = 0;
+		$payoutStatus =  $result['shipmentpayout_status'];
+		//var_dump($payoutStatus);
+
+		if(in_array($shipmentStatusId,$checkShipementStatus))
+		{
 				if(in_array($user,$userAccess)) {
 						$accessFlag = 0;
 				} else {
 						$accessFlag = 1;
 				}
-				
-		} else if($todaydate > $finaldate){
+		}
+		if($todaydate > $finaldate)
+		{
 				if(in_array($user,$userAccess)) {
 						$flag = 0;
 				} else {
 						$flag = 1;
 				}
-		} else if($result['shipmentpayout_status']){
-				$payoutFlag = 1 ;
 		}
+		if($payoutStatus == '1')
+		{
+				if(in_array($user,$payOutUserAccess)) {
+						$payoutFlag = 0;
+				} else {
+						$payoutFlag = 1;
+				}
+		}
+
+		if(in_array($user,$refundUserAccess)){
+				$refundFlag = 0;
+		} else {
+				$refundFlag = 1;
+		}
+
 ?>
 
 <!-- following shipment status removed
 
-$_label == 'Shipped To Craftsvilla' || $_label == 'Pending Pickup' || $_label == 'Packing Slip Printed' ||  $_label == 'QC Rejected by Craftsvilla' || $_label == 'Partially Refund Initiated' || $_label == 'COD Manifest Shared' || 
+$_label == 'Shipped To Craftsvilla' || $_label == 'Pending Pickup' || $_label == 'Packing Slip Printed' ||  $_label == 'QC Rejected by Craftsvilla' || $_label == 'Partially Refund Initiated' || $_label == 'COD Manifest Shared' ||
 $_label == 'COD Shipment Picked Up'|| $_label == 'Return Recieved From Customer' || $_label == 'Partially Recieved' || $_label == 'Returned By Customer' || $_label == 'Partially Shipped' || $_label == 'Received in Craftsvilla' ||
 
-in_array($shipmentStatusId,$checkShipementStatus) || 
+in_array($shipmentStatusId,$checkShipementStatus) ||
 -->
 
-	
+
 <div id="comments_block">
     <span class="field-row">
         <label class="normal" for="comment_status"><?php echo Mage::helper('sales')->__('Status') ?></label><br/>
 
-    
+
        <select name="comment[status]" class="select" id="comment_status" onchange="showfield(this.options[this.selectedIndex].value)" <?php if($accessFlag == '1' || $flag == '1' || $payoutFlag == '1') echo 'disabled' ?>>
 
-	<?php 
- 
+	<?php
+
       foreach (Mage::getSingleton('udropship/source')->setPath('shipment_statuses')->toOptionHash() as $_code=>$_label):
         		/*
         		*Craftsvilla Comment
         		*Changed Shipped to Shipped To Customer and added one more condition Shipped To Craftsvilla
         		*Added by Suresh on 31-05-2012
         		*/
-        	
-				if($_label == '' || $_label == 'Processing' || $_label == 'Shipped To Customer' || $_label == 'Delivered' || $_label == 'Refund Initiated' || $_label == 'Not Delivered' || $_label == 'Charge Back' || $_label == 'Canceled' || $_label == 'Product Out Of Stock' || $_label == 'Dispute Raised' || $_label == 'Shipment Delayed' || $_label == 'Refund To Do' || $_label == 'Accepted' || $_label == 'COD RTO' || $_label == 'Accept To Ship Directly To Customer'|| $_label == 'Handed To Courier' || $_label == 'Refund Voucher Requested' || $_label == 'Refund Voucher Sent' || $_label == 'PREPAID RTO' || ($_label=='Damage/Lost in transit' && $user == "pravin@craftsvilla.com" || $user == "tarun@craftsvilla.com" || $user == "Ayeshab@craftsvilla.com" || $user == "roshan@craftsvilla.com")): //Modifed by Ankit for restriction on Damage/Lost in Transit
+
+				if($_label == '' || $_label == 'Processing' || $_label == 'Shipped To Customer' || $_label == 'Delivered' || $_label == 'Refund Initiated' || $_label == 'Not Delivered' || $_label == 'Charge Back' || $_label == 'Canceled' || $_label == 'Product Out Of Stock' || $_label == 'Dispute Raised' || $_label == 'Shipment Delayed' || $_label == 'Refund To Do' || $_label == 'Accepted' || $_label == 'COD RTO' || $_label == 'Accept To Ship Directly To Customer'|| $_label == 'Handed To Courier' || $_label == 'Refund Voucher Requested' || $_label == 'Refund Voucher Sent' || $_label == 'PREPAID RTO' || $_label == 'COD RTO in Transit' || ($_label=='Damage/Lost in transit' && $user == "pravin@craftsvilla.com" || $user == "tarun@craftsvilla.com" || $user == "Ayeshab@craftsvilla.com" || $user == "roshan@craftsvilla.com")): //Modifed by Ankit for restriction on Damage/Lost in Transit
         ?>
 				   <option value="<?php echo $_code ?>"<?php if($_code==$this->getEntity()->getUdropshipStatus()): ?> selected="selected" <?php endif; ?>><?php echo $_label ?></option>
+
 			  <!-- check for current status with allow status -->
-				<?php  elseif($currentShipmentStatusId == $_code  && !in_array($_label,$rpu_status_arr)): ?>
+				<?php  elseif($currentShipmentStatusId == $_code && !in_array($_label,$rpu_status_arr)): ?>
 					 <option value="<?php echo $_code ?>"<?php if($_code==$this->getEntity()->getUdropshipStatus()): ?> selected="selected" <?php endif; ?>><?php echo $_label ?></option>
 				<?php endif; ?>
-			   
 				<?php
 				   if($reverse_pick==1){
             if(in_array($_label,$rpu_status_arr)){
         ?>
-            <option value="<?php echo $_code ?>"<?php if($_code==$this->getEntity()->getUdropshipStatus()): ?> selected="selected" <?php endif; ?>><?php echo $_label ?></option>
+            <option value="<?php echo $_code ?>" <?php if($_code==$this->getEntity()->getUdropshipStatus()): ?> selected="selected" <?php endif; ?>><?php echo $_label ?></option>
        <?php } } ?>
 			  <?php endforeach; ?>
         </select>
@@ -142,13 +164,15 @@ in_array($shipmentStatusId,$checkShipementStatus) ||
 
 
 	<!--Added By Dileswar on dated 30-03-2013 for add a extra text box to get the refund amount-->
-<!--mstart-->
-       <div id="div1" style="display: none" ><label for=''>Refund Amount of <font face="Tahoma" size="2" color="green"> Rs: <?php echo $autoRefundedamount?></label> </font><br><input type="text"  name="refundamount" value = "<?php echo $autoRefundedamount?>" id="refundamount" /></div>
-<!--mend-->
-         <div id="div2"></div>
+		<!--mstart-->
+				<div id="div1" style="display: none" >
+						<label for='' style="width: 350px; margin: 5px;">Refund Amount of <font face="Tahoma" size="2" color="green"> Rs: <?php echo $autoRefundedamount?></label> </font><br>
+						<input type="text" <?php if($refundFlag == 1) { echo 'readonly';} ?>  name="refundamount" value = "<?php echo $autoRefundedamount?>" id="refundamount" />				 </div>
+		<!--mend-->
+    <div id="div2"></div>
 		<script type="text/javascript">
 		    $('comment_status').origValue = $('comment_status').value
-	    </script>
+	  </script>
 
         </span>
           <form name="qcreject" action="<?php echo $this->getUrl('udropshipadmin/adminhtml_shipment/qcreject/', array('shipment_id'=>$_entity->getId())); ?>" method="post" enctype="multipart/form-data">
@@ -205,14 +229,24 @@ in_array($shipmentStatusId,$checkShipementStatus) ||
     <?php endforeach; ?>
     </ul>
     </form>
+
+<?php
+		$shipmentId = $this->getRequest()->getParam('shipment_id');
+		$trackingCollection = Mage::getResourceModel('sales/order_shipment_track_collection')
+												->addAttributeToSelect('*')
+												->addAttributeToFilter('parent_id',$shipmentId);
+		$trackId = $trackingCollection->getFirstItem();
+		$trackid = $trackId['number'];
+?>
+
 <script type="text/javascript">
 function submitComment() {
-     var currentStatusId = '<?php echo $shipmentStatusId ?>'; //alert(currentStatusId);
+     var currentStatusId = '<?php echo $shipmentStatusId ?>';
 		 var monthCheck = '<?php echo $flag ?>' ;
 		 var payoutFlag = '<?php echo $payoutFlag ?>';
 		 var userAccess = '<?php echo $accessFlag ?>';
-		
-     if( (currentStatusId == '25' && currentStatusId == '12' && userAccess == '1') || monthCheck == '1' || payoutFlag == '1' )
+
+		 if(((currentStatusId == '25' || currentStatusId == '12') && userAccess == '1') || monthCheck == '1' || payoutFlag == '1' )
      {
      alert('Futher Modification not allow at this stage.');
      return false ;
@@ -251,10 +285,10 @@ function showfield(name)
 		{
 				if(name==23)
 				{
-		
+
 				document.getElementById('div1').style.display = "block";
 				}
-		
+
 				else
 				{
 				document.getElementById('div1').style.display = "none";
@@ -281,7 +315,48 @@ function showfield(name)
 
 
 if ($('submit_comment_button')) {
-    $('submit_comment_button').observe('click', submitComment);
+    $('submit_comment_button').observe('click', function(event){
+			var shipmentStatus = $('comment_status').value;
+			var refundAccess = '<?php echo $refundFlag ?>';
+			var refundAccessTotalAmount = '<?php echo $autoRefundedamount; ?>'
+			var refundUpdateAmount =  $('refundamount').value;
+			if(shipmentStatus == '23' && refundAccess == '1' && refundUpdateAmount != refundAccessTotalAmount ){
+				alert('Further Modification Not Allow');
+				return false;
+			}
+
+			if(shipmentStatus == '6'){
+				var reloadurl = '<?php echo $this->getUrl('udropshipadmin/adminhtml_shipment/senddRequestOnDelete', array('track_id'=>$trackid)) ?>';
+				var trackNo = '<?php echo $trackid ?>';
+				new Ajax.Request(reloadurl, {
+						method: "get",
+						requestHeaders: {Accept: "application/json"},
+						parameters: {track_id:trackNo},
+						onSuccess: function(transport) {
+							var response = transport.responseText.evalJSON();
+							if(response.error){
+								/* condition when track not generated for shipment i.e order not accepted by vendor yet.
+									 allow to cancelled shipment when tracking number not generated.
+								*/
+								if(response.track_no){
+									alert(response.message);
+								}
+							}
+							submitComment();
+						},
+						onFailure: function(transport) {
+							var response = transport.responseText.evalJSON();
+							if(response.error){
+								alert(response.message);
+							} else {
+								submitComment();
+							}
+						}
+				});
+			} else {
+					submitComment();
+			}
+		});
 }
 
 </script>

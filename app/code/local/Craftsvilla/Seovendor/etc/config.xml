@@ -40,20 +40,17 @@
 
 		<acl>
 			<resources>
-			<all>
-				<title>Allow Everything</title>
-			</all>
-			<admin>
-				<children>
-					<sales>
-						<children>
-							<seovendor>
-							<title>Manage Seo Data</title>
-							</seovendor>
-						</children>
-				  </sales>
-				</children>
-			</admin>
+				<admin>
+					<children>
+						<sales>
+							<children>
+								<seovendor translate="title" module="seovendor">
+								<title>SeoVendor Module</title>
+								</seovendor>
+							</children>
+						</sales>
+					</children>
+				</admin>
 			</resources>
 		</acl>
 

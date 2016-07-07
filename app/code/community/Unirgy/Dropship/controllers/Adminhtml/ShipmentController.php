@@ -174,6 +174,17 @@ class Unirgy_Dropship_Adminhtml_ShipmentController extends Mage_Adminhtml_Contro
 
             $statusSaveRes = true;
             if ($status!=$shipment->getUdropshipStatus()) {
+               
+                if($status == 37)
+                {
+                   $shipmentStatus = $statuses[$status];
+                   $sendResponse = $this->returnrequested($shipment_id_value,$shipmentId_value,$reason,$shipmentStatus);
+                   if($sendResponse['error'] == 'true'){
+                    Mage::throwException($this->__($sendResponse['message']));
+                    return false ;
+                   }
+                }
+                    
                 $oldStatus = $shipment->getUdropshipStatus();
                 if (($oldStatus==$statusShipped || $oldStatus==$statusDelivered )
                     && $status!=$statusShipped && $status!=$statusDelivered && $hlp->isUdpoActive()
@@ -232,15 +243,7 @@ class Unirgy_Dropship_Adminhtml_ShipmentController extends Mage_Adminhtml_Contro
                     {
                        $this->deliver($shipment_id_value,$shipmentId_value);
                     }
-                    if($status == 37)
-                    {
-                       $shipmentStatus = $statuses[$status];
-                       $sendResponse = $this->returnrequested($shipment_id_value,$shipmentId_value,$reason,$shipmentStatus);
-                       if($sendResponse == '1'){
-                        Mage::throwException($this->__('Please try again later'));
-                        return false ;
-                       }
-                    }
+                   
                      
 
                 $comment = Mage::getModel('sales/order_shipment_comment')
@@ -320,7 +323,17 @@ class Unirgy_Dropship_Adminhtml_ShipmentController extends Mage_Adminhtml_Contro
                 $shipment->sendUpdateEmail(!empty($data['is_customer_notified']), $data['comment']);
                 $shipment->getCommentsCollection()->save();
             } else {
-
+                
+                if($status == 37)
+                {
+                   $shipmentStatus = $statuses[$status];
+                   $sendResponse = $this->returnrequested($shipment_id_value,$shipmentId_value,$reason,$shipmentStatus);
+                   if($sendResponse['error'] == 'true'){
+                    Mage::throwException($this->__($sendResponse['message']));
+                    return false ;
+                   }
+                }
+                    
                 $comment = Mage::getModel('sales/order_shipment_comment')
                     ->setComment($data['comment'])
                     ->setIsCustomerNotified(isset($data['is_customer_notified']))
@@ -371,15 +384,7 @@ class Unirgy_Dropship_Adminhtml_ShipmentController extends Mage_Adminhtml_Contro
                         }
                         //mend
                     }
-                    if($status == 37)
-                    {
-                       $shipmentStatus = $statuses[$status];
-                       $sendResponse = $this->returnrequested($shipment_id_value,$shipmentId_value,$reason,$shipmentStatus);
-                       if($sendResponse == '1'){
-                        Mage::throwException($this->__('Please try again later'));
-                        return false ;
-                       }
-                    }
+                   
 
                 if (isset($data['is_vendor_notified'])) {
                     Mage::helper('udropship')->sendShipmentCommentNotificationEmail($shipment, $data['comment']);
@@ -1202,8 +1207,11 @@ public function disputeCustomerRemarks($shipment_id_value)
              
             if($response == NULL)
             {
-               $flag=1;
-               return $flag ;
+                $response = array(
+                            'error'     => true,
+                            'message'   => $this->__('Please try again later'),
+                        );
+                return $response;
             }
             
             $awb=   $response->partner_tracking_detail->tracking_number; 
@@ -1234,18 +1242,28 @@ public function disputeCustomerRemarks($shipment_id_value)
                }
             catch (Exception $e){
                 //Mage::throwException($this->__($e->getMessage()));
-                $flag = 1;
-                return $flag;
+                $response = array(
+                            'error'     => true,
+                            'message'   => $this->__($e->getMessage()),
+                        );
+                return $response;
              }
+
             $courierName = $generalcheck_hlp->getCouriernameFromCourierCode($c_company);
             $shipment->setUdropshipStatus(37);
             //Mage::helper('udropship')->addShipmentComment($shipment,('Status has been changed to Return Requested from customer care agent having AWB No:'.$awb.'And CourierName:'.$courierName));
            $commentId = 'Status has been changed to Return Requested from customer care agent having AWB No:'.$awb.'And CourierName:'.$courierName.' due to '.$reason;
-            $commentNew = Mage::getModel('sales/order_shipment_comment')
+           $commentNew = Mage::getModel('sales/order_shipment_comment')
                     ->setComment($commentId)
                     ->setUdropshipStatus($shipmentStatus);
             $shipment->addComment($commentNew);
              $shipment->save();
+        } else {
+            $response = array(
+                            'error'     => true,
+                            'message'   => $this->__('Cannot load track with retrieving identifier.'),
+                        );
+            return $response;
         }
         
        
@@ -1322,6 +1340,53 @@ public function disputeCustomerRemarks($shipment_id_value)
         }            
         $issue = "The Awb Number is not generated for Reverse";
         return $generalcheck_hlp->sendErrorEmail($errorArr, $issue, $incrementId, $vendorId); 
+    }
+
+     /*--------
+        API Call to SendDNXT when shipment status set to deleted (only for)
+     ----------*/
+     
+    public function senddRequestOnDeleteAction(){
+        $trackingId = $this->getRequest()->getParam('track_id');
+        if($trackingId)
+        {
+         // call to senddnxt API for cancelling cod order
+         try{
+                $status = Mage::helper('generalcheck')->senddRequestOnDeleteStatus($trackingId);
+                //echo $status->tracking_number[0];exit;
+                if($status == "CA"){
+                    $response = array(
+                        'error'     => false,
+                        'message'   => $this->__('Response from sendDNXT - CA'),
+                        'track_no'  => true,
+                    );
+                }
+                else if($status != 'Not Applicable' || $status != ''){
+                     $response = array(
+                        'error'     => true,
+                        'message'   => $this->__('Response from sendDNXT - '.$status->tracking_number[0]),
+                        'track_no'  => true,
+                    );
+                }
+            }catch(Exception $e){
+                $response = array(
+                    'error'     => true,
+                    'message'   => $this->__('Error in SendDNXT API call.'),
+                    'track_no'  => true,
+                );
+            }
+        } else {
+            $response = array(
+                'error'     => true,
+                'message'   => $this->__('Cannot load track with retrieving identifier.'),
+                'track_no'  => false,
+            );
+        }
+         if (is_array($response)) {
+                $response = Mage::helper('core')->jsonEncode($response);
+            }
+            $this->getResponse()->setBody($response);
+        
     }
 }
 

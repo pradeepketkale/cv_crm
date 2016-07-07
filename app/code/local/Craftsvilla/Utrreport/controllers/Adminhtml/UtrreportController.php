@@ -171,7 +171,7 @@ public function assignAction()
 	->join(array('b'=>'sales_flat_shipment_grid'), 'b.increment_id=main_table.shipment_id', array('order_created_at'))
 	->joinLeft('sales_flat_order_payment','b.order_id = sales_flat_order_payment.parent_id','method')
 				//->where('main_table.type = "Adjusted Against Refund"');
-				->where('main_table.citibank_utr = "" AND (a.updated_at < DATE_SUB(NOW(),INTERVAL 8 DAY)) AND  main_table.shipmentpayout_status=0 AND a.udropship_status IN (1,17) AND sales_flat_order_payment.method IN ("secureebs_standard","purchaseorder","ccavenue_standard","avenues_standard","payucheckout_shared","free")');
+				->where('main_table.citibank_utr = "" AND (a.updated_at < DATE_SUB(NOW(),INTERVAL 16 DAY)) AND  main_table.shipmentpayout_status=0 AND a.udropship_status IN (1,17) AND sales_flat_order_payment.method IN ("secureebs_standard","purchaseorder","ccavenue_standard","avenues_standard","payucheckout_shared","free")');
 				//->limit(100);// a.udropship_status IN (1,15,17)
 				//->where('b.increment_id' = '100001562');
 				//->where('main_table.shipmentpayout_update_time <= "'.$selected_date_val.' 23:59:59" AND main_table.citibank_utr != "" AND main_table.shipmentpayout_status=0 AND a.udropship_status = 1 AND sales_flat_order_payment.method IN ("secureebs_standard","purchaseorder","ccavenue_standard")');// a.udropship_status IN (1,15,17)
