@@ -284,6 +284,10 @@ var normalizeDate = function (dateString) {
 						<option value="Aramex">Aramex</option>
 						<option value="Fedex">Fedex</option>
 						<option value="Dtdc">Dtdc</option>
+						<option value="India Post">India Post</option>
+						<option value="EcomExpress">EcomExpress</option>
+						<option value="Dhl_int">DHL International</option>
+						<option value="Blue Dart">Blue Dart</option>
 					</select></td>
 					<tr>
 					<td colspan="6" align="center">

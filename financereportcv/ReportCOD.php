@@ -416,6 +416,7 @@ var normalizeDate = function (dateString) {
 									<option value="Return In Transit">Return In Transit</option>
 									<option value="Return Delivered">Return Delivered</option>
 									<option value="Return RTO">Return RTO</option>
+									<option value="COD RTO in Transit">COD RTO in Transit</option>
 								</select>
 
 							</td>
