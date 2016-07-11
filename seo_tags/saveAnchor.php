@@ -10,7 +10,7 @@ $anchor_type= $_GET['anchor_type'];
 $anchorSequence= $_GET['anchorSequence'];
 
 $statsConn = Mage::getSingleton('core/resource')->getConnection('core_read');
-$selectQuery ="Select * from `seo_anchor_tags` where `anchor_type` = '".$anchor_type."' and `anchor_tag` = '".$anchorTitle."'";
+$selectQuery ="Select * from `seo_anchor_tags` where `anchor_type` = '".$anchor_type."' and `page_detail` = '".$pageDetail."' and `anchor_tag` = '".$anchorTitle."'";
 $existingResult = $statsConn->query($selectQuery)->fetchAll();
 if($existingResult) {
 	$message='Anchor Already Exist';
