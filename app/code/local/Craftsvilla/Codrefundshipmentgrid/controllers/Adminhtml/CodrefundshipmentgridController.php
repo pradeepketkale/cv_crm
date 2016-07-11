@@ -484,6 +484,10 @@ $updateCodQuery = "UPDATE `codrefundshipmentgrid` SET `shipment_id`= '".$lastShi
 			$total_amount1 = $shipmentpayout_report1_val['paymentamount'];
 			$shipmentId = $shipmentpayout_report1_val['shipment_id'];
 			$accountNo = "'".$shipmentpayout_report1_val['accountno'];
+			$checkaccountNo = $shipmentpayout_report1_val['accountno'];
+            if(empty($checkaccountNo) || $checkaccountNo == ''){
+                continue;
+            }
 			$beneficiaryName = $shipmentpayout_report1_val['cust_name'];
 			$custEmailID = $shipmentpayout_report1_val['customer_email'];
 			$ifsccode = $shipmentpayout_report1_val['ifsccode'];
