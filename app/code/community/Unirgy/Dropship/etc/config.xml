@@ -1844,6 +1844,17 @@
                     </udropship>
                 </observers>
             </adminhtml_catalog_product_edit_element_types>
+						
+						<craftsvilla_shipment_status_change_after>
+                <observers>
+                    <udropship>
+                        <type>singleton</type>
+                        <class>udropship/observer</class>
+                        <method>shipmentLogInfo</method>
+                    </udropship>
+                </observers>
+            </craftsvilla_shipment_status_change_after>
+						 
         </events>
         <translate>
               <modules>

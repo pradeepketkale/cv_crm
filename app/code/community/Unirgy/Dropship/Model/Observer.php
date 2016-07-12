@@ -495,4 +495,32 @@ class Unirgy_Dropship_Model_Observer extends Varien_Object
             }
         }
     }
+		public function shipmentLogInfo($observer) {
+				$shipment = $observer->getEvent()->getShipment();
+				$user = Mage::getSingleton('admin/session')->getUser();
+				$shipmentIncrementId = $shipment->getIncrementId();
+				$customerId = $shipment->getCustomerId();
+				$statusId = $observer->getEvent()->getStatus(); //$shipment->getUdropshipStatus();
+				$userType = 'A';
+				$createdBy = $user->getUserId(); //$shipment->getUdropshipVendor();
+				$updatedBy = $user->getUserId(); //$shipment->getUdropshipVendor();
+				$creatAt = date('Y-m-d H:m:s');
+				$updateAt = date('Y-m-d H:m:s');
+				
+				//$shipmentArray =  Mage::getSingleton('udropship/source')->setPath('shipment_statuses')->toOptionHash();
+				//$shipmentStatus = $shipmentArray[$statusId];
+				
+				$resource = Mage::getSingleton('core/resource');
+		    $writeConnection = $resource->getConnection('core_write');
+				try{
+				$insertLogQuery = "INSERT INTO `cv_log_shipments` (`shipment_id`, `status`,`user_type`,`created_by`,`created_at`,`updated_by` ,`updated_at`) VALUES ('".$shipmentIncrementId."', '".$statusId."','".$userType."','".$createdBy."','".$creatAt."','".$updatedBy."','".$updateAt."')";
+		    $writeConnection->query($insertLogQuery);
+				$writeConnection->closeConnection();
+				} catch (Exception $e) {
+						//$e->getMessage() ;
+						Mage::logException($e);
+				}
+				//echo '<pre>';print_r($shipment->getData());die('<-hh');
+				
+		}
 }

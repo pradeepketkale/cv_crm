@@ -328,10 +328,10 @@ if ($('submit_comment_button')) {
 				alert('Further Modification Not Allow');
 				return false;
 			}
-		if(shipmentStatus == '7' && deliveryAccess == '1'){
-				alert('Further Modification Not Allow');
-				return false;
-		}
+				if(shipmentStatus == '7' && deliveryAccess == '1'){
+						alert('Further Modification Not Allow');
+						return false;
+				}
 
 			if(shipmentStatus == '6'){
 				var reloadurl = '<?php echo $this->getUrl('udropshipadmin/adminhtml_shipment/senddRequestOnDelete', array('track_id'=>$trackid)) ?>';
