@@ -53,7 +53,8 @@
 
 		  $payOutUserAccess = array('pravin@craftsvilla.com','bhupendrar@craftsvilla.com','gitap@craftsvilla.com');
 
-			$refundUserAccess = array('pravin@craftsvilla.com');
+			$refundUserAccess = array('pravin@craftsvilla.com','tribhuvan@craftsvilla.com');
+			$deliveryuserAccess = array('pravin@craftsvilla.com','tribhuvan@craftsvilla.com','dileswar@craftsvilla.com');
 
 		/* disable shipment status which is older than 3 month */
 		$monthDiff =  strtotime(date("Y-m-d", strtotime($_entity->getUpdatedAt())) . " +3 month");
@@ -66,7 +67,7 @@
 		$result = $read->query($query)->fetch();
 		$read->closeConnection();
 
-		$accessFlag = 0 ; $flag = 0; $payoutFlag = 0; $refundFlag = 0;
+		$accessFlag = 0 ; $flag = 0; $payoutFlag = 0; $refundFlag = 0; $deliveryFlag=0;
 		$payoutStatus =  $result['shipmentpayout_status'];
 		//var_dump($payoutStatus);
 
@@ -100,6 +101,8 @@
 		} else {
 				$refundFlag = 1;
 		}
+		
+		$deliveryFlag = (in_array($user,$deliveryuserAccess)) ? $deliveryFlag = 0 : $deliveryFlag = 1 ;
 
 ?>
 
@@ -320,10 +323,15 @@ if ($('submit_comment_button')) {
 			var refundAccess = '<?php echo $refundFlag ?>';
 			var refundAccessTotalAmount = '<?php echo $autoRefundedamount; ?>'
 			var refundUpdateAmount =  $('refundamount').value;
+			var deliveryAccess = '<?php echo $deliveryFlag ?>';
 			if(shipmentStatus == '23' && refundAccess == '1' && refundUpdateAmount != refundAccessTotalAmount ){
 				alert('Further Modification Not Allow');
 				return false;
 			}
+		if(shipmentStatus == '7' && deliveryAccess == '1'){
+				alert('Further Modification Not Allow');
+				return false;
+		}
 
 			if(shipmentStatus == '6'){
 				var reloadurl = '<?php echo $this->getUrl('udropshipadmin/adminhtml_shipment/senddRequestOnDelete', array('track_id'=>$trackid)) ?>';

@@ -527,12 +527,24 @@ public function addTrackAction()
                     Added by Pradeep (assigned by Dileswar) - 29 March 2016
                     Set shipment status to Processing so vendor can accept and assign new shipment
                     */
+                    
                     $statusProcessing = Unirgy_Dropship_Model_Source::SHIPMENT_STATUS_PROCESSING;
-                    $shipmentStatus = Mage::getModel('sales/order_shipment')->load($setStatusShipment)->setUdropshipStatus($statusProcessing)->save();
-
+                    $commentMsg = 'Agent deleted the tracking id, to create new awb for shipment';
+                    $statuses = Mage::getSingleton('udropship/source')->setPath('shipment_statuses')->toOptionHash();
+                    
+                    $shipment = Mage::getModel('sales/order_shipment')->load($setStatusShipment);
+                    
+                    $commentNew = Mage::getModel('sales/order_shipment_comment')->setComment($commentMsg)->setUdropshipStatus($statuses[$statusProcessing]);
+                    
+                    $shipment->setUdropshipStatus($statusProcessing);
+                    $shipment->addComment($commentNew);
+                    $shipment->save();
+                    
+                    //$shipmentStatus = Mage::getModel('sales/order_shipment')->load($setStatusShipment)->setUdropshipStatus($statusProcessing)->save();
+                    
                     $track->delete();
-
                     $this->loadLayout();
+
 
                     // call to senddnxt API for cancelling cod order
                     try{
