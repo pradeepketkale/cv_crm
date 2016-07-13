@@ -394,7 +394,7 @@ public function productUpdateNotify_retry($productId)
         Mage::app()->removeCache($cacheSenddLoginKey);
         return;
     }
-    
+
 		public function uploadToS3($tempPath, $bucket, $tempFilename)
     {
       $model= Mage::getStoreConfig('craftsvilla_config/amazon_s3');
@@ -407,7 +407,7 @@ public function productUpdateNotify_retry($productId)
       $uploadToAmazonS3 = $s3->putObjectFile($tempPath, $bucket , $tempFilename, S3::ACL_PUBLIC_READ_WRITE);
       return $uploadToAmazonS3;
     }
-		
+
 		public function getCouriernameFromCourierCode($courierCode){
         $courierName = 'UNKNOWN';
         if($courierCode == 'FE'){
@@ -416,6 +416,9 @@ public function productUpdateNotify_retry($productId)
         if($courierCode == 'AX'){
         $courierName = 'ARAMEX';
         }
+        if($courierCode == 'NE'){
+           $courierName = 'NUVOEX';
+       	}
         if($courierCode == 'DT'){
         $courierName = 'DTDC';
         }
@@ -451,7 +454,7 @@ public function productUpdateNotify_retry($productId)
         }
         return $courierName;
     }
-		
+
 		public function senddRequestOnDeleteStatus($trackingId){
         // get authenitication token
         $token =  $this->getSenddToken();
@@ -500,11 +503,11 @@ public function productUpdateNotify_retry($productId)
                 if(!$token){
                     return NULL;
                 }
-                $inputHeader = 'Token '.$token;                                         
+                $inputHeader = 'Token '.$token;
                 $calls--;
                 continue;
-            }        
-        }while($calls > 0); 
+            }
+        }while($calls > 0);
     }
 }
 
