@@ -58,10 +58,10 @@
                 <title>Razorpay</title>
                 <merchant_name_override>Magento</merchant_name_override>
                 <payment_action>authorize_capture</payment_action>
-                <active>0</active>
+                <active>1</active>
                 <order_status>processing</order_status>
-                <key_id>Key ID</key_id>
-                <key_secret>Key Secret</key_secret>
+                <key_id>rzp_test_481qMU1SmyreNu</key_id>
+                <key_secret>ymPUqKBsikb9MIxwtOEjBSAG</key_secret>
             </razorpay>
         </payment>
     </default>
