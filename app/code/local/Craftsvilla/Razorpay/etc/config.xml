@@ -54,7 +54,7 @@
     <default>
         <payment>
             <razorpay>
-                <model>craftsvilla_razorpay/paymentmethod</model>
+                <model>razorpay/paymentmethod</model>
                 <title>Razorpay</title>
                 <merchant_name_override>Magento</merchant_name_override>
                 <payment_action>authorize_capture</payment_action>
