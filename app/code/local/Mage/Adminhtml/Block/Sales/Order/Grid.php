@@ -28,12 +28,12 @@ class Mage_Adminhtml_Block_Sales_Order_Grid extends Mage_Adminhtml_Block_Widget_
                 //added by saurabh for search by sku at grid
 		$collection->getSelect()
                 ->joinLeft('sales_flat_order_payment', 'main_table.entity_id = sales_flat_order_payment.parent_id','method')
-				
+
 				;
                 //->joinLeft('sales_flat_order_address', 'main_table.entity_id = sales_flat_order_address.parent_id',array('telephone' => 'telephone'))
-                //->where("sales_flat_order_address.address_type='billing'") ; 
+                //->where("sales_flat_order_address.address_type='billing'") ;
                 //->joinLeft('sales_flat_order_item', 'main_table.entity_id = sales_flat_order_item.order_id','sku');
-         //echo $collection->getSelect();               
+         //echo $collection->getSelect();
         		//echo '<pre>';print_r($collection);exit;
 		return parent::_prepareCollection();
     }
@@ -74,26 +74,26 @@ class Mage_Adminhtml_Block_Sales_Order_Grid extends Mage_Adminhtml_Block_Widget_
             'header' => Mage::helper('sales')->__('Ship to Name'),
             'index' => 'shipping_name',
         ));
-		
+
 		$this->addColumn('country_id', array(
             'header' => Mage::helper('sales')->__('Country'),
             'renderer' => 'adminhtml/renderer_country',
             ));
-            
+
         /*$this->addColumn('escalate', array(
             'header' => Mage::helper('sales')->__('ESCALATE'),
         	'renderer'  => 'Mage_Adminhtml_Block_Renderer_Escalate',
         	'filter' => false
        ));*/
-		
-		
+
+
 		$this->addColumn('method', array(
             'header'    => Mage::helper('sales')->__('Payment Method Name'),
             'index'     => 'method',
 			'type'		=> 'options',
-			'options'   => array('checkmo' => 'Cash On Delivery Old', 'secureebs_standard' => 'EBS', 'paypal_standard'=>'PayPal Website Payments Standard', 'purchaseorder' =>'EBS-B', 'gharpay_standard' => 'Cash In Advance','cashondelivery' => 'Cash On Delivery','avenues_standard' => 'Ccavenue Payment','m2epropayment' => 'E-Bay Payment','payucheckout_shared' => 'PayU Checkout' ,'retailpay' => 'Retail Pay'),
+			'options'   => array('checkmo' => 'Cash On Delivery Old', 'secureebs_standard' => 'EBS', 'paypal_standard'=>'PayPal Website Payments Standard', 'purchaseorder' =>'EBS-B', 'gharpay_standard' => 'Cash In Advance','cashondelivery' => 'Cash On Delivery','avenues_standard' => 'Ccavenue Payment','m2epropayment' => 'E-Bay Payment','payucheckout_shared' => 'PayU Checkout' ,'retailpay' => 'Retail Pay','razorpay'=>'Razor Pay'),
         ));
-		
+
 		/*$this->addColumn('base_grand_total', array(
             'header' => Mage::helper('sales')->__('G.T. (Base)'),
             'index' => 'base_grand_total',
@@ -108,15 +108,15 @@ class Mage_Adminhtml_Block_Sales_Order_Grid extends Mage_Adminhtml_Block_Widget_
             'currency' => 'order_currency_code',
         ));
 
-           
+
 	    /*$this->addColumn('telephone', array(
             'header' => Mage::helper('sales')->__('Telephone'),
             'index' => 'telephone',
-            
+
         ));*/
-        
-        
-        
+
+
+
         $this->addColumn('status', array(
             'header' => Mage::helper('sales')->__('Status'),
             'index' => 'status',
@@ -129,7 +129,7 @@ class Mage_Adminhtml_Block_Sales_Order_Grid extends Mage_Adminhtml_Block_Widget_
             'header' => Mage::helper('sales')->__('SKU'),
             'index' => 'sku',
         ));*/
-        
+
         if (Mage::getSingleton('admin/session')->isAllowed('sales/order/actions/view')) {
             $this->addColumn('action',
                 array(
@@ -194,7 +194,7 @@ if (Mage::getSingleton('admin/session')->isAllowed('sales/order/actions/view')) 
                  'url'  => $this->getUrl('*/sales_order/massCancel'),
             ));
         }
-		
+
 		if (Mage::getSingleton('admin/session')->isAllowed('sales/order/actions/massUndoAction')) {
         $this->getMassactionBlock()->addItem('changestatus_order', array(
         'label'=> Mage::helper('sales')->__('Undo Cancel'),
@@ -235,7 +235,7 @@ if (Mage::getSingleton('admin/session')->isAllowed('sales/order/actions/view')) 
              'label'=> Mage::helper('sales')->__('Print All'),
              'url'  => $this->getUrl('*/sales_order/pdfdocs'),
         ));
-        
+
         return $this;
     }
 
