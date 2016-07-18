@@ -69,7 +69,7 @@ class Craftsvilla_Shipmentpayout_Block_Adminhtml_Shipmentpayout_Grid extends Mag
 		    'header'    => Mage::helper('sales')->__('Payment Method Name'),
 		    'index'     => 'method',
 			'type'		=> 'options',
-			'options'   => array('free' => 'No Payment Information Required','checkmo' => 'Cash On Delivery Old', 'secureebs_standard' => 'EBS', 'paypal_standard'=>'PayPal Website Payments Standard', 'purchaseorder' =>'EBS-B', 'gharpay_standard' => 'Cash In Advance','cashondelivery' => 'Cash On Delivery','avenues_standard' => 'Ccavenue Payment','ccavenue_standard' => 'Ccavenue Old','m2epropayment' => 'E-Bay Payment','payucheckout_shared' => 'PayU Checkout','retailpay'=>'Retail Pay'),
+			'options'   => array('free' => 'No Payment Information Required','checkmo' => 'Cash On Delivery Old', 'secureebs_standard' => 'EBS', 'paypal_standard'=>'PayPal Website Payments Standard', 'purchaseorder' =>'EBS-B', 'gharpay_standard' => 'Cash In Advance','cashondelivery' => 'Cash On Delivery','avenues_standard' => 'Ccavenue Payment','ccavenue_standard' => 'Ccavenue Old','m2epropayment' => 'E-Bay Payment','payucheckout_shared' => 'PayU Checkout','retailpay'=>'Retail Pay','razorpay'=>'Razor Pay'),
 		));
 
       $this->addColumn('shipmentpayout_update_time', array(
