@@ -101,10 +101,10 @@ class Razorpay_Payments_Model_Paymentmethod extends Mage_Payment_Model_Method_Ab
     public function _getChannel()
     {
         $edition = 'CE';
-        if (Mage::getEdition() == Mage::EDITION_ENTERPRISE)
+        /*if (Mage::getEdition() == Mage::EDITION_ENTERPRISE)
         {
             $edition = 'EE';
-        }
+        }*/
         return sprintf(self::CHANNEL_NAME, $edition, Mage::getVersion(), self::VERSION);
     }
 
