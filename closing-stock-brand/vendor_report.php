@@ -120,12 +120,12 @@ Mage::app();
 			}
 			if(!empty($subcategory)){
 			$readcon = Mage::getSingleton('core/resource')->getConnection('custom_db');
-			$subcategory =   "select value from catalog_category_entity_varchar where entity_id = $subcategory and attribute_id = 31";
-			$subcategory = $readcon->query($subcategory)->fetch(); 
+			$subcatnm =   "select value from catalog_category_entity_varchar where entity_id = $subcategory and attribute_id = 31";
+			$subcatnm = $readcon->query($subcatnm)->fetch(); 
 			$readcon->closeConnection();
 			}
 			
-			$csvResultArr=array($entity_id, $vend_sku['value'],$sku, $productname, $price, $qty, $attarra, $attarrasize, $catname['value'], $category, $subcategory['value'], $vend['vendor_name']);
+			$csvResultArr=array($entity_id, $vend_sku['value'],$sku, $productname, $price, $qty, $attarra, $attarrasize, $catname['value'], $category, $subcatnm['value'], $vend['vendor_name']);
 		   	fputcsv($fp,$csvResultArr, ',', '"');
 		
 		   }
