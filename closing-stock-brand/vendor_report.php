@@ -55,7 +55,7 @@ Mage::app();
 				$readcon->closeConnection();
 				}*/
 				//print_r($vend); exit;
-			$csvResultArr = array('Entity_id','Vendor_Sku','Sku','ProductName','Price','Qty','Color','Size','Category', 'Category_id','Sub-Category', 'vendor name');	
+			$csvResultArr = array('Entity_id', 'vendor_sku','Sku','ProductName','Price','Qty','Color','Size','Category', 'Category_id','Sub-Category', 'vendor name');	
 			$path ='/tmp/'.$csv_name;
 			$fp = fopen($path, 'w');
 			fputcsv($fp, $csvResultArr, ',', '"');
@@ -125,8 +125,7 @@ Mage::app();
 			$readcon->closeConnection();
 			}
 			
-			$vend_sku = '';
-			$csvResultArr=array($entity_id, $vend_sku['value'], $sku, $productname, $price, $qty, $attarra, $attarrasize, $catname['value'], $category, $subcategory['value'], $vend['vendor_name']);
+			$csvResultArr=array($entity_id, $vend_sku['value'],$sku, $productname, $price, $qty, $attarra, $attarrasize, $catname['value'], $category, $subcategory['value'], $vend['vendor_name']);
 		   	fputcsv($fp,$csvResultArr, ',', '"');
 		
 		   }
@@ -159,9 +158,9 @@ Mage::app();
 					</html>";
 
 	    $uid = md5(uniqid(time()));
-	    $to = 'rajesh.bishnoi@tejora.com';
-	    $header = "From: Places <malaniraz@gmail.com>\r\n";
-	    //$header .= "CC: rajesh.bishnoi@tejora.com \r\n";
+	    $to = 'dileswar@craftsvilla.com';
+	    $header = "From: Places <Places@craftsvilla.com>\r\n";
+	    $header .= "CC: rajesh.bishnoi@tejora.com \r\n";
 	    #$header .= "Reply-To: ".$replyto."\r\n";
 	    $header .= "MIME-Version: 1.0\r\n";
 	    $header .= "Content-Type: multipart/mixed; boundary=\"".$uid."\"\r\n\r\n";
