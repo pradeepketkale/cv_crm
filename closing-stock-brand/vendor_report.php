@@ -6,9 +6,10 @@ error_reporting(E_ALL & ~E_NOTICE);
 require_once '../app/Mage.php';
 Mage::app();
 	if (isset($_POST['submit'])) {
+			$msg = '';
 			//echo '<pre>'; print_r($_POST);exit;
 		if (empty($_POST['vendor_id'])) {
-			$error 		= "Invalid Vendor id";
+			$msg 		= "Invalid Vendor id";
 		}else{
 			$readcon 	= Mage::getSingleton('core/resource')->getConnection('custom_db');
 			$vendor_id	= trim($_POST['vendor_id']);
@@ -22,7 +23,7 @@ Mage::app();
 			$readcon 	= Mage::getSingleton('core/resource')->getConnection('custom_db');
 		
 			//$vendor_id = '8489';
-			$orderDetail =   "SELECT `e`.entity_id,`e`.sku,`at_name`.`value` AS productname,`at_price`.`value` AS `price`,`qty`.`qty`,`cat`.`category_id`,`cat`.`sub_category_id`,`cat`.`attributes`,`_table_udropship_vendor`.`value` AS `udropship_vendor` 
+			$orderDetail =   "SELECT `e`.entity_id,`e`.sku,`at_name`.`value` AS productname,`ven_name`.`value` AS vendorsku,`at_price`.`value` AS `price`, `cat_name`.`value` AS `category`, `cat_name`.`entity_id` AS `category_id`, `scat_name`.`value` AS `subcategory`,`cat`.`attributes`,`qty`.`qty`, `_table_udropship_vendor`.`value` AS `udropship_vendor` 
 			FROM `catalog_product_entity` AS `e`
 
 			LEFT JOIN `catalog_product_entity_int` AS `_table_udropship_vendor` 
@@ -31,6 +32,10 @@ Mage::app();
 			LEFT JOIN `catalog_product_entity_varchar` AS `at_name` 
 			ON (`at_name`.`entity_id` = `e`.`entity_id`) 
 			AND  (`at_name`.`attribute_id` = 56)
+			
+			LEFT JOIN `catalog_product_entity_varchar` AS `ven_name` 
+			ON (`ven_name`.`entity_id` = `e`.`entity_id`) 
+			AND  (`ven_name`.`attribute_id` = 644)
 
 			LEFT JOIN `catalog_product_entity_decimal` AS `at_price` 
 			ON (`at_price`.`entity_id` = `e`.`entity_id`)
@@ -39,38 +44,39 @@ Mage::app();
 			LEFT JOIN `cataloginventory_stock_item` AS `qty` 
 			ON (`qty`.`product_id` = `e`.`entity_id`)
 			
+			LEFT JOIN  `catalog_category_entity_varchar` AS `cat_name` 
+               		ON (`cat_name`.`entity_id` = (SELECT category_id FROM `cv_category_product` as `cata`  WHERE `cata`.`product_id` = `e`.`entity_id` )) 
+			AND (`cat_name`.`attribute_id` = 31)
+			
+			LEFT JOIN  `catalog_category_entity_varchar` AS `scat_name` 
+               		ON (`scat_name`.`entity_id` = (SELECT sub_category_id FROM `cv_category_product` as `cata`  WHERE `cata`.`product_id` = `e`.`entity_id` )) 
+			AND (`scat_name`.`attribute_id` = 31) 
+			
 			LEFT JOIN `cv_category_product` AS `cat` 
 			ON (`cat`.`product_id` = `e`.`entity_id`)
-			
+
 			AND (`_table_udropship_vendor`.`store_id` = 0)
-			WHERE (`_table_udropship_vendor`.`value` = $vendor_id)";
+			WHERE (`_table_udropship_vendor`.`value`  = '$vendor_id')";
 
 			$ordersRes = $readcon->query($orderDetail)->fetchAll(); 
-			//$readcon->closeConnection();
-			//echo '<pre>';print_r($ordersRes);
-			/*if(!empty($vendor_id)){
-			
-				$vend_name =   "select vendor_name from udropship_vendor where vendor_id = $vendor_id";
-				$vend = $readcon->query($vend_name)->fetch(); 
-				$readcon->closeConnection();
-				}*/
-				//print_r($vend); exit;
-			$csvResultArr = array('Entity_id', 'vendor_sku','Sku','ProductName','Price','Qty','Color','Size','Category', 'Category_id','Sub-Category', 'vendor name');	
+			$csvResultArr = array('Entity_id','vendor_sku','Sku','ProductName','Price','Qty','Attributes','Category', 'Category_id','Sub-Category', 'vendor name');
 			$path ='/tmp/'.$csv_name;
 			$fp = fopen($path, 'w');
 			fputcsv($fp, $csvResultArr, ',', '"');
 
 		foreach ($ordersRes as $key => $value) {
 			//print_r($value);exit;
-			$entity_id = $value['entity_id'];
-			$sku = $value['sku'];
-			$productname = $value['productname'];
-			$price = $value['price'];
-			$qty = $value['qty'];
-			$category = $value['category_id'];
-			$subcategory = $value['sub_category_id'];
-			$attributes = $value['attributes'];
-			if(!empty($attributes)){
+			$entity_id 	= $value['entity_id'];
+				$sku 		= $value['sku'];
+				$productname 	= $value['productname'];
+				$vendorsku 	= $value['vendorsku'];
+				$price 		= $value['price'];
+				$category 	= $value['category'];
+				$category_id 	= $value['category_id'];
+				$subcategory 	= $value['subcategory'];
+				$attributes 	= $value['attributes'];
+				$qty 		= $value['qty'];
+			/*if(!empty($attributes)){
 				$attributes = json_decode($attributes,true);
 				//echo '<pre>'; print_r($attributes);exit;
 				$attarra = array();
@@ -108,24 +114,9 @@ Mage::app();
 			}else{
 				$attarrasize = ' ';
 			}
-			$readcon = Mage::getSingleton('core/resource')->getConnection('custom_db');
-			$vend_sku =   "select value from catalog_product_entity_varchar where entity_id = $entity_id and attribute_id = 644";
-			$vend_sku = $readcon->query($vend_sku)->fetch(); 
-			$readcon->closeConnection();
-			if(!empty($category)){
-			$readcon = Mage::getSingleton('core/resource')->getConnection('custom_db');
-			$catname =   "select value from catalog_category_entity_varchar where entity_id = $category and attribute_id = 31";
-			$catname = $readcon->query($catname)->fetch(); 
-			$readcon->closeConnection();
-			}
-			if(!empty($subcategory)){
-			$readcon = Mage::getSingleton('core/resource')->getConnection('custom_db');
-			$subcatnm =   "select value from catalog_category_entity_varchar where entity_id = $subcategory and attribute_id = 31";
-			$subcatnm = $readcon->query($subcatnm)->fetch(); 
-			$readcon->closeConnection();
-			}
+			*/
 			
-			$csvResultArr=array($entity_id, $vend_sku['value'],$sku, $productname, $price, $qty, $attarra, $attarrasize, $catname['value'], $category, $subcatnm['value'], $vend['vendor_name']);
+			$csvResultArr=array($entity_id, $vendorsku, $sku, $productname, $price, $qty, $attributes, $category, $category_id, $subcategory, $vend['vendor_name']);
 		   	fputcsv($fp,$csvResultArr, ',', '"');
 		
 		   }
@@ -179,9 +170,11 @@ Mage::app();
 		mail($to, 'Vendor Product Details', $message, $header);
 
 		unlink('/tmp/'.$csv_name);
-		$success = "Successfully generated CSV, Please check your mail id inbox or Spam";
+		$msg = "Successfully generated CSV, Please check your mail id inbox or Spam";
 		}
-		$error = "Invalid Vendor";
+		else {
+			$msg = "Invalid Vendor";
+		}
 	}
 }
 ?>
@@ -268,8 +261,8 @@ Mage::app();
 						<table  width="100%" border="0" cellspacing="0" cellpadding="0" class="tbl_rptjen">
 
 							<tr>
-								<td colspan="2" align="center"><?php echo $error; ?>
-						<?php echo $success; ?></td>
+								<td colspan="2" align="center"><?php //echo $error; ?>
+						<?php echo $msg; ?></td>
 
 							</tr>
 							
