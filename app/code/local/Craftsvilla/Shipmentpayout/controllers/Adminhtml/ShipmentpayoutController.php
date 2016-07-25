@@ -1642,7 +1642,7 @@ class Craftsvilla_Shipmentpayout_Adminhtml_ShipmentpayoutController extends Mage
 				}
 
 				//$gen_random_number = "K".$this->gen_rand();
-                       $vendor_amount = (($total_amount+$itemised_total_shippingcost+$discountAmountCoupon)*(1-($commission_amount/100)*(1+$service_tax)));
+                       $vendor_amount = (($total_amount+$base_shipping_amount+$discountAmountCoupon)*(1-($commission_amount/100)*(1+$service_tax)));
 
 						//$kribha_amount = (($total_amount1+$itemised_total_shippingcost) - $vendor_amount);
 						//change to accomodate 3% Payment gateway charges on dated 20-12-12
