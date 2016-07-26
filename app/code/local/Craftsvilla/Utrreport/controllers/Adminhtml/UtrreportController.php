@@ -190,7 +190,15 @@ public function assignAction()
 				$_liveDate = "2012-08-21 00:00:00";
 				$readOrderCntry = Mage::getSingleton('core/resource')->getConnection('core_read');
 				foreach($shipmentpayout_report1_arr as $shipmentpayout_report1_val)
-				{
+				{	/**********Check Payment Privilege of the Vendor*********/
+			    	$readObj = Mage::getSingleton('core/resource')->getConnection('core_read');
+					$sqlQuery = "SELECT * FROM `vendor_info_craftsvilla` WHERE `payment_privileges` = '0' AND `vendor_id` = " .$shipmentpayout_report1_val['udropship_vendor'];
+					$result = $readObj->query($sqlQuery)->fetch();
+					$readObj->closeConnection();
+					if($result){
+						continue;
+					}
+					/**********Privilege Check Done***********/
 					$merchantIdnew = $this->getMerchantIdCv($shipmentpayout_report1_val['udropship_vendor']);
 					$vendors = Mage::helper('udropship')->getVendor($shipmentpayout_report1_val['udropship_vendor']);
 					$vendorId = $shipmentpayout_report1_val['udropship_vendor'];

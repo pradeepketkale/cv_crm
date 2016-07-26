@@ -330,7 +330,15 @@ class Craftsvilla_Shipmentpayout_Adminhtml_ShipmentpayoutController extends Mage
 		exit();*/
 
     	foreach($shipmentpayout_report1_arr as $shipmentpayout_report1_val)
-	    {
+	    {	/**********Check Payment Privilege of the Vendor*********/
+	    	$readObj = Mage::getSingleton('core/resource')->getConnection('core_read');
+			$sqlQuery = "SELECT `vendor_name` FROM `vendor_info_craftsvilla` WHERE `payment_privileges` = '0' AND `vendor_id` = " .$shipmentpayout_report1_val['udropship_vendor'];
+			$result = $readObj->query($sqlQuery)->fetch();
+			$readObj->closeConnection();
+			if($result){
+				continue;
+			}
+			/**********Privilege Check Done***********/
 			$merchantIdnew = $this->getMerchantIdCv($shipmentpayout_report1_val['udropship_vendor']);
 			$vendors = Mage::helper('udropship')->getVendor($shipmentpayout_report1_val['udropship_vendor']);
 	    	if(($shipmentpayout_report1_val['udropship_vendor'] != '' && ($merchantIdnew!= '')) )
@@ -1583,7 +1591,15 @@ class Craftsvilla_Shipmentpayout_Adminhtml_ShipmentpayoutController extends Mage
 		exit();*/
 
     	foreach($shipmentpayout_report1_arr as $shipmentpayout_report1_val)
-	    {
+	    {	/**********Check Payment Privilege of the Vendor*********/
+	    	$readObj = Mage::getSingleton('core/resource')->getConnection('core_read');
+			$sqlQuery = "SELECT `vendor_name` FROM `vendor_info_craftsvilla` WHERE `payment_privileges` = '0' AND `vendor_id` = " .$shipmentpayout_report1_val['udropship_vendor'];
+			$result = $readObj->query($sqlQuery)->fetch();
+			$readObj->closeConnection();
+			if($result){
+				continue;
+			}
+			/**********Privilege Check Done***********/
 			$vendors = Mage::helper('udropship')->getVendor($shipmentpayout_report1_val['udropship_vendor']);
 			//var_dump($vendors);exit;
 	    	//Checking Valid Account number
