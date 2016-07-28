@@ -149,7 +149,7 @@ Mage::app();
 					</html>";
 
 	    $uid = md5(uniqid(time()));
-	    $to = 'dileswar@craftsvilla.com';
+	    $to = 'aabha.jagota@craftsvilla.com';
 	    $header = "From: Places <Places@craftsvilla.com>\r\n";
 	    $header .= "CC: rajesh.bishnoi@tejora.com \r\n";
 	    #$header .= "Reply-To: ".$replyto."\r\n";
