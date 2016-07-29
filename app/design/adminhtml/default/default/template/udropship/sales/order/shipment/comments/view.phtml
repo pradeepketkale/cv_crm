@@ -69,7 +69,8 @@
 		$result = $read->query($query)->fetch();
 		$read->closeConnection();
 
-		$accessFlag = 0 ; $flag = 0; $payoutFlag = 0; $refundFlag = 0; $deliveryFlag=0; $agentAccessFlag = 0;
+		$accessFlag = 0 ; $flag = 0; $payoutFlag = 0; $refundFlag = 0; $deliveryFlag=0; 
+		$agentUser = 0; $allowAccess=0;
 		$payoutStatus =  $result['shipmentpayout_status'];
 		//var_dump($payoutStatus);
 
@@ -107,8 +108,9 @@
 		$deliveryFlag = (in_array($user,$deliveryuserAccess)) ? $deliveryFlag = 0 : $deliveryFlag = 1 ;
 		
 		// Only Shipment having current status as accepted,process, dispute raised, return requested will be change by agent, rest status are restricted to change.
-		$agentAccessFlag = (!in_array($shipmentStatusId,$agentAcessStatus)) ? (in_array($user,$userAccess)) ? $agentAccessFlag = 0 : $agentAccessFlag = 1 : $agentAccessFlag = 0  ;
-		
+
+		$allowAccess = (!in_array($user,$userAccess) && !in_array($shipmentStatusId,$agentAcessStatus)) ? $allowAccess = 1 : $allowAccess = 0 ;
+		$agentUser = (!in_array($user,$userAccess)) ? $agentUser = 1 : $agentUser = 0;
 
 ?>
 
@@ -126,7 +128,7 @@ in_array($shipmentStatusId,$checkShipementStatus) ||
         <label class="normal" for="comment_status"><?php echo Mage::helper('sales')->__('Status') ?></label><br/>
 
 
-       <select name="comment[status]" class="select" id="comment_status" onchange="showfield(this.options[this.selectedIndex].value)" <?php if($accessFlag == '1' || $flag == '1' || $payoutFlag == '1' || $agentAccessFlag == '1') echo 'disabled' ?>>
+       <select name="comment[status]" class="select" id="comment_status" onchange="showfield(this.options[this.selectedIndex].value)" <?php if($accessFlag == '1' || $flag == '1' || $payoutFlag == '1' || $allowAccess == '1') echo 'disabled' ?>>
 
 	<?php
 
@@ -330,7 +332,7 @@ if ($('submit_comment_button')) {
 			var refundAccessTotalAmount = '<?php echo $autoRefundedamount; ?>'
 			var refundUpdateAmount =  $('refundamount').value;
 			var deliveryAccess = '<?php echo $deliveryFlag ?>';
-			var agentAccess = '<?php echo $agentAccessFlag ?>';
+			var agentUser = '<?php echo $agentUser ?>';
 			var currentStatusId = '<?php echo $shipmentStatusId ?>';
 			
 			if(shipmentStatus == '23' && refundAccess == '1' && refundUpdateAmount != refundAccessTotalAmount ){
@@ -341,13 +343,9 @@ if ($('submit_comment_button')) {
 				alert('Further Modification Not Allow');
 				return false;
 			}
-			if(agentAccess == '1'){
-				alert('Agent Not Have Rights To Change This Shipment Status.');
-				return false;
-			}
 			
 			/* 11: processing status , 24: accepted status , 6:cancelled status */
-			if((currentStatusId == '11' || currentStatusId == '24') && shipmentStatus != '6' && agentAccess == '1'){
+			if(shipmentStatus != '6' && agentUser == '1'){
 				alert('Agent Only Allow To Cancelled Shipement.');
 				return false;
 			}
