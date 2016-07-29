@@ -7,10 +7,10 @@ class Craftsvilla_Vendorneftcode_Adminhtml_VendorneftcodeController extends Mage
 		$this->loadLayout()
 			->_setActiveMenu('vendorneftcode/items')
 			->_addBreadcrumb(Mage::helper('adminhtml')->__('Items Manager'), Mage::helper('adminhtml')->__('Item Manager'));
-		
+
 		return $this;
-	}   
- 
+	}
+
 	public function indexAction() {
 		$this->_initAction()
 			->renderLayout();
@@ -25,18 +25,18 @@ class Craftsvilla_Vendorneftcode_Adminhtml_VendorneftcodeController extends Mage
 
 	public function editAction() {
 		$id     = $this->getRequest()->getParam('vendorinfo_id');
-		
-		
+
+
 		$model  = Mage::getModel('vendorneftcode/vendorneftcode')->load($id);
-		
+
 		if ($model->getId() || $id == 0) {
 			$data = Mage::getSingleton('adminhtml/session')->getFormData(true);
-			
+
 			if (!empty($data)) {
-			
+
 				$model->setData($data);
 			}
-			
+
 			Mage::register('vendorneftcode_data', $model);
 
 			$this->loadLayout();
@@ -56,42 +56,42 @@ class Craftsvilla_Vendorneftcode_Adminhtml_VendorneftcodeController extends Mage
 			$this->_redirect('*/*/');
 		}
 	}
- 
- 
+
+
 	public function newAction() {
 		$this->_forward('edit');
 	}
- 
+
 	public function saveAction() {
 		if ($data = $this->getRequest()->getPost()) {
-			
+
 			/*if(isset($_FILES['filename']['name']) && $_FILES['filename']['name'] != '') {
-				try {	
-					/* Starting upload */	
+				try {
+					/* Starting upload */
 					//$uploader = new Varien_File_Uploader('filename');
-					
+
 					// Any extention would work
 	           		//$uploader->setAllowedExtensions(array('jpg','jpeg','gif','png'));
 					//$uploader->setAllowRenameFiles(false);
-					
-					// Set the file upload mode 
+
+					// Set the file upload mode
 					// false -> get the file directly in the specified folder
-					// true -> get the file in the product like folders 
+					// true -> get the file in the product like folders
 					//	(file.jpg will go in something like /media/f/i/file.jpg)
 					//$uploader->setFilesDispersion(false);
-							
+
 					// We set media as the upload dir
 					//$path = Mage::getBaseDir('media') . DS ;
 					//$uploader->save($path, $_FILES['filename']['name'] );
-					
+
 				//} catch (Exception $e) {
-		      
+
 		       // }
-	        
+
 		        //this way the name is saved in DB
 	  			//$data['filename'] = $_FILES['filename']['name'];
 			//}*/
-	  			
+
 	  		$vendorId = $this->getRequest()->getParam('vendor_id');
 			$vendorName = mysql_escape_string($this->getRequest()->getParam('vendor_name'));
 			$merchantId = mysql_escape_string($this->getRequest()->getParam('merchant_id_city'));
@@ -102,32 +102,38 @@ class Craftsvilla_Vendorneftcode_Adminhtml_VendorneftcodeController extends Mage
 	     $kyc_approved = mysql_escape_string($this->getRequest()->getParam('kyc_approved'));
 		$read = Mage::getSingleton('core/resource')->getConnection('custom_db');
         $write = Mage::getSingleton('core/resource')->getConnection('core_write');
-        
-        $vendorInfoCraftsQuery = "SELECT * FROM `vendor_info_craftsvilla` WHERE `vendor_id` = '".$vendorId."'"; 
+        //var_dump($this->getRequest()->getParam('bulk_privileges'));exit;
+        $vendorInfoCraftsQuery = "SELECT * FROM `vendor_info_craftsvilla` WHERE `vendor_id` = '".$vendorId."'";
 		$vendorInfoCraftsQueryRes = $read->query($vendorInfoCraftsQuery)->fetch();
+		if($bulk_privileges == ''){
+			$bulk_privileges = 'NULL';
+		}
+		if($catalog_privileges == ''){
+			$catalog_privileges = 'NULL';
+		}
 		if($vendorInfoCraftsQueryRes) {
-		
-		$vendorInfoUpdateQuery = "UPDATE `vendor_info_craftsvilla` SET `merchant_id_city`='".$merchantId."',`vendor_name`='".$vendorName."',`catalog_privileges`='".$catalog_privileges."', `logistics_privileges`='".$logistics_privileges."', `payment_privileges`='".$payment_privileges."',`bulk_privileges`='".$bulk_privileges."',`kyc_approved`='".$kyc_approved."' WHERE `vendor_id` = '".$vendorId."'"; 
+
+		$vendorInfoUpdateQuery = "UPDATE `vendor_info_craftsvilla` SET `merchant_id_city`='".$merchantId."',`vendor_name`='".$vendorName."',`catalog_privileges`=".$catalog_privileges.", `logistics_privileges`='".$logistics_privileges."', `payment_privileges`='".$payment_privileges."',`bulk_privileges`=".$bulk_privileges.",`kyc_approved`='".$kyc_approved."' WHERE `vendor_id` = '".$vendorId."'";
 		$vendorInfoUpdateQueryRes = $write->query($vendorInfoUpdateQuery);
-		
+
 		} else {
-		$vendorInfoInsertQuery = "INSERT INTO `vendor_info_craftsvilla`(`vendor_id`, `vendor_name`, `international_order`,`merchant_id_city`,`catalog_privileges`,`logistics_privileges`,`payment_privileges`,`bulk_privileges`, `kyc_approved`) VALUES ($vendorId,'$vendorName',1,'$merchantId','$catalog_privileges','$logistics_privileges','$payment_privileges',0,0)";   
+		$vendorInfoInsertQuery = "INSERT INTO `vendor_info_craftsvilla`(`vendor_id`, `vendor_name`, `international_order`,`merchant_id_city`,`catalog_privileges`,`logistics_privileges`,`payment_privileges`,`bulk_privileges`, `kyc_approved`) VALUES ($vendorId,'$vendorName',1,'$merchantId','$catalog_privileges','$logistics_privileges','$payment_privileges',0,0)";
 		$vendorInfoInsertQueryRes = $write->query($vendorInfoInsertQuery);
-		
+
 		}
 			$model = Mage::getModel('vendorneftcode/vendorneftcode');
-			
+
 			$model->setData($data)
 				->setId($this->getRequest()->getParam('id'));
-			
+
 			try {
 				if ($model->getCreatedTime == NULL || $model->getUpdateTime() == NULL) {
 					$model->setCreatedTime(now())
 						->setUpdateTime(now());
 				} else {
 					$model->setUpdateTime(now());
-				}	
-				
+				}
+
 				//$model->save();
 				Mage::getSingleton('adminhtml/session')->addSuccess(Mage::helper('vendorneftcode')->__('NEFTcode was successfully saved'));
 				Mage::getSingleton('adminhtml/session')->setFormData(false);
@@ -148,15 +154,15 @@ class Craftsvilla_Vendorneftcode_Adminhtml_VendorneftcodeController extends Mage
         Mage::getSingleton('adminhtml/session')->addError(Mage::helper('vendorneftcode')->__('Unable to find item to save'));
         $this->_redirect('*/*/');
 	}
- 
+
 	public function deleteAction() {
 		if( $this->getRequest()->getParam('id') > 0 ) {
 			try {
 				$model = Mage::getModel('vendorneftcode/vendorneftcode');
-				 
+
 				$model->setId($this->getRequest()->getParam('id'))
 					->delete();
-					 
+
 				Mage::getSingleton('adminhtml/session')->addSuccess(Mage::helper('adminhtml')->__('Item was successfully deleted'));
 				$this->_redirect('*/*/');
 			} catch (Exception $e) {
@@ -169,14 +175,14 @@ class Craftsvilla_Vendorneftcode_Adminhtml_VendorneftcodeController extends Mage
 
     public function massDeleteAction() {
         $vendorneftcodeIds = $this->getRequest()->getParam('vendorneftcode');
-        
+
         if(!is_array($vendorneftcodeIds)) {
 			Mage::getSingleton('adminhtml/session')->addError(Mage::helper('adminhtml')->__('Please select item(s)'));
         } else {
             try {
                 foreach ($vendorneftcodeIds as $vendorneftcodeId) {
                     $vendorneftcode = Mage::getModel('vendorneftcode/vendorneftcode')->load($vendorneftcodeId);
-  
+
                     $vendorneftcode->delete();
                 }
                 Mage::getSingleton('adminhtml/session')->addSuccess(
@@ -190,7 +196,7 @@ class Craftsvilla_Vendorneftcode_Adminhtml_VendorneftcodeController extends Mage
         }
         $this->_redirect('*/*/index');
     }
-	
+
     public function massStatusAction()
     {
         $vendorneftcodeIds = $this->getRequest()->getParam('vendorneftcode');
@@ -223,7 +229,7 @@ class Craftsvilla_Vendorneftcode_Adminhtml_VendorneftcodeController extends Mage
         $vendor_name = $model->getVendorName();
         $catalogprivileges_remark = mysql_escape_string($this->getRequest()->getParam('catalog_privileges'));
         $write = Mage::getSingleton('core/resource')->getConnection('core_write');
-        $remarkinsertQuery = "INSERT INTO `vendoractivityremark` SET `vendorid`='".$vendor_id."',`vendorname`='".$vendor_name."',`vendoractivity`='".$catalogprivileges_remark."'"; 
+        $remarkinsertQuery = "INSERT INTO `vendoractivityremark` SET `vendorid`='".$vendor_id."',`vendorname`='".$vendor_name."',`vendoractivity`='".$catalogprivileges_remark."'";
         $remarkinsertrow = $write->query($remarkinsertQuery);
         Mage::getSingleton('adminhtml/session')->addSuccess(Mage::helper('vendorneftcode')->__('Remark was successfully saved'));
       $this->_redirect('*/*/index');
@@ -237,7 +243,7 @@ class Craftsvilla_Vendorneftcode_Adminhtml_VendorneftcodeController extends Mage
          $vendor_name = $model->getVendorName();
          $logisticsprivileges_remark = mysql_escape_string($this->getRequest()->getParam('logistics_privileges'));
          $write = Mage::getSingleton('core/resource')->getConnection('core_write');
-         $remarkinsertQuery = "INSERT INTO `vendoractivityremark` SET `vendorid`='".$vendor_id."',`vendorname`='".$vendor_name."',`vendoractivity`='".$logisticsprivileges_remark."'"; 
+         $remarkinsertQuery = "INSERT INTO `vendoractivityremark` SET `vendorid`='".$vendor_id."',`vendorname`='".$vendor_name."',`vendoractivity`='".$logisticsprivileges_remark."'";
          $remarkinsertrow = $write->query($remarkinsertQuery);
          Mage::getSingleton('adminhtml/session')->addSuccess(Mage::helper('vendorneftcode')->__('Remark was successfully saved'));
       $this->_redirect('*/*/index');
@@ -251,7 +257,7 @@ public function paymentprivilegesAction()
           $vendor_name = $model->getVendorName();
           $paymentprivileges_remark = mysql_escape_string($this->getRequest()->getParam('payment_privileges'));
           $write = Mage::getSingleton('core/resource')->getConnection('core_write');
-          $remarkinsertQuery = "INSERT INTO `vendoractivityremark` SET `vendorid`='".$vendor_id."',`vendorname`='".$vendor_name."',`vendoractivity`='".$paymentprivileges_remark."'"; 
+          $remarkinsertQuery = "INSERT INTO `vendoractivityremark` SET `vendorid`='".$vendor_id."',`vendorname`='".$vendor_name."',`vendoractivity`='".$paymentprivileges_remark."'";
           $remarkinsertrow = $write->query($remarkinsertQuery);
           Mage::getSingleton('adminhtml/session')->addSuccess(Mage::helper('vendorneftcode')->__('Remark was successfully saved'));
       $this->_redirect('*/*/index');
