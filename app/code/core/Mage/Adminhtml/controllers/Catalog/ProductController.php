@@ -726,7 +726,7 @@ class Mage_Adminhtml_Catalog_ProductController extends Mage_Adminhtml_Controller
                         $d[] = array("key"=>"quantity","new_value" => $quantityval);
                     }
                     if(count($d)>0)
-                    {   $array['new']=$d;
+                    {   $array['changes']=$d;
                         $json = json_encode($array);
                         $sql = "INSERT INTO `dev1maindb`.`cv_log_product` (`product_id`, `user_type`, `change_log`, `created_by`, `created_at`, `updated_by`, `updated_at`) VALUES ('$ProductId', '$userType', '$json', '$created_by', '$creatAt', '$updated_by', '$updateAt')";
                         $prisql = $readConn->query($sql);             
