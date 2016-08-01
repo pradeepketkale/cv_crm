@@ -497,11 +497,9 @@ public function addTrackAction()
                             $inputHeader = 'Token '.$token;                                         
                            
                             continue;
-                        } 
-       
-                    }
-                    $calls--;
-                    while($calls > 0); 
+                        }
+                        $calls--;    
+                    }while($calls > 0); 
  		
               
         } else {
