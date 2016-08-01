@@ -64,11 +64,13 @@ class Mage_Adminhtml_Block_Widget_Grid_Column_Filter_Abstract extends Mage_Admin
 
     public function getCondition()
     {
+	//return array('like'=>'%'.$this->_escapeValue($this->getValue()).'%');
 
-	if($router =='shipmentpayout' || $router =='utrreport'){
-		return array('like'=>'%'.$this->_escapeValue($this->getValue()).'%');
-	} else {
+	if (is_numeric($this->_escapeValue($this->getValue()))){
+
 		return array('eq'=>$this->_escapeValue($this->getValue()));
+	} else{
+		return array('like'=>'%'.$this->_escapeValue($this->getValue()).'%');
 	}
     }
 
