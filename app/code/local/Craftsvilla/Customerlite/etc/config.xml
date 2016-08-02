@@ -1,0 +1,83 @@
+<?xml version="1.0"?>
+<config>
+  <modules>
+    <Craftsvilla_Customerlite>
+      <version>0.1.0</version>
+    </Craftsvilla_Customerlite>
+  </modules>
+
+ <admin>
+		<routers>
+			<customerlite>
+				<use>admin</use>
+				<args>
+					<module>Craftsvilla_Customerlite</module>
+					<frontName>customerlite</frontName>
+				</args>
+			</customerlite>
+		</routers>
+	</admin>
+
+	<adminhtml>
+		<menu>
+			<customer>
+				<children>
+					<customerlite module="customerlite">
+					<title>Customer lite</title>
+					<sort_order>100</sort_order>
+					<!--<children>
+						<seovendorbackend module="seovendor">
+						<title>Manage Seo Data</title>
+						<sort_order>0</sort_order>
+						<action>seovendor/adminhtml_seovendorbackend</action>
+						</seovendorbackend>
+					</children>-->
+					 <action>customerlite/adminhtml_customerlite</action>
+					</customerlite>
+				</children>
+			</customer>
+		</menu>
+
+		<acl>
+			<resources>
+				<admin>
+					<children>
+						<sales>
+							<children>
+								<customerlite translate="title" module="customerlite">
+								<title>customerlite Module</title>
+								</customerlite>
+							</children>
+						</sales>
+					</children>
+				</admin>
+			</resources>
+		</acl>
+
+		<layout>
+			<updates>
+			<customerlite>
+				<file>customerlite.xml</file>
+			</customerlite>
+			</updates>
+		</layout>
+  </adminhtml>
+
+  <global>
+    
+
+		
+
+	  <blocks>
+			<customerlite>
+				<class>Craftsvilla_Customerlite_Block</class>
+			</customerlite>
+		</blocks>
+
+		<helpers>
+      <customerlite>
+        <class>Craftsvilla_Customerlite_Helper</class>
+      </customerlite>
+    </helpers>
+	</global>
+</config>
