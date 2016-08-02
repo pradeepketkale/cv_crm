@@ -377,6 +377,18 @@ class EM_DeleteOrder_Block_Adminhtml_Sales_Order_Grid extends Mage_Adminhtml_Blo
 						 )
              )
         ));
+
+    $this->getMassactionBlock()->addItem('updateemail', array(
+             'label'=> Mage::helper('sales')->__('Update Email'),
+             'url'  => $this->getUrl('*/sales_order/updateemail'),
+             'additional' => array(
+                    'visibility' =>array(
+                         'name' => 'email',
+                         'type'  => 'text',
+                         'label' => Mage::helper('sales')->__('Update Email'),
+                         )
+             )
+        ));
 		 
 		return $this;
     }
