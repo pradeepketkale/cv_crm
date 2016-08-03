@@ -1774,7 +1774,7 @@ sum(case when (sfs.udropship_status IN (25,41)) then (sfs.base_shipping_amount+s
 sum(case when (sfs.udropship_status = 12) then (sfs.base_shipping_amount+sfs.base_total_value) else 0 end) as refuntInitiatedGmv
 from sales_flat_shipment sfs
 left join sales_flat_order_payment sfop
-on sfs.order_id = sfop.parent_id where sfs.created_at BETWEEN '".$startDate." 00:00:01' AND '".$endDate." 23:59:59' AND (sfs.base_shipping_amount+sfs.base_total_value) < 250000";
+on sfs.order_id = sfop.parent_id where sfs.created_at BETWEEN '".$startDate." 00:00:01' AND '".$endDate." 23:59:59' AND (sfs.base_shipping_amount+sfs.base_total_value) < 100000";
         $resultNmv       = $readQuery->query($sqlnmv)->fetch();
         $result['totalShippedOrder'] = round(intval($resultNmv['TotalShippedOrder']));
         $result['shippedGMV'] = round(intval($resultNmv['shippedGMV']));
@@ -1784,11 +1784,19 @@ on sfs.order_id = sfop.parent_id where sfs.created_at BETWEEN '".$startDate." 00
         $result['nmvcod'] = round(intval($resultNmv['MnvCOD']));
         $result['nmvothers'] = round(intval($resultNmv['MnvPrepaid']));
         $result['nmv'] = round($resultNmv['MnvCOD'] + $resultNmv['MnvPrepaid']);
-        $sqlgmv = "SELECT  sum(base_grand_total) as gmv,count(*) as TotalOrder from sales_flat_order where base_grand_total < 250000 and created_at BETWEEN '".$startDate." 00:00:01' AND '".$endDate." 23:59:59'";
+        $sqlgmv = "SELECT  sum(sfo.base_grand_total) as gmv,count(*) as TotalOrder,
+sum(case when sfop.method = 'cashondelivery' then sfo.base_grand_total else 0 end) as CODgmv,
+sum(case when sfop.method not in ('cashondelivery','free') then sfo.base_grand_total else 0 end) as Prepaidgmv
+from sales_flat_order sfo
+left join sales_flat_order_payment sfop
+on sfop.parent_id = sfo.entity_id
+where base_grand_total < 100000 and sfo.created_at BETWEEN '".$startDate." 00:00:01' AND '".$endDate." 23:59:59'";
         $resultgmv       = $readQuery->query($sqlgmv)->fetch();
         $result['gmv'] = round(intval($resultgmv['gmv']));
         $result['droppedGmv'] = round(intval($resultgmv['gmv']) - $result['shippedGMV']);
         $result['totalOrder'] = round(intval($resultgmv['TotalOrder']));
+        $result['CODgmv'] = round(intval($resultgmv['CODgmv']));
+        $result['Prepaidgmv'] = round(intval($resultgmv['Prepaidgmv']));
         $readQuery->closeConnection();
         echo (json_encode($result));
     }
