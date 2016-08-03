@@ -64,12 +64,14 @@ class Mage_Adminhtml_Block_Widget_Grid_Column_Filter_Abstract extends Mage_Admin
 
     public function getCondition()
     {
-
-	//$router = $this->getRequest()->getRouteName();
-	//if($router =='shipmentlite'){
-        return array('eq'=>$this->_escapeValue($this->getValue()));
-	//}
 	//return array('like'=>'%'.$this->_escapeValue($this->getValue()).'%');
+
+	if (is_numeric($this->_escapeValue($this->getValue()))){
+
+		return array('eq'=>$this->_escapeValue($this->getValue()));
+	} else{
+		return array('like'=>'%'.$this->_escapeValue($this->getValue()).'%');
+	}
     }
 
     protected function _escapeValue($value)
