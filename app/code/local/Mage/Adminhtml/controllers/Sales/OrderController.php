@@ -2132,5 +2132,33 @@ echo   '<font size=5><b>OrderUltraLite</b></font>
     }
  //----------------------------------------------------end ViewUltralite function-------------------------------------------------------
 
+    public function updateemailAction()
+    {
+        $changeemail = mysql_escape_string($this->getRequest()->getParam('email'));     
+        $orderIds = $this->getRequest()->getPost('order_ids');
+        foreach($orderIds as $orderId)
+        {
+            $orderData = Mage::getModel("sales/order")->load($orderId); //load order by order id
+            $incrementId = $orderData->getIncrementId();
+            $readdb = Mage::getSingleton('core/resource')->getConnection('core_read');
+            $emailQuery = "SELECT `customer_email` FROM `sales_flat_order` WHERE `entity_id` = '".$orderId."' ";
+            $emailAddress = $readdb->query($emailQuery)->fetch();
+            $email =  $emailAddress['customer_email'];
+            $readdb->closeConnection();
+        }
+        
+        if($changeemail){ $emailname = $changeemail; } else { $emailname = $email; } 
+
+        $writeUp = Mage::getSingleton('core/resource')->getConnection('core_write');            
+        $updatedAddQuery = "UPDATE `sales_flat_order_address` SET `email`='".$emailname."' WHERE `parent_id` = '".$orderId."' AND `address_type`='billing'";
+        $writeUp->query($updatedAddQuery);
+
+        $updatedQuery = "UPDATE `sales_flat_order` SET `customer_email`='".$emailname."' WHERE `entity_id` = '".$orderId."' ";
+        $writeUp->query($updatedQuery);
+       
+        $writeUp->closeConnection();
+        Mage::getSingleton('adminhtml/session')->addSuccess(Mage::helper('adminhtml')->__('Email updated Successfully for order: '.$incrementId));
+        $this->_redirect('*/*/');   
+    }
 
 }

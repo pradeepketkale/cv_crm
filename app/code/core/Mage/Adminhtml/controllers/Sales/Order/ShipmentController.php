@@ -439,7 +439,6 @@ public function addTrackAction()
     ----------*/
 
     public function cancelShipmentIndiaPost($trackNumber){
-
         //$track = Mage::getModel('sales/order_shipment_track')->load($trackId);
        // echo $track->getNumber().'<-->'.$trackId ; exit;
         if($trackNumber){
@@ -496,10 +495,12 @@ public function addTrackAction()
                                 return NULL;
                             }
                             $inputHeader = 'Token '.$token;                                         
-                            $calls--;
+                           
                             continue;
-                        }        
+                        }
+                        $calls--;    
                     }while($calls > 0); 
+ 		
               
         } else {
                  return "Not Applicable";

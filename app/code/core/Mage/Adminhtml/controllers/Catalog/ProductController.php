@@ -688,9 +688,79 @@ class Mage_Adminhtml_Catalog_ProductController extends Mage_Adminhtml_Controller
             $product = $this->_initProductSave();
 
             try {
-                $product->save();
-                $productId = $product->getId();
+                $type ='new';
+                $productid = $product->getId();
+                $user = Mage::getSingleton('admin/session')->getUser();
+                $userType = 'A';
+                $created_by = $user->getUserId(); //$shipment->getUdropshipVendor();
+                $updated_by = $user->getUserId(); //$shipment->getUdropshipVendor();
+                $creatAt = date('Y-m-d H:m:s');
+                $updateAt = date('Y-m-d H:m:s');
+               
+                $readConn = Mage::getSingleton('core/resource')->getConnection('custom_db');
+                if($productid!='')
+                {
+                    $type ='change';
+                    $dbprice = "select value from catalog_product_entity_decimal where entity_id = '$productid' and attribute_id = 60 and store_id = 0";
+                    $pricesql = $readConn->query($dbprice)->fetch();
+                    $specialPrice = "select value from catalog_product_entity_decimal where entity_id = '$productid' and attribute_id = 61 and store_id = 0";
+                    $special_pricesql = $readConn->query($specialPrice)->fetch();
+                    $quantity = "select qty from cataloginventory_stock_item where product_id = '$productid'";
+                    $quantitysql = $readConn->query($quantity)->fetch();
+                }               
 
+                $product->save();
+                $ProductId = $product->getId(); 
+                $price = $product->getPrice();
+                $special_price = $product->getSpecialPrice();
+                $stock = Mage::getModel('cataloginventory/stock_item')->loadByProduct($product);
+                $quantityval = $stock->getQty();
+                if($type == 'new')
+                {
+                    $array = array('type' => 'new');
+                    if(!empty($price))
+                    {
+                        $d[] = array("key"=>"price","new_value" => $price); 
+                    }   
+                    if(!empty($special_price))
+                    {
+                        $d[] = array("key"=>"special_price","new_value" => $special_price );         
+                    }
+                    if(!empty($quantityval))
+                    {
+                        $d[] = array("key"=>"quantity","new_value" => $quantityval);
+                    }
+                    if(count($d)>0)
+                    {   $array['changes']=$d;
+                        $json = json_encode($array);
+                        $sql = "INSERT INTO `cv_log_product` (`product_id`, `user_type`, `change_log`, `created_by`, `created_at`, `updated_by`, `updated_at`) VALUES ('$ProductId', '$userType', '$json', '$created_by', '$creatAt', '$updated_by', '$updateAt')";
+                        $prisql = $readConn->query($sql);             
+                    }
+                }
+                else
+                {
+                    $new_array = array('type' => 'change');
+                    if($price != $pricesql['value'])
+                    {
+                        $n[] = array("key"=>"price","old_value" => $pricesql['value'], "new_value" => $price); 
+                    }   
+                    if($special_price != $special_pricesql['value'])
+                    {
+                        $n[] = array("key"=>"special_price","old_value" => $special_pricesql['value'],"new_value" => $special_price );                   
+                    }
+                    if($quantityval != $quantitysql['qty'])
+                    {
+                        $n[] = array("key"=>"quantity","old_value" => $quantitysql['qty'] ,"new_value" => $quantityval);
+                    }
+                    if(count($n)>0)
+                    {   $new_array['changes']=$n;
+                        $json = json_encode($new_array);
+                        $sql = "INSERT INTO `cv_log_product` (`product_id`, `user_type`, `change_log`, `created_by`, `created_at`, `updated_by`, `updated_at`) VALUES ('$productid', '$userType', '$json', '$created_by', '$creatAt', '$updated_by', '$updateAt')";
+                        $pricesql = $readConn->query($sql);             
+                    }
+                }
+                $readConn->closeConnection();
+                 //print_r($json); exit;
                 /**
                  * Do copying data to stores
                  */
