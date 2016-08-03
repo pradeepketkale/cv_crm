@@ -504,9 +504,10 @@ public function productUpdateNotify_retry($productId)
                     return NULL;
                 }
                 $inputHeader = 'Token '.$token;
-                $calls--;
+               
                 continue;
             }
+	$calls--;
         }while($calls > 0);
     }
 }
