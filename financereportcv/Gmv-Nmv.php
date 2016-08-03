@@ -55,12 +55,18 @@ include('session.php');
 						title:{
 							text: "GMV and NMV"
 						},
+						axisX:{
+						        labelFontSize: 17,
+						        margin: 10
+				      	},
 						data: [
 						{
 							// Change type to "doughnut", "line", "splineArea", etc.
 							type: "column",
 							dataPoints: [
 								{ label: "GMV",  y: result.gmv  },
+								{ label: "COD GMV",  y: result.CODgmv  },
+								{ label: "Prepaid GMV",  y: result.Prepaidgmv  },
 								{ label: "Dropped Order GMV", y: result.droppedGmv  },
 								{ label: "Shipped GMV", y: result.shippedGMV  },
 								{ label: "Cancelled Shipment", y: result.cancelledShipmentGmv  },
@@ -152,6 +158,14 @@ include('session.php');
 	</div>
 <!-- 	<div id="mybox">
  -->
+ <div>
+ 	<h3>Notes:</h3>
+ 	 <ul>
+ 	  <li>Condition for 1Lac</li>
+ 	  <li>GMV,Dropped GMV,Total Order,COD GMV, Prepaid GMV is on Order Created date</li>
+ 	  <li>Rest all are on Shipment Created date</li>
+ 	</ul>
+ </div>
  <div id= "loader" style="height: 300px; width: 40%; margin-top: 100px;margin-left: 49%; visibility: collapse;" class="loader"> </div>
  <div id="chartContainer" class="chartContainer" style="height: 500px; width: 50%; margin-top: 100px;margin-left: 20%;"></div>
  <div ><b>Total Order:</b><div id="totalOrder"> </div> <br><br><b>Total Shipped Order</b> <div id="totalShippedOrder"> </div></div>
