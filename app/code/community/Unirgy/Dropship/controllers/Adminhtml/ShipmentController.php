@@ -446,6 +446,12 @@ class Unirgy_Dropship_Adminhtml_ShipmentController extends Mage_Adminhtml_Contro
                 'craftsvilla_shipment_status_save_after',
                 array('shipment'=>$shipment)
             );
+        
+        /* Create event for shipment log information. it will call when shipment status change. */
+            Mage::dispatchEvent(
+                'craftsvilla_shipment_status_change_after',
+                array('shipment'=>$shipment,'status'=>$status)
+            );
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         }
         catch (Mage_Core_Exception $e) {
@@ -877,7 +883,7 @@ $customerShipaddressHtml = "<table border='0' width='750px'><tr><td style='font-
 public function sendDisputeRaisedEmailtoCustomer($shipment_id_value)
 
     {
-+
+
         $user = Mage::getSingleton('admin/session');
         $userFirstname = $user->getUser()->getFirstname();
         $shipmentId_value = $this->getRequest()->getParam('shipment_id');
