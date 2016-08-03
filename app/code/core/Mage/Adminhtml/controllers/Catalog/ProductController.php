@@ -712,6 +712,7 @@ class Mage_Adminhtml_Catalog_ProductController extends Mage_Adminhtml_Controller
                 $product->save();
                 $ProductId = $product->getId(); 
                 $price = $product->getPrice();
+                $special_price = $product->getSpecialPrice();
                 $stock = Mage::getModel('cataloginventory/stock_item')->loadByProduct($product);
                 $quantityval = $stock->getQty();
                 if($type == 'new')
@@ -721,6 +722,10 @@ class Mage_Adminhtml_Catalog_ProductController extends Mage_Adminhtml_Controller
                     {
                         $d[] = array("key"=>"price","new_value" => $price); 
                     }   
+                    if(!empty($special_price))
+                    {
+                        $d[] = array("key"=>"special_price","new_value" => $special_price );         
+                    }
                     if(!empty($quantityval))
                     {
                         $d[] = array("key"=>"quantity","new_value" => $quantityval);
@@ -728,7 +733,7 @@ class Mage_Adminhtml_Catalog_ProductController extends Mage_Adminhtml_Controller
                     if(count($d)>0)
                     {   $array['changes']=$d;
                         $json = json_encode($array);
-                        $sql = "INSERT INTO `dev1maindb`.`cv_log_product` (`product_id`, `user_type`, `change_log`, `created_by`, `created_at`, `updated_by`, `updated_at`) VALUES ('$ProductId', '$userType', '$json', '$created_by', '$creatAt', '$updated_by', '$updateAt')";
+                        $sql = "INSERT INTO `cv_log_product` (`product_id`, `user_type`, `change_log`, `created_by`, `created_at`, `updated_by`, `updated_at`) VALUES ('$ProductId', '$userType', '$json', '$created_by', '$creatAt', '$updated_by', '$updateAt')";
                         $prisql = $readConn->query($sql);             
                     }
                 }
@@ -750,7 +755,7 @@ class Mage_Adminhtml_Catalog_ProductController extends Mage_Adminhtml_Controller
                     if(count($n)>0)
                     {   $new_array['changes']=$n;
                         $json = json_encode($new_array);
-                        $sql = "INSERT INTO `dev1maindb`.`cv_log_product` (`product_id`, `user_type`, `change_log`, `created_by`, `created_at`, `updated_by`, `updated_at`) VALUES ('$productid', '$userType', '$json', '$created_by', '$creatAt', '$updated_by', '$updateAt')";
+                        $sql = "INSERT INTO `cv_log_product` (`product_id`, `user_type`, `change_log`, `created_by`, `created_at`, `updated_by`, `updated_at`) VALUES ('$productid', '$userType', '$json', '$created_by', '$creatAt', '$updated_by', '$updateAt')";
                         $pricesql = $readConn->query($sql);             
                     }
                 }
