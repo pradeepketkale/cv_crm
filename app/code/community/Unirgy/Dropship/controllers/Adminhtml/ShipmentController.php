@@ -122,12 +122,12 @@ class Unirgy_Dropship_Adminhtml_ShipmentController extends Mage_Adminhtml_Contro
         *Added to get order id
         *Added by Suresh on 04-06-2012
         */
-        
+
         $shipmentId_value = $this->getRequest()->getParam('shipment_id');
         $shipment_collection = Mage::getModel('sales/order_shipment')->load($shipmentId_value);
         $shipment_id_value = $shipment_collection->getIncrementId();
         $reason = $this->getRequest()->getPost('returnRequestRemark');
-       
+
         /*End..
         *Craftsvilla Comment
         *Added to get order id
@@ -150,7 +150,7 @@ class Unirgy_Dropship_Adminhtml_ShipmentController extends Mage_Adminhtml_Contro
             if (!is_numeric($dataRefund) && $data['status']==23){
             Mage::throwException($this->__('Only Numeric Value Allow in Refund To Do Dropdown'));
             }
-            
+
             if (empty($dataDispute) && $data['status']==20) {
                     Mage::throwException($this->__('Please Select Reason For Dispute Raise'));
                 }
@@ -174,7 +174,7 @@ class Unirgy_Dropship_Adminhtml_ShipmentController extends Mage_Adminhtml_Contro
 
             $statusSaveRes = true;
             if ($status!=$shipment->getUdropshipStatus()) {
-               
+
                 if($status == 37)
                 {
                    $shipmentStatus = $statuses[$status];
@@ -184,7 +184,7 @@ class Unirgy_Dropship_Adminhtml_ShipmentController extends Mage_Adminhtml_Contro
                     return false ;
                    }
                 }
-                    
+
                 $oldStatus = $shipment->getUdropshipStatus();
                 if (($oldStatus==$statusShipped || $oldStatus==$statusDelivered )
                     && $status!=$statusShipped && $status!=$statusDelivered && $hlp->isUdpoActive()
@@ -243,8 +243,8 @@ class Unirgy_Dropship_Adminhtml_ShipmentController extends Mage_Adminhtml_Contro
                     {
                        $this->deliver($shipment_id_value,$shipmentId_value);
                     }
-                   
-                     
+
+
 
                 $comment = Mage::getModel('sales/order_shipment_comment')
                     ->setComment($commentText)
@@ -266,7 +266,7 @@ class Unirgy_Dropship_Adminhtml_ShipmentController extends Mage_Adminhtml_Contro
                 *Added sendmail to customercare@craftsvilla.com when shipment status Changed to 'Shipped To Craftsvilla'
                 *Added by Suresh on 2-06-2012
                 */
-               
+
                 if($status == 15 || $status == 16 || $status == 17 || $status == 18 )
                 {
                     //$shipment->sendUpdateEmail('suresh.konda@craftsvilla.com', $data['comment']);
@@ -285,7 +285,7 @@ class Unirgy_Dropship_Adminhtml_ShipmentController extends Mage_Adminhtml_Contro
                         $mail->setBody('Shipment Id:#'.$shipment_id_value.' Shipment status changed to "QC Rejected by Craftsvilla"');
                         $mail->setSubject('Shipment Id:#'.$shipment_id_value.' Shipment status changed to "QC Rejected by Craftsvilla"');
                     }
-                   
+
                     if($status == 17)
                     {
                         $mail->setBody('Shipment Id:#'.$shipment_id_value.' Shipment status changed to "Received in Craftsvilla"');
@@ -302,7 +302,7 @@ class Unirgy_Dropship_Adminhtml_ShipmentController extends Mage_Adminhtml_Contro
                         $mail->setBody('Shipment Id:#'.$shipment_id_value.'Shipment status changed to "Shipment Delayed"');
                         $mail->setSubject('Shipment Id:#'.$shipment_id_value.' Shipment status changed to "Shipment Delayed"');
                     }
-                    
+
 
 
                 $mail->setToName('Customercare');
@@ -323,7 +323,7 @@ class Unirgy_Dropship_Adminhtml_ShipmentController extends Mage_Adminhtml_Contro
                 $shipment->sendUpdateEmail(!empty($data['is_customer_notified']), $data['comment']);
                 $shipment->getCommentsCollection()->save();
             } else {
-                
+
                 if($status == 37)
                 {
                    $shipmentStatus = $statuses[$status];
@@ -333,7 +333,7 @@ class Unirgy_Dropship_Adminhtml_ShipmentController extends Mage_Adminhtml_Contro
                     return false ;
                    }
                 }
-                    
+
                 $comment = Mage::getModel('sales/order_shipment_comment')
                     ->setComment($data['comment'])
                     ->setIsCustomerNotified(isset($data['is_customer_notified']))
@@ -384,7 +384,7 @@ class Unirgy_Dropship_Adminhtml_ShipmentController extends Mage_Adminhtml_Contro
                         }
                         //mend
                     }
-                   
+
 
                 if (isset($data['is_vendor_notified'])) {
                     Mage::helper('udropship')->sendShipmentCommentNotificationEmail($shipment, $data['comment']);
@@ -446,7 +446,7 @@ class Unirgy_Dropship_Adminhtml_ShipmentController extends Mage_Adminhtml_Contro
                 'craftsvilla_shipment_status_save_after',
                 array('shipment'=>$shipment)
             );
-        
+
         /* Create event for shipment log information. it will call when shipment status change. */
             Mage::dispatchEvent(
                 'craftsvilla_shipment_status_change_after',
@@ -1193,24 +1193,24 @@ public function disputeCustomerRemarks($shipment_id_value)
     {
         $shipment1 = Mage::getModel('sales/order_shipment');
         $shipment = $shipment1->load($shipentId);
-      
+
         $vendorId = $shipment['udropship_vendor']; //print_r($shipment['udropship_vendor']);//echo $vendorId;
         $requestParams  =   array();
         $readdb         =   Mage::getSingleton('core/resource')->getConnection('custom_db');
         $trackSql       =   "SELECT `number` FROM `sales_flat_shipment_track` WHERE `parent_id` = '$shipentId'";
         $trackInformation   =   $readdb->query($trackSql)->fetch();
         $readdb->closeConnection();
-        
-        
+
+
         if(!empty($trackInformation))
         {
             $trackNumber                =   $trackInformation['number'];
             $requestParams['tracking_number']   =   $trackNumber;
             $jsonInput              =   str_replace('\\/', '/', json_encode($requestParams));
-             
+
             #call sendd api if tracking number exists
             $response               =   $this->senddReverseOrder($jsonInput,$shipentId,$vendorId);
-             
+
             if($response == NULL)
             {
                 $response = array(
@@ -1219,32 +1219,32 @@ public function disputeCustomerRemarks($shipment_id_value)
                         );
                 return $response;
             }
-            
-            $awb=   $response->partner_tracking_detail->tracking_number; 
+
+            $awb=   $response->partner_tracking_detail->tracking_number;
             $shipping_docs      =   $response->partner_tracking_detail->shipping_docs;
             $c_company      =   $response->partner_tracking_detail->company;
             $created_at         =   $response->partner_tracking_detail->tracking_status_updates[0]->created_at;
             $updated_at         =   $response->partner_tracking_detail->tracking_status_updates[0]->updated_at;
             $message_status     =   $response->partner_tracking_detail->tracking_status_updates[0]->message;
             $generalcheck_hlp = Mage::helper('generalcheck');
-             
+
            try{
                 $writedb = Mage::getSingleton('core/resource')->getConnection('core_write');
                 $updatereAwb = "INSERT INTO `sales_flat_shipment_reverse_track`(`shipment_id`, `reverse_awb_no`, `reverse_shipping_docs`,`courier_code`,`reverse_reason`,`created_at`,`updated_at`,`message`,`created_by`,`updated_by`) VALUES ('".$shipment_id_value."','".$awb."','".$shipping_docs."','".$c_company."','".$reason."','".$created_at."','".$updated_at."','".$message_status."','1','1') ";
                 //Mage::log("ShipmentReverseTrack: " .$updatereAwb, null, 'system.log', true).
                 $_updatereAwb = $writedb->query($updatereAwb);
                 $writedb->closeConnection();
-                if(strlen($awb)>0) 
+                if(strlen($awb)>0)
                 {
-                    
+
                     $dest       =   "/tmp/".$shipment_id_value.".pdf";
                     copy($shipping_docs, $dest);
-    
+
                     $bucketName             ='assets1.craftsvilla.com';
                     $imageSlipNameTwo       = 'sendd/barcode/'.$vendorId.'/'.$shipment_id_value.'_invoice_reverse_shipment_label.pdf';
                     $moveToBucketSlipTwo    = $generalcheck_hlp->uploadToS3($dest,$bucketName, $imageSlipNameTwo);
                     unlink($dest);
-                } 
+                }
                }
             catch (Exception $e){
                 //Mage::throwException($this->__($e->getMessage()));
@@ -1271,11 +1271,11 @@ public function disputeCustomerRemarks($shipment_id_value)
                         );
             return $response;
         }
-        
-       
-    
+
+
+
     }
-    
+
     public function senddReverseOrder($jsonInput, $incrementId, $vendorId)
     {
         $generalcheck_hlp = Mage::helper('generalcheck');
@@ -1285,14 +1285,14 @@ public function disputeCustomerRemarks($shipment_id_value)
         {
             return NULL;
         }
-    
+
         $inputHeader = 'Token '.$token; //echo $inputHeader; exit;
         $model= Mage::getStoreConfig('craftsvilla_config/sendd');
         $url = $model['base_url'].'core/api/v1/shipment/reverse/';
 
         $count = 3;
         while($count > 0)
-        { 
+        {
             $curl = curl_init();
             curl_setopt_array($curl, array(
                 CURLOPT_URL => $url,
@@ -1309,14 +1309,14 @@ public function disputeCustomerRemarks($shipment_id_value)
                 ),
             ));
             $result = curl_exec($curl);
-            $response = json_decode($result); 
+            $response = json_decode($result);
            // echo "<pre>";print_r($response);exit; //print_r($response);
             $error = curl_error($curl);
             $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
             curl_close($curl);
             //echo "<pre>";print_r($response);exit;
             if($httpCode == 200 || $httpCode == 201)
-            {       
+            {
                 return $response;
             }
             if($httpCode == 401)
@@ -1333,25 +1333,25 @@ public function disputeCustomerRemarks($shipment_id_value)
             }
             $count--;
         }   //echo "The count is: ".$count; exit;
-        $errorArr = array();        
+        $errorArr = array();
         //$errorArr[] = "The error http status code : " . $httpCode;
         if($response)
         {
-            $response = json_decode($result, true); 
+            $response = json_decode($result, true);
             $errorArr[] = $response ;
         }
         if($error)
         {
-           $errorArr[] = $error; 
-        }            
+           $errorArr[] = $error;
+        }
         $issue = "The Awb Number is not generated for Reverse";
-        return $generalcheck_hlp->sendErrorEmail($errorArr, $issue, $incrementId, $vendorId); 
+        return $generalcheck_hlp->sendErrorEmail($errorArr, $issue, $incrementId, $vendorId);
     }
 
      /*--------
         API Call to SendDNXT when shipment status set to deleted (only for)
      ----------*/
-     
+
     public function senddRequestOnDeleteAction(){
         $trackingId = $this->getRequest()->getParam('track_id');
         if($trackingId)
@@ -1392,7 +1392,14 @@ public function disputeCustomerRemarks($shipment_id_value)
                 $response = Mage::helper('core')->jsonEncode($response);
             }
             $this->getResponse()->setBody($response);
-        
+
     }
+
+     public function refundRazorpayAction(){
+        $order_id = $this->getRequest()->getParam('order_id');
+        $amount = $this->getRequest()->getParam('refundamount');
+        $result = Mage::helper('udropship')->addPrepaidRefundToRMQ($order_id, $amount);
+        echo json_encode($result);
+     }
 }
 

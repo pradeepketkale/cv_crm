@@ -14,7 +14,10 @@
  * @copyright  Copyright (c) 2008-2009 Unirgy LLC (http://www.unirgy.com)
  * @license    http:///www.unirgy.com/LICENSE-M1.txt
  */
-
+require_once __DIR__ . '/../../../../../../lib/amqplib/vendor/autoload.php';
+require_once __DIR__ . '/../../../../../../scripts/rabbitConfig.php';
+use PhpAmqpLib\Connection\AMQPConnection;
+use PhpAmqpLib\Message\AMQPMessage;
 class Unirgy_Dropship_Helper_Data extends Mage_Core_Helper_Abstract
 {
     /**
@@ -4707,5 +4710,21 @@ public function getServicesendd($customerPincode,$vendorPincode){
         //$s3->getBucket($bucket); // Get the files of our bucket
         $uploadToAmazonS3 = $s3->putObjectFile($tempPath, $bucket , $tempFilename, S3::ACL_PUBLIC_READ_WRITE);
         return $uploadToAmazonS3;
+    }
+
+    public function addPrepaidRefundToRMQ($order_id, $amount){
+        $connection = new AMQPConnection(RABBIT_HOST, RABBIT_PORT, RABBIT_USERNAME, RABBIT_PASSWORD);
+        try {
+            $channel = $connection->channel();
+            $msg = new AMQPMessage(json_encode(array('order_id' => $order_id, 'amount' => $amount)),array('delivery_mode' => 2));
+            $channel->basic_publish($msg, "", "razorpay_refund_q");//$argv[1] the name of queue
+            $channel->close();
+            $connection->close();
+            $msg = 'Success: Rs.' . $amount . " will be refunded soon";
+            $response = array('status' => 'success', 'message' => $msg );
+        }  catch (Exception $e){
+            $response =array('status' => 'falied', 'message' => 'Refund Faliled: Please try again. ' . $e->getMessage());
+        }
+        return $response;
     }
 }

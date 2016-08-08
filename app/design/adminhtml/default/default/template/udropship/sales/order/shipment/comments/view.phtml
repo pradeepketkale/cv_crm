@@ -19,8 +19,11 @@
 <?php if ($_entity = $this->getEntity()): ?>
 <?php
    	$_order_id = $_entity->getOrder();
-		$_shippingAddress_value = $_order_id->getShippingAddress();
-		$country_id_value = $_shippingAddress_value->getCountry_id();
+   	$order_inc_id = ($_order_id->getIncrementId());
+   	$payment_method = $_order_id->getPayment()->getMethodInstance()->getTitle();
+   	echo $payment_method;
+	$_shippingAddress_value = $_order_id->getShippingAddress();
+	$country_id_value = $_shippingAddress_value->getCountry_id();
     $autoRefundedamount = Mage::helper('udropship')->getrefundCv($_entity->getId());
     $helpc  =   Mage::helper('udropship');
     $user = Mage::getSingleton('admin/session')->getUser(); //Added by Ankit for restriction on Damage/Lost in Transit
@@ -101,7 +104,7 @@
 		} else {
 				$refundFlag = 1;
 		}
-		
+
 		$deliveryFlag = (in_array($user,$deliveryuserAccess)) ? $deliveryFlag = 0 : $deliveryFlag = 1 ;
 
 ?>
@@ -324,14 +327,35 @@ if ($('submit_comment_button')) {
 			var refundAccessTotalAmount = '<?php echo $autoRefundedamount; ?>'
 			var refundUpdateAmount =  $('refundamount').value;
 			var deliveryAccess = '<?php echo $deliveryFlag ?>';
-			if(shipmentStatus == '23' && refundAccess == '1' && refundUpdateAmount != refundAccessTotalAmount ){
+			var $payment_method = '<?php echo $payment_method ?>';
+			/*if(shipmentStatus == '23' && refundAccess == '1' && refundUpdateAmount != refundAccessTotalAmount ){
 				alert('Further Modification Not Allow');
 				return false;
 			}
-				if(shipmentStatus == '7' && deliveryAccess == '1'){
-						alert('Further Modification Not Allow');
-						return false;
-				}
+			if(shipmentStatus == '7' && deliveryAccess == '1'){
+					alert('Further Modification Not Allow');
+					return false;
+			}*/
+			if(shipmentStatus == '23' && $payment_method == 'Razorpay'){
+				var reloadurl = '<?php echo $this->getUrl('udropshipadmin/adminhtml_shipment/refundRazorpay', array('order_id'=>$order_inc_id)) ?>';
+				//alert(reloadurl); return false;
+				var trackNo = '<?php echo $trackid ?>';
+				new Ajax.Request(reloadurl, {
+						method: "get",
+						requestHeaders: {Accept: "application/json"},
+						parameters: {refundamount:refundUpdateAmount},
+						onSuccess: function(transport) {
+							var response = transport.responseText.evalJSON();
+							window.myResponse = response;
+							submitComment();
+							alert(response.message);
+						},
+						onFailure: function(transport) {
+							var response = transport.responseText.evalJSON();
+							alert('Falied: Please try again');
+						}
+				});
+			}
 
 			if(shipmentStatus == '6'){
 				var reloadurl = '<?php echo $this->getUrl('udropshipadmin/adminhtml_shipment/senddRequestOnDelete', array('track_id'=>$trackid)) ?>';
