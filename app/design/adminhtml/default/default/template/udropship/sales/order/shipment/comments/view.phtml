@@ -50,14 +50,20 @@
 		$shipmentStatusId = $this->getEntity()->getUdropshipStatus() ;
 		$agentAcessStatus = array('11','20','24','37');
 
-		// access array
-		$userAccess = array('robin.sequeria@craftsvilla.com','sameer.mantri@craftsvilla.com','Rohit@craftsvilla.com','anderson.kokken@craftsvilla.com','jyoti.arora@craftsvilla.com','tribhuvan@craftsvilla.com','niraj@craftsvilla.com','gaurav@craftsvilla.com','dilipcscare@craftsvilla.com','santoshc@craftsvilla.com','samidha@craftsvilla.com','Seemag@craftsvilla.com','poojaminac@craftsvilla.com','Ayeshab@craftsvilla.com');
+		// array for user role having access for change 90 days old shipment status.
+		$userAccess = array('robin.sequeria@craftsvilla.com','sameer.mantri@craftsvilla.com','Rohit@craftsvilla.com','anderson.kokken@craftsvilla.com','jyoti.arora@craftsvilla.com','tribhuvan@craftsvilla.com','niraj@craftsvilla.com','gaurav@craftsvilla.com','dilipcscare@craftsvilla.com','santoshc@craftsvilla.com','samidha@craftsvilla.com','Seemag@craftsvilla.com','poojaminac@craftsvilla.com','Ayeshab@craftsvilla.com','pravin@craftsvilla.com');
 
-		  $payOutUserAccess = array('pravin@craftsvilla.com','bhupendrar@craftsvilla.com','gitap@craftsvilla.com','tribhuvan@craftsvilla.com');
+		// array for user role having access for shipment status having shipmentpayout status set .
+		$payOutUserAccess = array('pravin@craftsvilla.com','bhupendrar@craftsvilla.com','gitap@craftsvilla.com','tribhuvan@craftsvilla.com');
 
-			$refundUserAccess = array('pravin@craftsvilla.com','tribhuvan@craftsvilla.com');
-			$deliveryuserAccess = array('pravin@craftsvilla.com','tribhuvan@craftsvilla.com','dileswar@craftsvilla.com');
+        // array for user role having access for refund todo shipment status.
+		$refundUserAccess = array('pravin@craftsvilla.com','tribhuvan@craftsvilla.com');
+		// array for user role having access for delivery shipment status
+		$deliveryuserAccess = array('pravin@craftsvilla.com','tribhuvan@craftsvilla.com','dileswar@craftsvilla.com');
 
+		// create an array for all user role .
+		$userRoleArray = array_unique(array_merge($userAccess, $payOutUserAccess,$refundUserAccess,$deliveryuserAccess));
+		
 		/* disable shipment status which is older than 3 month */
 		$monthDiff =  strtotime(date("Y-m-d", strtotime($_entity->getUpdatedAt())) . " +3 month");
 		$finaldate =  date('Y-m-d H:i:s', $monthDiff);
@@ -98,19 +104,15 @@
 				$payoutFlag = 1;
 			}
 		}
-
-		if(in_array($user,$refundUserAccess)){
-			$refundFlag = 0;
-		} else {
-			$refundFlag = 1;
-		}
-		
+        
+        // flag that use while changing current status at js code .
+		$refundFlag = (in_array($user,$refundUserAccess)) ? $refundFlag = 0 : $refundFlag = 1;
 		$deliveryFlag = (in_array($user,$deliveryuserAccess)) ? $deliveryFlag = 0 : $deliveryFlag = 1 ;
 		
 		// Only Shipment having current status as accepted,process, dispute raised, return requested will be change by agent, rest status are restricted to change.
 
-		$allowAccess = (!in_array($user,$userAccess) && !in_array($shipmentStatusId,$agentAcessStatus)) ? $allowAccess = 1 : $allowAccess = 0 ;
-		$agentUser = (!in_array($user,$userAccess)) ? $agentUser = 1 : $agentUser = 0;
+		$allowAccess = (!in_array($user,$userRoleArray) && !in_array($shipmentStatusId,$agentAcessStatus)) ? $allowAccess = 1 : $allowAccess = 0 ;
+		$agentUser = (!in_array($user,$userRoleArray)) ? $agentUser = 1 : $agentUser = 0;
 
 ?>
 
@@ -126,9 +128,34 @@ in_array($shipmentStatusId,$checkShipementStatus) ||
 <div id="comments_block">
     <span class="field-row">
         <label class="normal" for="comment_status"><?php echo Mage::helper('sales')->__('Status') ?></label><br/>
+       <!--  check for agent user role-->
+   <?php if(!in_array($user,$userRoleArray)): ?>
+         <!-- if user is agent then only sepcific status will shown -->
+	<select name="comment[status]" class="select" id="comment_status" onchange="showfield(this.options[this.selectedIndex].value)" <?php if($accessFlag == '1' || $flag == '1' || $payoutFlag == '1' || $allowAccess == '1') echo 'disabled' ?>>
+           
+	<?php
 
+		foreach (Mage::getSingleton('udropship/source')->setPath('shipment_statuses')->toOptionHash() as $_code=>$_label):
+        		if($_label == '' || $_label == 'Processing' || $_label == 'Accepted' || $_label == 'Delivered' || $_label == 'Canceled'): 
+     ?>   		
+			   		<option value="<?php echo $_code ?>"<?php if($_code==$this->getEntity()->getUdropshipStatus()): ?> selected="selected" <?php endif; ?>><?php echo $_label ?></option>
 
-       <select name="comment[status]" class="select" id="comment_status" onchange="showfield(this.options[this.selectedIndex].value)" <?php if($accessFlag == '1' || $flag == '1' || $payoutFlag == '1' || $allowAccess == '1') echo 'disabled' ?>>
+			  <!-- check for current status with allow status -->
+		<?php  elseif($currentShipmentStatusId == $_code && !in_array($_label,$rpu_status_arr)): ?>
+					<option value="<?php echo $_code ?>"<?php if($_code==$this->getEntity()->getUdropshipStatus()): ?> selected="selected" <?php endif; ?>><?php echo $_label ?></option>
+		<?php endif; ?>
+				<?php
+				   if($reverse_pick==1){
+				if(in_array($_label,$rpu_status_arr)){
+				?>
+					<option value="<?php echo $_code ?>" <?php if($_code==$this->getEntity()->getUdropshipStatus()): ?> selected="selected" <?php endif; ?>><?php echo $_label ?></option>
+				<?php } } ?>
+	  <?php endforeach; ?>
+    </select>
+
+   <?php else : ?>
+     <!-- if user is not agent then allowed status will display respective authorised user role -->
+	<select name="comment[status]" class="select" id="comment_status" onchange="showfield(this.options[this.selectedIndex].value)" <?php if($accessFlag == '1' || $flag == '1' || $payoutFlag == '1' ) echo 'disabled' ?>>
 
 	<?php
 
@@ -141,20 +168,21 @@ in_array($shipmentStatusId,$checkShipementStatus) ||
 
 				if($_label == '' || $_label == 'Processing' || $_label == 'Shipped To Customer' || $_label == 'Delivered' || $_label == 'Refund Initiated' || $_label == 'Not Delivered' || $_label == 'Charge Back' || $_label == 'Canceled' || $_label == 'Product Out Of Stock' || $_label == 'Dispute Raised' || $_label == 'Shipment Delayed' || $_label == 'Refund To Do' || $_label == 'Accepted' || $_label == 'COD RTO' || $_label == 'Accept To Ship Directly To Customer'|| $_label == 'Handed To Courier' || $_label == 'Refund Voucher Requested' || $_label == 'Refund Voucher Sent' || $_label == 'PREPAID RTO' || $_label == 'COD RTO in Transit' || ($_label=='Damage/Lost in transit' && $user == "pravin@craftsvilla.com" || $user == "tarun@craftsvilla.com" || $user == "Ayeshab@craftsvilla.com" || $user == "roshan@craftsvilla.com")): //Modifed by Ankit for restriction on Damage/Lost in Transit
         ?>
-				   <option value="<?php echo $_code ?>"<?php if($_code==$this->getEntity()->getUdropshipStatus()): ?> selected="selected" <?php endif; ?>><?php echo $_label ?></option>
+			   		<option value="<?php echo $_code ?>"<?php if($_code==$this->getEntity()->getUdropshipStatus()): ?> selected="selected" <?php endif; ?>><?php echo $_label ?></option>
 
 			  <!-- check for current status with allow status -->
-				<?php  elseif($currentShipmentStatusId == $_code && !in_array($_label,$rpu_status_arr)): ?>
-					 <option value="<?php echo $_code ?>"<?php if($_code==$this->getEntity()->getUdropshipStatus()): ?> selected="selected" <?php endif; ?>><?php echo $_label ?></option>
-				<?php endif; ?>
+		<?php  elseif($currentShipmentStatusId == $_code && !in_array($_label,$rpu_status_arr)): ?>
+					<option value="<?php echo $_code ?>"<?php if($_code==$this->getEntity()->getUdropshipStatus()): ?> selected="selected" <?php endif; ?>><?php echo $_label ?></option>
+		<?php endif; ?>
 				<?php
 				   if($reverse_pick==1){
-            if(in_array($_label,$rpu_status_arr)){
-        ?>
-            <option value="<?php echo $_code ?>" <?php if($_code==$this->getEntity()->getUdropshipStatus()): ?> selected="selected" <?php endif; ?>><?php echo $_label ?></option>
-       <?php } } ?>
-			  <?php endforeach; ?>
-        </select>
+				if(in_array($_label,$rpu_status_arr)){
+				?>
+					<option value="<?php echo $_code ?>" <?php if($_code==$this->getEntity()->getUdropshipStatus()): ?> selected="selected" <?php endif; ?>><?php echo $_label ?></option>
+				<?php } } ?>
+	  <?php endforeach; ?>
+    </select>
+<?php endif; ?>
 <!--mstart-->
 <select  id="disputeremarks"  name="disputeremarks"  style="display: none;margin-top:8px; width:203px; ">
 	<option value="" >Select Reason</option>
@@ -259,7 +287,7 @@ function submitComment() {
 
 	if(((currentStatusId == '25' || currentStatusId == '12') && userAccess == '1') || monthCheck == '1' || payoutFlag == '1' )
      {
-     alert('Futher Modification not allow at this stage.');
+     alert('Futher Modification Not Allow At This Stage.');
      return false ;
      }
      else if (validateShipmentStatusSubmit()) {
@@ -335,12 +363,27 @@ if ($('submit_comment_button')) {
 			var agentUser = '<?php echo $agentUser ?>';
 			var currentStatusId = '<?php echo $shipmentStatusId ?>';
 			
+			// check for RefundToDo Status i.e only refund todo user role allow to change prices
 			if(shipmentStatus == '23' && refundAccess == '1' && refundUpdateAmount != refundAccessTotalAmount ){
 				alert('Further Modification Not Allow');
 				return false;
 			}
+
+        	// prevent refund todo role from access other shipment current status .
+			if(currentStatusId != '23' && refundAccess == '0' && refundUpdateAmount != refundAccessTotalAmount ){
+				alert('Only RefundToDo Shipment Status Allow To Access.');
+				return false;
+			}
+			
+			// check for delivery access user i.e current status is delivery then only delivery user role allow to change it.
 			if(shipmentStatus == '7' && deliveryAccess == '1'){
 				alert('Further Modification Not Allow');
+				return false;
+			}
+
+			// prevent delivery user role from access other shipment status .
+			if(currentStatusId != '7' && deliveryAccess == '0'){
+				alert('Only Delivery Shipment Status Allow To Access.');
 				return false;
 			}
 			
