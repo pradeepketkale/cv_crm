@@ -370,7 +370,7 @@ if ($('submit_comment_button')) {
 			}
 
         	// prevent refund todo role from access other shipment current status .
-			if(currentStatusId != '23' && refundAccess == '0' && refundUpdateAmount != refundAccessTotalAmount ){
+			if(shipmentStatus != '23' && refundAccess == '0'){
 				alert('Only RefundToDo Shipment Status Allow To Access.');
 				return false;
 			}
