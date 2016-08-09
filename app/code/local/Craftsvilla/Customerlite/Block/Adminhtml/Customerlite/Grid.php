@@ -58,7 +58,9 @@ class Craftsvilla_Customerlite_Block_Adminhtml_Customerlite_Grid extends Mage_Ad
       $collection = Mage::getResourceModel('customer/customer_collection')
             ->addNameToSelect()
             ->addAttributeToSelect('email')
-            ->joinAttribute('billing_telephone', 'customer_address/telephone', 'default_billing', null, 'left');
+            ->joinAttribute('billing_telephone', 'customer_address/telephone', 'default_billing', null, 'left')
+	    ->setPageSize(20)
+	    ->setCurPage(1);
         $this->setCollection($collection);
         return parent::_prepareCollection();
     }
