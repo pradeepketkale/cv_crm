@@ -24,7 +24,7 @@
 				<children>
 					<customerlite module="customerlite">
 					<title>Customer lite</title>
-					<sort_order>100</sort_order>
+					<sort_order>0</sort_order>
 					<!--<children>
 						<seovendorbackend module="seovendor">
 						<title>Manage Seo Data</title>
