@@ -72,7 +72,7 @@ class Unirgy_Dropship_Block_Adminhtml_Vendor_Statement_Grid extends Mage_Adminht
             'type'      => 'price',
             'currency_code' => Mage::app()->getStore()->getBaseCurrency()->getCode(),
         ));
-        
+
         if ($hlp->isUdpayoutActive()) {
             $this->addColumn('total_paid', array(
                 'header'    => $hlp->__('Total Paid'),
@@ -110,7 +110,7 @@ class Unirgy_Dropship_Block_Adminhtml_Vendor_Statement_Grid extends Mage_Adminht
              'url'  => $this->getUrl('*/*/massDelete'),
              'confirm' => Mage::helper('udropship')->__('Deleting selected statement(s). Are you sure?')
         ));
-        
+
         $this->getMassactionBlock()->addItem('refresh', array(
              'label'=> Mage::helper('udropship')->__('Refresh'),
              'url'  => $this->getUrl('*/*/massRefresh', array('_current'=>true)),
@@ -121,12 +121,17 @@ class Unirgy_Dropship_Block_Adminhtml_Vendor_Statement_Grid extends Mage_Adminht
              'url'  => $this->getUrl('*/*/massDownload', array('_current'=>true)),
         ));
 
+        $this->getMassactionBlock()->addItem('downloadLogistic', array(
+             'label'=> Mage::helper('udropship')->__('Download Logistic'),
+             'url'  => $this->getUrl('*/*/massDownloadLogistic', array('_current'=>true)),
+        ));
+
         $this->getMassactionBlock()->addItem('email', array(
              'label'=> Mage::helper('udropship')->__('Send Emails'),
              'url'  => $this->getUrl('*/*/massEmail', array('_current'=>true)),
              'confirm' => Mage::helper('udropship')->__('Emailing selected statement(s) to vendors. Are you sure?')
         ));
-		
+
 		// Added By Dileswar   On Dated 14-02-2013//////////////////////////////////////////
 		$_months = array();
 		$year = Mage::app()->getLocale()->date()->get(Zend_date::YEAR);
@@ -134,7 +139,7 @@ class Unirgy_Dropship_Block_Adminhtml_Vendor_Statement_Grid extends Mage_Adminht
         for ($i = 0; $i < 12; $i++) {
 			$_monthNum = ($monthNum+12 -$i) % 12;
 			if ($_monthNum == 0) $_monthNum = 12;
-			
+
 			if ($monthNum <= $i)
 			{
 				$_year = $year - 1;
@@ -144,7 +149,7 @@ class Unirgy_Dropship_Block_Adminhtml_Vendor_Statement_Grid extends Mage_Adminht
 			}
            $_months[$i] = Mage::app()->getLocale()->date(mktime(null,null,null,$_monthNum))->get(Zend_date::MONTH_NAME).' '.$_year;
 		}
-			
+
 		$this->getMassactionBlock()->addItem('statementRdr1',  array(
              'label'=> Mage::helper('udropship')->__('StatementRdr1'),
              'url'  => $this->getUrl('*/*/statementRdr1', array('_current'=>true)),
@@ -160,11 +165,11 @@ class Unirgy_Dropship_Block_Adminhtml_Vendor_Statement_Grid extends Mage_Adminht
 															'required'  => true,
 															'type' => 'select',
 														 ),
-														
+
 													 )
-													 
+
         ));
-		
+
 		$this->getMassactionBlock()->addItem('statementOrdr',  array(
              'label'=> Mage::helper('udropship')->__('StatementOrdr'),
              'url'  => $this->getUrl('*/*/statementOrdr', array('_current'=>true)),
@@ -180,14 +185,14 @@ class Unirgy_Dropship_Block_Adminhtml_Vendor_Statement_Grid extends Mage_Adminht
 															'required'  => true,
 															'type' => 'select',
 														 ),
-														
+
 													 )
-													 
+
         ));
-	
+
         return $this;
     }
-    
+
     public function getRowUrl($row)
     {
         return $this->getUrl('*/*/edit', array('id' => $row->getId()));
