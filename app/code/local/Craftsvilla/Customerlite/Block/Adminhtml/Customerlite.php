@@ -16,6 +16,7 @@ public function __construct()
 	$this->_blockGroup = 'customerlite';
         $this->_headerText = Mage::helper('customerlite')->__('Customer Lite');
         //$this->_addButtonLabel = Mage::helper('customerlite')->__('Add New Customer');
+	$this->_removeButton('add');
         parent::__construct();
     }
 }
