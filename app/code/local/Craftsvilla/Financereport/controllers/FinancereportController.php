@@ -1919,4 +1919,33 @@ where base_grand_total < 100000 and sfo.created_at BETWEEN '".$startDate." 00:00
             echo $htmlDiv;
         }
     }
+
+    public function shipmentStatusToDeliveredAction()
+    {   //var_dump($_POST);exit;
+        $data = explode(",", $_POST['param']) ;
+        $falied_id = "";
+        foreach ($data as $key => $value) {
+            $write = Mage::getSingleton('core/resource')->getConnection('core_write');
+            $sql = "";
+            $sql = "UPDATE `sales_flat_shipment` sfs LEFT JOIN `sales_flat_order_payment` AS sfop ON `sfs`.`order_id` = `sfop`.`parent_id` SET sfs.`udropship_status` = 7 WHERE sfs.`increment_id` = '".$value."' AND sfop.`method` = 'cashondelivery'";
+            $result = $write->exec($sql);
+            if($result == 0){
+                $falied_id .= '<br>' . $value;
+            } else {
+                $creatAt = date('Y-m-d H:m:s');
+                $updateAt = date('Y-m-d H:m:s');
+                $insertLogQuery = "INSERT INTO `cv_log_shipments` (`shipment_id`, `status`,`user_type`,`created_by`,`created_at`,`updated_by` ,`updated_at`) VALUES ('".$value."', '7','A','148','".$creatAt."','148','".$updateAt."')";
+                $write->query($insertLogQuery);
+                $shipment = Mage::getModel('sales/order_shipment')->loadByIncrementId($value);
+                Mage::helper('udropship')->addShipmentComment($shipment, 'Status changed by Finance Department');
+                $shipment->save();
+            }
+            $write->closeConnection();
+        }
+        if (strlen($falied_id) > 0){
+            echo "Partial Update.. <b>Failed Shipments :</b> " . $falied_id;
+        } else {
+            echo "Update Successful";
+        }
+    }
 }

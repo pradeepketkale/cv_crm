@@ -172,9 +172,9 @@ include('session.php');
 					</div>
 
 					<div class="col-1-3 padding_top" >
-						<a href="#">
+						<a href="shipmentsToDelivered.php">
 						<div class="container_inner1 bg7 ">
-						<h3>Upcoming</h3>
+						<h3>Shipment's to Delivered Status</h3>
 
 						</div>
 						</a>
