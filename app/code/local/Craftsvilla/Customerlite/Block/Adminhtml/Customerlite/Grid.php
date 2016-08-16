@@ -34,7 +34,7 @@ class Craftsvilla_Customerlite_Block_Adminhtml_Customerlite_Grid extends Mage_Ad
 		LEFT JOIN `customer_address_entity_varchar` AS `_table_billing_telephone` 
 	    ON (`_table_billing_telephone`.`entity_id` = `_table_default_billing`.`value`) 
 	    AND (`_table_billing_telephone`.`attribute_id` = '29')
-		WHERE (`e`.`entity_type_id` = '1') LIMIT 10";
+		WHERE (`e`.`entity_type_id` = '1') LIMIT 30";
 
 		$cusDetails =  $readConnection->query($selectcus)->fetchAll();
 		$readConnection->closeConnection();
@@ -42,18 +42,11 @@ class Craftsvilla_Customerlite_Block_Adminhtml_Customerlite_Grid extends Mage_Ad
 		$collection = new Varien_Data_Collection();
 
 		    foreach($cusDetails as $cusDetail){
-		      //$vendorObj = new Varien_Object();
-		      //$vendorObj->setData($vendorDetail);
 		      $collection->addItem(new Varien_Object($cusDetail));
 		    }
 
 		    $this->setCollection($collection);
-			$collection->getSelect();
-		    return parent::_prepareCollection();
-	//echo '<pre>';print_r( $collection);
-		   //return Mage_Adminhtml_Block_Widget_Grid::_prepareCollection();
-		   // return $this;
-	    */
+		    return parent::_prepareCollection();*/
 
       $collection = Mage::getResourceModel('customer/customer_collection')
             ->addNameToSelect()
