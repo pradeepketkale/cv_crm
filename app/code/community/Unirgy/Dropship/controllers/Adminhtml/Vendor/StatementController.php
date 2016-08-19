@@ -785,6 +785,45 @@ class Unirgy_Dropship_Adminhtml_Vendor_StatementController extends Mage_Adminhtm
         $this->_redirect('*/*/');
     }
 
+    public function massDownloadLogisticAction()
+    {
+        $objIds = (array)$this->getRequest()->getParam('statement');
+        if (!is_array($objIds)) {
+            $this->_getSession()->addError($this->__('Please select statement(s)'));
+        }
+        try {
+            $generator = Mage::getModel('udropship/pdf_statement')->before();
+            $statement = Mage::getModel('udropship/vendor_statement');
+            foreach ($objIds as $id) {
+                $statement = Mage::getModel('udropship/vendor_statement')->load($id);
+                if (!$statement->getId()) {
+                    continue;
+                }
+                //$generator->addStatement($statement);
+                $generator->addStatementCraftsvillaLogistic($statement);
+            }
+
+            $pdf = $generator->getPdf();
+
+            if (empty($pdf->pages)) {
+                Mage::throwException(Mage::helper('udropship')->__('No statements found to print'));
+            }
+
+            //Commented by Dileswar on dated 08-03-2013 for stopping statement order total report
+
+            //$generator->insertTotalsPage()->after();
+            Mage::helper('udropship')->sendDownload('statements.pdf', $pdf->render(), 'application/x-pdf');
+        }
+        catch (Mage_Core_Model_Exception $e) {
+            $this->_getSession()->addError($e->getMessage());
+        }
+        catch (Exception $e) {
+            $this->_getSession()->addException($e, $this->__('There was an error while download vendor statement(s): %s', $e->getMessage()));
+        }
+
+        $this->_redirect('*/*/');
+    }
+
     public function massEmailAction()
     {
         $objIds = (array)$this->getRequest()->getParam('statement');

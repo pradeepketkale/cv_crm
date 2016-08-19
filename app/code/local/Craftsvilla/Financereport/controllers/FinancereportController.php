@@ -1770,11 +1770,11 @@ sum(sfs.base_shipping_amount+sfs.base_total_value) as shippedGMV,
 sum(case when (sfs.udropship_status = 1 and sfop.method not in ('cashondelivery','free')) then (sfs.base_shipping_amount+sfs.base_total_value) else 0 end) as MnvPrepaid,
 sum(case when (sfs.udropship_status = 7 and sfop.method = 'cashondelivery') then (sfs.base_shipping_amount+sfs.base_total_value) else 0 end) as MnvCOD,
 sum(case when (sfs.udropship_status = 6) then (sfs.base_shipping_amount+sfs.base_total_value) else 0 end) as cancelledShipmentGmv,
-sum(case when (sfs.udropship_status IN (25,41)) then (sfs.base_shipping_amount+sfs.base_total_value) else 0 end) as rtoGmv,
+sum(case when (sfs.udropship_status IN (25,41,42)) then (sfs.base_shipping_amount+sfs.base_total_value) else 0 end) as rtoGmv,
 sum(case when (sfs.udropship_status = 12) then (sfs.base_shipping_amount+sfs.base_total_value) else 0 end) as refuntInitiatedGmv
 from sales_flat_shipment sfs
 left join sales_flat_order_payment sfop
-on sfs.order_id = sfop.parent_id where sfs.created_at BETWEEN '".$startDate." 00:00:01' AND '".$endDate." 23:59:59' AND (sfs.base_shipping_amount+sfs.base_total_value) < 250000";
+on sfs.order_id = sfop.parent_id where sfs.created_at BETWEEN '".$startDate." 00:00:01' AND '".$endDate." 23:59:59' AND (sfs.base_shipping_amount+sfs.base_total_value) < 100000";
         $resultNmv       = $readQuery->query($sqlnmv)->fetch();
         $result['totalShippedOrder'] = round(intval($resultNmv['TotalShippedOrder']));
         $result['shippedGMV'] = round(intval($resultNmv['shippedGMV']));
@@ -1784,11 +1784,19 @@ on sfs.order_id = sfop.parent_id where sfs.created_at BETWEEN '".$startDate." 00
         $result['nmvcod'] = round(intval($resultNmv['MnvCOD']));
         $result['nmvothers'] = round(intval($resultNmv['MnvPrepaid']));
         $result['nmv'] = round($resultNmv['MnvCOD'] + $resultNmv['MnvPrepaid']);
-        $sqlgmv = "SELECT  sum(base_grand_total) as gmv,count(*) as TotalOrder from sales_flat_order where base_grand_total < 250000 and created_at BETWEEN '".$startDate." 00:00:01' AND '".$endDate." 23:59:59'";
+        $sqlgmv = "SELECT  sum(sfo.base_grand_total) as gmv,count(*) as TotalOrder,
+sum(case when sfop.method = 'cashondelivery' then sfo.base_grand_total else 0 end) as CODgmv,
+sum(case when sfop.method not in ('cashondelivery','free') then sfo.base_grand_total else 0 end) as Prepaidgmv
+from sales_flat_order sfo
+left join sales_flat_order_payment sfop
+on sfop.parent_id = sfo.entity_id
+where base_grand_total < 100000 and sfo.created_at BETWEEN '".$startDate." 00:00:01' AND '".$endDate." 23:59:59'";
         $resultgmv       = $readQuery->query($sqlgmv)->fetch();
         $result['gmv'] = round(intval($resultgmv['gmv']));
         $result['droppedGmv'] = round(intval($resultgmv['gmv']) - $result['shippedGMV']);
         $result['totalOrder'] = round(intval($resultgmv['TotalOrder']));
+        $result['CODgmv'] = round(intval($resultgmv['CODgmv']));
+        $result['Prepaidgmv'] = round(intval($resultgmv['Prepaidgmv']));
         $readQuery->closeConnection();
         echo (json_encode($result));
     }
@@ -1909,6 +1917,35 @@ on sfs.order_id = sfop.parent_id where sfs.created_at BETWEEN '".$startDate." 00
             $htmlDiv .="<center><div style=' text-color:black; width:700px; height:200px; background-color:#ccc; padding-top:2px; padding:5px; box-shadow: 1px 1px 1px #888888;'>";
             $htmlDiv .="<div style='font-size:20px; padding-top:8px; text-align:center;'>You have entered wrong Awb Number.<br/><br/><a href='http://localcadmin.craftsvilla.com/financereportcv/AwbToCsv.php' style='float:center; '>Go Back</a> </div></div></center>";
             echo $htmlDiv;
+        }
+    }
+
+    public function shipmentStatusToDeliveredAction()
+    {   //var_dump($_POST);exit;
+        $data = explode(",", $_POST['param']) ;
+        $falied_id = "";
+        foreach ($data as $key => $value) {
+            $write = Mage::getSingleton('core/resource')->getConnection('core_write');
+            $sql = "";
+            $sql = "UPDATE `sales_flat_shipment` sfs LEFT JOIN `sales_flat_order_payment` AS sfop ON `sfs`.`order_id` = `sfop`.`parent_id` SET sfs.`udropship_status` = 7 WHERE sfs.`increment_id` = '".$value."' AND sfop.`method` = 'cashondelivery'";
+            $result = $write->exec($sql);
+            if($result == 0){
+                $falied_id .= '<br>' . $value;
+            } else {
+                $creatAt = date('Y-m-d H:m:s');
+                $updateAt = date('Y-m-d H:m:s');
+                $insertLogQuery = "INSERT INTO `cv_log_shipments` (`shipment_id`, `status`,`user_type`,`created_by`,`created_at`,`updated_by` ,`updated_at`) VALUES ('".$value."', '7','A','148','".$creatAt."','148','".$updateAt."')";
+                $write->query($insertLogQuery);
+                $shipment = Mage::getModel('sales/order_shipment')->loadByIncrementId($value);
+                Mage::helper('udropship')->addShipmentComment($shipment, 'Status changed by Finance Department');
+                $shipment->save();
+            }
+            $write->closeConnection();
+        }
+        if (strlen($falied_id) > 0){
+            echo "Partial Update.. <b>Failed Shipments :</b> " . $falied_id;
+        } else {
+            echo "Update Successful";
         }
     }
 }
