@@ -1770,7 +1770,7 @@ sum(sfs.base_shipping_amount+sfs.base_total_value) as shippedGMV,
 sum(case when (sfs.udropship_status = 1 and sfop.method not in ('cashondelivery','free')) then (sfs.base_shipping_amount+sfs.base_total_value) else 0 end) as MnvPrepaid,
 sum(case when (sfs.udropship_status = 7 and sfop.method = 'cashondelivery') then (sfs.base_shipping_amount+sfs.base_total_value) else 0 end) as MnvCOD,
 sum(case when (sfs.udropship_status = 6) then (sfs.base_shipping_amount+sfs.base_total_value) else 0 end) as cancelledShipmentGmv,
-sum(case when (sfs.udropship_status IN (25,41)) then (sfs.base_shipping_amount+sfs.base_total_value) else 0 end) as rtoGmv,
+sum(case when (sfs.udropship_status IN (25,41,42)) then (sfs.base_shipping_amount+sfs.base_total_value) else 0 end) as rtoGmv,
 sum(case when (sfs.udropship_status = 12) then (sfs.base_shipping_amount+sfs.base_total_value) else 0 end) as refuntInitiatedGmv
 from sales_flat_shipment sfs
 left join sales_flat_order_payment sfop
