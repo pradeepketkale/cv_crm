@@ -415,27 +415,27 @@ public function assignAction()
 				}
 
 				/************Functionality to Adjust Small balance Amount*********************/
-				if($utrBalance <= 50){
-					$readQuery = Mage::getSingleton('core/resource')->getConnection('custom_db');
-					$queryUtrShipmentCount = "select shipment_id , todo_commission_amount from shipmentpayout where citibank_utr = '".$utrNum."'";
-					$resultUtrShipment = $readQuery->query($queryUtrShipmentCount)->fetchAll();
-					$readQuery->closeConnection();
-					$unitCommissionAmount = $utrBalance / count($resultUtrShipment);
-					foreach ($resultUtrShipment as $value) {
-						$tempShipmentId = $value['shipment_id'];
-						$originalTodoCommissionAmount = $value['todo_commission_amount'] ;
-						$finalTodoCommissionAmount = $originalTodoCommissionAmount + $unitCommissionAmount;
-						$write = Mage::getSingleton('core/resource')->getConnection('shipmentpayout_write');
-						$queryUpdate = "update shipmentpayout set `todo_commission_amount`= '".$finalTodoCommissionAmount."' WHERE shipment_id = '".$tempShipmentId."'";
-						$write->query($queryUpdate);
-						$write->closeConnection();
-						$utrBalance = $utrBalance - $unitCommissionAmount;
-						$writeUtr = Mage::getSingleton('core/resource')->getConnection('utrreport_write');
-						$queryUtrupdate = "update utrreport set `balance` = '".$utrBalance."' WHERE `utrno` = '".$utrNum."'";
-						$writeUtr->query($queryUtrupdate);
-						$writeUtr->closeConnection();
-					}
-				}
+				// if($utrBalance <= 50){
+				// 	$readQuery = Mage::getSingleton('core/resource')->getConnection('custom_db');
+				// 	$queryUtrShipmentCount = "select shipment_id , todo_commission_amount from shipmentpayout where citibank_utr = '".$utrNum."'";
+				// 	$resultUtrShipment = $readQuery->query($queryUtrShipmentCount)->fetchAll();
+				// 	$readQuery->closeConnection();
+				// 	$unitCommissionAmount = $utrBalance / count($resultUtrShipment);
+				// 	foreach ($resultUtrShipment as $value) {
+				// 		$tempShipmentId = $value['shipment_id'];
+				// 		$originalTodoCommissionAmount = $value['todo_commission_amount'] ;
+				// 		$finalTodoCommissionAmount = $originalTodoCommissionAmount + $unitCommissionAmount;
+				// 		$write = Mage::getSingleton('core/resource')->getConnection('shipmentpayout_write');
+				// 		$queryUpdate = "update shipmentpayout set `todo_commission_amount`= '".$finalTodoCommissionAmount."' WHERE shipment_id = '".$tempShipmentId."'";
+				// 		$write->query($queryUpdate);
+				// 		$write->closeConnection();
+				// 		$utrBalance = $utrBalance - $unitCommissionAmount;
+				// 		$writeUtr = Mage::getSingleton('core/resource')->getConnection('utrreport_write');
+				// 		$queryUtrupdate = "update utrreport set `balance` = '".$utrBalance."' WHERE `utrno` = '".$utrNum."'";
+				// 		$writeUtr->query($queryUtrupdate);
+				// 		$writeUtr->closeConnection();
+				// 	}
+				// }
 				/********************END***********************************************************/
 
 				$filename = "UtrReport_".date("Ymd");
