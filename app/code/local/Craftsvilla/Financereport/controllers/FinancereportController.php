@@ -1767,14 +1767,14 @@ class Craftsvilla_Financereport_FinancereportController extends Mage_Core_Contro
         $sqlnmv = "select
 count(DISTINCT sfs.order_id) as TotalShippedOrder,
 sum(sfs.base_shipping_amount+sfs.base_total_value) as shippedGMV,
-sum(case when (sfs.udropship_status = 1 and sfop.method not in ('cashondelivery','free')) then (sfs.base_shipping_amount+sfs.base_total_value) else 0 end) as MnvPrepaid,
+sum(case when (sfs.udropship_status IN (1,7) and sfop.method not in ('cashondelivery','free')) then (sfs.base_shipping_amount+sfs.base_total_value) else 0 end) as MnvPrepaid,
 sum(case when (sfs.udropship_status = 7 and sfop.method = 'cashondelivery') then (sfs.base_shipping_amount+sfs.base_total_value) else 0 end) as MnvCOD,
 sum(case when (sfs.udropship_status = 6) then (sfs.base_shipping_amount+sfs.base_total_value) else 0 end) as cancelledShipmentGmv,
 sum(case when (sfs.udropship_status IN (25,41,42)) then (sfs.base_shipping_amount+sfs.base_total_value) else 0 end) as rtoGmv,
 sum(case when (sfs.udropship_status = 12) then (sfs.base_shipping_amount+sfs.base_total_value) else 0 end) as refuntInitiatedGmv
 from sales_flat_shipment sfs
 left join sales_flat_order_payment sfop
-on sfs.order_id = sfop.parent_id where sfs.created_at BETWEEN '".$startDate." 00:00:01' AND '".$endDate." 23:59:59' AND (sfs.base_shipping_amount+sfs.base_total_value) < 100000";
+on sfs.order_id = sfop.parent_id where sfs.created_at BETWEEN '".$startDate." 00:00:01' AND '".$endDate." 23:59:59' AND sfs.base_shipping_amount < 100000 AND sfs.base_total_value < 100000";
         $resultNmv       = $readQuery->query($sqlnmv)->fetch();
         $result['totalShippedOrder'] = round(intval($resultNmv['TotalShippedOrder']));
         $result['shippedGMV'] = round(intval($resultNmv['shippedGMV']));
